@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>curl-to-Go: Convert curl commands to Go code</title>
+		<meta charset="utf-8">
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('./sw.js').then(function(reg) {
+					console.log('Successfully registered service worker', reg);
+				}).catch(function(err) {
+					console.warn('Error whilst registering service worker', err);
+				})
+			}
+		</script>
+		<script src="https://mholt.github.io/curl-to-go/resources/js/jquery.min.js"></script>
+		<script src="https://mholt.github.io/curl-to-go/resources/js/highlight.pack.js"></script>
+		<script src="https://mholt.github.io/curl-to-go/resources/js/common.js"></script>
+		<script src="https://mholt.github.io/json-to-go/resources/js/json-to-go.js"></script>
+		<script src="https://mholt.github.io/curl-to-go/resources/js/curl-to-go.js"></script>
+		<script src="https://mholt.github.io/curl-to-go/resources/js/gofmt.js" async></script>
+		<link rel="stylesheet" href="https://mholt.github.io/curl-to-go/resources/css/color-brewer.css">
+		<link rel="stylesheet" href="https://mholt.github.io/curl-to-go/resources/css/common.css">
+	</head>
+	<body>
+
+		<header>
+			<h1>curl-to-Go</h1>
+			<h2>Instantly convert <a href="http://curl.haxx.se/">curl</a> commands to <a href="https://golang.org/">Go</a> code</h2>
+
+			<p>
+				This tool turns a curl command into Go code. (To do the reverse, check out <a href="https://github.com/sethgrid/gencurl">sethgrid/gencurl</a>.) Currently, it knows the following options: -d/--data, -H/--header, -I/--head, -u/--user, --url, and -X/--request. It also understands JSON content types (see <a href="https://mholt.github.io/json-to-go">JSON-to-Go</a>). Feel free to <a href="https://github.com/mholt/curl-to-go">contribute on GitHub</a>!
+			</p>
+
+			<p class="examples">
+				<a href="javascript:" id="example1">Example 1</a> &middot;
+				<a href="javascript:" id="example2">Example 2</a> &middot;
+				<a href="javascript:" id="example3">Example 3</a> &middot;
+				<a href="javascript:" id="example4">Example 4</a> &middot;
+				<a href="javascript:" id="example5">Example 5</a>
+			</p>
+		</header>
+
+		<main>
+			<textarea id="input" rows="4" placeholder="Paste curl here"></textarea>
+			<div id="output"></div>
+		</main>
+
+		<p>
+			Note: http.DefaultClient will follow redirects by default, whereas curl does not without the <code>--location</code> flag. Since reusing HTTP client is good Go practice, this tool does not attempt to configure the HTTP client for you.
+		</p>
+
+
+		<footer>
+			&copy; <script>document.write(new Date().getFullYear());</script> Matt Holt - <a href="https://github.com/mholt/curl-to-go">View on GitHub</a> - <a id="dark" href="javascript:">dark mode</a>
+		</footer>
+
+	</body>
+</html>

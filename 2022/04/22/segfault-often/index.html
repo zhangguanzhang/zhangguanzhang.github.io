@@ -1,0 +1,5420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Zhangguanzhang">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Zhangguanzhang">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="记录生活点滴">
+    <meta name="description" content="客户环境 docker 和 containerd 启动时不时 segment fault 的一次处理过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker containerd 不定时的 segfault 的一次处理过程">
+<meta property="og:url" content="http://zhangguanzhang.github.io/2022/04/22/segfault-often/">
+<meta property="og:site_name" content="Zhangguanzhang">
+<meta property="og:description" content="客户环境 docker 和 containerd 启动时不时 segment fault 的一次处理过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-22T10:15:30.000Z">
+<meta property="article:modified_time" content="2022-04-22T10:15:30.000Z">
+<meta property="article:author" content="Zhangguanzhang">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="segfault">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>docker containerd 不定时的 segfault 的一次处理过程 · zhangguanzhang&#39;s Blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://unpkg.zhimg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://unpkg.zhimg.com/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+        <script>
+            var hits = JSON.parse('{"per_page":10}')
+            var labels = JSON.parse('{"input_placeholder":"Search for Posts","hits_empty":"We did not find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}')
+
+            var algolia = {
+                applicationID: '3RNEGEC262',
+                apiKey: '6403a5f93c8554eb5b5ed2ad42b9693e',
+                indexName: 'blog',
+                hits: hits,
+                labels: labels
+            }
+        </script>
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Zhangguanzhang" type="application/atom+xml">
+</head>
+
+    <script src="https://unpkg.zhimg.com/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>zhangguanzhang's Blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">zhangguanzhang&#39;s Blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">docker containerd 不定时的 segfault 的一次处理过程</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                docker containerd 不定时的 segfault 的一次处理过程
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="segfault">segfault</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.4k</span>阅读时长: <span class="post-count reading-time">25 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022/04/22</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://unpkg.zhimg.com/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>客户环境 docker 和 containerd 启动时不时 segment fault 的一次处理过程。</p>
+<span id="more"></span>
+
+<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>问题拉我处理是 <code>04/15</code> 号，现象是客户的根分区被撑爆了，后台 tty 进去看了下是根目录充满了 <code>core.$pid</code> 的 coredump 文件。然后清理后重启发现很多容器起不来。然后喊我来看下。</p>
+<h2 id="处理过程"><a href="#处理过程" class="headerlink" title="处理过程"></a>处理过程</h2><p>客户系统是 centos7.9 ，先使用 <code>systemctl status docker</code> 看了下 docker 运行一段时间后就崩了，前台启动调试下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ dockerd --version</span><br><span class="line">Docker version 19.03.14, build 5eb3275</span><br><span class="line">$ systemctl stop kubelet docker</span><br><span class="line">$ dockerd --debug</span><br></pre></td></tr></table></figure>
+
+<p>然后发现每次 dockerd 退出日志不一样，有时候是 <code>segment fault</code>，有时候报错无法通过 <code>/var/run/docker/containerd/containerd.sock</code> 连接 containerd，该 sock 文件不存在，根据这个报错可以看出来 containerd 无法启动。可以通过 <a target="_blank" rel="noopener" href="https://github.com/docker/docker-ce/blob/d7080c17a580919f5340a15a8e5e013133089680/components/engine/libcontainerd/remote_daemon.go#L205-244">源码</a> 得知，如果没启动 containerd ，docker 则会 os.Exec 起一个 <code>containerd</code> 。</p>
+<p>我们的 docker 是官方的 static bin 安装的，如果是官方包管理安装的话，containerd 会由 systemd 启动，docker bin 的方式的话，会由 dockerd 使用 exec 方式启动一个 containerd，找个同版本的查询下 cmdline 后手动前台 debug log-level 启动下 containerd：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br></pre></td><td class="code"><pre><span class="line">$ containerd --config /var/run/docker/containerd/containerd.toml --log-level debug   </span><br><span class="line">INFO[2022-04-15T14:14:01.755841221+08:00] starting containerd                           revision=ea765aba0d05254012b0b9e595e995c09186427f version=v1.3.9</span><br><span class="line">DEBU[2022-04-15T14:14:01.755989919+08:00] changing OOM score to -500                   </span><br><span class="line">INFO[2022-04-15T14:14:01.787587081+08:00] loading plugin &quot;io.containerd.content.v1.content&quot;...  type=io.containerd.content.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.787837808+08:00] loading plugin &quot;io.containerd.snapshotter.v1.btrfs&quot;...  type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.790684367+08:00] skip loading plugin &quot;io.containerd.snapshotter.v1.btrfs&quot;...  error=&quot;path /data/kube/docker/containerd/daemon/io.containerd.snapshotter.v1.btrfs (xfs) must be a btrfs filesystem to be used with the btrfs snapshotter: skip plugin&quot; type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.790779651+08:00] loading plugin &quot;io.containerd.snapshotter.v1.devmapper&quot;...  type=io.containerd.snapshotter.v1</span><br><span class="line">WARN[2022-04-15T14:14:01.790827944+08:00] failed to load plugin io.containerd.snapshotter.v1.devmapper  error=&quot;devmapper not configured&quot;</span><br><span class="line">INFO[2022-04-15T14:14:01.790850382+08:00] loading plugin &quot;io.containerd.snapshotter.v1.aufs&quot;...  type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.793069978+08:00] skip loading plugin &quot;io.containerd.snapshotter.v1.aufs&quot;...  error=&quot;modprobe aufs failed: \&quot;modprobe: FATAL: Module aufs not found.\\n\&quot;: exit status 1: skip plugin&quot; type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.793133838+08:00] loading plugin &quot;io.containerd.snapshotter.v1.native&quot;...  type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.793229323+08:00] loading plugin &quot;io.containerd.snapshotter.v1.overlayfs&quot;...  type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.793392157+08:00] loading plugin &quot;io.containerd.snapshotter.v1.zfs&quot;...  type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.794994033+08:00] skip loading plugin &quot;io.containerd.snapshotter.v1.zfs&quot;...  error=&quot;path /data/kube/docker/containerd/daemon/io.containerd.snapshotter.v1.zfs must be a zfs filesystem to be used with the zfs snapshotter: skip plugin&quot; type=io.containerd.snapshotter.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.795033213+08:00] loading plugin &quot;io.containerd.metadata.v1.bolt&quot;...  type=io.containerd.metadata.v1</span><br><span class="line">WARN[2022-04-15T14:14:01.795068521+08:00] could not use snapshotter devmapper in metadata plugin  error=&quot;devmapper not configured&quot;</span><br><span class="line">INFO[2022-04-15T14:14:01.795097127+08:00] metadata content store policy set             policy=shared</span><br><span class="line">INFO[2022-04-15T14:14:01.795925864+08:00] loading plugin &quot;io.containerd.differ.v1.walking&quot;...  type=io.containerd.differ.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.795966063+08:00] loading plugin &quot;io.containerd.gc.v1.scheduler&quot;...  type=io.containerd.gc.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796083519+08:00] loading plugin &quot;io.containerd.service.v1.containers-service&quot;...  type=io.containerd.service.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796116546+08:00] loading plugin &quot;io.containerd.service.v1.content-service&quot;...  type=io.containerd.service.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796143806+08:00] loading plugin &quot;io.containerd.service.v1.diff-service&quot;...  type=io.containerd.service.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796174035+08:00] loading plugin &quot;io.containerd.service.v1.images-service&quot;...  type=io.containerd.service.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796201988+08:00] loading plugin &quot;io.containerd.service.v1.leases-service&quot;...  type=io.containerd.service.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796236554+08:00] loading plugin &quot;io.containerd.service.v1.namespaces-service&quot;...  type=io.containerd.service.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796274839+08:00] loading plugin &quot;io.containerd.service.v1.snapshots-service&quot;...  type=io.containerd.service.v1</span><br><span class="line">INFO[2022-04-15T14:14:01.796309507+08:00] loading plugin &quot;io.containerd.runtime.v1.linux&quot;...  type=io.containerd.runtime.v1</span><br><span class="line">DEBU[2022-04-15T14:14:01.796470242+08:00] loading tasks in namespace                    namespace=moby</span><br><span class="line">ERRO[2022-04-15T14:14:01.796797091+08:00] connecting to shim                            error=&quot;dial unix \x00/containerd-shim/moby/427b5abebd744817fe9cf8c0aa2febadff17d5905e830d3236bb46fa58d6858b/shim.sock: connect: connection refused&quot; id=427b5abebd744817fe9cf8c0aa2febadff17d5905e830d3236bb46fa58d6858b namespace=moby</span><br><span class="line">WARN[2022-04-15T14:14:01.796844852+08:00] cleaning up after shim dead                   id=427b5abebd744817fe9cf8c0aa2febadff17d5905e830d3236bb46fa58d6858b namespace=moby</span><br><span class="line">DEBU[2022-04-15T14:14:01.809292656+08:00] event published                               ns=moby topic=/tasks/exit type=containerd.events.TaskExit</span><br><span class="line">DEBU[2022-04-15T14:14:01.810296940+08:00] event published                               ns=moby topic=/tasks/delete type=containerd.events.TaskDelete</span><br><span class="line">ERRO[2022-04-15T14:14:01.810491037+08:00] connecting to shim                            error=&quot;dial unix /run/containerd/s/058682ed3ebcc6c9b8d37022b1d379d2d11dbf583467c8d834cc09b3d0c76fea: connect: connection refused&quot; id=44d4a81a122079c684c2a45fcd412c8dc2eef3e4e3569ecae2332ac450b80076 namespace=moby</span><br><span class="line">WARN[2022-04-15T14:14:01.810533770+08:00] cleaning up after shim dead                   id=44d4a81a122079c684c2a45fcd412c8dc2eef3e4e3569ecae2332ac450b80076 namespace=moby</span><br><span class="line">DEBU[2022-04-15T14:14:01.823164929+08:00] event published                               ns=moby topic=/tasks/exit type=containerd.events.TaskExit</span><br><span class="line">DEBU[2022-04-15T14:14:01.823795277+08:00] event published                               ns=moby topic=/tasks/delete type=containerd.events.TaskDelete</span><br><span class="line">ERRO[2022-04-15T14:14:01.823953161+08:00] connecting to shim                            error=&quot;dial unix /run/containerd/s/96bd5e94f86fc8e5752989ee5f22f46924d7deea59c7b8ef11087186f81ca50b: connect: connection refused&quot; id=52aa8ad1be01f3f947bcd2f03197771f1b965b0733f3d4026a58d77979618966 namespace=moby</span><br><span class="line">WARN[2022-04-15T14:14:01.823995417+08:00] cleaning up after shim dead                   id=52aa8ad1be01f3f947bcd2f03197771f1b965b0733f3d4026a58d77979618966 namespace=moby</span><br><span class="line">DEBU[2022-04-15T14:14:01.835741082+08:00] event published                               ns=moby topic=/tasks/exit type=containerd.events.TaskExit</span><br><span class="line">DEBU[2022-04-15T14:14:01.836774408+08:00] event published                               ns=moby topic=/tasks/delete type=containerd.events.TaskDelete</span><br><span class="line">ERRO[2022-04-15T14:14:01.836931317+08:00] connecting to shim                            error=&quot;dial unix \x00/containerd-shim/moby/6b1fb39b4c5ad46612b6755f652d608ef75b3374f719b08a67cac1b7f4ddf646/shim.sock: connect: connection refused&quot; id=6b1fb39b4c5ad46612b6755f652d608ef75b3374f719b08a67cac1b7f4ddf646 namespace=moby</span><br><span class="line">WARN[2022-04-15T14:14:01.836979896+08:00] cleaning up after shim dead                   id=6b1fb39b4c5ad46612b6755f652d608ef75b3374f719b08a67cac1b7f4ddf646 namespace=moby</span><br><span class="line">DEBU[2022-04-15T14:14:01.849530967+08:00] event published                               ns=moby topic=/tasks/exit type=containerd.events.TaskExit</span><br><span class="line">ERRO[2022-04-15T14:14:01.862000189+08:00] delete bundle                                 error=&quot;rename /data/kube/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/6b1fb39b4c5ad46612b6755f652d608ef75b3374f719b08a67cac1b7f4ddf646 /data/kube/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/.6b1fb39b4c5ad46612b6755f652d608ef75b3374f719b08a67cac1b7f4ddf646: file exists&quot;</span><br><span class="line">DEBU[2022-04-15T14:14:01.862166378+08:00] event published                               ns=moby topic=/tasks/delete type=containerd.events.TaskDelete</span><br><span class="line">ERRO[2022-04-15T14:14:01.862300707+08:00] connecting to shim                            error=&quot;dial unix \x00/containerd-shim/moby/b49a6d51e1a8997440bbcb6e9267a76d8ce2f24a684454890ae98600de364f64/shim.sock: connect: connection refused&quot; id=b49a6d51e1a8997440bbcb6e9267a76d8ce2f24a684454890ae98600de364f64 namespace=moby</span><br><span class="line">WARN[2022-04-15T14:14:01.862334378+08:00] cleaning up after shim dead                   id=b49a6d51e1a8997440bbcb6e9267a76d8ce2f24a684454890ae98600de364f64 namespace=moby</span><br><span class="line">DEBU[2022-04-15T14:14:01.877502812+08:00] event published                               ns=moby topic=/tasks/exit type=containerd.events.TaskExit</span><br><span class="line">DEBU[2022-04-15T14:14:01.877994394+08:00] event published                               ns=moby topic=/tasks/delete type=containerd.events.TaskDelete</span><br><span class="line">ERRO[2022-04-15T14:14:01.878143864+08:00] connecting to shim                            error=&quot;dial unix /run/containerd/s/b538e3e9b252cc635009139b544114a233b3cc34ca48925588da77aa15cdf90a: connect: connection refused&quot; id=b902f9e634100578e9ab38eeaf9a27224d843035ae33a368d65efc071393bd2f namespace=moby</span><br><span class="line">WARN[2022-04-15T14:14:01.878183396+08:00] cleaning up after shim dead                   id=b902f9e634100578e9ab38eeaf9a27224d843035ae33a368d65efc071393bd2f namespace=moby</span><br><span class="line">DEBU[2022-04-15T14:14:01.895566880+08:00] event published                               ns=moby topic=/tasks/exit type=containerd.events.TaskExit</span><br><span class="line">DEBU[2022-04-15T14:14:01.896242084+08:00] event published                               ns=moby topic=/tasks/delete type=containerd.events.TaskDelete</span><br><span class="line">ERRO[2022-04-15T14:14:01.896450640+08:00] connecting to shim                            error=&quot;dial unix /run/containerd/s/4d17ae4e022c51c38d6eff249e4a50d6eaceba757f043204ae68b9382271b0da: connect: connection refused&quot; id=dc31940495385987c90e96c333014f1ac7dc7eddb5e3f45acb19877c79e22893 namespace=moby</span><br><span class="line">WARN[2022-04-15T14:14:01.896496784+08:00] cleaning up after shim dead                   id=dc31940495385987c90e96c333014f1ac7dc7eddb5e3f45acb19877c79e22893 namespace=moby</span><br><span class="line">DEBU[2022-04-15T14:14:01.904116791+08:00] garbage collected                             d=7.541562ms</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">0x40c05f</span><br><span class="line">fatal error: bad lfnode address</span><br><span class="line">[signal SIGSEGV: segmentation violation code=0x80 addr=0x0 pc=0x45cf1f]</span><br><span class="line"></span><br><span class="line">runtime stack:</span><br><span class="line">runtime: unexpected return pc for runtime.lfnodeValidate called from 0x0</span><br><span class="line">stack: frame=&#123;sp:0x7f5918d8f5d8, fp:0x7f5918d8f600&#125; stack=[0x7f5918594148,0x7f5918d93d48)</span><br><span class="line">00007f5918d8f4d8:  000000c000000900  01000000000003e8 </span><br><span class="line">00007f5918d8f4e8:  0000000000000004  000000000000001f </span><br><span class="line">00007f5918d8f4f8:  000000000045cf1f &lt;runtime.GoroutineProfile.func2+47&gt;  0000000000000000 </span><br><span class="line">00007f5918d8f508:  0000000000000080  00000000013f1515 </span><br><span class="line">00007f5918d8f518:  00007f5918d8f560  000000000045d961 &lt;runtime.fatalthrow.func1+97&gt; </span><br><span class="line">00007f5918d8f528:  000000c000000900  0000000000430dd4 &lt;runtime.throw+116&gt; </span><br><span class="line">00007f5918d8f538:  00007f5918d8f5a8  0000000000000001 </span><br><span class="line">00007f5918d8f548:  00007f5918d8f5a8  0000000000430dd4 &lt;runtime.throw+116&gt; </span><br><span class="line">00007f5918d8f558:  000000c000000900  00007f5918d8f598 </span><br><span class="line">00007f5918d8f568:  0000000000430fa9 &lt;runtime.fatalthrow+89&gt;  00007f5918d8f578 </span><br><span class="line">00007f5918d8f578:  000000000045d900 &lt;runtime.fatalthrow.func1+0&gt;  000000c000000900 </span><br><span class="line">00007f5918d8f588:  0000000000430dd4 &lt;runtime.throw+116&gt;  00007f5918d8f5a8 </span><br><span class="line">00007f5918d8f598:  00007f5918d8f5c8  0000000000430dd4 &lt;runtime.throw+116&gt; </span><br><span class="line">00007f5918d8f5a8:  00007f5918d8f5b0  000000000045d870 &lt;runtime.throw.func1+0&gt; </span><br><span class="line">00007f5918d8f5b8:  00000000013dce54  0000000000000012 </span><br><span class="line">00007f5918d8f5c8:  00007f5918d8f608  000000000040beba &lt;runtime.lfnodeValidate+170&gt; </span><br><span class="line">00007f5918d8f5d8: &lt;00000000013dce54  0000000000000012 </span><br><span class="line">00007f5918d8f5e8:  00000000004317a0 &lt;runtime.recordForPanic+304&gt;  000000000274594b </span><br><span class="line">00007f5918d8f5f8: !0000000000000000 &gt;0000000000000000 </span><br><span class="line">00007f5918d8f608:  00007f5918d8f648  0000000000000000 </span><br><span class="line">00007f5918d8f618:  00007f5918d8f650  00000000004317a0 &lt;runtime.recordForPanic+304&gt; </span><br><span class="line">00007f5918d8f628:  000000000274594b  0000000000000004 </span><br><span class="line">00007f5918d8f638:  00007f5918d8f670  00000000004317a0 &lt;runtime.recordForPanic+304&gt; </span><br><span class="line">00007f5918d8f648:  00007f5918d8f668  000000000043183d &lt;runtime.printlock+109&gt; </span><br><span class="line">00007f5918d8f658:  00000000027445b0  000000c000074380 </span><br><span class="line">00007f5918d8f668:  00007f5918d8f698  000000000045d8a6 &lt;runtime.throw.func1+54&gt; </span><br><span class="line">00007f5918d8f678:  0000000000431967 &lt;runtime.gwrite+167&gt;  0000000000000002 </span><br><span class="line">00007f5918d8f688:  000000000000002a  00000000014054d6 </span><br><span class="line">00007f5918d8f698:  00007f5918d8f6c8  0000000000430dad &lt;runtime.throw+77&gt; </span><br><span class="line">00007f5918d8f6a8:  00007f5918d8f6b0  000000000045d870 &lt;runtime.throw.func1+0&gt; </span><br><span class="line">00007f5918d8f6b8:  00000000014054d6  000000000000002a </span><br><span class="line">00007f5918d8f6c8:  00007f5918d8f6f8  0000000000446a60 &lt;runtime.sigpanic+1152&gt; </span><br><span class="line">00007f5918d8f6d8:  00000000014054d6  000000000000002a </span><br><span class="line">00007f5918d8f6e8:  00000000013c9053  0000000000000001 </span><br><span class="line">00007f5918d8f6f8:  00007f5918d8f720 </span><br><span class="line">runtime.throw(0x13dce54, 0x12)</span><br><span class="line">        /usr/local/go/src/runtime/panic.go:774 +0x74</span><br><span class="line">runtime: unexpected return pc for runtime.lfnodeValidate called from 0x0</span><br><span class="line">stack: frame=&#123;sp:0x7f5918d8f5d8, fp:0x7f5918d8f600&#125; stack=[0x7f5918594148,0x7f5918d93d48)</span><br><span class="line">00007f5918d8f4d8:  000000c000000900  01000000000003e8 </span><br><span class="line">00007f5918d8f4e8:  0000000000000004  000000000000001f </span><br><span class="line">00007f5918d8f4f8:  000000000045cf1f &lt;runtime.GoroutineProfile.func2+47&gt;  0000000000000000 </span><br><span class="line">00007f5918d8f508:  0000000000000080  00000000013f1515 </span><br><span class="line">00007f5918d8f518:  00007f5918d8f560  000000000045d961 &lt;runtime.fatalthrow.func1+97&gt; </span><br><span class="line">00007f5918d8f528:  000000c000000900  0000000000430dd4 &lt;runtime.throw+116&gt; </span><br><span class="line">00007f5918d8f538:  00007f5918d8f5a8  0000000000000001 </span><br><span class="line">00007f5918d8f548:  00007f5918d8f5a8  0000000000430dd4 &lt;runtime.throw+116&gt; </span><br><span class="line">00007f5918d8f558:  000000c000000900  00007f5918d8f598 </span><br><span class="line">00007f5918d8f568:  0000000000430fa9 &lt;runtime.fatalthrow+89&gt;  00007f5918d8f578 </span><br><span class="line">00007f5918d8f578:  000000000045d900 &lt;runtime.fatalthrow.func1+0&gt;  000000c000000900 </span><br><span class="line">00007f5918d8f588:  0000000000430dd4 &lt;runtime.throw+116&gt;  00007f5918d8f5a8 </span><br><span class="line">00007f5918d8f598:  00007f5918d8f5c8  0000000000430dd4 &lt;runtime.throw+116&gt; </span><br><span class="line">00007f5918d8f5a8:  00007f5918d8f5b0  000000000045d870 &lt;runtime.throw.func1+0&gt; </span><br><span class="line">00007f5918d8f5b8:  00000000013dce54  0000000000000012 </span><br><span class="line">00007f5918d8f5c8:  00007f5918d8f608  000000000040beba &lt;runtime.lfnodeValidate+170&gt; </span><br><span class="line">00007f5918d8f5d8: &lt;00000000013dce54  0000000000000012 </span><br><span class="line">00007f5918d8f5e8:  00000000004317a0 &lt;runtime.recordForPanic+304&gt;  000000000274594b </span><br><span class="line">00007f5918d8f5f8: !0000000000000000 &gt;0000000000000000 </span><br><span class="line">00007f5918d8f608:  00007f5918d8f648  0000000000000000 </span><br><span class="line">00007f5918d8f618:  00007f5918d8f650  00000000004317a0 &lt;runtime.recordForPanic+304&gt; </span><br><span class="line">00007f5918d8f628:  000000000274594b  0000000000000004 </span><br><span class="line">00007f5918d8f638:  00007f5918d8f670  00000000004317a0 &lt;runtime.recordForPanic+304&gt; </span><br><span class="line">00007f5918d8f648:  00007f5918d8f668  000000000043183d &lt;runtime.printlock+109&gt; </span><br><span class="line">00007f5918d8f658:  00000000027445b0  000000c000074380 </span><br><span class="line">00007f5918d8f668:  00007f5918d8f698  000000000045d8a6 &lt;runtime.throw.func1+54&gt; </span><br><span class="line">00007f5918d8f678:  0000000000431967 &lt;runtime.gwrite+167&gt;  0000000000000002 </span><br><span class="line">00007f5918d8f688:  000000000000002a  00000000014054d6 </span><br><span class="line">00007f5918d8f698:  00007f5918d8f6c8  0000000000430dad &lt;runtime.throw+77&gt; </span><br><span class="line">00007f5918d8f6a8:  00007f5918d8f6b0  000000000045d870 &lt;runtime.throw.func1+0&gt; </span><br><span class="line">00007f5918d8f6b8:  00000000014054d6  000000000000002a </span><br><span class="line">00007f5918d8f6c8:  00007f5918d8f6f8  0000000000446a60 &lt;runtime.sigpanic+1152&gt; </span><br><span class="line">00007f5918d8f6d8:  00000000014054d6  000000000000002a </span><br><span class="line">00007f5918d8f6e8:  00000000013c9053  0000000000000001 </span><br><span class="line">00007f5918d8f6f8:  00007f5918d8f720 </span><br><span class="line">runtime.lfnodeValidate(0x0)</span><br><span class="line">        /usr/local/go/src/runtime/lfstack.go:65 +0xaa</span><br><span class="line"></span><br><span class="line">goroutine 1 [chan receive]:</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/containerd/go-runc.(*defaultMonitor).Wait(0x2744360, 0xc0002738c0, 0xc00035e4e0, 0x0, 0x0, 0x3d54454b434f)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/containerd/go-runc/monitor.go:74 +0x50</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/containerd/go-runc.cmdOutput(0xc0002738c0, 0xc0002ee301, 0x0, 0x0, 0x0, 0x0, 0x0)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/containerd/go-runc/runc.go:709 +0x14e</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/containerd/go-runc.(*Runc).runOrError(0xc00055ec80, 0xc0002738c0, 0xc0002cee40, 0xc00004ee40)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/containerd/go-runc/runc.go:689 +0x186</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/containerd/go-runc.(*Runc).Delete(0xc00055ec80, 0x1bcd9e0, 0xc0002cee40, 0xc000016796, 0x40, 0xc00062cd77, 0x40, 0xc00055ec80)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/containerd/go-runc/runc.go:302 +0x16a</span><br><span class="line">github.com/containerd/containerd/runtime/v1/linux.(*Runtime).terminate(0xc000240960, 0x1bcd9e0, 0xc0002cee40, 0xc0002cea80, 0xc00010d5d1, 0x4, 0xc000016796, 0x40, 0x1, 0x1)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/runtime/v1/linux/runtime.go:473 +0xfc</span><br><span class="line">github.com/containerd/containerd/runtime/v1/linux.(*Runtime).cleanupAfterDeadShim(0xc000240960, 0x1bcd9e0, 0xc0002cee40, 0xc0002cea80, 0xc00010d5d1, 0x4, 0xc000016796, 0x40, 0x1b938c0, 0xc00003caf0)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/runtime/v1/linux/runtime.go:432 +0x386</span><br><span class="line">github.com/containerd/containerd/runtime/v1/linux.(*Runtime).loadTasks(0xc000240960, 0x1bcd960, 0xc000040098, 0xc00010d5d1, 0x4, 0x0, 0x0, 0xc00062e610, 0x439d71, 0xc000052500)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/runtime/v1/linux/runtime.go:362 +0xa28</span><br><span class="line">github.com/containerd/containerd/runtime/v1/linux.(*Runtime).restoreTasks(0xc000240960, 0x1bcd960, 0xc000040098, 0x1a9f5c0, 0xc000532540, 0x0, 0x0, 0xc00062e898)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/runtime/v1/linux/runtime.go:298 +0x368</span><br><span class="line">github.com/containerd/containerd/runtime/v1/linux.New(0xc00034ea80, 0xc000332c60, 0x2, 0x2, 0x1968f20)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/runtime/v1/linux/runtime.go:125 +0x3db</span><br><span class="line">github.com/containerd/containerd/plugin.(*Registration).Init(0xc00009a1e0, 0xc00034ea80, 0x18c2f40)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/plugin/plugin.go:110 +0x3a</span><br><span class="line">github.com/containerd/containerd/services/server.New(0x1bcd960, 0xc000040098, 0xc00055c480, 0x1, 0x1, 0xc0002079b0)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/services/server/server.go:167 +0xcaa</span><br><span class="line">github.com/containerd/containerd/cmd/containerd/command.App.func1(0xc000558580, 0x0, 0xc000162880)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/cmd/containerd/command/main.go:177 +0x7fa</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/urfave/cli.HandleAction(0x1937d80, 0x1b71550, 0xc000558580, 0xc000558580, 0x0)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/urfave/cli/app.go:523 +0xc0</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/urfave/cli.(*App).Run(0xc000536700, 0xc00003c050, 0x5, 0x5, 0x0, 0x0)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/urfave/cli/app.go:285 +0x5e1</span><br><span class="line">main.main()</span><br><span class="line">        github.com/containerd/containerd/cmd/containerd/main.go:33 +0x51</span><br><span class="line"></span><br><span class="line">goroutine 6 [syscall]:</span><br><span class="line">os/signal.signal_recv(0x0)</span><br><span class="line">        /usr/local/go/src/runtime/sigqueue.go:147 +0x9e</span><br><span class="line">os/signal.loop()</span><br><span class="line">        /usr/local/go/src/os/signal/signal_unix.go:23 +0x24</span><br><span class="line">created by os/signal.init.0</span><br><span class="line">        /usr/local/go/src/os/signal/signal_unix.go:29 +0x43</span><br><span class="line"></span><br><span class="line">goroutine 7 [chan receive]:</span><br><span class="line">github.com/containerd/containerd/vendor/k8s.io/klog.(*loggingT).flushDaemon(0x2721260)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/k8s.io/klog/klog.go:1010 +0x8d</span><br><span class="line">created by github.com/containerd/containerd/vendor/k8s.io/klog.init.0</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/k8s.io/klog/klog.go:411 +0xd8</span><br><span class="line"></span><br><span class="line">goroutine 43 [select]:</span><br><span class="line">github.com/containerd/containerd/cmd/containerd/command.handleSignals.func1(0xc000551380, 0xc000551320, 0x1bcd960, 0xc000040098, 0xc00054c300)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/cmd/containerd/command/main_unix.go:44 +0xf2</span><br><span class="line">created by github.com/containerd/containerd/cmd/containerd/command.handleSignals</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/cmd/containerd/command/main_unix.go:41 +0x8b</span><br><span class="line"></span><br><span class="line">goroutine 11 [select]:</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/docker/go-events.(*Broadcaster).run(0xc00003c0f0)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/docker/go-events/broadcast.go:117 +0x1b3</span><br><span class="line">created by github.com/containerd/containerd/vendor/github.com/docker/go-events.NewBroadcaster</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/docker/go-events/broadcast.go:39 +0x1b0</span><br><span class="line"></span><br><span class="line">goroutine 114 [runnable]:</span><br><span class="line">os/exec.(*Cmd).Start.func2(0xc0002738c0)</span><br><span class="line">        /usr/local/go/src/os/exec/exec.go:448 +0xc6</span><br><span class="line">created by os/exec.(*Cmd).Start</span><br><span class="line">        /usr/local/go/src/os/exec/exec.go:447 +0x6d2</span><br><span class="line"></span><br><span class="line">goroutine 47 [select]:</span><br><span class="line">github.com/containerd/containerd/gc/scheduler.(*gcScheduler).run(0xc0002408a0, 0x1bcd960, 0xc000040098)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/gc/scheduler/scheduler.go:268 +0x1ce</span><br><span class="line">created by github.com/containerd/containerd/gc/scheduler.init.0.func1</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/gc/scheduler/scheduler.go:132 +0x429</span><br><span class="line"></span><br><span class="line">goroutine 115 [runnable]:</span><br><span class="line">os/exec.(*Cmd).Wait(0xc0002738c0, 0x0, 0x0)</span><br><span class="line">        /usr/local/go/src/os/exec/exec.go:514 +0x127</span><br><span class="line">github.com/containerd/containerd/vendor/github.com/containerd/go-runc.(*defaultMonitor).Start.func1(0xc0002738c0, 0xc00035e4e0)</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/containerd/go-runc/monitor.go:55 +0x31</span><br><span class="line">created by github.com/containerd/containerd/vendor/github.com/containerd/go-runc.(*defaultMonitor).Start</span><br><span class="line">        /tmp/tmp.0JSku0IZFM/src/github.com/containerd/containerd/vendor/github.com/containerd/go-runc/monitor.go:53 +0xa7</span><br></pre></td></tr></table></figure>
+
+<p>上面只是偶尔的报错，偶尔也会报错 <code>segment fault</code>，同时根目录也有 coredump 生成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ ll /</span><br><span class="line">总用量 145912</span><br><span class="line">lrwxrwxrwx.   1 root root         7 10月 13 2021 bin -&gt; usr/bin</span><br><span class="line">dr-xr-xr-x.   5 root root      4096 4月  11 14:55 boot</span><br><span class="line">-rw-------    1 root root 230711296 4月  15 13:59 core.28650</span><br><span class="line">-rw-------    1 root root 187424768 4月  15 13:46 core.3977</span><br><span class="line">drwxr-xr-x   12 xxx  xxx        156 10月 29 11:32 data</span><br><span class="line">drwxr-xr-x   19 root root      3180 4月  15 12:38 dev</span><br><span class="line">drwxr-xr-x.  85 root root      8192 4月  15 12:44 etc</span><br><span class="line">drwxr-xr-x.   3 root root        17 10月 28 13:30 home</span><br><span class="line">lrwxrwxrwx.   1 root root         7 10月 13 2021 lib -&gt; usr/lib</span><br><span class="line">lrwxrwxrwx.   1 root root         9 10月 13 2021 lib64 -&gt; usr/lib64</span><br><span class="line">drwxr-xr-x.   3 root root       127 10月 28 13:32 media</span><br><span class="line">drwxr-xr-x.   2 root root         6 4月  11 2018 mnt</span><br><span class="line">drwxr-xr-x.   3 root root        24 10月 28 13:38 opt</span><br><span class="line">dr-xr-xr-x  253 root root         0 4月  15 12:38 proc</span><br><span class="line">dr-xr-x---.   7 root root       258 4月  15 13:13 root</span><br><span class="line">drwxr-xr-x   30 root root       960 4月  15 14:11 run</span><br><span class="line">lrwxrwxrwx.   1 root root         8 10月 13 2021 sbin -&gt; usr/sbin</span><br><span class="line">drwxr-xr-x.   2 root root         6 4月  11 2018 srv</span><br><span class="line">dr-xr-xr-x   13 root root         0 4月  15 13:12 sys</span><br><span class="line">drwxrwxrwt.  14 root root      4096 4月  15 14:28 tmp</span><br><span class="line">drwxr-xr-x.  13 root root       155 10月 13 2021 usr</span><br><span class="line">drwxr-xr-x.  19 root root       267 10月 13 2021 var</span><br></pre></td></tr></table></figure>
+
+<p>对比了二进制文件，也没损坏，查看了进程，也没有啥安全软件，查看下系统日志，其实在上面排查过程中 ssh 也会偶尔断开，然后 strace 也是没有啥头绪。</p>
+<p>系统日志里过滤一些无用的信息后，发现 bash 也会 <code>segfault</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Apr 15 13:46:32 xxx supervisord: 2022-04-15 13:46:32,958 INFO exited: prometheus_00 (exit status 2; expected)</span><br><span class="line">Apr 15 13:46:33 xxx supervisord: 2022-04-15 13:46:33,962 INFO spawned: &#x27;prometheus_00&#x27; with pid 3751</span><br><span class="line">Apr 15 13:46:35 xxx supervisord: 2022-04-15 13:46:35,379 INFO success: prometheus_00 entered RUNNING state, process has stayed up for &gt; than 1 seconds (startsecs)</span><br><span class="line">Apr 15 13:46:35 xxx dockerd: failed to start daemon: failed to dial &quot;/run/containerd/containerd.sock&quot;: failed to dial &quot;/run/containerd/containerd.sock&quot;: context deadline exceeded</span><br><span class="line">Apr 15 13:46:35 xxx systemd: docker.service: main process exited, code=exited, status=1/FAILURE</span><br><span class="line">Apr 15 13:46:35 xxx systemd: Unit docker.service entered failed state.</span><br><span class="line">Apr 15 13:46:35 xxx systemd: docker.service failed.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: docker.service holdoff time over, scheduling restart.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: Starting Docker Application Container Engine...</span><br><span class="line">Apr 15 13:46:40 xxx systemd: Started Docker Application Container Engine.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: docker.service: main process exited, code=killed, status=11/SEGV</span><br><span class="line">Apr 15 13:46:40 xxx systemd: Unit docker.service entered failed state.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: docker.service failed.</span><br><span class="line">Apr 15 13:46:42 xxx kernel: bash[4028]: segfault at fa8 ip 0000000000440c58 sp 00007fff8528e830 error 4 in bash[400000+de000]</span><br></pre></td></tr></table></figure>
+
+<p>单独看看 <code>segfault</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ grep kernal /var/log/messages | grep -i segfault</span><br><span class="line"></span><br><span class="line">Apr 15 11:17:31 xxx kernel: celery[13267]: segfault at 6de410 ip 000000000041b720 sp 00007ffccf1813c0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:35 xxx kernel: redis-server[21118]: segfault at 5dd030 ip 00000000005dd030 sp 00007ffc05cbe440 error 14 in redis-server[6dd000+1000]</span><br><span class="line">Apr 15 11:20:35 xxx kernel: supervisord[20844]: segfault at 29 ip 000000000045c030 sp 00007ffd48aa29d0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:51 xxx kernel: gunicorn[23241]: segfault at 8 ip 00000000004272c8 sp 00007ffc0c4f34e0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:56 xxx kernel: celery[23193]: segfault at 10 ip 0000000000454a29 sp 00007ffd17acce78 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:56 xxx kernel: python[23196]: segfault at 154c0ab0 ip 0000000000420eb0 sp 00007fff43b9fe08 error 6 in python3.7[400000+293000]</span><br><span class="line">Apr 15 12:38:34 xxx kernel: init.ipv6-globa[1154]: segfault at 68 ip 000000000044f62f sp 00007ffc2cf307a8 error 6 in bash[400000+de000]</span><br><span class="line">Apr 15 12:59:25 xxx kernel: bash[11112]: segfault at 18 ip 0000000000449dc9 sp 00007ffffbc2dac8 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:00:58 xxx kernel: bash[14117]: segfault at ffffffff8d48ffff ip 0000000000440c36 sp 00007ffe9be29640 error 7 in bash[400000+de000]</span><br><span class="line">Apr 15 13:01:19 xxx kernel: strace[14852]: segfault at 0 ip           (null) sp 00007ffc836a2be8 error 14 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:10:44 xxx kernel: grep[2587]: segfault at a0d ip 000000000040c43f sp 00007ffcda056be8 error 4 in grep[400000+25000]</span><br><span class="line">Apr 15 13:14:06 xxx kernel: strace[9484]: segfault at ffffffff89489abc ip 00000000004336c2 sp 00007ffcb217a758 error 7 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:27:57 xxx kernel: grep[32713]: segfault at 0 ip           (null) sp 00007ffebf181d10 error 14 in grep[400000+25000]</span><br><span class="line">Apr 15 13:30:22 xxx kernel: bash[5138]: segfault at 108 ip 000000000040cc32 sp 00007ffd55de2728 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:35:56 xxx kernel: strace[15846]: segfault at 0 ip           (null) sp 00007ffef0a931e0 error 14 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:36:27 xxx kernel: bash[16818]: segfault at 33173b0 ip 000000000046d584 sp 00007ffdb71ff5c8 error 6 in bash[400000+de000]</span><br><span class="line">Apr 15 13:37:04 xxx kernel: bash[17993]: segfault at 46a0 ip 0000000000440c58 sp 00007fffd76cf1e0 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:39:49 xxx kernel: bash[23124]: segfault at 5aa0 ip 0000000000440c58 sp 00007fff98271ac0 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:46:42 xxx kernel: bash[4028]: segfault at fa8 ip 0000000000440c58 sp 00007fff8528e830 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:59:04 xxx kernel: redis_exporter-[21520]: segfault at 43b8ba ip 000000000043b892 sp 000000c000057f48 error 7 in redis_exporter-1.23.1.linux-x86_64[400000+41f000]</span><br><span class="line">Apr 15 14:12:12 xxx kernel: grepconf.sh[20714]: segfault at 0 ip           (null) sp 00007ffe3009c158 error 14 in bash[400000+de000]</span><br><span class="line">Apr 15 14:14:43 xxx kernel: bash[25463]: segfault at 313f4023 ip 00000000313f4023 sp 00007ffd25075948 error 14 in ISO8859-1.so[7f6335587000+2000]</span><br><span class="line">Apr 15 14:22:32 xxx kernel: bash[7390]: segfault at 18 ip 0000000000449dc9 sp 00007ffc765d0558 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 14:38:21 xxx kernel: prometheus[26806]: segfault at 440eb5 ip 0000000000421391 sp 000000c0002f1f38 error 7 in prometheus[400000+20ec000]</span><br><span class="line">Apr 15 14:38:21 xxx kernel: prometheus[26801]: segfault at bffffffff8 ip 0000000000440ea3 sp 000000c000000000 error 6 in prometheus[400000+20ec000]</span><br></pre></td></tr></table></figure>
+
+<p>看了下内存容量也正常，很多东西都会触发 segmenft fault，但是最常见的就是内存越界，但是根据系统日志看并不存在内存越界（毕竟这么多进程都 segfault，不可能这么多进程代码写的有问题），使用 <code>rpm -V glibc</code> 也没看到 so 文件被修改，初步怀疑客户的宿主机内存有问题，让客户迁移下这台机器。</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>2022&#x2F;04&#x2F;22 反馈迁移后一切都正常了。</p>
+<h2 id="coredump-的配置参考"><a href="#coredump-的配置参考" class="headerlink" title="coredump 的配置参考"></a>coredump 的配置参考</h2><p>参考文章 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/arnoldlu/p/11160510.html">coredump配置、产生、分析以及分析示例</a> coredump 的一些配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cat /proc/sys/kernel/core_pattern </span><br><span class="line">core</span><br></pre></td></tr></table></figure>
+
+<p>临时修改</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;core-%e-%p-%t-%s&quot; &gt; /proc/sys/kernel/core_pattern </span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">%% - 单个%字符</span><br><span class="line">%p - 添加pid</span><br><span class="line">%u - 添加当前uid</span><br><span class="line">%g - 添加当前gid</span><br><span class="line">%s - 添加导致产生core的信号</span><br><span class="line">%t - 添加core文件生成时的unix时间</span><br><span class="line">%h - 添加主机名</span><br><span class="line">%e - 添加程序文件名 </span><br></pre></td></tr></table></figure>
+
+<p>sysctl 固化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kernel.core_pattern=core-%e-%p-%t-%s</span><br><span class="line">kernel.core_uses_pid=1</span><br></pre></td></tr></table></figure>
+
+<p><code>limit.d/*.conf</code> 配置 coredump 文件限制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* soft core 1024</span><br></pre></td></tr></table></figure>
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
+            <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/04/22/segfault-often/">http://zhangguanzhang.github.io/2022/04/22/segfault-often/</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/04/22/segfault-often/">April 22nd 2022, 10:15:30 am</a>
+            <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/04/22/segfault-often/">April 22nd 2022, 10:15:30 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/04/23/nfc/" title="nfc 折腾笔记，ACR122U/proxmark3">
+                    <div class="nextTitle">nfc 折腾笔记，ACR122U/proxmark3</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/04/21/ecs-xmrig/" title="ecs 中毒的一次处理过程">
+                    <div class="prevTitle">ecs 中毒的一次处理过程</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMzk1OC8xMDQ5Mw>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:zhangguanzhang@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/zhangguanzhang" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_wc.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/assets/zhifubao.png" class="iconfont-archer others" target="_blank" title=others></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">处理过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">3.</span> <span class="toc-text">后续</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#coredump-%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">coredump 的配置参考</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 152
+        </div>
+        <!-- search  -->
+        
+            <div class="site-search site-search-loading popup-trigger">
+                <span class="iconfont-archer search-icon">&#xe627;</span>
+            </div>
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2022/05/13/overlayfs-unix-socket/">低版本内核下容器内部无法使用 unix socket 通信</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/23</span>
+            <a class="archive-post-title" href="/2022/04/23/nfc/">nfc 折腾笔记，ACR122U/proxmark3</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2022/04/22/segfault-often/">docker containerd 不定时的 segfault 的一次处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2022/04/21/ecs-xmrig/">ecs 中毒的一次处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2022/04/11/sdn-tcp-keepalive/">无数据的 tcp 链接被 SDN/防火墙 干掉的一种处理办法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2022/03/24/python-list-kubernetes-permission/">python kubernetes client list permission</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/2022/03/16/cannot-assign-requested-address/">server 端的 cannot assign requested address</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span>
+            <a class="archive-post-title" href="/2022/02/24/keepalived-static-build/">keepalived static link build</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span>
+            <a class="archive-post-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">proxmox 开机 error: disk 'lvmid/[vg uuid]/[lv uuid]' not found</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span>
+            <a class="archive-post-title" href="/2022/02/10/docker-daemon-layer-broken/">18.09.03 docker daemon layer broken 的一次不优雅处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2022/01/26/nginx-static-build/">利用 docker buildx 静态编译 nginx</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2022/01/22/EmuELEC/">EmuELEC 笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span>
+            <a class="archive-post-title" href="/2021/12/19/openwrt-update/">openwrt 的在线升级固件和扩容的研究</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2021/12/12/mod-rejected-by-service/">docker数据盘损坏后启动报错 Error starting daemon: Error initializing network controller: Error creating default "bridge" network: package not installed</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span>
+            <a class="archive-post-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/28</span>
+            <a class="archive-post-title" href="/2021/09/28/ipvs-svc/">在非容器环境上实现散装的 IPVS SVC</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2021/09/16/read-containerd-con-reset/">解决 docker 的 read unix @->/run/containerd/s/xxx read: connection reset by peer: unknown</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span>
+            <a class="archive-post-title" href="/2021/09/03/openwrt-usb-net/">[持续更新] - Openwrt USB 网络</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span>
+            <a class="archive-post-title" href="/2021/09/02/fio/">fio 静态编译和基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2021/09/01/ubuntu18-and-cfq/">ubuntu18下io调度算法是cfq导致mysql非常慢</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/k8s-runxtables.lock/">干掉烦人的 open /run/xtables.lock: is a directory</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2021/08/25/flannel-a-host-net-tmout/">flannel下集群有个节点网络不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/cni-plugins-bridge-err/">一次 cni-plugins 导致集群 dns 无法解析的排错</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span>
+            <a class="archive-post-title" href="/2021/08/16/reserve-compute-resources/">kubelet 为系统配置预留资源</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2021/07/26/kylin-v10-boot-hang/">鲲鹏920的麒麟v10物理服务器断电后无法启动处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span>
+            <a class="archive-post-title" href="/2021/07/20/dlv-remote/">dlv命令行的远程调试 golang 进程步骤(包含容器进程)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2021/07/16/consul-mips64le/">编译mips64le架构的consul</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">机器重启后 kube-apiserver 无法启动，etcd刷(error "EOF", ServerName "")</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2021/07/05/systemctl-start-docker-canceled/">Job for docker.service canceled</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/08</span>
+            <a class="archive-post-title" href="/2021/06/08/ocp4.5.9-restore-etcd/">openshift 4.5.9 etcd损坏+脑裂修复过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2021/04/30/kubernetes-sec-agent-node-network-error/">一次单节点单个pod网络问题排查过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2021/04/08/kubelet-runc-disable-kmem/">kubelet 和 runc 编译关闭 kmem</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2021/03/23/iptables-docker-no-chain/">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span>
+            <a class="archive-post-title" href="/2021/03/12/build-arm64-docker-compose-action/">使用github action 配合 docker buildx 编译 arm64 docker-compose</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2021/02/02/node-shutdown-dns-unavailable/">集群节点关机导致dns在eviction pod之前几率不可用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2021/01/24/e2fsprogs/">e2fsck 太老报错 has unsupported feature(s): metadata_csum，从而尝试静态编译</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2021/01/23/chrony/">chrony 静态编译和笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2020/12/04/docker1803-hang-container-restore/">docker18.03 hang at 'restoring container'</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-reload-user/">ansible reload user group</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-hang-in-docker/">ansible hang in docker container</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span>
+            <a class="archive-post-title" href="/2020/11/20/disable-swap/">永久关闭swap的正确姿势</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2020/10/30/uos20-nftables/">统信USO 20 hostPort 无法访问</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2020/09/18/ocp-4.5-install/">openshift 4.5.9 离线安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2020/08/27/skopeo-static-build/">skopeo 静态编译</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span>
+            <a class="archive-post-title" href="/2020/08/05/wireguard-for-personal/">个人用 wireguard 笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span>
+            <a class="archive-post-title" href="/2020/07/30/prometheus-rate-and-irate/">prometheus的rate与irate内部是如何计算的</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2020/07/23/fs-error-fix-k8s-master/">k8s master机器文件系统故障的一次恢复过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2020/07/05/linux-auditd/">Linux audit 审计</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2020/06/25/kubernetes-pprof/">k8s pprof 分析 cpu 和内存</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2020/06/23/host-gw-in-aliyun/">阿里云上使用flannel host-gw跨节点pod不通的解决</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2020/06/19/go-prom-exporter/">[未写完]使用go开发一个Prometheus的exporter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2020/05/23/k8s-vxlan-63-timeout/">v1.17+ k8s集群下CNI使用VXLAN模式SVC有63秒延迟的触发原因定位</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2020/05/13/x86-router-flash/">proxmox x86软路由笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/dns-formerr/">adguardhome dns FORMERR 错误</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/N1-flash/">斐讯N1刷机和旁路由的设置</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/go-version-ifno/">git工作流下golang项目的version信息该如何处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/26</span>
+            <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span>
+            <a class="archive-post-title" href="/2020/03/10/go-mod-base-use/">go mod的基础使用-科普</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/centos6-hung-while-booting/">centos6中毒重启后卡在启动页面</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/binfmt-0000/">记录一次request_module: runaway loop modeprobe binfmt-0000</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span>
+            <a class="archive-post-title" href="/2020/02/27/microsoft-graph-for-onedrive/">使用microsoft-graph的api对接onedrive</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2020/01/15/kill-ctr-with-grace-period/">Killing container "docker://xxx with 30 second grace period</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2020/01/08/docker-panic-invalid-page-type/">docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2019/12/05/suse-fix-data-but-device-busy/">opensuse的一次救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span>
+            <a class="archive-post-title" href="/2019/12/03/dos-to-gpt/">从PTTYPE="dos"到TYPE="LVM2_member"的救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2019/11/24/kubeadm-base-use/">[长期更新]--应大多数人要求写下kubeadm的基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2019/10/24/deployment-consul-in-k8s/">consul仅当服务发现在k8s无状态部署使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">手动修复v1.14-v1.15版本k8s的issue:76956</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2019/10/12/boot-grub-rescue/">/boot目录被清空下物理机无法开机的一次救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/ansible-count-Idempotency/">ansible数量限制上的幂等性</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/27</span>
+            <a class="archive-post-title" href="/2019/09/27/consul-tls/">高可用的SSL consul cluster实践</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2019/09/05/prometheus-change-timezone/">修改源码更改prometheus的时区问题</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2019/08/24/gobot-build/">gobot控制esp8266</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2019/08/06/preseed/">ubuntu preseed无人应答安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span>
+            <a class="archive-post-title" href="/2019/07/14/chromedp/">golang headless browser包chromedp初探</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2019/07/08/nodeport-err/">为什么我不用nodePort之偶然中奖几率</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2019/07/07/golang-http/">golang的net/http包的客户端简单科普</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2019/06/26/uefi-pxe/">uefi模式下docker+交换机部署pxe批量安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2019/06/23/autoInstallServer/">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span>
+            <a class="archive-post-title" href="/2019/06/12/CLP/">SMASH CLP的一些笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2019/06/02/cobra/">golang cobra的一些笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2019/05/11/container-too-many-open-file/">standard_init_linux.go:211: exec user process caused "too many open files in system"</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2019/04/28/k8s-java-start-time-not-same/">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2019/03/22/k8s-controller-error/">一次kube-controller-manager的bug导致的线上无法调度处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2019/03/15/flannel-bin/">不走etcd v2 api下二进制跑flannel的总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span>
+            <a class="archive-post-title" href="/2019/03/11/k8s-ha/">k8s高可用涉及到ip填写的相关配置和一些坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span>
+            <a class="archive-post-title" href="/2019/03/03/kubernetes-1-13-4/">二进制部署Kubernetes v1.13.12 HA可选</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/19</span>
+            <a class="archive-post-title" href="/2019/02/19/jira-confluence/">docker部署jira(8.0.0)和confluence(6.14.1)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2019/02/12/dashboard/">通用的dashboard部署和tls，SSL相关部署</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span>
+            <a class="archive-post-title" href="/2019/01/30/fstab/">fstab与systemd.mount自动挂载的一点研究和见解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2019/01/22/proxmox-cloud-init/">proxmox里使用cloud-init和一些笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2018/12/04/black-box-exporter/">prometheus的黑盒监控</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2018/11/24/how-to-use-kubeadm/">对于初入k8s和kubeadm的一些建议</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2018/11/06/onlyoffice/">一次docker镜像的解耦--onlyoffice</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018/11/05/10chars/">记录一次十字符病毒清理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span>
+            <a class="archive-post-title" href="/2018/10/27/create-kubeconfig/">生成kubeconfig常规的两种方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2018/10/12/prometheus-operator/">全手动部署prometheus-operator监控K8S集群以及一些坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2018/10/06/IngressController/">IngressController使用和它的高可用落地</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span>
+            <a class="archive-post-title" href="/2018/09/24/k8s-some-vpc-cluster/">跨VPC或者跨云供应商搭建K8S集群正确姿势</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2018/09/18/kubernetes-1-11-x-bin/">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span>
+            <a class="archive-post-title" href="/2018/08/03/Kubernetes_install_1.11.1/">Kubernetes v1.11.x HA全手动苦工安装教学</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2018/07/18/ecs-vip/">基于openstack的ecs上使用VIP</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2018/07/08/travis-sync-gcr-io/">利用travis同步gcr.io镜像到dockerhub</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2018/06/25/etcd-error/">记录一次线上k8s节点故障</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2018/06/03/kubernetes-s-job/">kubernetes's Job总结和实战以及坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2018/06/02/kubernetes-nodeSelector/">kubernetes的PodAffinity的不解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2018/05/05/Kubernetes_install/">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2018/04/29/kubernetes-configMap-mount/">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">使用管理网当作业务网keepalived VIP的心跳线</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2018/02/15/linux-tc/">Linux tc基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/05</span>
+            <a class="archive-post-title" href="/2018/02/05/docker-image-can-t-rm/">docker无法删除掉镜像的解决方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">慎用docker的--rm选项!!!</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">docker的一些概念</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span>
+            <a class="archive-post-title" href="/2017/12/24/docker%E5%AE%B9%E5%99%A8%E8%AE%BF%E9%97%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA/">docker容器访问宿主机</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/23</span>
+            <a class="archive-post-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">docker容器网络互联</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2017/07/25/linux-bridge/">centos桥接测试</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span>
+            <a class="archive-post-title" href="/2017/07/15/dd-make-boot-device/">使用 dd 利用 iso 文件制作 USB 启动盘</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2017/07/06/windows/">windows 笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2017/07/05/centos7-some-mirror/">centos7 的一些常见软件的安装 mirror</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2017/06/26/lua-list-all-upsteam/">lua列出所有upsteam</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2017/06/03/bash-complete/">bash自定义补全</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span>
+            <a class="archive-post-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">shell脚本的选项和参数处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2017/05/15/rpmbuild/">rpm包的制作笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2017/05/12/ssh-trust/">ssh互信</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2017/05/06/shell%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%8F%90%E5%8D%87%E6%95%88%E7%8E%87/">shell利用快捷键提升命令输入和编辑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2017/04/29/zabbixsetup/">个人zabbix安装和坑的解决</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span>
+            <a class="archive-post-title" href="/2017/04/26/%E6%AD%A3%E5%88%99%E9%9B%B6%E5%AE%BD%E6%96%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%B8%AA%E6%B3%A8%E6%84%8F%E7%82%B9/">正则零宽断言的一个注意点</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/25</span>
+            <a class="archive-post-title" href="/2017/04/25/%E8%BD%AC%E8%BD%BD-awk%E4%B8%ADRS-OFS-RS-ORS%E5%8C%BA%E5%88%AB%E4%BA%8E%E8%81%94%E7%B3%BB/">[转载]awk中RS,ORS,FS,OFS区别于联系</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/lvm-practice/">记录LVM和raid的练习</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/linux-partition-grow/">虚拟化扩容硬盘大小</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span>
+            <a class="archive-post-title" href="/2017/04/17/iot/">分享下自己做的外网控制硬件</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shell_process/">shell多进程并发执行</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shellsubstring/">shell的字符串截取</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2017/04/11/8266hexdownload/">8266模块的烧写和sdk的坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2017/04/09/armlnmp/">安卓安装linux并且源码编译安装搭建lnmp的坑和总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span>
+            <a class="archive-post-title" href="/2017/03/28/zombie-process/">Linux 僵尸进程处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2017/03/23/check-dhcp-or-static/">判断是否是 dhcp 获取ip的一个手段</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span>
+            <a class="archive-post-title" href="/2017/03/20/ftp-install/">vsftpd虚拟用户简单部署</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2017/03/15/lnmp/">源码编译安装lnmp</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span>
+            <a class="archive-post-title" href="/2017/02/26/ad/">Altium Designer里走线开窗和挖除铺铜还有一些技巧</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2017/02/12/wx00/">微信公众号接入自己服务器</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2017/02/02/lamp/">lamp环境搭建总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2017/01/08/tuling-wx/">微信公众号接入图灵机器人api</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2016 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span>
+            <a class="archive-post-title" href="/2016/11/13/cad/">cad</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2016/10/30/20161030/">记录下自己制作的led-vu</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2016/10/28/hello/">hello world</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="微信">
+                <span class="iconfont-archer">&#xe606;</span>
+                微信
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="diy">
+                <span class="iconfont-archer">&#xe606;</span>
+                diy
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                8266
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="总结">
+                <span class="iconfont-archer">&#xe606;</span>
+                总结
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipmi">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipmi
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CLP">
+                <span class="iconfont-archer">&#xe606;</span>
+                CLP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="k8s">
+                <span class="iconfont-archer">&#xe606;</span>
+                k8s
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Mismatch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Mismatch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Altium Designer">
+                <span class="iconfont-archer">&#xe606;</span>
+                Altium Designer
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ansible">
+                <span class="iconfont-archer">&#xe606;</span>
+                ansible
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="consul">
+                <span class="iconfont-archer">&#xe606;</span>
+                consul
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lnmp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lnmp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="安卓">
+                <span class="iconfont-archer">&#xe606;</span>
+                安卓
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kernel">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernel
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                prometheus
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="exporter">
+                <span class="iconfont-archer">&#xe606;</span>
+                exporter
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="boot">
+                <span class="iconfont-archer">&#xe606;</span>
+                boot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="grub">
+                <span class="iconfont-archer">&#xe606;</span>
+                grub
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cad">
+                <span class="iconfont-archer">&#xe606;</span>
+                cad
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tcp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tcp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="golang">
+                <span class="iconfont-archer">&#xe606;</span>
+                golang
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="centos6">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="chromedp">
+                <span class="iconfont-archer">&#xe606;</span>
+                chromedp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="chrony">
+                <span class="iconfont-archer">&#xe606;</span>
+                chrony
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubernetes">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubernetes
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cni-plugins">
+                <span class="iconfont-archer">&#xe606;</span>
+                cni-plugins
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="mips64le">
+                <span class="iconfont-archer">&#xe606;</span>
+                mips64le
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubeconfig">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeconfig
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="swap">
+                <span class="iconfont-archer">&#xe606;</span>
+                swap
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dlv">
+                <span class="iconfont-archer">&#xe606;</span>
+                dlv
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="adguardhome">
+                <span class="iconfont-archer">&#xe606;</span>
+                adguardhome
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dns">
+                <span class="iconfont-archer">&#xe606;</span>
+                dns
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Dockerfile">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dockerfile
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="e2fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                e2fsck
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                fsck
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepavlied">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepavlied
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ecs">
+                <span class="iconfont-archer">&#xe606;</span>
+                ecs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="xmrig">
+                <span class="iconfont-archer">&#xe606;</span>
+                xmrig
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="etcd">
+                <span class="iconfont-archer">&#xe606;</span>
+                etcd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fio">
+                <span class="iconfont-archer">&#xe606;</span>
+                fio
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="flannel">
+                <span class="iconfont-archer">&#xe606;</span>
+                flannel
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ftp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="go mod">
+                <span class="iconfont-archer">&#xe606;</span>
+                go mod
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="go">
+                <span class="iconfont-archer">&#xe606;</span>
+                go
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gobot">
+                <span class="iconfont-archer">&#xe606;</span>
+                gobot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="esp8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp8266
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hello world">
+                <span class="iconfont-archer">&#xe606;</span>
+                hello world
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="host-gw">
+                <span class="iconfont-archer">&#xe606;</span>
+                host-gw
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="mqtt">
+                <span class="iconfont-archer">&#xe606;</span>
+                mqtt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="原创">
+                <span class="iconfont-archer">&#xe606;</span>
+                原创
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="jira">
+                <span class="iconfont-archer">&#xe606;</span>
+                jira
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confluence">
+                <span class="iconfont-archer">&#xe606;</span>
+                confluence
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-controller-manager">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-controller-manager
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java">
+                <span class="iconfont-archer">&#xe606;</span>
+                java
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="springboot">
+                <span class="iconfont-archer">&#xe606;</span>
+                springboot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vip">
+                <span class="iconfont-archer">&#xe606;</span>
+                vip
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepalived">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalived
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ConfigMap">
+                <span class="iconfont-archer">&#xe606;</span>
+                ConfigMap
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="PodAffinity">
+                <span class="iconfont-archer">&#xe606;</span>
+                PodAffinity
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                kylin
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="arm64">
+                <span class="iconfont-archer">&#xe606;</span>
+                arm64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kylin
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="audit">
+                <span class="iconfont-archer">&#xe606;</span>
+                audit
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fs">
+                <span class="iconfont-archer">&#xe606;</span>
+                fs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nginx">
+                <span class="iconfont-archer">&#xe606;</span>
+                nginx
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="microsoft">
+                <span class="iconfont-archer">&#xe606;</span>
+                microsoft
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="graph">
+                <span class="iconfont-archer">&#xe606;</span>
+                graph
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="onedrive">
+                <span class="iconfont-archer">&#xe606;</span>
+                onedrive
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nodeport">
+                <span class="iconfont-archer">&#xe606;</span>
+                nodeport
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="usb-net">
+                <span class="iconfont-archer">&#xe606;</span>
+                usb-net
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="overlay">
+                <span class="iconfont-archer">&#xe606;</span>
+                overlay
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kernal">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernal
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="preseed">
+                <span class="iconfont-archer">&#xe606;</span>
+                preseed
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                Prometheus
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openstack">
+                <span class="iconfont-archer">&#xe606;</span>
+                openstack
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cloud-init">
+                <span class="iconfont-archer">&#xe606;</span>
+                cloud-init
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="python">
+                <span class="iconfont-archer">&#xe606;</span>
+                python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="containerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                containerd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepalive">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalive
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="shell">
+                <span class="iconfont-archer">&#xe606;</span>
+                shell
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="bash">
+                <span class="iconfont-archer">&#xe606;</span>
+                bash
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="skopeo">
+                <span class="iconfont-archer">&#xe606;</span>
+                skopeo
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ssh">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssh
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubelet">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubelet
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="systemd">
+                <span class="iconfont-archer">&#xe606;</span>
+                systemd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dockerhub">
+                <span class="iconfont-archer">&#xe606;</span>
+                dockerhub
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gcr.io">
+                <span class="iconfont-archer">&#xe606;</span>
+                gcr.io
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="api">
+                <span class="iconfont-archer">&#xe606;</span>
+                api
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ubuntu18">
+                <span class="iconfont-archer">&#xe606;</span>
+                ubuntu18
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="initrd">
+                <span class="iconfont-archer">&#xe606;</span>
+                initrd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tftp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="uos">
+                <span class="iconfont-archer">&#xe606;</span>
+                uos
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="x86">
+                <span class="iconfont-archer">&#xe606;</span>
+                x86
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openwrt">
+                <span class="iconfont-archer">&#xe606;</span>
+                openwrt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="zabbix">
+                <span class="iconfont-archer">&#xe606;</span>
+                zabbix
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="zombie">
+                <span class="iconfont-archer">&#xe606;</span>
+                zombie
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="正则">
+                <span class="iconfont-archer">&#xe606;</span>
+                正则
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="awk">
+                <span class="iconfont-archer">&#xe606;</span>
+                awk
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="EmuELEC">
+                <span class="iconfont-archer">&#xe606;</span>
+                EmuELEC
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ingress">
+                <span class="iconfont-archer">&#xe606;</span>
+                ingress
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="N1">
+                <span class="iconfont-archer">&#xe606;</span>
+                N1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cobra">
+                <span class="iconfont-archer">&#xe606;</span>
+                cobra
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hang">
+                <span class="iconfont-archer">&#xe606;</span>
+                hang
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cifs">
+                <span class="iconfont-archer">&#xe606;</span>
+                cifs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="http">
+                <span class="iconfont-archer">&#xe606;</span>
+                http
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lvs">
+                <span class="iconfont-archer">&#xe606;</span>
+                lvs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipvsadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipvsadm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-proxy">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-proxy
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="63s">
+                <span class="iconfont-archer">&#xe606;</span>
+                63s
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="timeout">
+                <span class="iconfont-archer">&#xe606;</span>
+                timeout
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lamp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lamp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nfc">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pm3">
+                <span class="iconfont-archer">&#xe606;</span>
+                pm3
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="coredns">
+                <span class="iconfont-archer">&#xe606;</span>
+                coredns
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openshift">
+                <span class="iconfont-archer">&#xe606;</span>
+                openshift
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ocp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ocp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="squashfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                squashfs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="timezone">
+                <span class="iconfont-archer">&#xe606;</span>
+                timezone
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="rpm">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="rpmbuild">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpmbuild
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="segfault">
+                <span class="iconfont-archer">&#xe606;</span>
+                segfault
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="suse">
+                <span class="iconfont-archer">&#xe606;</span>
+                suse
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="wireguard">
+                <span class="iconfont-archer">&#xe606;</span>
+                wireguard
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="raid">
+                <span class="iconfont-archer">&#xe606;</span>
+                raid
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubeadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeadm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="operator">
+                <span class="iconfont-archer">&#xe606;</span>
+                operator
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="日志">
+            <span class="iconfont-archer">&#xe60a;</span>
+            日志
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="闲搞">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲搞
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ipmi">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ipmi
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubernetes
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ansible">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ansible
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubelet">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubelet
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Auto cad">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Auto cad
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubeconfig">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeconfig
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="grub">
+            <span class="iconfont-archer">&#xe60a;</span>
+            grub
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="centos6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            centos6
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="openstack">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openstack
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="vsftp">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vsftp
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="go">
+            <span class="iconfont-archer">&#xe60a;</span>
+            go
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="version">
+            <span class="iconfont-archer">&#xe60a;</span>
+            version
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="panic">
+            <span class="iconfont-archer">&#xe60a;</span>
+            panic
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="gobot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            gobot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="闲聊">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲聊
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="iptables">
+            <span class="iconfont-archer">&#xe60a;</span>
+            iptables
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="admission">
+            <span class="iconfont-archer">&#xe60a;</span>
+            admission
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kube-controller-manager">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kube-controller-manager
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="keepalived">
+            <span class="iconfont-archer">&#xe60a;</span>
+            keepalived
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Job">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Job
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="lua">
+            <span class="iconfont-archer">&#xe60a;</span>
+            lua
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="microsoft">
+            <span class="iconfont-archer">&#xe60a;</span>
+            microsoft
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="openwrt">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openwrt
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="preseed">
+            <span class="iconfont-archer">&#xe60a;</span>
+            preseed
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="proxmox">
+            <span class="iconfont-archer">&#xe60a;</span>
+            proxmox
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="总结">
+            <span class="iconfont-archer">&#xe60a;</span>
+            总结
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="CI">
+            <span class="iconfont-archer">&#xe60a;</span>
+            CI
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Kylin">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Kylin
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ubuntu18">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ubuntu18
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="pxe">
+            <span class="iconfont-archer">&#xe60a;</span>
+            pxe
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="uos">
+            <span class="iconfont-archer">&#xe60a;</span>
+            uos
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="graph">
+            <span class="iconfont-archer">&#xe60a;</span>
+            graph
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="运维">
+            <span class="iconfont-archer">&#xe60a;</span>
+            运维
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="zombie">
+            <span class="iconfont-archer">&#xe60a;</span>
+            zombie
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="travis">
+            <span class="iconfont-archer">&#xe60a;</span>
+            travis
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="onedrive">
+            <span class="iconfont-archer">&#xe60a;</span>
+            onedrive
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="consul">
+            <span class="iconfont-archer">&#xe60a;</span>
+            consul
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="fstab">
+            <span class="iconfont-archer">&#xe60a;</span>
+            fstab
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="http">
+            <span class="iconfont-archer">&#xe60a;</span>
+            http
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="vxlan">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vxlan
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="coredns">
+            <span class="iconfont-archer">&#xe60a;</span>
+            coredns
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="node-cache">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node-cache
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kmem">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kmem
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="suse">
+            <span class="iconfont-archer">&#xe60a;</span>
+            suse
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="wireguard">
+            <span class="iconfont-archer">&#xe60a;</span>
+            wireguard
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubeadm">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeadm
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="LVM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            LVM
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://zhangguanzhang.github.io",
+        root: siteMetaRoot,
+        author: "Zhangguanzhang"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://unpkg.zhimg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+            <div class="site-search site-search-loading">
+    <div class="algolia-popup popup">
+        <div class="algolia-search">
+            <div class="algolia-search-input-icon">
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="algolia-search-input" id="algolia-search-input"></div>
+            <div class="popup-btn-close">
+                <i class="iconfont-archer">&#xe609;</i>
+            </div>
+        </div>
+
+        <div class="algolia-results">
+            <div id="algolia-stats" class="algolia-stats"></div>
+            <div id="algolia-hits"></div>
+            <div id="algolia-pagination" class="algolia-pagination"></div>
+        </div>
+    </div>
+</div>
+
+            <script src="/scripts/search.js?v=20211217" defer></script>
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

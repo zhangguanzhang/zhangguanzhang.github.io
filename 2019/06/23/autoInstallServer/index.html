@@ -1,0 +1,5571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Zhangguanzhang">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Zhangguanzhang">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="记录生活点滴">
+    <meta name="description" content="修改镜像以及编程实现了从服务器买来上电就会自动化安装指定 ip 和 hostname 的步骤（包含了自动做raid）,全程非交互 先讲讲事情的由来，新节点建设，几百台服务器得人为安装系统，虽说服务器有带外 ipmi，但是 raid 和安装系统时候 hostname 和ip啥的得去配置。系统镜像还是修改过的，安装界面的菜单自动应答通用的流程还不行，于是决定看看能不能研究出来。想要达到的一个效果就是：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拟定excel表格服务器自动按照表格配置信息和安装的实现过程">
+<meta property="og:url" content="http://zhangguanzhang.github.io/2019/06/23/autoInstallServer/">
+<meta property="og:site_name" content="Zhangguanzhang">
+<meta property="og:description" content="修改镜像以及编程实现了从服务器买来上电就会自动化安装指定 ip 和 hostname 的步骤（包含了自动做raid）,全程非交互 先讲讲事情的由来，新节点建设，几百台服务器得人为安装系统，虽说服务器有带外 ipmi，但是 raid 和安装系统时候 hostname 和ip啥的得去配置。系统镜像还是修改过的，安装界面的菜单自动应答通用的流程还不行，于是决定看看能不能研究出来。想要达到的一个效果就是：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/001.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/002.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/003.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/004.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/005.png">
+<meta property="og:image" content="https://linuxgeeks.github.io/2018/01/22/162310-Kickstart%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%E5%AE%89%E8%A3%85CentOS6.8/pxe1.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/006.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/007.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/008.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/009.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/010.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/011.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/012.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/013.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/014.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/015.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/016.png">
+<meta property="article:published_time" content="2019-06-23T19:11:10.000Z">
+<meta property="article:modified_time" content="2019-06-23T19:11:10.000Z">
+<meta property="article:author" content="Zhangguanzhang">
+<meta property="article:tag" content="grub">
+<meta property="article:tag" content="initrd">
+<meta property="article:tag" content="raid">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/001.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>拟定excel表格服务器自动按照表格配置信息和安装的实现过程 · zhangguanzhang&#39;s Blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://unpkg.zhimg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://unpkg.zhimg.com/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+        <script>
+            var hits = JSON.parse('{"per_page":10}')
+            var labels = JSON.parse('{"input_placeholder":"Search for Posts","hits_empty":"We did not find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}')
+
+            var algolia = {
+                applicationID: '3RNEGEC262',
+                apiKey: '6403a5f93c8554eb5b5ed2ad42b9693e',
+                indexName: 'blog',
+                hits: hits,
+                labels: labels
+            }
+        </script>
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Zhangguanzhang" type="application/atom+xml">
+</head>
+
+    <script src="https://unpkg.zhimg.com/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>zhangguanzhang's Blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">zhangguanzhang&#39;s Blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                拟定excel表格服务器自动按照表格配置信息和安装的实现过程
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="raid">raid</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">8.1k</span>阅读时长: <span class="post-count reading-time">36 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2019/06/23</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://unpkg.zhimg.com/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>修改镜像以及编程实现了从服务器买来上电就会自动化安装指定 ip 和 hostname 的步骤（包含了自动做raid）,全程非交互</p>
+<p>先讲讲事情的由来，新节点建设，几百台服务器得人为安装系统，虽说服务器有带外 ipmi，但是 raid 和安装系统时候 hostname 和ip啥的得去配置。系统镜像还是修改过的，安装界面的菜单自动应答通用的流程还不行，于是决定看看能不能研究出来。<br>想要达到的一个效果就是：服务器送货到节点后，一个人带着电脑和设备的标签，高主频高io啥的分类好后贴上标签，按照贴的写一个所有设备应该配置的信息的excel:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hostname	  序列号	         IPMI IP/mask	IPMI 网关	管理IP/MASK	管理网关	  机器型号</span><br><span class="line">test1   	210200A00QH18500xxxx	10.0.23.34/24	10.0.23.1	10.0.23.41/24	10.0.23.1	 xxx</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+
+<p>然后设备接网线上电后全部自动做raid和安装系统和配置好自己应该配置的那个ip和hostname(而不是装完系统后dhcp上线，而且服务器最少都是八个网口，四个光口和四个电口)</p>
+<p>文章不太会发图片，因为很多中途看的一些资料都过时了导致我走了弯路，以及没有稳定图床，所以我会把图放在我 github 上在文章里引入，如果不能访问 github 可能会看不到图。而且服务器安装系统界面那个终端里尝试的命令里一些文本输出无法复制出来，因为没网(虽然后面理解了手动配置了)<br>我之前对于kickstart和pxe啥的都是看过没实践过，同事说他整pxe和raid的部分，但是后面基本他都太忙了，我就先整镜像的自动应答(打算整出来了他还没整出pxe我就接手试试)，镜像是基于ubuntu修改的。<br>先说说ubuntu的安装自动应答，kickstart是red hat开发的。ubuntu的安装界面是一个debian-installer的二进制文件运行进程提供的选择交互安装界面: </p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/001.png" alt="menu"><br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/002.png" alt="choose"></p>
+<p>安装主要麻烦的是这个交互得频繁人为去输入，ubuntu 这个是叫 preseed 而不是 kickstart，经过多方查阅资料，发现安装的菜单定义文件可以在安装完系统后<code>/var/log/machineInstaller/cdebconf/templates.dat</code>找到(<a target="_blank" rel="noopener" href="https://www.debian.org/releases/stable/amd64/apbs03.html.zh-cn">https://www.debian.org/releases/stable/amd64/apbs03.html.zh-cn</a> 该文档说明了也可能安装完会删除)</p>
+<p>找不到的话使用命令查找<code>find /  -not \( -path /proc -prune \) -not \(  -path /var/lib/docker -prune \)  -type f -name templates.dat</code>在ubuntu18.04.2会得出两个文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/var/log/installer/cdebconf/templates.dat</span><br><span class="line">/var/cache/debconf/templates.dat</span><br></pre></td></tr></table></figure>
+
+<p>第一个文件是菜单文件，第二个是相关的值</p>
+<p>对于上面那个选择的界面，我们可以用grep根据关键字找到如下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ grep -6 SSV /var/log/machineInstaller/cdebconf/templates.dat</span><br><span class="line">...</span><br><span class="line">Name: xxx-xxx-selection/install</span><br><span class="line">Type: multiselect</span><br><span class="line">Choices: CVM - Cloud Virtualization Manager, CIC - Cloud Intelligence Center, SSV - User Self-Service Portal</span><br><span class="line">Description: Please select install components(press the [Space Bar] to select): </span><br><span class="line">Extended_description: If you choose CVM, CVM will be installed. If you choose CIC, CIC will be installed. If you choose SSV, SSV will be installed. CVK will be installed by default. If you select CVM/CIC, CVM/CIC should be licensed from supplier before running.</span><br><span class="line">Choices-C: CVM, CIC, SSV</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>这个就是菜单来源，查阅资料<br><a target="_blank" rel="noopener" href="https://www.debian.org/releases/stable/amd64/apb.html.zh-cn">https://www.debian.org/releases/stable/amd64/apb.html.zh-cn</a><br><a target="_blank" rel="noopener" href="http://ftp.gnome.org/pub/debian-meetings/2006/debconf6/slides/Debian_installer_workshop-Frans_Pop/paper/index.html">http://ftp.gnome.org/pub/debian-meetings/2006/debconf6/slides/Debian_installer_workshop-Frans_Pop/paper/index.html</a><br>发现debian系列的自动安装都是使用preseed文件，里面写法如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;owner&gt; &lt;question name&gt; &lt;question type&gt; &lt;value&gt;</span><br></pre></td></tr></table></figure>
+
+<p>owner基本上都是debian-installer，直接写d-i即可，而为<code>&lt;question type&gt;</code>下面这些</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ grep -P &#x27;^Type&#x27; /var/log/machineInstaller/cdebconf/templates.dat | sort -u</span><br><span class="line">Type: boolean</span><br><span class="line">Type: detect-keyboard</span><br><span class="line">Type: entropy</span><br><span class="line">Type: error</span><br><span class="line">Type: multiselect</span><br><span class="line">Type: note</span><br><span class="line">Type: password</span><br><span class="line">Type: select</span><br><span class="line">Type: string</span><br><span class="line">Type: terminal</span><br><span class="line">Type: text</span><br><span class="line">Type: title</span><br></pre></td></tr></table></figure>
+
+<p>各个type见文档 <a target="_blank" rel="noopener" href="http://www.fifi.org/doc/debconf-doc/tutorial.html">http://www.fifi.org/doc/debconf-doc/tutorial.html</a> 里的<code>Table 1. Available data types</code><br>例如上面第二张图那个假设我们安装的时候要选 cvm 可以写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d-i xxx-xxx-selection/install select CVM</span><br></pre></td></tr></table></figure>
+
+<p>iso解开的目录<code>/preseed</code>下有一堆seed文件可以参考，preseed文件会写了的话我们得修改内核参数让安装器使用我们的preseed文件应答。<br>一种方法就是安装界面之前会有个选择内核啥的，我们可以在挂载iso开机的时候赶紧按tab或者e修改内核参数，也可以直接改改启动菜单里的参数</p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/003.png" alt="boot-menu"></p>
+<p>菜单的内容是在镜像的<code>isolinux/txt.cfg</code>里:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">default install  # 默认启动的是 &#x27;label install&#x27; 中标记的启动内核</span><br><span class="line">prompt 1      # 开启会显示命令行&#x27;boot: &#x27;提示符。prompt值为0时则不提示，将会直接启动&#x27;default&#x27;参数中指定的内容。</span><br><span class="line">timeout 200   # 超时会自动选择default选择</span><br><span class="line">label install</span><br><span class="line">  menu label ^Install VMC</span><br><span class="line">  kernel /install/vmlinuz</span><br><span class="line">  append DEBCONF_PRIORITY=critical preseed/file=/cdrom/preseed/ubuntu-server.seed vga=788 debian-installer/locale=en_US keyboard-configuration/layoutcode=us console-setup/ask_detect=false console-setup/layoutcode=us localechooser/translation/warn-light=true localechooser/translation/warn-severe=true initrd=/install/initrd.gz quiet --</span><br><span class="line">label cloud</span><br><span class="line">  menu label ^Enlist system with Ubuntu Orchestra Server</span><br><span class="line">  kernel /install/vmlinuz</span><br><span class="line">  append  modules=cobbler-enlist-udeb vga=788 initrd=/install/initrd.gz quiet --</span><br><span class="line">label check</span><br><span class="line">  menu label ^Check disc for defects</span><br><span class="line">  kernel /install/vmlinuz</span><br><span class="line">  append  MENU=/bin/cdrom-checker-menu vga=788 initrd=/install/initrd.gz quiet --</span><br><span class="line">label memtest</span><br><span class="line">  menu label Test ^memory</span><br><span class="line">  kernel /install/mt86plus</span><br><span class="line">label hd</span><br><span class="line">  menu label ^Boot from first hard disk</span><br><span class="line">  localboot 0x80</span><br></pre></td></tr></table></figure>
+
+<p>其中的append段是传递给vmlinuz的内核参数，最后的<code>--</code>后面是传递给后续安装完的内核的参数，<code>preseed/file=</code>后面可以写cdrom，至于vmlinuz和initrd是干啥用的详细可以看看下面的<br><a target="_blank" rel="noopener" href="https://blog.51cto.com/smileyouth/1268810">https://blog.51cto.com/smileyouth/1268810</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/yangxuan12580/article/details/51372632">https://blog.csdn.net/yangxuan12580/article/details/51372632</a></p>
+<p>简单来讲就是BIOS加电自检 –&gt;  运行isolinux目录下面的isolinux.bin文件，这个isolinux.bin文件根据isolinux.cfg文件的选项来加载内核vmlinuz和initrd.img文件，initrd.img文件会在内存中生成一个虚拟的linux操作系统，为安装过程提供一个安装环境 -&gt; 执行initrd这个rootfs的&#x2F;init<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/004.png" alt="initrd-init"></p>
+<p>这个initrd在安装的时候可以ctrl+shift+f2进到终端里，查看了下进程发现了好像是个busybox，下面一篇文章是busybox的init干了些啥的文章<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/yangxuan12580/article/details/51372632">https://blog.csdn.net/yangxuan12580/article/details/51372632</a></p>
+<p>简单的看了下里面shell的调用流程找到了这个，append的参数会在&#x2F;proc&#x2F;cmdline里，另外ks或者preseed文件不一定需要放在cdrom里，也可以网络上，如果是网络的话在获取之前会尝试以所有的网卡dhcp获取ip，获取到了就会去下载<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/005.png" alt="initrd-init"></p>
+<p>最终实现了自动应答(这里先不追求每个机器配置的ip应该不通)，然后同事告诉我们新节点的镜像后续用centos，我就放下了ubuntu，自己准备摸索下centos的</p>
+<p>后面按照这个文章了解了下pxe<br><a target="_blank" rel="noopener" href="https://linuxgeeks.github.io/2018/01/22/162310-Kickstart%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%E5%AE%89%E8%A3%85CentOS6.8/">https://linuxgeeks.github.io/2018/01/22/162310-Kickstart%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%E5%AE%89%E8%A3%85CentOS6.8/</a></p>
+<p><img src="https://linuxgeeks.github.io/2018/01/22/162310-Kickstart%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%E5%AE%89%E8%A3%85CentOS6.8/pxe1.jpg" alt="pxe"></p>
+<p>pxe启动步骤就是如上图，需要配置一个tftp，让类似于安装界面安装包的时候从tftp上去下载，vmlinuz和initrd均是从tftp上下载</p>
+<p>步骤比较简单，然后用vmware开两台虚机测试了下可行，然后主要是应答，我就直接拿物理服务器nfs挂载centos的iso去看看centos的自动应答咋整。<br>服务器是华三的，像dell之类的在服务器没系统的时候有cli可以外部去设置bios一些参数和做raid，华三没有。华三基本都是要人为交互。远程装机是华三的ipmi起了个web页面，页面上能获取基本信息和设置远程<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/006.png" alt="hdm"><br>对于这种web，华三叫hdm，dell叫idrac，hpe叫iLO。上面可以远程，设置下一次从啥设备启动，控制电源啥的。实际上ipmi的硬件还提供了ssh，ssh上可以敲命令获取和设置服务器的信息，各个厂商的命令具体的可能不一样，这个ssh叫做SMASH CLP标准<br>初期想到的思路是:</p>
+<ul>
+<li>1.人为清点服务器，写好所有服务器的序列号，ipmi和系统应该配置的信息，然后服务器贴好hostname的标签上架好布好线</li>
+<li>2.服务器ipmi的硬件网口接网线后会dhcp上线随机分配一个ip</li>
+<li>3.写一个cli或者脚本ssh交换机获取arp信息。扫描机器序列号是否在excel里(这步防止全部操作了不必要的服务器，后期也可以判断加扩展)，是就用SMASH CLP设置ipmi网络信息设置从nfs指定iso启动，并且在excel里记录服务器的四个电口mac地址</li>
+<li>4.启动的iso里指定了kickstart文件，然后服务器在安装界面出来之前会dhcp获取ip去下载ks文件，而dhcp上线的mac就是四张电口的mac地址之一。获取ip是每个网口尝试去发dhcp请求，如下图实际上这个物理机我只连线了一个电口，电口网卡名为enp61s0f2，获取到了ip就会下载ks文件，那个speed相关就是curl下载的进度输出。<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/007.png" alt="initrd-init"></li>
+<li>5.dhcp得到ip后从我这web拿ks文件，我这web返回ks文件之前那客户端的来源ip去连接交换机查客户端的mac地址(因为此时对于每一台服务器的来源ip不是固定的，mac地址是固定的)，查到mac地址后在excel看来源mac地址是那行确定了是哪个机器，返回渲染的ks文件（文件里渲染了ip和hostname之类的信息），服务器会自动安装和设置</li>
+</ul>
+<p>主要是从第三部开始实现，SMASH CLP就是ssh执行命令，里面路径信息得自己去找，具体的一些找过的资料可以看我另一个文章里的链接 <a href="https://zhangguanzhang.github.io/2019/06/12/CLP/">https://zhangguanzhang.github.io/2019/06/12/CLP/</a> 。<br>CLP非常麻烦，寻思着有没有hdm的api，询问了社区和相关人员确定了没有api文档，只能浏览器界面上点击然后F12打开network抓包找接口。http请求用go的<code>net/http</code>包，excel用的<code>github.com/360EntSecGroup-Skylar/excelize/v2</code>国人开发的包，主要是由自己的example文档界面 <a target="_blank" rel="noopener" href="https://xuri.me/excelize/zh-hans/utils.html#CellNameToCoordinates">https://xuri.me/excelize/zh-hans/utils.html#CellNameToCoordinates</a> 。ssh操作交换机找了下找到了一个大佬写的包，把其中连接交换机执行命令的部分给扣出来使用，但是字符串提取<code>dis arp</code>的纯ip和mac部分文本遇到了诡异的问题，想着按照<code>\n</code>去split成切片然后去掉前面两个和最后一个就是纯arp列表了，然后每行按照空格split下就能提取到ip和mac了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">   Type: S-Static    D-Dynamic    O-Openflow   R-Rule   I-Invalid</span><br><span class="line">IP address      MAC address    SVLAN/VSI  Interface/Link ID        Aging Type </span><br><span class="line">10.254.250.250  dcda-80fb-b321 --         GE1/0/0                  10    D    </span><br><span class="line">61.181.149.xxx  4c09-b4f4-c7f1 --         GE1/0/2                  20    D    </span><br><span class="line">10.0.6.253      a80c-0d00-26d4 --         GE1/0/3                  16    D    </span><br><span class="line">10.101.1.2      3cf5-cc94-155a 20         GE1/0/4                  8     D    </span><br><span class="line">&lt;FW-IT-TJ&gt;</span><br></pre></td></tr></table></figure>
+
+<p>但是当时打印了是split后切片元素值不对，以为是库的问题给大佬发了好友请求，想咨询下大佬，后续自己找到问题了，是因为交换机的换行是<code>\r</code>，这里就不放代码了。后续加上大佬交流了下，把整个思路给他说了下，他说没必要ssh交换机，你只是获取信息用snmp就行了。之前对于snmp也是只知道有个mib库和oid啥的，具体干啥的不清楚。查阅了相关资料明白了 <a target="_blank" rel="noopener" href="https://blog.csdn.net/zqixiao_09/article/details/77127448">https://blog.csdn.net/zqixiao_09/article/details/77127448</a><br>我这里办公网的交换机没密码连不上，连了个防火墙，这部分是一样的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;FW-IT-TJ&gt;dis current-configuration | include snmp</span><br><span class="line"> snmp-agent</span><br><span class="line"> snmp-agent local-engineid 800063A28088DF9E7356xxxxxxxx</span><br><span class="line"> snmp-agent community read public</span><br><span class="line"> snmp-agent sys-info version v2c v3 </span><br><span class="line">&lt;FW-IT-TJ&gt;</span><br></pre></td></tr></table></figure>
+
+<p>现在来讲所有的网络设备都支持snmp ，协议版本号都是v2居多，v3认证挺严格的一般用的太少。<br>v2协议认证非常简单，snmp协议是161端口，udp和tcp均可，我们可以安装一个snmpwalk命令测试下，<code>community read</code>后面的字符串就是v2协议下认证的口令，默认是<code>public</code>。snmpwalk连接格式为下面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmpwalk -v&lt;协议版本&gt; -c &lt;community string&gt; &lt;网络设备的登陆ip&gt;        &lt;对象标识符,也就是oid&gt;</span><br></pre></td></tr></table></figure>
+
+<p>协议版本号为 1|2c|3，我们用2就写2c</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snmpwalk -v2c -c public 10.0.23.1     .</span><br></pre></td></tr></table></figure>
+
+<p>命令输出的信息会非常多，因为我们的oid写的是一个点，oid实际上就是一个mib树的路径<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/008.png" alt="mib"></p>
+<p>比如我们要查询系统信息，就是左下角，oid为.1.3.6.1.2.1.1，walk一下测试看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ snmpwalk -v2c -c public 10.0.23.1          .1.3.6.1.2.1.1</span><br><span class="line">SNMPv2-MIB::sysDescr.0 = STRING: H3C Comware Platform Software, Software Version 7.1.070, Release 2510P02</span><br><span class="line">H3C S6800-54QF</span><br><span class="line">Copyright (c) 2004-2017 New H3C Technologies Co., Ltd. All rights reserved.</span><br><span class="line">SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.25506.1.1733</span><br><span class="line">DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (1045202613) 120 days, 23:20:26.13</span><br><span class="line">SNMPv2-MIB::sysContact.0 = STRING: New H3C Technologies Co., Ltd.</span><br><span class="line">SNMPv2-MIB::sysName.0 = STRING: IT_S6800-54QF</span><br><span class="line">SNMPv2-MIB::sysLocation.0 = STRING: Hangzhou, China</span><br><span class="line">SNMPv2-MIB::sysServices.0 = INTEGER: 78</span><br></pre></td></tr></table></figure>
+
+<p>这些基本都是通用的，遵循着上图的那个树，但是具体的信息好像得看厂家的设计，例如arp在ip下面，搜索了下华三交换机的arp oid为<code>.1.3.6.1.2.1.4.22.1.2</code>。<br>然后搜索了下go的snmp库，用的gosnmp这个库，后续写cli的时候指定了snmp，ip，community字符等选项。测试了下发现实际上写错误信息也没报错无法连接，看了newClient的时候缺省是udp传输，改成tcp的也不行，于是想着先看看能不能oid获取到交换机信息来判断连接信息传入正确，也就是用上面的systeminfo的oid。<br>然后http api设置服务器下一次以uefi和CDROM启动，挂载我启动的nfs上的iso也写出来了。这个时候主机组那边的iso，我用的官方centos先测，还没做好启动后进入安装界面<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/009.png" alt="install-menu"></p>
+<p>按e编辑修改参数加入ks文件，这个ks的web是我用虚机nginx搭建的，这里编辑可以防止去修改iso改菜单加参数。因为我笔记本偶尔wifi，偶尔网线，我虚机是桥接的ip会变化，所以改镜像很麻烦，这里我直接e或者tab编辑手写参数先测试。总之实现的流程是这样:</p>
+<ul>
+<li>1.人为清点服务器，写好所有服务器的序列号，ipmi和系统应该配置的信息，然后服务器贴好hostname的标签上架好布好线</li>
+<li>2.服务器ipmi的硬件网口接网线后会dhcp上线随机分配一个ip</li>
+<li>3.cli snmp交换机获取arp信息。扫描机器序列号是否在excel里(这步防止全部操作了不必要的服务器，后期也可以判断加扩展)，是就用http api设置从nfs指定iso启动，并且在excel里记录服务器的四个电口mac地址，并且设置ipmi的网络信息（因为此时的ipmi硬件是dhcp上线的，不符合表格里的最终设置ip）</li>
+<li>4.启动的iso是修改过的，里面参数里指定了kickstart文件，然后服务器在安装界面出来之前会dhcp获取ip去下载ks文件，文件的url是我的web server，返回ks文件之前会查询</li>
+<li>5.dhcp得到ip后从我这web拿ks文件，我这web返回ks文件之前那客户端的来源ip去连接交换机查客户端的mac地址(因为此时对于每一台服务器的来源ip不是固定的，mac地址是固定的)，查到mac地址后在excel看来源mac地址是那行确定了是哪个机器，返回渲染的ks文件（文件里渲染了ip和hostname之类的信息），服务器会自动安装和设置</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/010.png" alt="install-menu"></p>
+<p>ks里返回前是用go的<code>html/tempalte</code>渲染的，模板部分是下面的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;if and .IP .Mask .Gateway&#125;&#125;</span><br><span class="line">network  --bootproto=static --device=enp61s0f2 --ip &#123;&#123;.IP&#125;&#125; --netmask &#123;&#123;.Mask&#125;&#125; --gateway &#123;&#123;.Gateway&#125;&#125; --onboot=yes</span><br><span class="line">&#123;&#123;else&#125;&#125;</span><br><span class="line">network  --bootproto=dhcp --device=enp61s0f2 --onboot=yes --ipv6=auto --no-activate</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br><span class="line">network  --hostname=&#123;&#123;if .Hostname &#125;&#125;&#123;&#123;.Hostname&#125;&#125;&#123;&#123;else&#125;&#125;&#123;&#123;.Mac&#125;&#125;&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个时候实现的cli分了阶段，初次是扫描交换机扫描出在表格里的服务器，也就是上面图的H后面的列信息获取了写到excel里</p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/011.png" alt="scan"></p>
+<p>因为我excel里只有我那台测试机器，办公网里实际上还有其他的服务器，由于他们的序列号不在excel里所以不会被填入到excel里和设置启动啥的。第二阶段就是cli启动http让机器获取ks文件，现在其实每个机器返回不同的ks文件都解决了，但是raid还是解决不了。</p>
+<p>raid部分查阅了挺多的资料的，因为华三的ipmi没有cli连接方式去设置raid，初期搜索的关键词都是uefi shell做raid，找到的资料都是其他厂商的，例如hp的有efi shell(可以在启动顺序选择uefi shell之类的进入)里做raid的脚本，efi看了下需要c去编程<br><a target="_blank" rel="noopener" href="https://www.manualshelf.com/manual/hp/hp-z420-workstation/creating-raid-arrays-in-the-efi-shell-white-paper/page-3.html">https://www.manualshelf.com/manual/hp/hp-z420-workstation/creating-raid-arrays-in-the-efi-shell-white-paper/page-3.html</a><br><a target="_blank" rel="noopener" href="https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c03886480&amp;docLocale=zh_CN">https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c03886480&amp;docLocale=zh_CN</a><br><a target="_blank" rel="noopener" href="https://support.hpe.com/hpsc/doc/public/display?docId=c04398273">https://support.hpe.com/hpsc/doc/public/display?docId=c04398273</a><br><a target="_blank" rel="noopener" href="http://h17007.www1.hpe.com/docs/iss/proliant_uefi/UEFI_Moonshot_103117/s_sysconfig_attrib.html">http://h17007.www1.hpe.com/docs/iss/proliant_uefi/UEFI_Moonshot_103117/s_sysconfig_attrib.html</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/thewayma/article/details/4588182">https://blog.csdn.net/thewayma/article/details/4588182</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/lizhihua0925/article/details/53198483">https://blog.csdn.net/lizhihua0925/article/details/53198483</a></p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/012.png" alt="uefi-menu"></p>
+<p>uefi启动的话我们按e进入编辑界面发现路径为图里的，我们打开镜像发现了这些文件，hp在efi shell界面的配置raid是因为他们专门的人员去开发了下面图里类似的xxx.efi文件</p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/013.png" alt="uefi-iso"><br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/014.png" alt="uefi-ls"></p>
+<p>后续搜索资料无意中搜到了个pxe自动做raid的文章: <a target="_blank" rel="noopener" href="https://blog.csdn.net/lizhihua0925/article/details/53198483">https://blog.csdn.net/lizhihua0925/article/details/53198483</a><br>这个文章帮助了我，安装界面的时候就是一个在跑着的系统，文章里是把阵列命令加到了镜像里，这个跑着的系统虽然不是最终系统，但是我们可以在kickstart的%pre阶段创建出raid。然后我测试的物理机安装了系统后把storcli传进去获取不到，询问了存储同事说可以用arcconf，最后自己摸索出了一些信息。</p>
+<p>一般服务器对应的为这些cli</p>
+<ul>
+<li>IBM(MegaCli) 已经被storcli整合了，LSI控制器的阵列卡均可以使用storcli，部分dell的R系列也是megaraid啥的，应该也可以用strocli</li>
+<li>HP(hpacucli)</li>
+<li>Adaptec(arcconf)</li>
+<li>还有其他的cli，可以去这篇文章看看<a target="_blank" rel="noopener" href="https://blog.51cto.com/1130739/1771506">https://blog.51cto.com/1130739/1771506</a></li>
+</ul>
+<p>如果是要下载storcli可以去博通官网<a target="_blank" rel="noopener" href="https://www.broadcom.com搜索sotrcli下载`latest/">https://www.broadcom.com搜索sotrcli下载`Latest</a> MegaRAID Storcli&#96;</p>
+<p>其他的厂商就不知道啥命令了，大家自行摸索，我这里查到是<code>Adaptec</code>的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ dmesg | grep -i raid  </span><br><span class="line">[    4.058107] Adaptec aacraid driver 1.2.1[50877]-custom</span><br></pre></td></tr></table></figure>
+
+<p>arcconf安装在yum源里是没有的，Adaptec现在改名为Microsemi，下载arcconf的话去官网 <a target="_blank" rel="noopener" href="https://storage.microsemi.com/en-us/downloads/">https://storage.microsemi.com/en-us/downloads/</a> 进所有产品-&gt;<code>Adaptec SCSI RAID</code> -&gt; <code>Adaptec Series 8 SAS/SATA 12 Gb</code>  RAID <code>Storage Manager Downloads</code> -&gt; <code> Downloads  Microsemi Adaptec ARCCONF Command Line Utility v3.01.23531</code></p>
+<p>里面有rpm包安装了即可， 下面是我这台测试的物理机安装了后的操作，查看物理卷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line">$ arcconf getconfig 1 pd</span><br><span class="line">Controllers found: 1</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Physical Device information</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">      Device #0</span><br><span class="line">         Device is a Hard drive</span><br><span class="line">         State                              : Online</span><br><span class="line">         Block Size                         : 512 Bytes</span><br><span class="line">         Supported                          : Yes</span><br><span class="line">         Programmed Max Speed               : SAS 12.0 Gb/s</span><br><span class="line">         Transfer Speed                     : SAS 12.0 Gb/s</span><br><span class="line">         Reported Channel,Device(T:L)       : 0,0(0:0)</span><br><span class="line">         Reported Location                  : Enclosure 0, Slot 0(Connector 0)</span><br><span class="line">         Reported ESD(T:L)                  : 2,0(0:0)</span><br><span class="line">         Vendor                             : SEAGATE</span><br><span class="line">         Model                              : ST600MM0208</span><br><span class="line">         Firmware                           : N001</span><br><span class="line">         Serial number                      : W0M0P1CK0000E8228T49</span><br><span class="line">         World-wide name                    : 5000C500A13EBBC0</span><br><span class="line">         Reserved Size                      : 956312 KB</span><br><span class="line">         Used Size                          : 571391 MB</span><br><span class="line">         Unused Size                        : 1 MB</span><br><span class="line">         Total Size                         : 572325 MB</span><br><span class="line">         Write Cache                        : Disabled (write-through)</span><br><span class="line">         FRU                                : None</span><br><span class="line">         S.M.A.R.T.                         : No</span><br><span class="line">         S.M.A.R.T. warnings                : 0</span><br><span class="line">         Power State                        : Full rpm</span><br><span class="line">         Supported Power States             : Full rpm,Powered off</span><br><span class="line">         SSD                                : No</span><br><span class="line">         Temperature                        : 20 C/ 68 F </span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">      Device Phy Information                </span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">         Phy #0</span><br><span class="line">            PHY Identifier                  : 0</span><br><span class="line">            SAS Address                     : 5000C500A13EBBC1</span><br><span class="line">            Attached PHY Identifier         : 3</span><br><span class="line">            Attached SAS Address            : 560DA833FB704000</span><br><span class="line">         Phy #1</span><br><span class="line">            PHY Identifier                  : 1</span><br><span class="line">            SAS Address                     : 5000C500A13EBBC2</span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">      Runtime Error Counters                </span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">         Hardware Error Count               : 0</span><br><span class="line">         Medium Error Count                 : 0</span><br><span class="line">         Parity Error Count                 : 0</span><br><span class="line">         Link Failure Count                 : 0</span><br><span class="line">         Aborted Command Count              : 0</span><br><span class="line">         SMART Warning Count                : 0</span><br><span class="line"></span><br><span class="line">      Device #1</span><br><span class="line">         Device is a Hard drive</span><br><span class="line">         State                              : Online</span><br><span class="line">         Block Size                         : 512 Bytes</span><br><span class="line">         Supported                          : Yes</span><br><span class="line">         Programmed Max Speed               : SAS 12.0 Gb/s</span><br><span class="line">         Transfer Speed                     : SAS 12.0 Gb/s</span><br><span class="line">         Reported Channel,Device(T:L)       : 0,1(1:0)</span><br><span class="line">         Reported Location                  : Enclosure 0, Slot 1(Connector 0)</span><br><span class="line">         Reported ESD(T:L)                  : 2,0(0:0)</span><br><span class="line">         Vendor                             : SEAGATE</span><br><span class="line">         Model                              : ST600MM0208</span><br><span class="line">         Firmware                           : N001</span><br><span class="line">         Serial number                      : W0M0MRP60000E8229ZTR</span><br><span class="line">         World-wide name                    : 5000C500A13E6E5C</span><br><span class="line">         Reserved Size                      : 956312 KB</span><br><span class="line">         Used Size                          : 571391 MB</span><br><span class="line">         Unused Size                        : 1 MB</span><br><span class="line">         Total Size                         : 572325 MB</span><br><span class="line">         Write Cache                        : Disabled (write-through)</span><br><span class="line">         FRU                                : None</span><br><span class="line">         S.M.A.R.T.                         : No</span><br><span class="line">         S.M.A.R.T. warnings                : 0</span><br><span class="line">         Power State                        : Full rpm</span><br><span class="line">         Supported Power States             : Full rpm,Powered off</span><br><span class="line">         SSD                                : No</span><br><span class="line">         Temperature                        : 20 C/ 68 F </span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">      Device Phy Information                </span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">         Phy #0</span><br><span class="line">            PHY Identifier                  : 0</span><br><span class="line">            SAS Address                     : 5000C500A13E6E5D</span><br><span class="line">            Attached PHY Identifier         : 2</span><br><span class="line">            Attached SAS Address            : 560DA833FB704000</span><br><span class="line">         Phy #1</span><br><span class="line">            PHY Identifier                  : 1</span><br><span class="line">            SAS Address                     : 5000C500A13E6E5E</span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">      Runtime Error Counters                </span><br><span class="line">      ----------------------------------------------------------------</span><br><span class="line">         Hardware Error Count               : 0</span><br><span class="line">         Medium Error Count                 : 0</span><br><span class="line">         Parity Error Count                 : 0</span><br><span class="line">         Link Failure Count                 : 0</span><br><span class="line">         Aborted Command Count              : 0</span><br><span class="line">         SMART Warning Count                : 0</span><br><span class="line"></span><br><span class="line">      Device #2</span><br><span class="line">         Device is an Enclosure Services Device</span><br><span class="line">         Reported Channel,Device(T:L)       : 2,0(0:0)</span><br><span class="line">         Enclosure ID                       : 0</span><br><span class="line">         Type                               : SES2</span><br><span class="line">         Vendor                             : ADAPTEC</span><br><span class="line">         Model                              : Virtual SGPIO</span><br><span class="line">         Firmware                           :    1</span><br><span class="line">         Status of Enclosure Services Device</span><br><span class="line">            Speaker status                  : Not Available</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Command completed successfully.</span><br></pre></td></tr></table></figure>
+
+<p>可以看到两个硬盘，实际上也是只有两块硬盘，而<code>Device #2</code>不是属于硬盘，属于自带的一个抽象的东西，具体是啥不清楚，查看raid</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">$ arcconf getconfig 1 LD </span><br><span class="line">Controllers found: 1</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Logical device information</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Logical Device number 0</span><br><span class="line">   Logical Device name                      : DefaultValue0</span><br><span class="line">   Block Size of member drives              : 512 Bytes</span><br><span class="line">   RAID level                               : 1</span><br><span class="line">   Unique Identifier                        : B091F52F</span><br><span class="line">   Status of Logical Device                 : Optimal</span><br><span class="line">   Additional details                       : Quick initialized</span><br><span class="line">   Size                                     : 571381 MB</span><br><span class="line">   Parity space                             : 571391 MB</span><br><span class="line">   Interface Type                           : Serial Attached SCSI</span><br><span class="line">   Device Type                              : HDD</span><br><span class="line">   Read-cache setting                       : Enabled</span><br><span class="line">   Read-cache status                        : On</span><br><span class="line">   Write-cache setting                      : On when protected by battery/ZMM</span><br><span class="line">   Write-cache status                       : On</span><br><span class="line">   Partitioned                              : Yes</span><br><span class="line">   Protected by Hot-Spare                   : No</span><br><span class="line">   Bootable                                 : Yes</span><br><span class="line">   Failed stripes                           : No</span><br><span class="line">   Power settings                           : Disabled</span><br><span class="line">   --------------------------------------------------------</span><br><span class="line">   Logical Device segment information</span><br><span class="line">   --------------------------------------------------------</span><br><span class="line">   Segment 0                                : Present (572325MB, SAS, HDD, Enclosure:0, Slot:0) W0M0P1CK0000E8228T49</span><br><span class="line">   Segment 1                                : Present (572325MB, SAS, HDD, Enclosure:0, Slot:1) W0M0MRP60000E8229ZTR</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Command completed successfully.</span><br></pre></td></tr></table></figure>
+
+<p>参照之前ubuntu的，分析了下centos的启动流程，机器bios设置的是uefi启动，启动流程为:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST -&gt; 镜像的EFI/BOOT/grub.cfg -&gt; load 镜像里的内核/images/pxeboot/vmlinuz和加载/images/pxeboot/initrd.img -&gt; 安装界面</span><br></pre></td></tr></table></figure>
+
+<p>前面寻思着把arcconf命令整到这个initrd里，initrd是啥看前面那个Linux启动流程的文章，我们可以理解为内存内核vmlinuz的rootfs，但是最终实际上centos似乎多了个步骤，下图是物理机挂载了iso后安装界面ctrl+shift+f2切到终端后看&#x2F;usr&#x2F;sbin目录的可执行文件有哪些</p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/015.png" alt="install-shell"></p>
+<p>但是我们看<code>CentOS-7-x86_64-Minimal-1810.iso\images\pxeboot\initrd.img\initrd\usr\sbin\</code>里的压根就没这些命令，起初我是把arcconf加到这个initrd里，最后安装界面切到终端里压根就没arcconf命令<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/016.png" alt="initrd-sbin"><br>实际上centos的具体流程根据推理应该是这样</p>
+<ul>
+<li>vmlinuz内核加载initrd.img挂载成rootfs，然后读取append的参数做一些处理，</li>
+<li>如果有kickstart会根据&#x3D;后面的value前面看是啥开头。如果是非cdrom就会dhcp去retry每一张网卡去下载ks文件，</li>
+<li><code>inst.stage2=</code>参数: 指定要载入的安装程序运行时映像位置。其语法与 指定安装源 相同。这个选项需要包含有效<code>.treeinfo</code>文件的目录路径；如果发现这个文件，则会从这个文件中读取运行时映象位置。如果<code>.treeinfo</code>文件不可用，Anaconda 会尝试从<code>LiveOS/squashfs.img</code>中载入该映象。</li>
+<li>grub.cfg里的<code>search --no-floppy --set=root -l &#39;CentOS 7 x86_64&#39;</code>会把带label&#x3D;<code>CentOS 7 x86_64</code>的设置成root磁盘(这段很重要)</li>
+<li>默认的append参数指定stage2为iso，最终安装界面的rootfs就是<code>CentOS-7-x86_64-Minimal-1810.iso\LiveOS\squashfs.img\</code>这个rootfs，这个<code>squashfs.img</code>是个高压缩的rootfs，挂载了它后chroot进去，最终它的rootfs才是我们在安装界面切换到的终端，我们没必要去修改initrd</li>
+</ul>
+<p>这是我刚开始修改initrd的步骤<br>参考<a target="_blank" rel="noopener" href="https://wiki.gentoo.org/wiki/Custom_Initramfs">https://wiki.gentoo.org/wiki/Custom_Initramfs</a><br>虚机上挂载了centos的iso</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cd </span><br><span class="line">$ mkdir /root/test</span><br><span class="line">$ mount -t auto /dev/drom /mnt</span><br><span class="line">$ cp -ar /mnt /root/iso   # 原来root下没有iso目录，拷贝过来重命名为iso</span><br><span class="line">$ umount /mnt</span><br><span class="line">$ cp iso/images/pxeboot/initrd.img test/</span><br><span class="line">$ cd  test</span><br><span class="line">$ xz -dc ../initrd.img | cpio -id</span><br><span class="line">271820 blocks</span><br></pre></td></tr></table></figure>
+
+<p>修改一些东西后下面是打包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ find . -print0 | cpio --null --create --verbose --format=newc | gzip --best &gt; ../myinitrd</span><br><span class="line">$ yum install mkisofs isomd5sum -y</span><br><span class="line">$ cd iso</span><br><span class="line">  #执行封装镜像的命令：</span><br><span class="line">$ mkisofs -U \</span><br><span class="line">  -A &#x27;CentOS 7 x86_64&#x27; \</span><br><span class="line">  -V &#x27;CentOS 7 x86_64&#x27; \</span><br><span class="line">  -volset &#x27;CentOS 7 x86_64&#x27; \</span><br><span class="line">  -J -joliet-long -r -v -T \</span><br><span class="line">   -o /root/CentOS-MY.iso \</span><br><span class="line">   -b isolinux/isolinux.bin \</span><br><span class="line">   -c isolinux/boot.cat \</span><br><span class="line">   -no-emul-boot -boot-load-size 4 \</span><br><span class="line">    -boot-info-table  \</span><br><span class="line">   -eltorito-alt-boot \</span><br><span class="line">  -e images/efiboot.img -no-emul-boot .</span><br></pre></td></tr></table></figure>
+
+<p>注意<code>CentOS 7 x86_64</code>这部分不能乱写，我看网上的基本都是乱写或者没详细说明的，导致了uefi启动压根就没识别到iso，这个字段必须得是grub.cfg里的字段。也就是因为那个<code>inst.stage2=</code>和search以及这里制作iso的要一致</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ grep search EFI/BOOT/grub.cfg </span><br><span class="line">search --no-floppy --set=root -l &#x27;CentOS 7 x86_64&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>这个字段对上了才能识别到iso，参考 <a target="_blank" rel="noopener" href="https://access.redhat.com/discussions/762253">https://access.redhat.com/discussions/762253</a></p>
+<p>校验并写入 md5 值(可选)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ implantisomd5 /root/CentOS-MY.iso</span><br></pre></td></tr></table></figure>
+
+<p>上面的镜像打包命令我们后续也会用到，实际上我们还是得要把arcconf弄到<code>squashfs.img</code>里，因为安装界面对比&#x2F;usr&#x2F;sbin里文件就会发现是<code>squashfs.img</code>这个rootfs。此时物理机是安装界面，我切到终端配置了下ip和路由，然后把我安装了arcconf的虚机的命令拷贝到物理机上，因为这个rootfs相比initrd多了很多依赖，我们测试看看能不能使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ ip addr add 10.0.23.41/24 dev enp61s0f2</span><br><span class="line">$ route add -net 0.0.0.0/0 gw 10.0.23.1 dev enp61s0f2</span><br><span class="line">$ scp 10.0.23.79:/usr/sbin/arcconf /usr/sbin/</span><br><span class="line">$ arcconf getconfig 1 ld</span><br><span class="line">Controllers found: 1</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">Logical device infomation</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">   No logical devices configured</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Command completed successfully.</span><br></pre></td></tr></table></figure>
+
+<p>命令测试可用，我们后面直接修改<code>squashfs.img</code>添加&#x2F;usr&#x2F;sbin&#x2F;arcconf后打包即可。<br>假设命令不可用，我们得把命令相关的动态链接库给拷贝过去</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ cd /lib64</span><br><span class="line">$ ldd /usr/sbin/arcconf </span><br><span class="line">	linux-vdso.so.1 =&gt;  (0x00007ffc8a548000)</span><br><span class="line">	libdl.so.2 =&gt; /lib64/libdl.so.2 (0x00007fb1fdeee000)</span><br><span class="line">	libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007fb1fdcd2000)</span><br><span class="line">	libstdc++.so.6 =&gt; /lib64/libstdc++.so.6 (0x00007fb1fd9cb000)</span><br><span class="line">	libm.so.6 =&gt; /lib64/libm.so.6 (0x00007fb1fd6c9000)</span><br><span class="line">	libgcc_s.so.1 =&gt; /lib64/libgcc_s.so.1 (0x00007fb1fd4b3000)</span><br><span class="line">	libc.so.6 =&gt; /lib64/libc.so.6 (0x00007fb1fd0e6000)</span><br><span class="line">	/lib64/ld-linux-x86-64.so.2 (0x00007fb1fe0f2000)</span><br><span class="line">$ echo md5sum $(ldd /usr/sbin/arcconf | grep -Po &#x27;/lib64/\K\S+&#x27;)</span><br><span class="line">md5sum libdl.so.2 libpthread.so.0 libstdc++.so.6 libm.so.6 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2</span><br><span class="line">$ md5sum libdl.so.2 libpthread.so.0 libstdc++.so.6 libm.so.6 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2</span><br><span class="line">df69ee999269a70ee78fed4d39b6ab0a  libdl.so.2</span><br><span class="line">390e1ad4fd8b47508a0b80799acf83bf  libpthread.so.0</span><br><span class="line">bde5a21296b3dc19b0c374b324f97d4a  libstdc++.so.6</span><br><span class="line">0dc5febf77645a7d2e0b8aabbb85995d  libm.so.6</span><br><span class="line">ed3dac8e74ed913de13ee3dd7093e83e  libgcc_s.so.1</span><br><span class="line">03ce524a3e41c8f70daff7ca7a82f9ba  libc.so.6</span><br><span class="line">545bc0249fd1bee457dcec4bbda603b7  ld-linux-x86-64.so.2</span><br></pre></td></tr></table></figure>
+
+<p>自行看有没有对应的so和md5值一样，其中的<code>linux-vdso.so.1</code>不用管 <a target="_blank" rel="noopener" href="https://blog.csdn.net/wang_xya/article/details/43985241">https://blog.csdn.net/wang_xya/article/details/43985241</a></p>
+<p>接下来修改<code>squashfs.img</code>添加<code>arcconf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">$ yum install livecd-tools -y</span><br><span class="line">$ cd /root/iso/LiveOS</span><br><span class="line">$ unsquashfs  squashfs.img </span><br><span class="line">Parallel unsquashfs: Using 2 processors</span><br><span class="line">1 inodes (16384 blocks) to write</span><br><span class="line"></span><br><span class="line">[=========================================================================================================================================================|] 16384/16384 100%</span><br><span class="line"></span><br><span class="line">created 1 files</span><br><span class="line">created 2 directories</span><br><span class="line">created 0 symlinks</span><br><span class="line">created 0 devices</span><br><span class="line">created 0 fifos</span><br><span class="line">$ mkdir /root/sq</span><br><span class="line">$ mount -t loop,rw squashfs-root/LiveOS/rootfs.img /root/sq</span><br><span class="line">$ cp /usr/sbin/arcconf /root/sq/usr/sbin/</span><br><span class="line">$ umount /root/sq</span><br><span class="line">$ mv /root/iso/LiveOS/squashfs-root /root/sq/</span><br><span class="line">$ cd /root/sq</span><br><span class="line">$ mksquashfs squashfs-root squashfs.img</span><br><span class="line">$ rm -rf squashfs-root</span><br><span class="line">$ mv squashfs.img /root/iso/LiveOS/</span><br><span class="line">$ mv: overwrite ‘/root/iso/LiveOS/squashfs.img’? y</span><br><span class="line">$ cd /root/iso</span><br><span class="line">$ mkisofs -U \</span><br><span class="line">  -A &#x27;CentOS 7 x86_64&#x27; \</span><br><span class="line">  -V &#x27;CentOS 7 x86_64&#x27; \</span><br><span class="line">  -volset &#x27;CentOS 7 x86_64&#x27; \</span><br><span class="line">  -J -joliet-long -r -v -T \</span><br><span class="line">   -o /root/CentOS-MY.iso \</span><br><span class="line">   -b isolinux/isolinux.bin \</span><br><span class="line">   -c isolinux/boot.cat \</span><br><span class="line">   -no-emul-boot -boot-load-size 4 \</span><br><span class="line">    -boot-info-table  \</span><br><span class="line">   -eltorito-alt-boot \</span><br><span class="line">  -e images/efiboot.img -no-emul-boot .</span><br></pre></td></tr></table></figure>
+
+<p>把打包的iso放到我起的nfs里，在hdm的web上挂载它，在hdm远程里删掉阵列模拟机器刚出厂的时候，然后在安装界面进去测试命令可用。然后ks里增加创建阵列的逻辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">%pre</span><br><span class="line"></span><br><span class="line">arcconf getconfig 1 ld | grep -qw &#x27;No logical&#x27;</span><br><span class="line">if [ &quot;$?&quot; -eq 0 ];then</span><br><span class="line"></span><br><span class="line">    #获取实际硬盘的Channel id存成数组:0,1  0,0</span><br><span class="line">    hardDiskChannelIDArray=( $(arcconf getconfig 1 pd | grep Channel | tac | awk -F&#x27;[: ()]+&#x27; &#x27;NR!=1&#123;print $6&#125;&#x27;) )</span><br><span class="line">    arcconf task start 1 device all initialize noprompt  #初始化所有硬盘</span><br><span class="line">    #              控制器id               容量  raid级别</span><br><span class="line">    arcconf create    1     logicaldrive  max    1   $&#123;hardDiskChannelIDArray[@]//,/ &#125;  noprompt</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">ipmitool raw 0x0c 0x02   0x08   0x04 0x00 0x00 | grep -qw &#x27;02&#x27;   // 专有网口我这为8,共享网口是0x01, 如果8是dhcp的话就配置静态ip</span><br><span class="line">if [ &quot;$?&quot; -eq 0 ];then</span><br><span class="line">  ipmitool lan set 8 ipsrc static</span><br><span class="line">  ipmitool lan set 8 ipaddr &#123;&#123;.IPMIIP&#125;&#125;</span><br><span class="line">  ipmitool lan set 8 netmask &#123;&#123;.IPMIMask&#125;&#125;</span><br><span class="line">  ipmitool lan set 8 defgw ipaddr &#123;&#123;.IPMIGW&#125;&#125; </span><br><span class="line">  ipmitool chassis bootdev disk</span><br><span class="line"></span><br><span class="line">  ipmitool raw 0x00 0x08 0x05  0xE0 0x08  0x00 0x00 0x00 //uefi启动,强制boot from disk</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+
+<p>目前是做到这样，后续可能会更改，这几天发现了pxe似乎也可以达到需求，但是不能跨三层。pxe可以在pxelinux.cfg&#x2F;目录下存放客户端的mac地址文件，客户端实际请求文件有优先级别.<br>根据文档 <a target="_blank" rel="noopener" href="https://wiki.syslinux.org/wiki/index.php?title=PXELINUX">https://wiki.syslinux.org/wiki/index.php?title=PXELINUX</a> 得出: 假设pxe一个客户端的uuid为<code>b8945908-d6a6-41a9-611d-74a6ab80b83d</code>，mac地址为<code>88:99:AA:BB:CC:DD</code>，获取到的ip为<code>192.168.2.91</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mybootdir/pxelinux.cfg/b8945908-d6a6-41a9-611d-74a6ab80b83d</span><br><span class="line">mybootdir/pxelinux.cfg/01-88-99-aa-bb-cc-dd</span><br><span class="line">mybootdir/pxelinux.cfg/C0A8025B</span><br><span class="line">mybootdir/pxelinux.cfg/C0A8025</span><br><span class="line">mybootdir/pxelinux.cfg/C0A802</span><br><span class="line">mybootdir/pxelinux.cfg/C0A80</span><br><span class="line">mybootdir/pxelinux.cfg/C0A8</span><br><span class="line">mybootdir/pxelinux.cfg/C0A</span><br><span class="line">mybootdir/pxelinux.cfg/C0</span><br><span class="line">mybootdir/pxelinux.cfg/C</span><br><span class="line">mybootdir/pxelinux.cfg/default</span><br></pre></td></tr></table></figure>
+
+<p>后续的一些优化点走向</p>
+<ul>
+<li>可以提前渲染好所有的文件，或者自己写一个tftp server，pxe客户端请求mac地址文件的时候查询有没有这个机器，有就返回渲染的文件。其次我现在是读写excel，后期可能会load到数据库里</li>
+<li>再其次，ks的curl好像可以改initrd设置请求的header，pxe都是同一个dhcp下。tftp毕竟是四层，7层处理header结合数据库会非常方便,这样客户端自带header，http那部分逻辑就不需要去snmp连接交换机了</li>
+<li>后续的ks也得加%post部分，部分curl请求一下我cli写的web server告知已经安装完成</li>
+<li><code>squashfs.img</code>里自带了ipmitool，应该在post里设置下ipmi的网络信息和bios的启动顺序啥的，而不应该在挂载iso之前设置</li>
+</ul>
+<p>kickstart详细文档 <a target="_blank" rel="noopener" href="https://fedoraproject.org/wiki/Anaconda/Kickstart/zh-cn">https://fedoraproject.org/wiki/Anaconda/Kickstart/zh-cn</a></p>
+<p>后续优化了的话会继续更新和公布源码在我github上</p>
+<p>默认请求kickstart的header信息为:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">map[Accept:[*/*] User-Agent:[curl/7.29.0] X-Anaconda-Architecture:[x86_64] X-Anaconda-System-Release:[CentOS]]</span><br></pre></td></tr></table></figure>
+
+<p>在<code>/images/pxeboot/initrd.img/initrd/lib/dracut/hooks/initqueue/online/11-fetch-kickstart-net.sh</code> 里找到了一个逻辑</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># If we&#x27;re doing sendmac, we need to run after anaconda-ks-sendheaders.sh</span></span><br><span class="line"><span class="keyword">if</span> getargbool 0 inst.ks.sendmac kssendmac; <span class="keyword">then</span></span><br><span class="line">    newjob=<span class="variable">$hookdir</span>/initqueue/settled/fetch-ks-<span class="variable">$&#123;netif&#125;</span>.sh</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    newjob=<span class="variable">$hookdir</span>/initqueue/fetch-ks-<span class="variable">$&#123;netif&#125;</span>.sh</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>我用grep查找这个<code>getargbool</code>函数是在<code>usr/lib/dracut/hooks/initqueue/settled/00-anaconda-ks-sendheaders.sh</code>里，内容为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#/bin/sh</span></span><br><span class="line"><span class="comment"># anaconda-ks-sendheaders.sh - set various HTTP headers for kickstarting</span></span><br><span class="line"></span><br><span class="line">[ -f /tmp/.ks_sendheaders ] &amp;&amp; <span class="built_in">return</span></span><br><span class="line"><span class="built_in">command</span> -v set_http_header &gt;/dev/null || . /lib/url-lib.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># inst.ks.sendmac: send MAC addresses in HTTP headers</span></span><br><span class="line"><span class="keyword">if</span> getargbool 0 kssendmac inst.ks.sendmac; <span class="keyword">then</span></span><br><span class="line">    ifnum=0</span><br><span class="line">    <span class="keyword">for</span> ifname <span class="keyword">in</span> /sys/class/net/*; <span class="keyword">do</span></span><br><span class="line">        [ -e <span class="string">&quot;<span class="variable">$ifname</span>/address&quot;</span> ] || <span class="built_in">continue</span></span><br><span class="line">        mac=$(<span class="built_in">cat</span> <span class="variable">$ifname</span>/address)</span><br><span class="line">        ifname=<span class="variable">$&#123;ifname#/sys/class/net/&#125;</span></span><br><span class="line">        <span class="comment"># <span class="doctag">TODO:</span> might need to choose devices better</span></span><br><span class="line">        <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$ifname</span>&quot;</span> != <span class="string">&quot;lo&quot;</span> ] &amp;&amp; [ -n <span class="string">&quot;<span class="variable">$mac</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">            <span class="comment"># set_http_header is from url-lib.sh, sourced earlier</span></span><br><span class="line">            set_http_header <span class="string">&quot;X-RHN-Provisioning-MAC-<span class="variable">$ifnum</span>&quot;</span> <span class="string">&quot;<span class="variable">$ifname</span> <span class="variable">$mac</span>&quot;</span></span><br><span class="line">            ifnum=$((<span class="variable">$ifnum</span>+<span class="number">1</span>))</span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># inst.ks.sendsn: send system serial number in HTTP headers</span></span><br><span class="line"><span class="keyword">if</span> getargbool 0 kssendsn inst.ks.sendsn; <span class="keyword">then</span></span><br><span class="line">    system_serial=$(<span class="built_in">cat</span> /sys/class/dmi/id/product_serial 2&gt;/dev/null)</span><br><span class="line">    <span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$system_serial</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        warn <span class="string">&quot;inst.ks.sendsn: can&#x27;t find system serial number&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        set_http_header <span class="string">&quot;X-System-Serial-Number&quot;</span> <span class="string">&quot;<span class="variable">$system_serial</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">&gt; /tmp/.ks_sendheaders</span><br></pre></td></tr></table></figure>
+
+<p>boot的选项加了<code>inst.ks.sendmac</code>和<code>inst.ks.sendsn</code>后在curl请求ks文件的时候会附加header，所有网卡的mac地址和序列号。这个选项我搜了一圈，发现国内的和国外的基本很少用这个</p>
+<p>这个是append的后面可以加的boot选项的官方文档<br><a target="_blank" rel="noopener" href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/installation_guide/chap-anaconda-boot-options">https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/installation_guide/chap-anaconda-boot-options</a><br>而header为下面内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&quot;Accept&quot;: &quot;[*/*]&quot;</span><br><span class="line">&quot;User-Agent&quot;: &quot;curl/7.29.0&quot;</span><br><span class="line">&quot;X-Anaconda-Architecture: x86_64 </span><br><span class="line">&quot;X-Anaconda-System-Release: &quot;CentOS Linux&quot; </span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-0: &quot;enp61s0f0 9c:e8:95:d8:3c:cc&quot;</span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-1: &quot;enp61s0f1 9c:e8:95:d8:3c:cd&quot; </span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-2: &quot;enp61s0f2 9c:e8:95:d8:3c:ce&quot; </span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-3: &quot;enp61s0f3 9c:e8:95:d8:3c:cf&quot; </span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-4: &quot;ens1f0 3c:f5:cc:91:1f:68&quot; </span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-5: &quot;ens1f1 3c:f5:cc:91:1f:6a&quot; </span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-6: &quot;ens2f0 3c:f5:cc:91:1e:48&quot; </span><br><span class="line">&quot;X-Rhn-Provisioning-Mac-7: &quot;ens2f1 3c:f5:cc:91:1e:4a&quot; </span><br><span class="line">&quot;X-System-Serial-Number: &quot;210200A00QH18500xxxx&quot;</span><br></pre></td></tr></table></figure>
+
+<p>看到这个序列号和我服务器居然一样，感觉所有文章在ks的web上做就行了</p>
+<h2 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mintazoedeng/article/details/16804869">https://blog.csdn.net/mintazoedeng/article/details/16804869</a><br><a target="_blank" rel="noopener" href="https://www.thegeekstuff.com/2009/07/how-to-view-modify-and-recreate-initrd-img/">https://www.thegeekstuff.com/2009/07/how-to-view-modify-and-recreate-initrd-img/</a><br><a target="_blank" rel="noopener" href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/installation_guide/chap-installation-server-setup#sect-network-boot-setup-bios">https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/installation_guide/chap-installation-server-setup#sect-network-boot-setup-bios</a></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
+            <p>原文链接：<a href="http://zhangguanzhang.github.io/2019/06/23/autoInstallServer/">http://zhangguanzhang.github.io/2019/06/23/autoInstallServer/</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2019/06/23/autoInstallServer/">June 23rd 2019, 7:11:10 pm</a>
+            <p>更新日期：<a href="http://zhangguanzhang.github.io/2019/06/23/autoInstallServer/">June 23rd 2019, 7:11:10 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/06/26/uefi-pxe/" title="uefi模式下docker+交换机部署pxe批量安装">
+                    <div class="nextTitle">uefi模式下docker+交换机部署pxe批量安装</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/06/12/CLP/" title="SMASH CLP的一些笔记">
+                    <div class="prevTitle">SMASH CLP的一些笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMzk1OC8xMDQ5Mw>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:zhangguanzhang@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/zhangguanzhang" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_wc.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/assets/zhifubao.png" class="iconfont-archer others" target="_blank" title=others></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%8F%82%E8%80%83"><span class="toc-number">1.</span> <span class="toc-text">其他参考</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 152
+        </div>
+        <!-- search  -->
+        
+            <div class="site-search site-search-loading popup-trigger">
+                <span class="iconfont-archer search-icon">&#xe627;</span>
+            </div>
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2022/05/13/overlayfs-unix-socket/">低版本内核下容器内部无法使用 unix socket 通信</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/23</span>
+            <a class="archive-post-title" href="/2022/04/23/nfc/">nfc 折腾笔记，ACR122U/proxmark3</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2022/04/22/segfault-often/">docker containerd 不定时的 segfault 的一次处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2022/04/21/ecs-xmrig/">ecs 中毒的一次处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2022/04/11/sdn-tcp-keepalive/">无数据的 tcp 链接被 SDN/防火墙 干掉的一种处理办法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2022/03/24/python-list-kubernetes-permission/">python kubernetes client list permission</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/2022/03/16/cannot-assign-requested-address/">server 端的 cannot assign requested address</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span>
+            <a class="archive-post-title" href="/2022/02/24/keepalived-static-build/">keepalived static link build</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span>
+            <a class="archive-post-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">proxmox 开机 error: disk 'lvmid/[vg uuid]/[lv uuid]' not found</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span>
+            <a class="archive-post-title" href="/2022/02/10/docker-daemon-layer-broken/">18.09.03 docker daemon layer broken 的一次不优雅处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2022/01/26/nginx-static-build/">利用 docker buildx 静态编译 nginx</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2022/01/22/EmuELEC/">EmuELEC 笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span>
+            <a class="archive-post-title" href="/2021/12/19/openwrt-update/">openwrt 的在线升级固件和扩容的研究</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2021/12/12/mod-rejected-by-service/">docker数据盘损坏后启动报错 Error starting daemon: Error initializing network controller: Error creating default "bridge" network: package not installed</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span>
+            <a class="archive-post-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/28</span>
+            <a class="archive-post-title" href="/2021/09/28/ipvs-svc/">在非容器环境上实现散装的 IPVS SVC</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2021/09/16/read-containerd-con-reset/">解决 docker 的 read unix @->/run/containerd/s/xxx read: connection reset by peer: unknown</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span>
+            <a class="archive-post-title" href="/2021/09/03/openwrt-usb-net/">[持续更新] - Openwrt USB 网络</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span>
+            <a class="archive-post-title" href="/2021/09/02/fio/">fio 静态编译和基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2021/09/01/ubuntu18-and-cfq/">ubuntu18下io调度算法是cfq导致mysql非常慢</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/k8s-runxtables.lock/">干掉烦人的 open /run/xtables.lock: is a directory</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2021/08/25/flannel-a-host-net-tmout/">flannel下集群有个节点网络不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/cni-plugins-bridge-err/">一次 cni-plugins 导致集群 dns 无法解析的排错</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span>
+            <a class="archive-post-title" href="/2021/08/16/reserve-compute-resources/">kubelet 为系统配置预留资源</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2021/07/26/kylin-v10-boot-hang/">鲲鹏920的麒麟v10物理服务器断电后无法启动处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span>
+            <a class="archive-post-title" href="/2021/07/20/dlv-remote/">dlv命令行的远程调试 golang 进程步骤(包含容器进程)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2021/07/16/consul-mips64le/">编译mips64le架构的consul</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">机器重启后 kube-apiserver 无法启动，etcd刷(error "EOF", ServerName "")</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2021/07/05/systemctl-start-docker-canceled/">Job for docker.service canceled</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/08</span>
+            <a class="archive-post-title" href="/2021/06/08/ocp4.5.9-restore-etcd/">openshift 4.5.9 etcd损坏+脑裂修复过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2021/04/30/kubernetes-sec-agent-node-network-error/">一次单节点单个pod网络问题排查过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2021/04/08/kubelet-runc-disable-kmem/">kubelet 和 runc 编译关闭 kmem</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2021/03/23/iptables-docker-no-chain/">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span>
+            <a class="archive-post-title" href="/2021/03/12/build-arm64-docker-compose-action/">使用github action 配合 docker buildx 编译 arm64 docker-compose</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2021/02/02/node-shutdown-dns-unavailable/">集群节点关机导致dns在eviction pod之前几率不可用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2021/01/24/e2fsprogs/">e2fsck 太老报错 has unsupported feature(s): metadata_csum，从而尝试静态编译</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2021/01/23/chrony/">chrony 静态编译和笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2020/12/04/docker1803-hang-container-restore/">docker18.03 hang at 'restoring container'</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-reload-user/">ansible reload user group</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-hang-in-docker/">ansible hang in docker container</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span>
+            <a class="archive-post-title" href="/2020/11/20/disable-swap/">永久关闭swap的正确姿势</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2020/10/30/uos20-nftables/">统信USO 20 hostPort 无法访问</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2020/09/18/ocp-4.5-install/">openshift 4.5.9 离线安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2020/08/27/skopeo-static-build/">skopeo 静态编译</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span>
+            <a class="archive-post-title" href="/2020/08/05/wireguard-for-personal/">个人用 wireguard 笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span>
+            <a class="archive-post-title" href="/2020/07/30/prometheus-rate-and-irate/">prometheus的rate与irate内部是如何计算的</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2020/07/23/fs-error-fix-k8s-master/">k8s master机器文件系统故障的一次恢复过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2020/07/05/linux-auditd/">Linux audit 审计</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2020/06/25/kubernetes-pprof/">k8s pprof 分析 cpu 和内存</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2020/06/23/host-gw-in-aliyun/">阿里云上使用flannel host-gw跨节点pod不通的解决</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2020/06/19/go-prom-exporter/">[未写完]使用go开发一个Prometheus的exporter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2020/05/23/k8s-vxlan-63-timeout/">v1.17+ k8s集群下CNI使用VXLAN模式SVC有63秒延迟的触发原因定位</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2020/05/13/x86-router-flash/">proxmox x86软路由笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/dns-formerr/">adguardhome dns FORMERR 错误</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/N1-flash/">斐讯N1刷机和旁路由的设置</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/go-version-ifno/">git工作流下golang项目的version信息该如何处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/26</span>
+            <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span>
+            <a class="archive-post-title" href="/2020/03/10/go-mod-base-use/">go mod的基础使用-科普</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/centos6-hung-while-booting/">centos6中毒重启后卡在启动页面</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/binfmt-0000/">记录一次request_module: runaway loop modeprobe binfmt-0000</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span>
+            <a class="archive-post-title" href="/2020/02/27/microsoft-graph-for-onedrive/">使用microsoft-graph的api对接onedrive</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2020/01/15/kill-ctr-with-grace-period/">Killing container "docker://xxx with 30 second grace period</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2020/01/08/docker-panic-invalid-page-type/">docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2019/12/05/suse-fix-data-but-device-busy/">opensuse的一次救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span>
+            <a class="archive-post-title" href="/2019/12/03/dos-to-gpt/">从PTTYPE="dos"到TYPE="LVM2_member"的救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2019/11/24/kubeadm-base-use/">[长期更新]--应大多数人要求写下kubeadm的基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2019/10/24/deployment-consul-in-k8s/">consul仅当服务发现在k8s无状态部署使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">手动修复v1.14-v1.15版本k8s的issue:76956</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2019/10/12/boot-grub-rescue/">/boot目录被清空下物理机无法开机的一次救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/ansible-count-Idempotency/">ansible数量限制上的幂等性</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/27</span>
+            <a class="archive-post-title" href="/2019/09/27/consul-tls/">高可用的SSL consul cluster实践</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2019/09/05/prometheus-change-timezone/">修改源码更改prometheus的时区问题</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2019/08/24/gobot-build/">gobot控制esp8266</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2019/08/06/preseed/">ubuntu preseed无人应答安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span>
+            <a class="archive-post-title" href="/2019/07/14/chromedp/">golang headless browser包chromedp初探</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2019/07/08/nodeport-err/">为什么我不用nodePort之偶然中奖几率</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2019/07/07/golang-http/">golang的net/http包的客户端简单科普</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2019/06/26/uefi-pxe/">uefi模式下docker+交换机部署pxe批量安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2019/06/23/autoInstallServer/">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span>
+            <a class="archive-post-title" href="/2019/06/12/CLP/">SMASH CLP的一些笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2019/06/02/cobra/">golang cobra的一些笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2019/05/11/container-too-many-open-file/">standard_init_linux.go:211: exec user process caused "too many open files in system"</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2019/04/28/k8s-java-start-time-not-same/">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2019/03/22/k8s-controller-error/">一次kube-controller-manager的bug导致的线上无法调度处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2019/03/15/flannel-bin/">不走etcd v2 api下二进制跑flannel的总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span>
+            <a class="archive-post-title" href="/2019/03/11/k8s-ha/">k8s高可用涉及到ip填写的相关配置和一些坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span>
+            <a class="archive-post-title" href="/2019/03/03/kubernetes-1-13-4/">二进制部署Kubernetes v1.13.12 HA可选</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/19</span>
+            <a class="archive-post-title" href="/2019/02/19/jira-confluence/">docker部署jira(8.0.0)和confluence(6.14.1)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2019/02/12/dashboard/">通用的dashboard部署和tls，SSL相关部署</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span>
+            <a class="archive-post-title" href="/2019/01/30/fstab/">fstab与systemd.mount自动挂载的一点研究和见解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2019/01/22/proxmox-cloud-init/">proxmox里使用cloud-init和一些笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2018/12/04/black-box-exporter/">prometheus的黑盒监控</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2018/11/24/how-to-use-kubeadm/">对于初入k8s和kubeadm的一些建议</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2018/11/06/onlyoffice/">一次docker镜像的解耦--onlyoffice</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018/11/05/10chars/">记录一次十字符病毒清理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span>
+            <a class="archive-post-title" href="/2018/10/27/create-kubeconfig/">生成kubeconfig常规的两种方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2018/10/12/prometheus-operator/">全手动部署prometheus-operator监控K8S集群以及一些坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2018/10/06/IngressController/">IngressController使用和它的高可用落地</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span>
+            <a class="archive-post-title" href="/2018/09/24/k8s-some-vpc-cluster/">跨VPC或者跨云供应商搭建K8S集群正确姿势</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2018/09/18/kubernetes-1-11-x-bin/">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span>
+            <a class="archive-post-title" href="/2018/08/03/Kubernetes_install_1.11.1/">Kubernetes v1.11.x HA全手动苦工安装教学</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2018/07/18/ecs-vip/">基于openstack的ecs上使用VIP</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2018/07/08/travis-sync-gcr-io/">利用travis同步gcr.io镜像到dockerhub</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2018/06/25/etcd-error/">记录一次线上k8s节点故障</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2018/06/03/kubernetes-s-job/">kubernetes's Job总结和实战以及坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2018/06/02/kubernetes-nodeSelector/">kubernetes的PodAffinity的不解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2018/05/05/Kubernetes_install/">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2018/04/29/kubernetes-configMap-mount/">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">使用管理网当作业务网keepalived VIP的心跳线</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2018/02/15/linux-tc/">Linux tc基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/05</span>
+            <a class="archive-post-title" href="/2018/02/05/docker-image-can-t-rm/">docker无法删除掉镜像的解决方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">慎用docker的--rm选项!!!</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">docker的一些概念</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span>
+            <a class="archive-post-title" href="/2017/12/24/docker%E5%AE%B9%E5%99%A8%E8%AE%BF%E9%97%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA/">docker容器访问宿主机</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/23</span>
+            <a class="archive-post-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">docker容器网络互联</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2017/07/25/linux-bridge/">centos桥接测试</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span>
+            <a class="archive-post-title" href="/2017/07/15/dd-make-boot-device/">使用 dd 利用 iso 文件制作 USB 启动盘</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2017/07/06/windows/">windows 笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2017/07/05/centos7-some-mirror/">centos7 的一些常见软件的安装 mirror</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2017/06/26/lua-list-all-upsteam/">lua列出所有upsteam</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2017/06/03/bash-complete/">bash自定义补全</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span>
+            <a class="archive-post-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">shell脚本的选项和参数处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2017/05/15/rpmbuild/">rpm包的制作笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2017/05/12/ssh-trust/">ssh互信</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2017/05/06/shell%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%8F%90%E5%8D%87%E6%95%88%E7%8E%87/">shell利用快捷键提升命令输入和编辑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2017/04/29/zabbixsetup/">个人zabbix安装和坑的解决</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span>
+            <a class="archive-post-title" href="/2017/04/26/%E6%AD%A3%E5%88%99%E9%9B%B6%E5%AE%BD%E6%96%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%B8%AA%E6%B3%A8%E6%84%8F%E7%82%B9/">正则零宽断言的一个注意点</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/25</span>
+            <a class="archive-post-title" href="/2017/04/25/%E8%BD%AC%E8%BD%BD-awk%E4%B8%ADRS-OFS-RS-ORS%E5%8C%BA%E5%88%AB%E4%BA%8E%E8%81%94%E7%B3%BB/">[转载]awk中RS,ORS,FS,OFS区别于联系</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/lvm-practice/">记录LVM和raid的练习</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/linux-partition-grow/">虚拟化扩容硬盘大小</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span>
+            <a class="archive-post-title" href="/2017/04/17/iot/">分享下自己做的外网控制硬件</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shell_process/">shell多进程并发执行</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shellsubstring/">shell的字符串截取</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2017/04/11/8266hexdownload/">8266模块的烧写和sdk的坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2017/04/09/armlnmp/">安卓安装linux并且源码编译安装搭建lnmp的坑和总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span>
+            <a class="archive-post-title" href="/2017/03/28/zombie-process/">Linux 僵尸进程处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2017/03/23/check-dhcp-or-static/">判断是否是 dhcp 获取ip的一个手段</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span>
+            <a class="archive-post-title" href="/2017/03/20/ftp-install/">vsftpd虚拟用户简单部署</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2017/03/15/lnmp/">源码编译安装lnmp</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span>
+            <a class="archive-post-title" href="/2017/02/26/ad/">Altium Designer里走线开窗和挖除铺铜还有一些技巧</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2017/02/12/wx00/">微信公众号接入自己服务器</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2017/02/02/lamp/">lamp环境搭建总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2017/01/08/tuling-wx/">微信公众号接入图灵机器人api</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2016 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span>
+            <a class="archive-post-title" href="/2016/11/13/cad/">cad</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2016/10/30/20161030/">记录下自己制作的led-vu</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2016/10/28/hello/">hello world</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="微信">
+                <span class="iconfont-archer">&#xe606;</span>
+                微信
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="diy">
+                <span class="iconfont-archer">&#xe606;</span>
+                diy
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                8266
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="总结">
+                <span class="iconfont-archer">&#xe606;</span>
+                总结
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipmi">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipmi
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CLP">
+                <span class="iconfont-archer">&#xe606;</span>
+                CLP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="k8s">
+                <span class="iconfont-archer">&#xe606;</span>
+                k8s
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Mismatch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Mismatch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Altium Designer">
+                <span class="iconfont-archer">&#xe606;</span>
+                Altium Designer
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ansible">
+                <span class="iconfont-archer">&#xe606;</span>
+                ansible
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="consul">
+                <span class="iconfont-archer">&#xe606;</span>
+                consul
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lnmp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lnmp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="安卓">
+                <span class="iconfont-archer">&#xe606;</span>
+                安卓
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kernel">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernel
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                prometheus
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="exporter">
+                <span class="iconfont-archer">&#xe606;</span>
+                exporter
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="boot">
+                <span class="iconfont-archer">&#xe606;</span>
+                boot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="grub">
+                <span class="iconfont-archer">&#xe606;</span>
+                grub
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cad">
+                <span class="iconfont-archer">&#xe606;</span>
+                cad
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tcp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tcp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="golang">
+                <span class="iconfont-archer">&#xe606;</span>
+                golang
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="centos6">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="chromedp">
+                <span class="iconfont-archer">&#xe606;</span>
+                chromedp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="chrony">
+                <span class="iconfont-archer">&#xe606;</span>
+                chrony
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubernetes">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubernetes
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cni-plugins">
+                <span class="iconfont-archer">&#xe606;</span>
+                cni-plugins
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="mips64le">
+                <span class="iconfont-archer">&#xe606;</span>
+                mips64le
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubeconfig">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeconfig
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="swap">
+                <span class="iconfont-archer">&#xe606;</span>
+                swap
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dlv">
+                <span class="iconfont-archer">&#xe606;</span>
+                dlv
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="adguardhome">
+                <span class="iconfont-archer">&#xe606;</span>
+                adguardhome
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dns">
+                <span class="iconfont-archer">&#xe606;</span>
+                dns
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Dockerfile">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dockerfile
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="e2fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                e2fsck
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                fsck
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepavlied">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepavlied
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ecs">
+                <span class="iconfont-archer">&#xe606;</span>
+                ecs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="xmrig">
+                <span class="iconfont-archer">&#xe606;</span>
+                xmrig
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="etcd">
+                <span class="iconfont-archer">&#xe606;</span>
+                etcd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fio">
+                <span class="iconfont-archer">&#xe606;</span>
+                fio
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="flannel">
+                <span class="iconfont-archer">&#xe606;</span>
+                flannel
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ftp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="go mod">
+                <span class="iconfont-archer">&#xe606;</span>
+                go mod
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="go">
+                <span class="iconfont-archer">&#xe606;</span>
+                go
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gobot">
+                <span class="iconfont-archer">&#xe606;</span>
+                gobot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="esp8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp8266
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hello world">
+                <span class="iconfont-archer">&#xe606;</span>
+                hello world
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="host-gw">
+                <span class="iconfont-archer">&#xe606;</span>
+                host-gw
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="mqtt">
+                <span class="iconfont-archer">&#xe606;</span>
+                mqtt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="原创">
+                <span class="iconfont-archer">&#xe606;</span>
+                原创
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="jira">
+                <span class="iconfont-archer">&#xe606;</span>
+                jira
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confluence">
+                <span class="iconfont-archer">&#xe606;</span>
+                confluence
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-controller-manager">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-controller-manager
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java">
+                <span class="iconfont-archer">&#xe606;</span>
+                java
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="springboot">
+                <span class="iconfont-archer">&#xe606;</span>
+                springboot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vip">
+                <span class="iconfont-archer">&#xe606;</span>
+                vip
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepalived">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalived
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ConfigMap">
+                <span class="iconfont-archer">&#xe606;</span>
+                ConfigMap
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="PodAffinity">
+                <span class="iconfont-archer">&#xe606;</span>
+                PodAffinity
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                kylin
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="arm64">
+                <span class="iconfont-archer">&#xe606;</span>
+                arm64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kylin
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="audit">
+                <span class="iconfont-archer">&#xe606;</span>
+                audit
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fs">
+                <span class="iconfont-archer">&#xe606;</span>
+                fs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nginx">
+                <span class="iconfont-archer">&#xe606;</span>
+                nginx
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="microsoft">
+                <span class="iconfont-archer">&#xe606;</span>
+                microsoft
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="graph">
+                <span class="iconfont-archer">&#xe606;</span>
+                graph
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="onedrive">
+                <span class="iconfont-archer">&#xe606;</span>
+                onedrive
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nodeport">
+                <span class="iconfont-archer">&#xe606;</span>
+                nodeport
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="usb-net">
+                <span class="iconfont-archer">&#xe606;</span>
+                usb-net
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="overlay">
+                <span class="iconfont-archer">&#xe606;</span>
+                overlay
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kernal">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernal
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="preseed">
+                <span class="iconfont-archer">&#xe606;</span>
+                preseed
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                Prometheus
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openstack">
+                <span class="iconfont-archer">&#xe606;</span>
+                openstack
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cloud-init">
+                <span class="iconfont-archer">&#xe606;</span>
+                cloud-init
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="python">
+                <span class="iconfont-archer">&#xe606;</span>
+                python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="containerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                containerd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepalive">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalive
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="shell">
+                <span class="iconfont-archer">&#xe606;</span>
+                shell
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="bash">
+                <span class="iconfont-archer">&#xe606;</span>
+                bash
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="skopeo">
+                <span class="iconfont-archer">&#xe606;</span>
+                skopeo
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ssh">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssh
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubelet">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubelet
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="systemd">
+                <span class="iconfont-archer">&#xe606;</span>
+                systemd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dockerhub">
+                <span class="iconfont-archer">&#xe606;</span>
+                dockerhub
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gcr.io">
+                <span class="iconfont-archer">&#xe606;</span>
+                gcr.io
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="api">
+                <span class="iconfont-archer">&#xe606;</span>
+                api
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ubuntu18">
+                <span class="iconfont-archer">&#xe606;</span>
+                ubuntu18
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="initrd">
+                <span class="iconfont-archer">&#xe606;</span>
+                initrd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tftp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="uos">
+                <span class="iconfont-archer">&#xe606;</span>
+                uos
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="x86">
+                <span class="iconfont-archer">&#xe606;</span>
+                x86
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openwrt">
+                <span class="iconfont-archer">&#xe606;</span>
+                openwrt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="zabbix">
+                <span class="iconfont-archer">&#xe606;</span>
+                zabbix
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="zombie">
+                <span class="iconfont-archer">&#xe606;</span>
+                zombie
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="正则">
+                <span class="iconfont-archer">&#xe606;</span>
+                正则
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="awk">
+                <span class="iconfont-archer">&#xe606;</span>
+                awk
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="EmuELEC">
+                <span class="iconfont-archer">&#xe606;</span>
+                EmuELEC
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ingress">
+                <span class="iconfont-archer">&#xe606;</span>
+                ingress
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="N1">
+                <span class="iconfont-archer">&#xe606;</span>
+                N1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cobra">
+                <span class="iconfont-archer">&#xe606;</span>
+                cobra
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hang">
+                <span class="iconfont-archer">&#xe606;</span>
+                hang
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cifs">
+                <span class="iconfont-archer">&#xe606;</span>
+                cifs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="http">
+                <span class="iconfont-archer">&#xe606;</span>
+                http
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lvs">
+                <span class="iconfont-archer">&#xe606;</span>
+                lvs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipvsadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipvsadm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-proxy">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-proxy
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="63s">
+                <span class="iconfont-archer">&#xe606;</span>
+                63s
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="timeout">
+                <span class="iconfont-archer">&#xe606;</span>
+                timeout
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lamp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lamp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nfc">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pm3">
+                <span class="iconfont-archer">&#xe606;</span>
+                pm3
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="coredns">
+                <span class="iconfont-archer">&#xe606;</span>
+                coredns
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openshift">
+                <span class="iconfont-archer">&#xe606;</span>
+                openshift
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ocp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ocp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="squashfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                squashfs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="timezone">
+                <span class="iconfont-archer">&#xe606;</span>
+                timezone
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="rpm">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="rpmbuild">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpmbuild
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="segfault">
+                <span class="iconfont-archer">&#xe606;</span>
+                segfault
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="suse">
+                <span class="iconfont-archer">&#xe606;</span>
+                suse
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="wireguard">
+                <span class="iconfont-archer">&#xe606;</span>
+                wireguard
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="raid">
+                <span class="iconfont-archer">&#xe606;</span>
+                raid
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubeadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeadm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="operator">
+                <span class="iconfont-archer">&#xe606;</span>
+                operator
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="日志">
+            <span class="iconfont-archer">&#xe60a;</span>
+            日志
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="闲搞">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲搞
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ipmi">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ipmi
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubernetes
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ansible">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ansible
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubelet">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubelet
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Auto cad">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Auto cad
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubeconfig">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeconfig
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="grub">
+            <span class="iconfont-archer">&#xe60a;</span>
+            grub
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="centos6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            centos6
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="openstack">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openstack
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="vsftp">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vsftp
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="go">
+            <span class="iconfont-archer">&#xe60a;</span>
+            go
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="version">
+            <span class="iconfont-archer">&#xe60a;</span>
+            version
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="panic">
+            <span class="iconfont-archer">&#xe60a;</span>
+            panic
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="gobot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            gobot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="闲聊">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲聊
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="iptables">
+            <span class="iconfont-archer">&#xe60a;</span>
+            iptables
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="admission">
+            <span class="iconfont-archer">&#xe60a;</span>
+            admission
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kube-controller-manager">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kube-controller-manager
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="keepalived">
+            <span class="iconfont-archer">&#xe60a;</span>
+            keepalived
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Job">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Job
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="lua">
+            <span class="iconfont-archer">&#xe60a;</span>
+            lua
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="microsoft">
+            <span class="iconfont-archer">&#xe60a;</span>
+            microsoft
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="openwrt">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openwrt
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="preseed">
+            <span class="iconfont-archer">&#xe60a;</span>
+            preseed
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="proxmox">
+            <span class="iconfont-archer">&#xe60a;</span>
+            proxmox
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="总结">
+            <span class="iconfont-archer">&#xe60a;</span>
+            总结
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="CI">
+            <span class="iconfont-archer">&#xe60a;</span>
+            CI
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Kylin">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Kylin
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ubuntu18">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ubuntu18
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="pxe">
+            <span class="iconfont-archer">&#xe60a;</span>
+            pxe
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="uos">
+            <span class="iconfont-archer">&#xe60a;</span>
+            uos
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="graph">
+            <span class="iconfont-archer">&#xe60a;</span>
+            graph
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="运维">
+            <span class="iconfont-archer">&#xe60a;</span>
+            运维
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="zombie">
+            <span class="iconfont-archer">&#xe60a;</span>
+            zombie
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="travis">
+            <span class="iconfont-archer">&#xe60a;</span>
+            travis
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="onedrive">
+            <span class="iconfont-archer">&#xe60a;</span>
+            onedrive
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="consul">
+            <span class="iconfont-archer">&#xe60a;</span>
+            consul
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="fstab">
+            <span class="iconfont-archer">&#xe60a;</span>
+            fstab
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="http">
+            <span class="iconfont-archer">&#xe60a;</span>
+            http
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="vxlan">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vxlan
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="coredns">
+            <span class="iconfont-archer">&#xe60a;</span>
+            coredns
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="node-cache">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node-cache
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kmem">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kmem
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="suse">
+            <span class="iconfont-archer">&#xe60a;</span>
+            suse
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="wireguard">
+            <span class="iconfont-archer">&#xe60a;</span>
+            wireguard
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubeadm">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeadm
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="LVM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            LVM
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://zhangguanzhang.github.io",
+        root: siteMetaRoot,
+        author: "Zhangguanzhang"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://unpkg.zhimg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+            <div class="site-search site-search-loading">
+    <div class="algolia-popup popup">
+        <div class="algolia-search">
+            <div class="algolia-search-input-icon">
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="algolia-search-input" id="algolia-search-input"></div>
+            <div class="popup-btn-close">
+                <i class="iconfont-archer">&#xe609;</i>
+            </div>
+        </div>
+
+        <div class="algolia-results">
+            <div id="algolia-stats" class="algolia-stats"></div>
+            <div id="algolia-hits"></div>
+            <div id="algolia-pagination" class="algolia-pagination"></div>
+        </div>
+    </div>
+</div>
+
+            <script src="/scripts/search.js?v=20211217" defer></script>
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

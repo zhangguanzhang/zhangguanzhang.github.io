@@ -1,0 +1,5584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Zhangguanzhang">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Zhangguanzhang">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="记录生活点滴">
+    <meta name="description" content="EmuELEC 笔记后续关于 EmuELEC 的笔记和知识点都会在这里更新，假定看到这篇文章的人都具备一些 Linux 基础，命令，path，分区，挂载之类的知识。 EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒子开发的游戏系统，它基于 CoreELEC 系统，在 CoreELEC 的基础上移植了 RetroArch 和众多的独立模拟器。E">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EmuELEC 笔记">
+<meta property="og:url" content="http://zhangguanzhang.github.io/2022/01/22/EmuELEC/">
+<meta property="og:site_name" content="Zhangguanzhang">
+<meta property="og:description" content="EmuELEC 笔记后续关于 EmuELEC 的笔记和知识点都会在这里更新，假定看到这篇文章的人都具备一些 Linux 基础，命令，path，分区，挂载之类的知识。 EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒子开发的游戏系统，它基于 CoreELEC 系统，在 CoreELEC 的基础上移植了 RetroArch 和众多的独立模拟器。E">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/picgo/xbox-set.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/picgo/controller-360.png">
+<meta property="article:published_time" content="2022-01-22T14:28:30.000Z">
+<meta property="article:modified_time" content="2022-01-22T14:28:30.000Z">
+<meta property="article:author" content="Zhangguanzhang">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="EmuELEC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/picgo/xbox-set.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>EmuELEC 笔记 · zhangguanzhang&#39;s Blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://unpkg.zhimg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://unpkg.zhimg.com/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+        <script>
+            var hits = JSON.parse('{"per_page":10}')
+            var labels = JSON.parse('{"input_placeholder":"Search for Posts","hits_empty":"We did not find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}')
+
+            var algolia = {
+                applicationID: '3RNEGEC262',
+                apiKey: '6403a5f93c8554eb5b5ed2ad42b9693e',
+                indexName: 'blog',
+                hits: hits,
+                labels: labels
+            }
+        </script>
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Zhangguanzhang" type="application/atom+xml">
+</head>
+
+    <script src="https://unpkg.zhimg.com/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>zhangguanzhang's Blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">zhangguanzhang&#39;s Blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">EmuELEC 笔记</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                EmuELEC 笔记
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="EmuELEC">EmuELEC</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">5.7k</span>阅读时长: <span class="post-count reading-time">26 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022/01/22</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://unpkg.zhimg.com/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="EmuELEC-笔记"><a href="#EmuELEC-笔记" class="headerlink" title="EmuELEC 笔记"></a>EmuELEC 笔记</h1><p>后续关于 EmuELEC 的笔记和知识点都会在这里更新，假定看到这篇文章的人都具备一些 Linux 基础，命令，path，分区，挂载之类的知识。</p>
+<h2 id="EmuELEC-介绍"><a href="#EmuELEC-介绍" class="headerlink" title="EmuELEC 介绍"></a>EmuELEC 介绍</h2><p>EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒子开发的游戏系统，它基于 CoreELEC 系统，在 CoreELEC 的基础上移植了 RetroArch 和众多的独立模拟器。EmuELEC 前身为 Sx05RE。Sx05RE 整合了 Lakka、KODI、EmulationStation，常被人简称为三合一。它实际上也是一个 Linux 系统，最新版本开始只支持 arm64 架构了。</p>
+<p>通常我们使用便宜的电视盒子（基本9成都是晶晨的 cpu）来刷 EmuELEC 系统，然后配合手柄（xbox协议，ps、psp和30块钱左右的无线手柄）能玩很多平台的游戏：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3do	    atari2600	 atarilynx    coleco  downloads	gameandwatch  gbah     genh	      megadrive        n64     nes	openbor     pcfx      pspminis	  screenshots  sg-1000	 solarus  uzebox      wonderswan</span><br><span class="line">amiga	    atari5200	 atarist     c128    cps1    dreamcast	gamegear      gbc      gw	      megadrive-japan  naomi   nesh	pc	    pico-8    psx	  scummvm      sgfx	 splash   vectrex     wonderswancolor</span><br><span class="line">amigacd32   atari7800	 atomiswave  c16     cps2    famicom	gamegearh     gbch     intellivision  mplayer	       nds     ngp	pc98	    pokemini  saturn	  sega32x      snes	 tg16	  vic20       x68000</span><br><span class="line">amstradcpc  atari800	 bezels      c64     cps3    fbneo	gb	      gbh      mame	      msx	       neocd   ngpc	pcengine    ports     savestates  segacd       snesh	 tg16cd   videopac    zx81</span><br><span class="line">arcade	    atarijaguar  BGM	     capcom  daphne  fds	gba	      genesis  mastersystem   msx2	       neogeo  odyssey	pcenginecd  psp       sc-3000	  sfc	       snesmsu1  tic-80   virtualboy  zxspectrum</span><br></pre></td></tr></table></figure>
+
+<p>arcade、mame、neogeo capcom（这四个是街机）、nes、nds、gba、ps、psp、fc、sfc、很多平台的游戏。我个人是使用 N1 盒子，但是不推荐，很多那种宽带送的电视盒子也行，根据现在的讯息去看哪个合适。国内的话能讨论这方面的有以下几个平台：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.right.com.cn/forum/forum.php">恩山</a>，恩山是软路由为主，注意电视盒子板块去讨论</li>
+<li><a target="_blank" rel="noopener" href="https://www.emuelec.cn/">EmuELEC 中文网</a></li>
+<li><a target="_blank" rel="noopener" href="https://tieba.baidu.com/f?kw=emuelec&ie=utf-8">emuelec贴吧</a>，如果你 pc web 贴吧发帖让你下 app 端，你可以编辑好内容后 ctrl + 回车直接绕过这个限制发帖</li>
+<li><a target="_blank" rel="noopener" href="https://post.smzdm.com/">什么值得买</a>，该论坛的电视盒子版块也有人会讨论这个</li>
+<li><a target="_blank" rel="noopener" href="https://space.bilibili.com/97745521/video">b站的人中日月大佬</a>，他一般提供了整合包，业内也有名气</li>
+</ul>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>一般是两种:</p>
+<ul>
+<li>电视盒子解密(并不是所有盒子都能折腾这个)后，在盒子上安装 <code>Reboot to LibreELEC</code> 的 apk ，运行它从安卓电视系统切换到 U 盘启动，从而进入到游戏系统。</li>
+<li>你盒子本身支持从 U 盘启动，你 U 盘写入 EmuELEC 的 img 文件后插到盒子上开机即可。</li>
+</ul>
+<p>刷机软件推荐 <a target="_blank" rel="noopener" href="https://www.balena.io/etcher/">balenaEtcher</a>，建议下载 Portable 免安装的版本。EmuELEC 的镜像去搜你设备关键字+EmuELC 找。</p>
+<p>初次打开需要设置手柄，手柄映射图<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/picgo/xbox-set.png"><br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/picgo/controller-360.png"></p>
+<h2 id="分区讲解"><a href="#分区讲解" class="headerlink" title="分区讲解"></a>分区讲解</h2><p>EmuELEC 的 img 刷到内存卡或者 U盘里后，windows 会弹出的让你是否格式化，记得点击否，一般是两个分区：</p>
+<ul>
+<li>EMUELEC 的 FAT32 分区 ，内存放有 dtb（device tree）的分区，不同电视盒子的 dtb 文件不一样，一般初次需要我们进里面的目录 device_trees 里把你设备的 xxx-dtb.img 拷贝到根目录的 <code>dtb.img</code></li>
+<li>ext4 的分区， windows 无法识别，单独存放游戏 roms 的分区。也是一些对外开放的配置引入。单独会被挂载成 <code>/storage</code> 目录</li>
+<li>EEROMS , 4.0 后开始新增的的分区，也就是之前的 <code>/storage/roms</code> 单独抽出来的一个单独分区，游戏都会存放在这里。</li>
+</ul>
+<p>前者是系统分区，一般升级的话升级这个就行了。添加游戏啥的可以在后者分区里按照平台添加，后者分区可以在 windows 上使用 <a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius</a> 打开。不过你刷好开机以及联网后，其实会自带一个 ssh 和 samba。都可以连上去操作，ssh 登录信息是 <code>root/emuelec</code>。 开机挂载 <code>/storage/roms</code> 的逻辑可以看脚本 <code>cat /usr/bin/mount_romfs.sh</code></p>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">EmuELEC:~ # df -h</span><br><span class="line">Filesystem                Size      Used Available Use% Mounted on</span><br><span class="line">devtmpfs                791.1M      4.0K    791.1M   0% /dev</span><br><span class="line">/dev/sda1                 1.0G    694.4M    330.6M  68% /flash</span><br><span class="line">/dev/loop0              673.5M    673.5M         0 100% /</span><br><span class="line">/dev/sda2                26.1G     21.8G      4.3G  84% /storage</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /dev/shm</span><br><span class="line">tmpfs                   902.1M      9.2M    892.8M   1% /run</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /sys/fs/cgroup</span><br><span class="line">tmpfs                   902.1M      2.6M    899.5M   0% /var</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /tmp</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/database</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/cores</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/joypads</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/shaders</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/overlays</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/assets</span><br></pre></td></tr></table></figure>
+
+<p>启动后, EMUELEC 分区被挂载为 <code>/flash</code>, STORAGE 分区被挂载为 <code>/storage</code>, system.img(也可能是那个 SYSTEM) 通过 <code>/dev/loop0</code> 被挂载为系统根目录 <code>/</code> 。所以, 用户能修改的仅仅是 <code>/flash</code> 和 <code>/storage</code> 目录下的内容<br>root用户的 home 目录被定位到 <code>/storage</code>, 如果需要添加登录后自动执行的命令(例如添加alias), 可以直接在 <code>/storage</code> 目录下新建 <code>.profile</code> 文件来实现。</p>
+<h3 id="wifi"><a href="#wifi" class="headerlink" title="wifi"></a>wifi</h3><p>文件 <code>/storage/.config/emuelec/configs/emuelec.conf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## Activate wifi (0,1)</span><br><span class="line">wifi.enabled=1</span><br><span class="line">wifi.ssid=CMCC-5G</span><br><span class="line">wifi.key=zhangguanzhang</span><br><span class="line"># secondary wifi (not configurable via the user interface)</span><br><span class="line">#wifi2.ssid=new ssid</span><br><span class="line">#wifi2.key=new key</span><br><span class="line"># third wifi (not configurable via the user interface)</span><br><span class="line">#wifi3.ssid=new ssid</span><br><span class="line">#wifi3.key=new key</span><br></pre></td></tr></table></figure>
+
+<p>RA 配置文件 <code>/storage/.config/retroarch/retroarch.cfg</code></p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>下载源码进入 <code>make image</code>，专门平台就加变量编译，例如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PROJECT=Amlogic-ce DEVICE=Amlogic-ng ARCH=aarch64 DISTRO=EmuELEC make image</span><br></pre></td></tr></table></figure>
+
+<p>例如贴吧也有人发自己编译的版本，但是这些比一般会锁 ssh，不让别人修改，当然你懂 Linux 的话可以 img 文件挂载了去改。网上也基本搜不到啥关于长篇大论讲编译的教程。建议还是先看官方的 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC">README.md</a> </p>
+<h2 id="使用问题"><a href="#使用问题" class="headerlink" title="使用问题"></a>使用问题</h2><h3 id="个别-HDMI-屏幕没声音"><a href="#个别-HDMI-屏幕没声音" class="headerlink" title="个别 HDMI 屏幕没声音"></a>个别 HDMI 屏幕没声音</h3><p>没声音的话尝试 EmuELEC setting – 音频 0,0 0,1 后重启试试。</p>
+<h3 id="延迟"><a href="#延迟" class="headerlink" title="延迟"></a>延迟</h3><p>有些人说是手柄问题，有线好于 &gt; 无线，某些牌子无线 &gt; 另外的无线。也有人说电视的原因。<br>我个人是在 ra 里设置 降低延迟的选项，打开以后参数设为 1 和 2都试了下，2好点，但是 2 可能比较吃配置，卡的话就试试 1</p>
+<h2 id="进阶玩法"><a href="#进阶玩法" class="headerlink" title="进阶玩法"></a>进阶玩法</h2><p><a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/wiki/bios">https://github.com/EmuELEC/EmuELEC/wiki/bios</a> bios存放路径</p>
+<h3 id="roms-网站"><a href="#roms-网站" class="headerlink" title="roms 网站"></a>roms 网站</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.oldmanemu.net/">老男人</a></li>
+<li><a target="_blank" rel="noopener" href="https://vimm.net/">vimm’s lair</a></li>
+<li><a target="_blank" rel="noopener" href="https://wowroms.com/en/all-roms">wowroms</a> 基本啥都有</li>
+<li><a target="_blank" rel="noopener" href="https://www.gamulator.com/roms">www.gamulator.com</a></li>
+</ul>
+<h3 id="缩容和提取-roms"><a href="#缩容和提取-roms" class="headerlink" title="缩容和提取 roms"></a>缩容和提取 roms</h3><p>需要缩容是因为 img 里所有分区表大小加起来会超过 U 盘容量。</p>
+<h4 id="windows-缩容和提取-roms"><a href="#windows-缩容和提取-roms" class="headerlink" title="windows 缩容和提取 roms"></a>windows 缩容和提取 roms</h4><p>把 img 文件拖到 <code>DiskGenius</code> 里，然后删掉几个大游戏，特别 psp 里的。删掉后分区表大小并没变小，然后利用分区克隆工具，按照非 EEROMS 的分区在你 U 盘上创建后前面的分区，然后剩下分区给 EEROMS。格式化的时候记得每个分区的卷标名要设置上，<code>EMUELEC</code>、<code>STORAGE</code> 和 <code>EEROMS</code>。提取的话直接复制出来即可。</p>
+<h4 id="Linux-缩容和提取-roms"><a href="#Linux-缩容和提取-roms" class="headerlink" title="Linux 缩容和提取 roms"></a>Linux 缩容和提取 roms</h4><p>帮同事弄的时候他 U 盘小于 64G ，<code>DiskGenius</code> 里分区克隆说不能克隆，气得我在 Linux 上搞。注意容量，先把 64G 的这个 img 文件拷贝到 Linux 上。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -l emuelec4.3正式版-s905x3-58g-3.img </span><br><span class="line">-rw-r--r-- 1 root root 62302191616 Jan 24 19:17 emuelec4.3正式版-s905x3-58g-3.img</span><br><span class="line"><span class="comment"># 查看下 img 分区信息</span></span><br><span class="line">$ parted emuelec4.3正式版-s905x3-58g-3.img u s p</span><br><span class="line">Model:  (file)</span><br><span class="line">Disk /data/emuelec4.3正式版-s905x3-58g-3.img: 121683968s</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: msdos</span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start     End         Size        Type     File system  Flags</span><br><span class="line"> 1      8192s     4202495s    4194304s    primary  fat32        boot, lba</span><br><span class="line"> 2      4202496s  8388608s    4186113s    primary  ext4</span><br><span class="line"> 3      8390656s  121683967s  113293312s  primary  fat32        lba</span><br></pre></td></tr></table></figure>
+
+<h5 id="img-挂载到本地目录"><a href="#img-挂载到本地目录" class="headerlink" title="img 挂载到本地目录"></a>img 挂载到本地目录</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取第一个空闲的 loop 设备</span></span><br><span class="line">LOOP_D=$(losetup --find)</span><br><span class="line"><span class="comment"># 把 img 文件扫描到 loop 设备上</span></span><br><span class="line">losetup --partscan <span class="variable">$LOOP_D</span>  emuelec4.3正式版-s905x3-58g-3.img</span><br><span class="line"><span class="comment"># 这里我的 img 里是 三个分区</span></span><br><span class="line"><span class="comment"># EMUELEC 和 EEROMS 分区都是 fat32 ，里面有中文游戏，需要挂载带上 iocharset=utf8</span></span><br><span class="line"><span class="built_in">mkdir</span> -p p1 p2 p3</span><br><span class="line">mount  -o iocharset=utf8 <span class="variable">$&#123;LOOP_D&#125;</span>p1 p1</span><br><span class="line">mount  <span class="variable">$&#123;LOOP_D&#125;</span>p2 p2</span><br><span class="line">mount  -o iocharset=utf8 <span class="variable">$&#123;LOOP_D&#125;</span>p3 p3</span><br></pre></td></tr></table></figure>
+
+<h5 id="克隆文件系统到-U-盘上"><a href="#克隆文件系统到-U-盘上" class="headerlink" title="克隆文件系统到 U 盘上"></a>克隆文件系统到 U 盘上</h5><p>创建 U 盘分区表，start 和 end 按照 img 文件里的信息来，最后分区结尾是 <code>100%</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ lsblk <span class="comment"># 找到 U 盘，我这里是 sdc</span></span><br><span class="line">sdc                                     8:32   1  57.6G  0 disk</span><br><span class="line"><span class="comment"># U 盘没分区表的，有的话自己清空下</span></span><br><span class="line"><span class="comment"># 在 U 盘上创建分区表</span></span><br><span class="line">parted /dev/sdc mkpart p fat32 8192s 4202495s</span><br><span class="line">parted /dev/sdc <span class="built_in">set</span> 1 boot on</span><br><span class="line">parted /dev/sdc mkpart p ext4 4202496s 8388608s</span><br><span class="line">parted /dev/sdc mkpart p fat32 8390656s 100% <span class="comment"># 最后一个直接100%</span></span><br></pre></td></tr></table></figure>
+
+<p>查看下 u 盘分区信息和 img 信息是符合</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ parted /dev/sdc u s p</span><br><span class="line">Model: Kingston DataTraveler 3.0 (scsi)</span><br><span class="line">Disk /dev/sdc: 120845300s</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: msdos</span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start     End         Size        Type     File system  Flags</span><br><span class="line"> 1      8192s     4202495s    4194304s    primary               boot, lba</span><br><span class="line"> 2      4202496s  8388608s    4186113s    primary</span><br><span class="line"> 3      8390656s  120844287s  112453632s  primary               lba</span><br></pre></td></tr></table></figure>
+
+<p>格式化出 U 盘文件系统：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意要带上 LABEL 名：EMUELEC STORAGE EEROMS</span></span><br><span class="line"><span class="comment"># openwrt 上没有 mkfs.vfat, 需要安装 dosfstools 后 ln -sf /usr/sbin/mkfs.fat /usr/sbin/mkfs.vfat</span></span><br><span class="line">mkfs.vfat -F 32 -n EMUELEC /dev/sdc1</span><br><span class="line">mkfs.ext4 -L STORAGE      /dev/sdc2</span><br><span class="line">mkfs.vfat -F 32 -n EEROMS /dev/sdc3</span><br></pre></td></tr></table></figure>
+
+<p>如果忘记 LABEL，后面打也行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fatlabel /dev/sdc1 EMUELEC</span><br><span class="line">tune2fs -L STORAGE /dev/sdc2</span><br><span class="line">fatlabel /dev/sdc3 EEROMS</span><br><span class="line"># 查看 LABEL</span><br><span class="line">lsblk -o PATH,LABEL</span><br></pre></td></tr></table></figure>
+
+<p>U 盘文件挂载到本地，并开始复制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mkdir -p u&#123;1..3&#125;</span><br><span class="line">mount  -o iocharset=utf8 /dev/sdc1 u1</span><br><span class="line">mount  /dev/sdc2 u2</span><br><span class="line">mount  -o iocharset=utf8 /dev/sdc3 u3</span><br><span class="line"></span><br><span class="line"># 拷贝之前 df -h 看下 p3 的已使用大小是否小于等于 u3 分区表大小</span><br><span class="line"># 如果不是 可以删掉 EEROMS 分区下面 psp 里的大游戏先</span><br><span class="line">rsync -vzrtopgl  p1/ u1/</span><br><span class="line">rsync -vzrtopgl  p2/ u2/</span><br><span class="line">rsync -vzrtopgl  p3/ u3/</span><br><span class="line"></span><br><span class="line">取消 U 盘挂载</span><br><span class="line">```bash</span><br><span class="line">umount u&#123;1..3&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="制作真正缩容的-img"><a href="#制作真正缩容的-img" class="headerlink" title="制作真正缩容的 img"></a>制作真正缩容的 img</h5><p>前面的 img 挂载不要取消，我们来制作一个缩小容量的 img 文件来分享给别人使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 制作一个 57G 的空文件</span><br><span class="line">truncate -s 57G test.img</span><br><span class="line"># 对文件开始分区，分区信息参考下 img</span><br><span class="line">parted test.img mklabel msdos</span><br><span class="line">parted test.img mkpart p fat32 8192s 4202495s</span><br><span class="line">parted test.img set 1 boot on</span><br><span class="line">parted test.img mkpart p ext4 4202496s 8388608s</span><br><span class="line">parted test.img mkpart p fat32 8390656s 100%</span><br></pre></td></tr></table></figure>
+
+<p>挂载我们的 img 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LOOP_D2=$(losetup --find)</span><br><span class="line">losetup --partscan $LOOP_D2  test.img</span><br><span class="line"># 创建分区表</span><br><span class="line">mkfs.vfat -F 32 -n EMUELEC $&#123;LOOP_D2&#125;p1</span><br><span class="line">mkfs.ext4 -L STORAGE $&#123;LOOP_D2&#125;p2</span><br><span class="line">mkfs.vfat -F 32 -n EEROMS $&#123;LOOP_D2&#125;p3</span><br><span class="line"># 挂载</span><br><span class="line">mkdir -p u&#123;1..3&#125;</span><br><span class="line">mount  -o iocharset=utf8 $&#123;LOOP_D2&#125;p1 u1</span><br><span class="line">mount   $&#123;LOOP_D2&#125;p2 u2</span><br><span class="line">mount  -o iocharset=utf8 $&#123;LOOP_D2&#125;p3 u3</span><br></pre></td></tr></table></figure>
+
+<p>拷贝到我们的新 img 里：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rsync -vzrtopgl  p1/ u1/</span><br><span class="line">rsync -vzrtopgl  p2/ u2/</span><br><span class="line">rsync -vzrtopgl  p3/ u3/</span><br><span class="line">umount u&#123;1..3&#125;</span><br></pre></td></tr></table></figure>
+
+<p>取消两个 img 文件映射：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">umount p&#123;1..3&#125;</span><br><span class="line">losetup -D  $&#123;LOOP_D2&#125;</span><br><span class="line">losetup -D  $&#123;LOOP_D&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后新的 img 文件就可以直接刷 U 盘了。</p>
+<h3 id="外置-roms"><a href="#外置-roms" class="headerlink" title="外置 roms"></a>外置 roms</h3><p>也就是你可能一个 2G 或者 4G 的 U 盘刷纯净系统，然后游戏 roms 都存放在其他地方：</p>
+<ul>
+<li>其他存储介质，例如另一个 u 盘或者移动硬盘。不懂 Linux 的话可以格式化成 fat32，这样 windows 可以识别，分区里新建一个 roms 文件夹，然后 roms 里存放一个空白文件 <code>emuelecroms</code> ，roms 目录里存放各个目录即可。移动硬盘一般是 <code>exfat</code> 分区，linux 和 windows 都能识别。 samba 的话官方推荐使用 systemd mount 挂载，见 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/wiki/ROMS-on-CIFS-SAMBA-shares">sabma share</a></li>
+<li>网络存储，nas上分享成 samba，或者你自己电脑上开共享。</li>
+<li>阿里云盘 webdav 挂载，我自己研究出来的</li>
+</ul>
+<p>默认行为可以看脚本 <code>cat /usr/bin/mount_romfs.sh</code></p>
+<h4 id="exfat-移动硬盘"><a href="#exfat-移动硬盘" class="headerlink" title="exfat 移动硬盘"></a>exfat 移动硬盘</h4><p>移动硬盘格式化成 exfat 格式，然后游戏 roms 拷贝进去，插上去后会自动挂载一个分区：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">EmuELEC:~ # df -h</span><br><span class="line">Filesystem                Size      Used Available Use% Mounted on</span><br><span class="line">devtmpfs                791.1M      4.0K    791.1M   0% /dev</span><br><span class="line">/dev/sda1                 1.0G    694.4M    330.6M  68% /flash</span><br><span class="line">/dev/loop0              673.5M    673.5M         0 100% /</span><br><span class="line">/dev/sda2                26.1G     21.9G      4.2G  84% /storage</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /dev/shm</span><br><span class="line">tmpfs                   902.1M     10.3M    891.8M   1% /run</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /sys/fs/cgroup</span><br><span class="line">tmpfs                   902.1M      2.6M    899.5M   0% /var</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /tmp</span><br><span class="line">none                     26.1G     21.9G      4.2G  84% /tmp/overlays</span><br><span class="line">none                     26.1G     21.9G      4.2G  84% /tmp/joypads</span><br><span class="line">none                     26.1G     21.9G      4.2G  84% /tmp/assets</span><br><span class="line">none                     26.1G     21.9G      4.2G  84% /tmp/cores</span><br><span class="line">none                     26.1G     21.9G      4.2G  84% /tmp/database</span><br><span class="line">none                     26.1G     21.9G      4.2G  84% /tmp/shaders</span><br><span class="line">/dev/sdb1               119.2G     43.1G     76.2G  36% /var/media/ZGZ # 这里我的卷名字是 ZGZ</span><br><span class="line"></span><br><span class="line"># umount 掉 /var/media/ZGZ 后挂载到 /storage/roms</span><br><span class="line">EmuELEC:~ # umount /var/media/ZGZ/</span><br><span class="line">EmuELEC:~ # mount -t exfat -o nonempty /dev/sdb1 /storage/roms</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="webdav"><a href="#webdav" class="headerlink" title="webdav"></a>webdav</h4><p>阿里云盘 webdav 是我自己摸索出来的，因为有 aliyundrive-webdav 项目能把阿里云盘抽象成 webdav ，但是我 ssh 上去看了下我的固件里并不行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EmuELEC:~ # mount</span><br><span class="line">mount             mount.exfat       mount.exfat-fuse  mount.fuse        mount.ntfs        mountpoint</span><br></pre></td></tr></table></figure>
+
+<p>在官方 github 上 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/issues/793">提了 issue</a> 后，开发者告诉我 <code>installentware</code> 后能使用 opkg，我就整出来了。</p>
+<h5 id="aliyundrive-webdav"><a href="#aliyundrive-webdav" class="headerlink" title="aliyundrive-webdav"></a>aliyundrive-webdav</h5><p>先准备用大佬的 <a target="_blank" rel="noopener" href="https://github.com/messense/aliyundrive-webdav">messense&#x2F;aliyundrive-webdav</a> 把 阿里云盘 抽象成局域网的 webdav。有两种方案，一种是 openwrt 上，一种是非 openwrt 上，非 openwrt 上我是 Linux 跑 docker，windows 自己去 release 上下载 windows 的。Linux 的话 docker-compose 如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">aliyundrive-webdav:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">aliyundrive-webdav</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">host</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&#x27;REFRESH_TOKEN=xxxxxx&#x27;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">HOST=0.0.0.0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PORT=8080</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">WEBDAV_AUTH_USER=root</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">WEBDAV_AUTH_PASSWORD=root</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">messense/aliyundrive-webdav</span></span><br><span class="line">    <span class="attr">command:</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="string">/usr/bin/aliyundrive-webdav</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--auto-index</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--root=/person/life/Game/EmuELEC/roms</span> <span class="comment"># 阿里云盘上 roms 路径</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--cache-ttl=10</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="挂载-webdav"><a href="#挂载-webdav" class="headerlink" title="挂载 webdav"></a>挂载 webdav</h5><p>实际上我研究出两种方案，一种是利用 rclone，一种是安装 davfs2 挂载</p>
+<h6 id="rclone"><a href="#rclone" class="headerlink" title="rclone"></a>rclone</h6><p>先ssh 上去 wget <a target="_blank" rel="noopener" href="https://github.com/rclone/rclone/releases">下载 linux-arm64.zip</a> 后，<code>unzip -x </code> 解压它后挂载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加密密码</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;root&quot;</span> | ./rclone obscure -</span><br><span class="line"><span class="comment"># 挂载到当前 roms 目录</span></span><br><span class="line">./rclone mount :webdav: roms --webdav-url http://192.168.101.1:8080 --webdav-user root --webdav-pass DRggunKeWmBO8A9b9T2ZmkPFaR8 --cache-dir /tmp --allow-other --vfs-cache-mode writes --allow-non-empty</span><br></pre></td></tr></table></figure>
+
+<p>rclone webdav 文档：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://rclone.org/webdav/">https://rclone.org/webdav/</a></li>
+<li><a target="_blank" rel="noopener" href="https://rclone.org/commands/rclone_obscure/">https://rclone.org/commands/rclone_obscure/</a> # 为啥密码要加密</li>
+</ul>
+<h6 id="mount-t-davfs"><a href="#mount-t-davfs" class="headerlink" title="mount -t davfs"></a>mount -t davfs</h6><p>先 ssh 上去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行下面这个，一路yes 后重启</span></span><br><span class="line">installentware</span><br></pre></td></tr></table></figure>
+
+<p>然后你就能使用 opkg 了，安装下 <code>davfs2</code>，源在国外，不能安装就去上面的 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/issues/793#issuecomment-1018214935">issue 里</a>看我安装时候的 url </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opkg install davfs2</span><br></pre></td></tr></table></figure>
+
+<p>当然这样是无法在 EmuELEC 里使用的，就像我提的 issue 里，需要修改几个地方：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把 dav_user 和 dav_group 取消注释，并改成存在的用户，这里我是改成 root</span></span><br><span class="line">vi /opt/etc/davfs2/davfs2.conf </span><br></pre></td></tr></table></figure>
+
+<p>改完后用 <code>grep -Ev &#39;^\s*$|^\s*#&#39; /opt/etc/davfs2/davfs2.conf</code> 查看是这样的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dav_user        root            # system wide config file only</span><br><span class="line">dav_group       root            # system wide config file only</span><br></pre></td></tr></table></figure>
+
+<p>然后更改 secret 的文件权限，否则挂载 webdav 的时候会报错 <code>mount.davfs: file /opt/etc/davfs2/secrets has wrong permissions</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 0600 /opt/etc/davfs2/secrets</span><br></pre></td></tr></table></figure>
+
+<p>挂载 webdav，挂载完后建议 <code>ls /storage/roms</code>下，初次有一点卡</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t davfs  http://192.168.101.1:8080 /storage/roms</span><br></pre></td></tr></table></figure>
+
+<p>后续挂载前记得执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -f /opt/var/run/mount.davfs/storage-roms.pid</span><br></pre></td></tr></table></figure>
+
+<p>挂载完后进菜单刷新下游戏。</p>
+<p>关于 webdav 的一些文档:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://man.archlinux.org/man/mount.davfs.8.en">https://man.archlinux.org/man/mount.davfs.8.en</a></li>
+</ul>
+<p>后续可以参考 samba 写一个 systemd 的 mount</p>
+<h3 id="自制-roms"><a href="#自制-roms" class="headerlink" title="自制 roms"></a>自制 roms</h3><p>我这里是自己打包一个纯净的 N1 img 和网上其他 img 里的 ROMS 复制进去为主。</p>
+<p>N1 是个特殊存在，参照下面两个帖子：</p>
+<ul>
+<li>恩山 <a target="_blank" rel="noopener" href="https://www.right.com.cn/forum/thread-4090331-1-1.html">EmuELEC 4.2 自主安装</a>里的，</li>
+<li>贴吧 <a target="_blank" rel="noopener" href="https://tieba.baidu.com/p/7619382778?pn=1&p_tk=1322QifLqSShpTFmTFD890NZYhknA/BTlYv+JMFCYG1WaXS0J558KEir1sr/GhyhKoYcYhmNaHzkHIG4uN84DH58wemMHpNVngGfh7poXSCPq1KfAiXaTvOnRW+aIz8lXqSf&p_timestamp=1643350078&p_sign=37ee8f2d0a49b58124628a8003121082&p_signature=f28e253e43066beb6450b9130d8fe53d&__pc2ps_ab=1322QifLqSShpTFmTFD890NZYhknA/BTlYv+JMFCYG1WaXS0J558KEir1sr/GhyhKoYcYhmNaHzkHIG4uN84DH58wemMHpNVngGfh7poXSCPq1KfAiXaTvOnRW+aIz8lXqSf%7C1643350078%7Cf28e253e43066beb6450b9130d8fe53d%7C37ee8f2d0a49b58124628a8003121082&red_tag=0480290028&qq-pf-to=pcqq.group">N1可用的鬼灭之刃EmuELEC v4.3</a></li>
+</ul>
+<p>下载官方的 img 文件，然后 N1 的补丁文件我用在 4.3 的官方文件里去替换是可以的。对比了下我之前的人中日月的固件和官方 img 替换了 N1 补丁文件后，发现内核是一样的都是 <code>3.14.29</code>，说明人中日月打包也只是基础设置+游戏 roms 而已。<br>先官方的 img 文件刷到 U 盘里，然后 windows 上把补丁覆盖到第一个分区。然后插 N1 开机启动后设置如下：</p>
+<ul>
+<li>emuelec 菜单时区，也可以可以 ssh 上去</li>
+<li>ra 的中文乱码，<code>systemctl cat tmp-assets.mount</code> ， <code>cp -a /tmp/assets/* /storage/assets/</code> 后提取中文字体覆盖 <code>/storage/assets/ozone/</code> 下的俩 ttf 后（似乎下面的 pkg 目录也要处理？）。重启机器后选择中文，然后再在 RA 里选择保存下配置。</li>
+<li>自家 wifi 设置啥的</li>
+</ul>
+<p>然后拔下来，插 Linux 上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ parted /dev/sda u s p</span><br><span class="line">Model: SanDisk Extreme Pro (scsi)</span><br><span class="line">Disk /dev/sda: 250085376s</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: msdos</span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start     End         Size        Type     File system  Flags</span><br><span class="line"> 1      8192s     4202495s    4194304s    primary  fat32        boot, lba</span><br><span class="line"> 2      4202496s  8388608s    4186113s    primary  ext4</span><br><span class="line"> 3      8390656s  250085375s  241694720s  primary  fat32        lba</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>有三个分区，先打包一个纯净版，考虑到 U 盘容量问题和现在购买基本都是 16G（jd 上好像最小 8G），打包一个 7350M 的纯净版。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">truncate -s 7350M test.img</span><br></pre></td></tr></table></figure>
+
+<p>先把设置后的 U 盘内文件系统的东西导出来到 test.img 里：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> e1 e2 e3</span><br><span class="line">mount  -o iocharset=utf8 /dev/sda1 e1</span><br><span class="line">mount  /dev/sda2 e2</span><br><span class="line">mount  -o iocharset=utf8 /dev/sda1 e3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对文件开始分区，分区信息参考下 img</span></span><br><span class="line">parted test.img mklabel msdos</span><br><span class="line">parted test.img mkpart p fat32 8192s 4202495s</span><br><span class="line">parted test.img <span class="built_in">set</span> 1 boot on</span><br><span class="line">parted test.img mkpart p ext4 4202496s 8388608s</span><br><span class="line">parted test.img mkpart p fat32 8390656s 100%</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理我们的 img 文件</span></span><br><span class="line"></span><br><span class="line">LOOP_D=$(losetup --find)</span><br><span class="line">losetup --partscan <span class="variable">$LOOP_D</span>  test.img</span><br><span class="line"><span class="comment"># 创建分区表</span></span><br><span class="line">mkfs.vfat -F 32 -n EMUELEC <span class="variable">$&#123;LOOP_D&#125;</span>p1</span><br><span class="line">mkfs.ext4 -L STORAGE <span class="variable">$&#123;LOOP_D&#125;</span>p2</span><br><span class="line">mkfs.vfat -F 32 -n EEROMS <span class="variable">$&#123;LOOP_D&#125;</span>p3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 挂载</span></span><br><span class="line"><span class="built_in">mkdir</span> -p u&#123;1..3&#125;</span><br><span class="line">mount  -o iocharset=utf8 <span class="variable">$&#123;LOOP_D&#125;</span>p1 u1</span><br><span class="line">mount   <span class="variable">$&#123;LOOP_D&#125;</span>p2 u2</span><br><span class="line">mount  -o iocharset=utf8 <span class="variable">$&#123;LOOP_D&#125;</span>p3 u3</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 拷贝文件</span></span><br><span class="line">rsync -vzrtopgl  e1/ u1/</span><br><span class="line"></span><br><span class="line">rsync -vzrtopgl  e2/ u2/</span><br><span class="line"><span class="comment"># EEROMS</span></span><br><span class="line">rsync -vzrtopgl  e3/ u3/</span><br><span class="line"><span class="comment"># 添加命令别名</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;alias ll=&#x27;ls -l&#x27;&quot;</span> &gt;&gt; u2/.config/profile.d/99-emuelec_functions.conf</span><br><span class="line"><span class="comment"># 也可以自己修改一些文件</span></span><br></pre></td></tr></table></figure>
+
+<p>拷贝完成后，可以进行一些修改，例如后面的菜单汉化和主题修改。改完了后就可以收尾工作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">umount e&#123;1..2&#125; u&#123;1..3&#125;</span><br><span class="line">losetup -D $LOOP_D</span><br><span class="line"></span><br><span class="line">mv test.img EmuELEC-4.3-N1-3.img</span><br><span class="line">gzip EmuELEC-4.3-N1-3.img</span><br></pre></td></tr></table></figure>
+
+<h2 id="一些其他笔记"><a href="#一些其他笔记" class="headerlink" title="一些其他笔记"></a>一些其他笔记</h2><h3 id="ssh-的一些设置"><a href="#ssh-的一些设置" class="headerlink" title="ssh 的一些设置"></a>ssh 的一些设置</h3><p><code>/storage/.config/emuelec/configs/emuelec.conf</code> 里修改时区 <code>system.timezone=Asia/Shanghai</code></p>
+<h4 id="蓝牙相关"><a href="#蓝牙相关" class="headerlink" title="蓝牙相关"></a>蓝牙相关</h4><p>连蓝牙手柄参考：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行后进入 bluetoothctl 交互</span></span><br><span class="line">bluetoothctl</span><br><span class="line"></span><br><span class="line">default-agent</span><br><span class="line">power on</span><br><span class="line">discoverable on</span><br><span class="line">pairable on</span><br><span class="line">scan on</span><br></pre></td></tr></table></figure>
+
+<p>然后会开始扫描 蓝牙，记录下你的蓝牙手柄 MAC，开始配对</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">trust AC:FD:93:CB:3E:BE</span><br><span class="line">pair AC:FD:93:CB:3E:BE</span><br><span class="line">connect AC:FD:93:CB:3E:BE</span><br></pre></td></tr></table></figure>
+
+<p>移除设备的话</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">remove AC:FD:93:CB:3E:BE</span><br></pre></td></tr></table></figure>
+
+<h4 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h4><p>去官方仓库找，例如 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/es-theme-alekfull-EmueELEC">EmuELEC&#x2F;es-theme-alekfull-EmueELEC</a>，进入下面目录下载后解压：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /storage/.config/emulationstation/themes</span><br><span class="line">wget https://github.com/EmuELEC/es-theme-alekfull-EmueELEC/archive/refs/heads/master.zip</span><br><span class="line">unzip -x master.zip &amp;&amp; rm -f master.zip</span><br><span class="line">mv es-theme-alekfull-EmueELEC-* es-theme-alekfull-EmueELEC</span><br></pre></td></tr></table></figure>
+
+<p>主题设置在 <code>/storage/.config/emulationstation/es_settings.cfg</code> 里的 <code>ThemeSet</code></p>
+<h4 id="菜单汉化的话"><a href="#菜单汉化的话" class="headerlink" title="菜单汉化的话"></a>菜单汉化的话</h4><p>善用 find ，例如我看了下菜单里有部分还是英文，例如 <code>DANGER ZONE</code>，用命令查 <code>find / -type f -exec grep -Eil &#39;DANGER\s+zone&#39; &#123;&#125; \;</code>，找到如下文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/storage/.config/emulationstation/resources/mamenames.xml</span><br><span class="line">/storage/.config/emuelec/configs/locale/de/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/pt_PT/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/ko/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/hu/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/nb_NO/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/pl/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/ca/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/zh_TW/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/pt_BR/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/it/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/he/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/uk_UA/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/ru_RU/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/sv_SE/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/oc_FR/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/eu_ES/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/nl/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/el/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/zh_CN/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/zh_CN/LC_MESSAGES/emulationstation2.po~</span><br><span class="line">/storage/.config/emuelec/configs/locale/cy_GB/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/ja_JP/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/nn_NO/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/es_MX/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/tr/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/es/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/es/LC_MESSAGES/emulationstation2.po~</span><br><span class="line">/storage/.config/emuelec/configs/locale/fr/LC_MESSAGES/emulationstation2.po</span><br><span class="line">/storage/.config/emuelec/configs/locale/ar/LC_MESSAGES/emulationstation2.po</span><br></pre></td></tr></table></figure>
+
+<p>例如我要汉化 <code>DANGER ZONE</code> 这个菜单，按照下面步骤修改文件内容后发布：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /storage/.config/emuelec/configs/locale/zh_CN/LC_MESSAGES/</span><br><span class="line">vi emulationstation2.po</span><br><span class="line"># msgfmt 在包 gettext 里</span><br><span class="line">msgfmt -o emulationstation2.mo emulationstation2.po</span><br></pre></td></tr></table></figure>
+
+<h3 id="N1-补丁后开机-CoreELEC-图标解决"><a href="#N1-补丁后开机-CoreELEC-图标解决" class="headerlink" title="N1 补丁后开机 CoreELEC 图标解决"></a>N1 补丁后开机 CoreELEC 图标解决</h3><p>参照 <a target="_blank" rel="noopener" href="https://www.qishe.org/3774.html#">N1 启动原版 EmuELEC</a>:</p>
+<p>目前 N1跑 Emuelec 的办法都是替换补丁，补丁里的内核是从 CoreELEC 编译来的，所以启动时会显示 CoreELEC 的 logo，对于洁癖党来说不能忍受，而且一直用这个补丁内核的话，就不能随 EmuELEC 的更新而更新。哪有没有办法直接启动原版呢？答案是肯定的。首先得搞清楚为什么N1不能启动原版的原因。那是因为 EmuELEC 的内核打包成 Android boot image 格式，而 N1 的 uboot 却只支持未经压缩的内核，那我们只要想办法从 EmuELEC 的中解包出来未经压缩的内核和 initramfs 就可以了。<br>从新版的EmuELEC镜像中获取 kernel.img，然后下载 <a target="_blank" rel="noopener" href="http://whiteboard.ping.se/Android/Unmkbootimg">这个页面点那个 download 下载 unmkbootimg</a>，解压，在 linux 环境运行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载 unmkbootimg</span></span><br><span class="line">wget http://whiteboard.ping.se/uploads/Android/unmkbootimg.gz</span><br><span class="line">gzip  -d unmkbootimg.gz</span><br><span class="line"><span class="built_in">chmod</span> a+x unmkbootimg</span><br><span class="line"></span><br><span class="line">./unmkbootimg kernel.img  </span><br><span class="line"><span class="comment"># 会得到类似以下的文件：</span></span><br><span class="line">initramfs.cpio.gz  </span><br><span class="line">zImage</span><br><span class="line"><span class="comment"># 同时记住输出里的  Kernel address</span></span><br><span class="line">To recompile this image, use:</span><br><span class="line">  mkbootimg --kernel zImage --ramdisk initramfs.cpio.gz ...</span><br></pre></td></tr></table></figure>
+
+<p>如果此时需要修改开机图片的话，可以执行下面操作，这个步骤是通用的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> initramfs</span><br><span class="line"><span class="built_in">cd</span> initramfs</span><br><span class="line"><span class="comment"># 我看有些 initramfs.cpio.gz 并不是 gzip压缩的，所以下面报错的话先试试 file initramfs.cpio.gz 看看，是 gzip的话就 gzip -d initramfs.cpio.gz</span></span><br><span class="line">cpio -idmv &lt; ../initramfs.cpio.gz</span><br><span class="line"><span class="comment"># 替换 splash/下的 splash-1080.png 即可，必须格式也是，而不是后缀</span></span><br><span class="line"><span class="built_in">ls</span> -l splash/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换完成后打包回 initramfs.cpio.gz</span></span><br><span class="line"><span class="comment"># find . | cpio --create --format=&#x27;newc&#x27; &gt; ../initramfs.cpio.gz</span></span><br><span class="line">find . -print0 | cpio --null --create --format=newc &gt; ../initramfs.cpio.gz</span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="comment"># 把上面 unmkbootimg 输出的 mkbootimg 命令执行</span></span><br><span class="line"><span class="comment"># https://github.com/EmuELEC/EmuELEC/search?q=mkbootimg  https://github.com/EmuELEC/EmuELEC/search?q=ANDROID_BOOTIMG_OPTIONS</span></span><br><span class="line">mkbootimg --kernel zImage --ramdisk initramfs.cpio.gz --base 0x0 --kernel_offset 0x1080000 -o new_kernel.img</span><br></pre></td></tr></table></figure>
+
+<p>下面的没试过，主要是 N1 的步骤</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># https://www.right.com.cn/forum/thread-6632323-1-1.html</span><br><span class="line"># 把 initramfs.cpio.gz 打包成 uInitrd。</span><br><span class="line">mkimage -A arm64 -O linux -T kernel -C none -d initramfs.cpio.gz uInitrd</span><br><span class="line"></span><br><span class="line">#这里得到的 kernel 就是未压缩的内核，把他改名成 kernel.img。</span><br><span class="line">lzop -d zImage -o kernel.img.new</span><br></pre></td></tr></table></figure>
+
+<p>大功告成，把 kernel.img 和 uInitrd 替换补丁里的同名文件，启动时就是用原版内核了</p>
+<h3 id="开机启动顺序"><a href="#开机启动顺序" class="headerlink" title="开机启动顺序"></a>开机启动顺序</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/michaelchain/article/details/119628601">https://blog.csdn.net/michaelchain/article/details/119628601</a> 参考这个，更多的不写进来了</p>
+<p>这个是在 uboot 中进行管理的, 可以通过 <code>fw_printenv</code> 命令进行查看:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">EmuELEC:~ # fw_printenv</span><br><span class="line">...</span><br><span class="line">baudrate=115200</span><br><span class="line">boot_count=0</span><br><span class="line">bootcmd=if test $&#123;bootfromnand&#125; = 1; then setenv bootfromnand 0; saveenv; else run bootfromsd; run bootfromusb; fi; run storeboot</span><br><span class="line">bootcount_check=echo bootcounts=$&#123;boot_count&#125;; if itest $&#123;boot_count&#125; == 0; then setenv boot_count 1;saveenv;else if itest $&#123;boot_count&#125; == 1; then setenv boot_count 2;saveenv;else if itest $&#123;boot_count&#125; == 2; then setenv boot_count 3;saveenv;else if itest $&#123;boot_count&#125; == 3; then setenv boot_count 4;saveenv;else if itest $&#123;boot_count&#125; == 4; then run recovery_from_flash;fi;fi;fi;fi;fi</span><br><span class="line">bootdelay=0</span><br><span class="line">bootfromnand=0</span><br><span class="line">bootfromsd=mmcinfo; if fatload mmc 0 $&#123;loadaddr&#125; kernel.img; then run sddtb; setenv bootargs $&#123;bootargs&#125; bootfromsd; bootm; fi</span><br><span class="line">bootfromusb=usb start 0; if fatload usb 0 $&#123;loadaddr&#125; kernel.img; then run usbdtb; setenv bootargs $&#123;bootargs&#125; bootfromusb; bootm; fi</span><br><span class="line">bootmode_check=get_rebootmode; echo reboot_mode=$&#123;reboot_mode&#125;;if test $&#123;reboot_mode&#125; = factory_reset; then defenv_reserv;setenv upgrade_step 2; save;fi;</span><br><span class="line">cmdline_keys=if keyman init 0x1234; then if sec_keyunify read mac $&#123;loadaddr&#125; str; then setenv bootargs $&#123;bootargs&#125; mac=$&#123;mac&#125; androidboot.mac=$&#123;mac&#125;;fi;fi;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>可以看到其中的 bootfromnand 变量是用于控制设备的启动顺序, 如果值为1, 那么从nand(设备内部存储, eMMC等), 如果值为0, 那么依次从sd, 从usb启动, 在这个过程中如果某个介质可以启动了, 就把这个方式加到bootargs变量的值当中去, 例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setenv bootargs $&#123;bootargs&#125; bootfromsd;</span><br></pre></td></tr></table></figure>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
+            <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/01/22/EmuELEC/">http://zhangguanzhang.github.io/2022/01/22/EmuELEC/</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/01/22/EmuELEC/">January 22nd 2022, 2:28:30 pm</a>
+            <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/01/22/EmuELEC/">January 22nd 2022, 2:28:30 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/01/26/nginx-static-build/" title="利用 docker buildx 静态编译 nginx">
+                    <div class="nextTitle">利用 docker buildx 静态编译 nginx</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/12/19/openwrt-update/" title="openwrt 的在线升级固件和扩容的研究">
+                    <div class="prevTitle">openwrt 的在线升级固件和扩容的研究</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMzk1OC8xMDQ5Mw>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活 JavaScript</noscript>
+    </div>
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:zhangguanzhang@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/zhangguanzhang" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                    
+                    <img class="profile-qr" src="/assets/example_wc.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/assets/zhifubao.png" class="iconfont-archer others" target="_blank" title=others></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#EmuELEC-%E7%AC%94%E8%AE%B0"><span class="toc-number">1.</span> <span class="toc-text">EmuELEC 笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#EmuELEC-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">EmuELEC 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E6%9C%BA"><span class="toc-number">1.2.</span> <span class="toc-text">刷机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%AE%B2%E8%A7%A3"><span class="toc-number">1.3.</span> <span class="toc-text">分区讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.1.</span> <span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wifi"><span class="toc-number">1.3.2.</span> <span class="toc-text">wifi</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">1.4.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-number">1.5.</span> <span class="toc-text">使用问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E5%88%AB-HDMI-%E5%B1%8F%E5%B9%95%E6%B2%A1%E5%A3%B0%E9%9F%B3"><span class="toc-number">1.5.1.</span> <span class="toc-text">个别 HDMI 屏幕没声音</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F"><span class="toc-number">1.5.2.</span> <span class="toc-text">延迟</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E7%8E%A9%E6%B3%95"><span class="toc-number">1.6.</span> <span class="toc-text">进阶玩法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#roms-%E7%BD%91%E7%AB%99"><span class="toc-number">1.6.1.</span> <span class="toc-text">roms 网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%A9%E5%AE%B9%E5%92%8C%E6%8F%90%E5%8F%96-roms"><span class="toc-number">1.6.2.</span> <span class="toc-text">缩容和提取 roms</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#windows-%E7%BC%A9%E5%AE%B9%E5%92%8C%E6%8F%90%E5%8F%96-roms"><span class="toc-number">1.6.2.1.</span> <span class="toc-text">windows 缩容和提取 roms</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux-%E7%BC%A9%E5%AE%B9%E5%92%8C%E6%8F%90%E5%8F%96-roms"><span class="toc-number">1.6.2.2.</span> <span class="toc-text">Linux 缩容和提取 roms</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#img-%E6%8C%82%E8%BD%BD%E5%88%B0%E6%9C%AC%E5%9C%B0%E7%9B%AE%E5%BD%95"><span class="toc-number">1.6.2.2.1.</span> <span class="toc-text">img 挂载到本地目录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%8B%E9%9A%86%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%88%B0-U-%E7%9B%98%E4%B8%8A"><span class="toc-number">1.6.2.2.2.</span> <span class="toc-text">克隆文件系统到 U 盘上</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E7%9C%9F%E6%AD%A3%E7%BC%A9%E5%AE%B9%E7%9A%84-img"><span class="toc-number">1.6.2.2.3.</span> <span class="toc-text">制作真正缩容的 img</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E7%BD%AE-roms"><span class="toc-number">1.6.3.</span> <span class="toc-text">外置 roms</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#exfat-%E7%A7%BB%E5%8A%A8%E7%A1%AC%E7%9B%98"><span class="toc-number">1.6.3.1.</span> <span class="toc-text">exfat 移动硬盘</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#webdav"><span class="toc-number">1.6.3.2.</span> <span class="toc-text">webdav</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#aliyundrive-webdav"><span class="toc-number">1.6.3.2.1.</span> <span class="toc-text">aliyundrive-webdav</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD-webdav"><span class="toc-number">1.6.3.2.2.</span> <span class="toc-text">挂载 webdav</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#rclone"><span class="toc-number">1.6.3.2.2.1.</span> <span class="toc-text">rclone</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#mount-t-davfs"><span class="toc-number">1.6.3.2.2.2.</span> <span class="toc-text">mount -t davfs</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%88%B6-roms"><span class="toc-number">1.6.4.</span> <span class="toc-text">自制 roms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E7%AC%94%E8%AE%B0"><span class="toc-number">1.7.</span> <span class="toc-text">一些其他笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh-%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.7.1.</span> <span class="toc-text">ssh 的一些设置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%93%9D%E7%89%99%E7%9B%B8%E5%85%B3"><span class="toc-number">1.7.1.1.</span> <span class="toc-text">蓝牙相关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E9%A2%98"><span class="toc-number">1.7.1.2.</span> <span class="toc-text">主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8F%9C%E5%8D%95%E6%B1%89%E5%8C%96%E7%9A%84%E8%AF%9D"><span class="toc-number">1.7.1.3.</span> <span class="toc-text">菜单汉化的话</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#N1-%E8%A1%A5%E4%B8%81%E5%90%8E%E5%BC%80%E6%9C%BA-CoreELEC-%E5%9B%BE%E6%A0%87%E8%A7%A3%E5%86%B3"><span class="toc-number">1.7.2.</span> <span class="toc-text">N1 补丁后开机 CoreELEC 图标解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.7.3.</span> <span class="toc-text">开机启动顺序</span></a></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 152
+        </div>
+        <!-- search  -->
+        
+            <div class="site-search site-search-loading popup-trigger">
+                <span class="iconfont-archer search-icon">&#xe627;</span>
+            </div>
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2022/05/13/overlayfs-unix-socket/">低版本内核下容器内部无法使用 unix socket 通信</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/23</span>
+            <a class="archive-post-title" href="/2022/04/23/nfc/">nfc 折腾笔记，ACR122U/proxmark3</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2022/04/22/segfault-often/">docker containerd 不定时的 segfault 的一次处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2022/04/21/ecs-xmrig/">ecs 中毒的一次处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2022/04/11/sdn-tcp-keepalive/">无数据的 tcp 链接被 SDN/防火墙 干掉的一种处理办法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2022/03/24/python-list-kubernetes-permission/">python kubernetes client list permission</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/2022/03/16/cannot-assign-requested-address/">server 端的 cannot assign requested address</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span>
+            <a class="archive-post-title" href="/2022/02/24/keepalived-static-build/">keepalived static link build</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span>
+            <a class="archive-post-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">proxmox 开机 error: disk 'lvmid/[vg uuid]/[lv uuid]' not found</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span>
+            <a class="archive-post-title" href="/2022/02/10/docker-daemon-layer-broken/">18.09.03 docker daemon layer broken 的一次不优雅处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2022/01/26/nginx-static-build/">利用 docker buildx 静态编译 nginx</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2022/01/22/EmuELEC/">EmuELEC 笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span>
+            <a class="archive-post-title" href="/2021/12/19/openwrt-update/">openwrt 的在线升级固件和扩容的研究</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2021/12/12/mod-rejected-by-service/">docker数据盘损坏后启动报错 Error starting daemon: Error initializing network controller: Error creating default "bridge" network: package not installed</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span>
+            <a class="archive-post-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/28</span>
+            <a class="archive-post-title" href="/2021/09/28/ipvs-svc/">在非容器环境上实现散装的 IPVS SVC</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2021/09/16/read-containerd-con-reset/">解决 docker 的 read unix @->/run/containerd/s/xxx read: connection reset by peer: unknown</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span>
+            <a class="archive-post-title" href="/2021/09/03/openwrt-usb-net/">[持续更新] - Openwrt USB 网络</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span>
+            <a class="archive-post-title" href="/2021/09/02/fio/">fio 静态编译和基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2021/09/01/ubuntu18-and-cfq/">ubuntu18下io调度算法是cfq导致mysql非常慢</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/k8s-runxtables.lock/">干掉烦人的 open /run/xtables.lock: is a directory</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2021/08/25/flannel-a-host-net-tmout/">flannel下集群有个节点网络不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/cni-plugins-bridge-err/">一次 cni-plugins 导致集群 dns 无法解析的排错</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span>
+            <a class="archive-post-title" href="/2021/08/16/reserve-compute-resources/">kubelet 为系统配置预留资源</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2021/07/26/kylin-v10-boot-hang/">鲲鹏920的麒麟v10物理服务器断电后无法启动处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span>
+            <a class="archive-post-title" href="/2021/07/20/dlv-remote/">dlv命令行的远程调试 golang 进程步骤(包含容器进程)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2021/07/16/consul-mips64le/">编译mips64le架构的consul</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">机器重启后 kube-apiserver 无法启动，etcd刷(error "EOF", ServerName "")</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2021/07/05/systemctl-start-docker-canceled/">Job for docker.service canceled</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/08</span>
+            <a class="archive-post-title" href="/2021/06/08/ocp4.5.9-restore-etcd/">openshift 4.5.9 etcd损坏+脑裂修复过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2021/04/30/kubernetes-sec-agent-node-network-error/">一次单节点单个pod网络问题排查过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2021/04/08/kubelet-runc-disable-kmem/">kubelet 和 runc 编译关闭 kmem</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2021/03/23/iptables-docker-no-chain/">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span>
+            <a class="archive-post-title" href="/2021/03/12/build-arm64-docker-compose-action/">使用github action 配合 docker buildx 编译 arm64 docker-compose</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2021/02/02/node-shutdown-dns-unavailable/">集群节点关机导致dns在eviction pod之前几率不可用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2021/01/24/e2fsprogs/">e2fsck 太老报错 has unsupported feature(s): metadata_csum，从而尝试静态编译</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2021/01/23/chrony/">chrony 静态编译和笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2020/12/04/docker1803-hang-container-restore/">docker18.03 hang at 'restoring container'</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-reload-user/">ansible reload user group</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-hang-in-docker/">ansible hang in docker container</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span>
+            <a class="archive-post-title" href="/2020/11/20/disable-swap/">永久关闭swap的正确姿势</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2020/10/30/uos20-nftables/">统信USO 20 hostPort 无法访问</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2020/09/18/ocp-4.5-install/">openshift 4.5.9 离线安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2020/08/27/skopeo-static-build/">skopeo 静态编译</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span>
+            <a class="archive-post-title" href="/2020/08/05/wireguard-for-personal/">个人用 wireguard 笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span>
+            <a class="archive-post-title" href="/2020/07/30/prometheus-rate-and-irate/">prometheus的rate与irate内部是如何计算的</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2020/07/23/fs-error-fix-k8s-master/">k8s master机器文件系统故障的一次恢复过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2020/07/05/linux-auditd/">Linux audit 审计</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2020/06/25/kubernetes-pprof/">k8s pprof 分析 cpu 和内存</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2020/06/23/host-gw-in-aliyun/">阿里云上使用flannel host-gw跨节点pod不通的解决</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2020/06/19/go-prom-exporter/">[未写完]使用go开发一个Prometheus的exporter</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2020/05/23/k8s-vxlan-63-timeout/">v1.17+ k8s集群下CNI使用VXLAN模式SVC有63秒延迟的触发原因定位</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2020/05/13/x86-router-flash/">proxmox x86软路由笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/dns-formerr/">adguardhome dns FORMERR 错误</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/N1-flash/">斐讯N1刷机和旁路由的设置</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/go-version-ifno/">git工作流下golang项目的version信息该如何处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/26</span>
+            <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span>
+            <a class="archive-post-title" href="/2020/03/10/go-mod-base-use/">go mod的基础使用-科普</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/centos6-hung-while-booting/">centos6中毒重启后卡在启动页面</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/binfmt-0000/">记录一次request_module: runaway loop modeprobe binfmt-0000</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span>
+            <a class="archive-post-title" href="/2020/02/27/microsoft-graph-for-onedrive/">使用microsoft-graph的api对接onedrive</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2020/01/15/kill-ctr-with-grace-period/">Killing container "docker://xxx with 30 second grace period</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2020/01/08/docker-panic-invalid-page-type/">docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2019/12/05/suse-fix-data-but-device-busy/">opensuse的一次救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span>
+            <a class="archive-post-title" href="/2019/12/03/dos-to-gpt/">从PTTYPE="dos"到TYPE="LVM2_member"的救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2019/11/24/kubeadm-base-use/">[长期更新]--应大多数人要求写下kubeadm的基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2019/10/24/deployment-consul-in-k8s/">consul仅当服务发现在k8s无状态部署使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">手动修复v1.14-v1.15版本k8s的issue:76956</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2019/10/12/boot-grub-rescue/">/boot目录被清空下物理机无法开机的一次救援</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/ansible-count-Idempotency/">ansible数量限制上的幂等性</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/27</span>
+            <a class="archive-post-title" href="/2019/09/27/consul-tls/">高可用的SSL consul cluster实践</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2019/09/05/prometheus-change-timezone/">修改源码更改prometheus的时区问题</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2019/08/24/gobot-build/">gobot控制esp8266</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2019/08/06/preseed/">ubuntu preseed无人应答安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span>
+            <a class="archive-post-title" href="/2019/07/14/chromedp/">golang headless browser包chromedp初探</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2019/07/08/nodeport-err/">为什么我不用nodePort之偶然中奖几率</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2019/07/07/golang-http/">golang的net/http包的客户端简单科普</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2019/06/26/uefi-pxe/">uefi模式下docker+交换机部署pxe批量安装</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2019/06/23/autoInstallServer/">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span>
+            <a class="archive-post-title" href="/2019/06/12/CLP/">SMASH CLP的一些笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2019/06/02/cobra/">golang cobra的一些笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2019/05/11/container-too-many-open-file/">standard_init_linux.go:211: exec user process caused "too many open files in system"</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2019/04/28/k8s-java-start-time-not-same/">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2019/03/22/k8s-controller-error/">一次kube-controller-manager的bug导致的线上无法调度处理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2019/03/15/flannel-bin/">不走etcd v2 api下二进制跑flannel的总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span>
+            <a class="archive-post-title" href="/2019/03/11/k8s-ha/">k8s高可用涉及到ip填写的相关配置和一些坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span>
+            <a class="archive-post-title" href="/2019/03/03/kubernetes-1-13-4/">二进制部署Kubernetes v1.13.12 HA可选</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/19</span>
+            <a class="archive-post-title" href="/2019/02/19/jira-confluence/">docker部署jira(8.0.0)和confluence(6.14.1)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2019/02/12/dashboard/">通用的dashboard部署和tls，SSL相关部署</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span>
+            <a class="archive-post-title" href="/2019/01/30/fstab/">fstab与systemd.mount自动挂载的一点研究和见解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2019/01/22/proxmox-cloud-init/">proxmox里使用cloud-init和一些笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2018/12/04/black-box-exporter/">prometheus的黑盒监控</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2018/11/24/how-to-use-kubeadm/">对于初入k8s和kubeadm的一些建议</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2018/11/06/onlyoffice/">一次docker镜像的解耦--onlyoffice</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018/11/05/10chars/">记录一次十字符病毒清理过程</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span>
+            <a class="archive-post-title" href="/2018/10/27/create-kubeconfig/">生成kubeconfig常规的两种方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2018/10/12/prometheus-operator/">全手动部署prometheus-operator监控K8S集群以及一些坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2018/10/06/IngressController/">IngressController使用和它的高可用落地</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span>
+            <a class="archive-post-title" href="/2018/09/24/k8s-some-vpc-cluster/">跨VPC或者跨云供应商搭建K8S集群正确姿势</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2018/09/18/kubernetes-1-11-x-bin/">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span>
+            <a class="archive-post-title" href="/2018/08/03/Kubernetes_install_1.11.1/">Kubernetes v1.11.x HA全手动苦工安装教学</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2018/07/18/ecs-vip/">基于openstack的ecs上使用VIP</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2018/07/08/travis-sync-gcr-io/">利用travis同步gcr.io镜像到dockerhub</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2018/06/25/etcd-error/">记录一次线上k8s节点故障</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2018/06/03/kubernetes-s-job/">kubernetes's Job总结和实战以及坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2018/06/02/kubernetes-nodeSelector/">kubernetes的PodAffinity的不解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2018/05/05/Kubernetes_install/">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2018/04/29/kubernetes-configMap-mount/">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">使用管理网当作业务网keepalived VIP的心跳线</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2018/02/15/linux-tc/">Linux tc基础使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/05</span>
+            <a class="archive-post-title" href="/2018/02/05/docker-image-can-t-rm/">docker无法删除掉镜像的解决方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">慎用docker的--rm选项!!!</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">docker的一些概念</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span>
+            <a class="archive-post-title" href="/2017/12/24/docker%E5%AE%B9%E5%99%A8%E8%AE%BF%E9%97%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA/">docker容器访问宿主机</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/23</span>
+            <a class="archive-post-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">docker容器网络互联</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2017/07/25/linux-bridge/">centos桥接测试</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span>
+            <a class="archive-post-title" href="/2017/07/15/dd-make-boot-device/">使用 dd 利用 iso 文件制作 USB 启动盘</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2017/07/06/windows/">windows 笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2017/07/05/centos7-some-mirror/">centos7 的一些常见软件的安装 mirror</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2017/06/26/lua-list-all-upsteam/">lua列出所有upsteam</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2017/06/03/bash-complete/">bash自定义补全</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span>
+            <a class="archive-post-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">shell脚本的选项和参数处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2017/05/15/rpmbuild/">rpm包的制作笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2017/05/12/ssh-trust/">ssh互信</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2017/05/06/shell%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%8F%90%E5%8D%87%E6%95%88%E7%8E%87/">shell利用快捷键提升命令输入和编辑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2017/04/29/zabbixsetup/">个人zabbix安装和坑的解决</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span>
+            <a class="archive-post-title" href="/2017/04/26/%E6%AD%A3%E5%88%99%E9%9B%B6%E5%AE%BD%E6%96%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%B8%AA%E6%B3%A8%E6%84%8F%E7%82%B9/">正则零宽断言的一个注意点</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/25</span>
+            <a class="archive-post-title" href="/2017/04/25/%E8%BD%AC%E8%BD%BD-awk%E4%B8%ADRS-OFS-RS-ORS%E5%8C%BA%E5%88%AB%E4%BA%8E%E8%81%94%E7%B3%BB/">[转载]awk中RS,ORS,FS,OFS区别于联系</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/lvm-practice/">记录LVM和raid的练习</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/linux-partition-grow/">虚拟化扩容硬盘大小</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span>
+            <a class="archive-post-title" href="/2017/04/17/iot/">分享下自己做的外网控制硬件</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shell_process/">shell多进程并发执行</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shellsubstring/">shell的字符串截取</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2017/04/11/8266hexdownload/">8266模块的烧写和sdk的坑</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2017/04/09/armlnmp/">安卓安装linux并且源码编译安装搭建lnmp的坑和总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span>
+            <a class="archive-post-title" href="/2017/03/28/zombie-process/">Linux 僵尸进程处理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2017/03/23/check-dhcp-or-static/">判断是否是 dhcp 获取ip的一个手段</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span>
+            <a class="archive-post-title" href="/2017/03/20/ftp-install/">vsftpd虚拟用户简单部署</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2017/03/15/lnmp/">源码编译安装lnmp</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span>
+            <a class="archive-post-title" href="/2017/02/26/ad/">Altium Designer里走线开窗和挖除铺铜还有一些技巧</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2017/02/12/wx00/">微信公众号接入自己服务器</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2017/02/02/lamp/">lamp环境搭建总结</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2017/01/08/tuling-wx/">微信公众号接入图灵机器人api</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2016 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span>
+            <a class="archive-post-title" href="/2016/11/13/cad/">cad</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2016/10/30/20161030/">记录下自己制作的led-vu</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2016/10/28/hello/">hello world</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="微信">
+                <span class="iconfont-archer">&#xe606;</span>
+                微信
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="diy">
+                <span class="iconfont-archer">&#xe606;</span>
+                diy
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                8266
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="总结">
+                <span class="iconfont-archer">&#xe606;</span>
+                总结
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipmi">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipmi
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CLP">
+                <span class="iconfont-archer">&#xe606;</span>
+                CLP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="k8s">
+                <span class="iconfont-archer">&#xe606;</span>
+                k8s
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Mismatch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Mismatch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Altium Designer">
+                <span class="iconfont-archer">&#xe606;</span>
+                Altium Designer
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ansible">
+                <span class="iconfont-archer">&#xe606;</span>
+                ansible
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="consul">
+                <span class="iconfont-archer">&#xe606;</span>
+                consul
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                docker
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lnmp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lnmp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="安卓">
+                <span class="iconfont-archer">&#xe606;</span>
+                安卓
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kernel">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernel
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                prometheus
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="exporter">
+                <span class="iconfont-archer">&#xe606;</span>
+                exporter
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="boot">
+                <span class="iconfont-archer">&#xe606;</span>
+                boot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="grub">
+                <span class="iconfont-archer">&#xe606;</span>
+                grub
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cad">
+                <span class="iconfont-archer">&#xe606;</span>
+                cad
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tcp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tcp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="golang">
+                <span class="iconfont-archer">&#xe606;</span>
+                golang
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="centos6">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="chromedp">
+                <span class="iconfont-archer">&#xe606;</span>
+                chromedp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="chrony">
+                <span class="iconfont-archer">&#xe606;</span>
+                chrony
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubernetes">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubernetes
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cni-plugins">
+                <span class="iconfont-archer">&#xe606;</span>
+                cni-plugins
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="mips64le">
+                <span class="iconfont-archer">&#xe606;</span>
+                mips64le
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubeconfig">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeconfig
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="swap">
+                <span class="iconfont-archer">&#xe606;</span>
+                swap
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dlv">
+                <span class="iconfont-archer">&#xe606;</span>
+                dlv
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="adguardhome">
+                <span class="iconfont-archer">&#xe606;</span>
+                adguardhome
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dns">
+                <span class="iconfont-archer">&#xe606;</span>
+                dns
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Dockerfile">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dockerfile
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="e2fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                e2fsck
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                fsck
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepavlied">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepavlied
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ecs">
+                <span class="iconfont-archer">&#xe606;</span>
+                ecs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="xmrig">
+                <span class="iconfont-archer">&#xe606;</span>
+                xmrig
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="etcd">
+                <span class="iconfont-archer">&#xe606;</span>
+                etcd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fio">
+                <span class="iconfont-archer">&#xe606;</span>
+                fio
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="flannel">
+                <span class="iconfont-archer">&#xe606;</span>
+                flannel
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ftp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="go mod">
+                <span class="iconfont-archer">&#xe606;</span>
+                go mod
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="go">
+                <span class="iconfont-archer">&#xe606;</span>
+                go
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gobot">
+                <span class="iconfont-archer">&#xe606;</span>
+                gobot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="esp8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp8266
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hello world">
+                <span class="iconfont-archer">&#xe606;</span>
+                hello world
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="host-gw">
+                <span class="iconfont-archer">&#xe606;</span>
+                host-gw
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="mqtt">
+                <span class="iconfont-archer">&#xe606;</span>
+                mqtt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="原创">
+                <span class="iconfont-archer">&#xe606;</span>
+                原创
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="jira">
+                <span class="iconfont-archer">&#xe606;</span>
+                jira
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confluence">
+                <span class="iconfont-archer">&#xe606;</span>
+                confluence
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-controller-manager">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-controller-manager
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="java">
+                <span class="iconfont-archer">&#xe606;</span>
+                java
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="springboot">
+                <span class="iconfont-archer">&#xe606;</span>
+                springboot
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vip">
+                <span class="iconfont-archer">&#xe606;</span>
+                vip
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepalived">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalived
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ConfigMap">
+                <span class="iconfont-archer">&#xe606;</span>
+                ConfigMap
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="PodAffinity">
+                <span class="iconfont-archer">&#xe606;</span>
+                PodAffinity
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                kylin
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="arm64">
+                <span class="iconfont-archer">&#xe606;</span>
+                arm64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kylin
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="audit">
+                <span class="iconfont-archer">&#xe606;</span>
+                audit
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fs">
+                <span class="iconfont-archer">&#xe606;</span>
+                fs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nginx">
+                <span class="iconfont-archer">&#xe606;</span>
+                nginx
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="microsoft">
+                <span class="iconfont-archer">&#xe606;</span>
+                microsoft
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="graph">
+                <span class="iconfont-archer">&#xe606;</span>
+                graph
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="onedrive">
+                <span class="iconfont-archer">&#xe606;</span>
+                onedrive
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nodeport">
+                <span class="iconfont-archer">&#xe606;</span>
+                nodeport
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="usb-net">
+                <span class="iconfont-archer">&#xe606;</span>
+                usb-net
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="overlay">
+                <span class="iconfont-archer">&#xe606;</span>
+                overlay
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kernal">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernal
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="preseed">
+                <span class="iconfont-archer">&#xe606;</span>
+                preseed
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                Prometheus
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openstack">
+                <span class="iconfont-archer">&#xe606;</span>
+                openstack
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cloud-init">
+                <span class="iconfont-archer">&#xe606;</span>
+                cloud-init
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="python">
+                <span class="iconfont-archer">&#xe606;</span>
+                python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="containerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                containerd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="keepalive">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalive
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="shell">
+                <span class="iconfont-archer">&#xe606;</span>
+                shell
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="bash">
+                <span class="iconfont-archer">&#xe606;</span>
+                bash
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="skopeo">
+                <span class="iconfont-archer">&#xe606;</span>
+                skopeo
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ssh">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssh
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubelet">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubelet
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="systemd">
+                <span class="iconfont-archer">&#xe606;</span>
+                systemd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="dockerhub">
+                <span class="iconfont-archer">&#xe606;</span>
+                dockerhub
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gcr.io">
+                <span class="iconfont-archer">&#xe606;</span>
+                gcr.io
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="api">
+                <span class="iconfont-archer">&#xe606;</span>
+                api
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ubuntu18">
+                <span class="iconfont-archer">&#xe606;</span>
+                ubuntu18
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="initrd">
+                <span class="iconfont-archer">&#xe606;</span>
+                initrd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tftp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="uos">
+                <span class="iconfont-archer">&#xe606;</span>
+                uos
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="x86">
+                <span class="iconfont-archer">&#xe606;</span>
+                x86
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openwrt">
+                <span class="iconfont-archer">&#xe606;</span>
+                openwrt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="zabbix">
+                <span class="iconfont-archer">&#xe606;</span>
+                zabbix
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="zombie">
+                <span class="iconfont-archer">&#xe606;</span>
+                zombie
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="正则">
+                <span class="iconfont-archer">&#xe606;</span>
+                正则
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="awk">
+                <span class="iconfont-archer">&#xe606;</span>
+                awk
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="EmuELEC">
+                <span class="iconfont-archer">&#xe606;</span>
+                EmuELEC
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ingress">
+                <span class="iconfont-archer">&#xe606;</span>
+                ingress
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="N1">
+                <span class="iconfont-archer">&#xe606;</span>
+                N1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cobra">
+                <span class="iconfont-archer">&#xe606;</span>
+                cobra
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hang">
+                <span class="iconfont-archer">&#xe606;</span>
+                hang
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cifs">
+                <span class="iconfont-archer">&#xe606;</span>
+                cifs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="http">
+                <span class="iconfont-archer">&#xe606;</span>
+                http
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lvs">
+                <span class="iconfont-archer">&#xe606;</span>
+                lvs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipvsadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipvsadm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-proxy">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-proxy
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="63s">
+                <span class="iconfont-archer">&#xe606;</span>
+                63s
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="timeout">
+                <span class="iconfont-archer">&#xe606;</span>
+                timeout
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="lamp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lamp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nfc">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pm3">
+                <span class="iconfont-archer">&#xe606;</span>
+                pm3
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="coredns">
+                <span class="iconfont-archer">&#xe606;</span>
+                coredns
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="openshift">
+                <span class="iconfont-archer">&#xe606;</span>
+                openshift
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ocp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ocp
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="squashfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                squashfs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="timezone">
+                <span class="iconfont-archer">&#xe606;</span>
+                timezone
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="rpm">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="rpmbuild">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpmbuild
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="segfault">
+                <span class="iconfont-archer">&#xe606;</span>
+                segfault
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="suse">
+                <span class="iconfont-archer">&#xe606;</span>
+                suse
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="wireguard">
+                <span class="iconfont-archer">&#xe606;</span>
+                wireguard
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="raid">
+                <span class="iconfont-archer">&#xe606;</span>
+                raid
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kubeadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeadm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="operator">
+                <span class="iconfont-archer">&#xe606;</span>
+                operator
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="日志">
+            <span class="iconfont-archer">&#xe60a;</span>
+            日志
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="闲搞">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲搞
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ipmi">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ipmi
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubernetes">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubernetes
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ansible">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ansible
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubelet">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubelet
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Auto cad">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Auto cad
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubeconfig">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeconfig
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="grub">
+            <span class="iconfont-archer">&#xe60a;</span>
+            grub
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            linux
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="centos6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            centos6
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="openstack">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openstack
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="vsftp">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vsftp
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="go">
+            <span class="iconfont-archer">&#xe60a;</span>
+            go
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="version">
+            <span class="iconfont-archer">&#xe60a;</span>
+            version
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="panic">
+            <span class="iconfont-archer">&#xe60a;</span>
+            panic
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="gobot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            gobot
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="闲聊">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲聊
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="iptables">
+            <span class="iconfont-archer">&#xe60a;</span>
+            iptables
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="admission">
+            <span class="iconfont-archer">&#xe60a;</span>
+            admission
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kube-controller-manager">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kube-controller-manager
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="keepalived">
+            <span class="iconfont-archer">&#xe60a;</span>
+            keepalived
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Job">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Job
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="lua">
+            <span class="iconfont-archer">&#xe60a;</span>
+            lua
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="microsoft">
+            <span class="iconfont-archer">&#xe60a;</span>
+            microsoft
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="openwrt">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openwrt
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="preseed">
+            <span class="iconfont-archer">&#xe60a;</span>
+            preseed
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="proxmox">
+            <span class="iconfont-archer">&#xe60a;</span>
+            proxmox
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="总结">
+            <span class="iconfont-archer">&#xe60a;</span>
+            总结
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="CI">
+            <span class="iconfont-archer">&#xe60a;</span>
+            CI
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="Kylin">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Kylin
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="ubuntu18">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ubuntu18
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="pxe">
+            <span class="iconfont-archer">&#xe60a;</span>
+            pxe
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="uos">
+            <span class="iconfont-archer">&#xe60a;</span>
+            uos
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="graph">
+            <span class="iconfont-archer">&#xe60a;</span>
+            graph
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="运维">
+            <span class="iconfont-archer">&#xe60a;</span>
+            运维
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="zombie">
+            <span class="iconfont-archer">&#xe60a;</span>
+            zombie
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="travis">
+            <span class="iconfont-archer">&#xe60a;</span>
+            travis
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="onedrive">
+            <span class="iconfont-archer">&#xe60a;</span>
+            onedrive
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="consul">
+            <span class="iconfont-archer">&#xe60a;</span>
+            consul
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="fstab">
+            <span class="iconfont-archer">&#xe60a;</span>
+            fstab
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="http">
+            <span class="iconfont-archer">&#xe60a;</span>
+            http
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="vxlan">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vxlan
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="coredns">
+            <span class="iconfont-archer">&#xe60a;</span>
+            coredns
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="node-cache">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node-cache
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kmem">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kmem
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="suse">
+            <span class="iconfont-archer">&#xe60a;</span>
+            suse
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="wireguard">
+            <span class="iconfont-archer">&#xe60a;</span>
+            wireguard
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kubeadm">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeadm
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="LVM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            LVM
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+    
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://zhangguanzhang.github.io",
+        root: siteMetaRoot,
+        author: "Zhangguanzhang"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://unpkg.zhimg.com/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+            <div class="site-search site-search-loading">
+    <div class="algolia-popup popup">
+        <div class="algolia-search">
+            <div class="algolia-search-input-icon">
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="algolia-search-input" id="algolia-search-input"></div>
+            <div class="popup-btn-close">
+                <i class="iconfont-archer">&#xe609;</i>
+            </div>
+        </div>
+
+        <div class="algolia-results">
+            <div id="algolia-stats" class="algolia-stats"></div>
+            <div id="algolia-hits"></div>
+            <div id="algolia-pagination" class="algolia-pagination"></div>
+        </div>
+    </div>
+</div>
+
+            <script src="/scripts/search.js?v=20211217" defer></script>
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
