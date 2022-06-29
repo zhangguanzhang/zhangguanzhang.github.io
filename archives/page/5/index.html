@@ -442,6 +442,42 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/12/04/docker1803-hang-container-restore/">
+                
+                <span class="abstract-title-text">docker18.03 hang at &#39;restoring container&#39;</span>
+            </a>
+            <div class="abstract-content">
+                由来起初是 k8s 有几个 node not ready，上去看了下 kubelet 日志刷 container runtime down，重启了下 docker 后还是没用，docker ps 命令都卡住。
+环境信息1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253$ cat /etc/redhat-release Linux xxx-disk0 3.10.0-1127.13.1.el7.x86_64 #1 SMP Tue Jun 23 15:...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/12/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/12/04</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="hang">hang</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -767,43 +803,6 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="wireguard">wireguard</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/07/30/prometheus-rate-and-irate/">
-                
-                <span class="abstract-title-text">prometheus的rate与irate内部是如何计算的</span>
-            </a>
-            <div class="abstract-content">
-                由来市面上的翻译误导人，压根不是啥平均增长率，看了下源码和实际算下来让大家好理解
-rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/promql/functions.go 的extrapolatedRate 和 funcRate，funcRate为
-123func funcRate(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper) Vector &#123;  return extrapolatedRate(vals, args...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/07/30">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/30</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Prometheus">Prometheus</a>
     
 </div>
 
@@ -1687,7 +1686,28 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3510,7 +3530,7 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 152
+        Total : 153
         </div>
         <!-- search  -->
         
@@ -3528,6 +3548,12 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2022/06/03/container-not-forward/">docker info无warning，iptables规则正常，宿主机就是不转发</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
