@@ -515,7 +515,7 @@
 <h3 id="具体现象"><a href="#具体现象" class="headerlink" title="具体现象"></a>具体现象</h3><p>业务 pod 日志看是无法连到非 k8s 机器上的 mysql 的 3306， <code>docker info</code> 命令无 warning 也就是代表下面的几个内核参数正常：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.bridge.bridge-nf-call-arptables = 1</span><br><span class="line">net.ipv4.ip_forward = 1</span><br></pre></td></tr></table></figure>
 
-<p>查看 <code>iptables -S</code> 规则没又优先级高的 drop 之类的规则，因为用了 cni plugins ，pod 的容器都是挂在 cni0 下的，可以 -i 插入优先放行的规则：</p>
+<p>查看 <code>iptables -S</code> 规则没有优先级高的 drop 之类的规则，默认 FORWARD Chain 的最后行为规则也不是 DROP。因为用了 cni plugins ，pod 的容器都是挂在 cni0 下的，可以 -i 插入优先放行的规则：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables --<span class="built_in">wait</span> -I INPUT -i cni0 -j ACCEPT</span><br></pre></td></tr></table></figure>
 
 <p>让现场插入了还是不行，然后让看看安全软件，<code>ps aux | grep xxx</code> 关键字后找到了个 <code>titanagent</code>，搜了下是青藤云，凌晨无法找到相关人员，暂时把几个节点 <code>drain</code> 了 </p>
