@@ -350,7 +350,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -518,7 +518,7 @@
 <p>查看 <code>iptables -S</code> 规则没有优先级高的 drop 之类的规则，默认 FORWARD Chain 的最后行为规则也不是 DROP。因为用了 cni plugins ，pod 的容器都是挂在 cni0 下的，可以 -i 插入优先放行的规则：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables --<span class="built_in">wait</span> -I INPUT -i cni0 -j ACCEPT</span><br></pre></td></tr></table></figure>
 
-<p>让现场插入了还是不行，然后让看看安全软件，<code>ps aux | grep xxx</code> 关键字后找到了个 <code>titanagent</code>，搜了下是青藤云，凌晨无法找到相关人员，暂时把几个节点 <code>drain</code> 了 </p>
+<p>让现场插入了还是不行，然后让看看安全软件，<code>ps aux | grep xxx</code> 关键字后找到了个 <code>titanagent</code>，搜了下是青藤云安全，之前遇到过安全软件拦截 pod 的网络请求，凌晨无法找到相关青藤云人员，暂时把几个节点 <code>drain</code> 了 </p>
 <h2 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h2><p>06&#x2F;03 号客户找人卸载了青藤云，发现还是不行，提供了远程，我上去看。</p>
 <h3 id="故障现象"><a href="#故障现象" class="headerlink" title="故障现象"></a>故障现象</h3><p>查了下，发现重启的节点上的容器，无法访问非宿主机的ip和端口，ping 另一个 k8s 主机都不行，用 tcpdump 抓包发现宿主机没转发，然后用 docker 起个默认桥接网络的试下也是不行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm -ti --entrypoint bash xxx telnet xxx 3306</span><br></pre></td></tr></table></figure>
