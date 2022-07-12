@@ -459,6 +459,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/07/12/pod-no-ip-addr/">
+                
+                <span class="abstract-title-text">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</span>
+            </a>
+            <div class="abstract-content">
+                由来有事回到工位上，还没坐下同事就过来喊我，让我帮忙看个客户的生产环境问题，大致就是客户为了搞安全，开了 ipset，然后发现业务受影响了。
+过程123456$ kubectl get pod -o wide | grep -v RunnNAME                                                  READY   STATUS             RESTARTS   AGE     IP            NODE         NOMINATED NODE   READINESS GATESxxxx-privilege-r97z...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/07/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/12</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/06/03/container-not-forward/">
                 
                 <span class="abstract-title-text">docker info无warning，iptables规则正常，宿主机就是不转发</span>
@@ -1005,42 +1033,6 @@ parted
         <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="squashfs">squashfs</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/12/12/mod-rejected-by-service/">
-                
-                <span class="abstract-title-text">docker数据盘损坏后启动报错 Error starting daemon: Error initializing network controller: Error creating default &#34;bridge&#34; network: package not installed</span>
-            </a>
-            <div class="abstract-content">
-                前言客户现场的数据盘损坏了，修复启动机器后 docker 无法启动
-123456789101112131415[root@db1 docker]# /data/kube/bin/dockerdWARN[0000] The &quot;graph&quot; config file option is deprecated. Please use &quot;data-root&quot; instead. WARN[2021-12-11T21:16:07.917969366+08:00] could not change group /var/run/docker.sock to doc...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
 </div>
 
@@ -2096,7 +2088,26 @@ parted
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3935,7 +3946,7 @@ parted
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 153
+        Total : 154
         </div>
         <!-- search  -->
         
@@ -3953,6 +3964,12 @@ parted
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2022/07/12/pod-no-ip-addr/">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/03</span>

@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/11/ansible-count-Idempotency/">
+                
+                <span class="abstract-title-text">ansible数量限制上的幂等性</span>
+            </a>
+            <div class="abstract-content">
+                由来准备写上一篇文章的consul成ansible，在证书方面，cli和ca需要执行一次生成，而server和agent证书需要多次执行产生。另外我们也要考虑，dc1-server-consul-0*.pem需要拷贝到机器1，1拷贝到机器2.如何在生成证书的时候中断后再次运行也会达到目标的数量来实现幂等性，而不是证书生成多了另外证书还得按照index去拷贝到指定机器，也就是类似下面的
+123scp 001.pem ip1:/etc/xxxscp 002.pem ip2:/etc/xxxscp 003.pem ip3:/etc/xxx
+场景1 – tls的幂等性规划这里我是三台server...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/11</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ansible">ansible</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/09/27/consul-tls/">
                 
                 <span class="abstract-title-text">高可用的SSL consul cluster实践</span>
@@ -994,43 +1033,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kube-controller-manager">kube-controller-manager</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/03/15/flannel-bin/">
-                
-                <span class="abstract-title-text">不走etcd v2 api下二进制跑flannel的总结</span>
-            </a>
-            <div class="abstract-content">
-                这几天给线上搭建 k8s 集群,文件和 systemd 参数大多是从 kubeadm 的 staticPod 的 yml 里扣出来的，起初是除了 flanneld 全部是 systemd 管理二进制。起初因为脚本问题导致 kube-proxy 的 kubeocnfig少执行了use-context所以显示的是匿名用户无法list node信息，kube-proxy是在运行但是无法维持 svc 的网络，flanneld 因为是 pod 要 watch 节点是通过 kubernetes 这个 svc 走的连接导致不通，然后 pod 状态变成退出，而 kubelet 在不手动清理掉退出状态的 ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/03/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/15</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="flannel">flannel</a>
     
 </div>
 
@@ -2086,7 +2088,26 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3925,7 +3946,7 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 153
+        Total : 154
         </div>
         <!-- search  -->
         
@@ -3943,6 +3964,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2022/07/12/pod-no-ip-addr/">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/03</span>

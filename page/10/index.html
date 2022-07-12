@@ -457,6 +457,45 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/04/20/linux-partition-grow/">
+                
+                <span class="abstract-title-text">虚拟化扩容硬盘大小</span>
+            </a>
+            <div class="abstract-content">
+                写于 2021/08/27 ，为了避免排到前面，所以日期修了下。
+about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所在分区的硬盘大小） 和非 lvm 纯分区的。无论是哪种，都得先扩容挂载路径所在的分区。推荐使用 parted 命令扩，且推荐使用最新版的 parted。新增硬盘扩到 lvm 里就不讲了，简单得不行。要先确保现场安装好新版本的 parted ，老版本的 parted 没有 resizepart 的命令，有条件的话把 gdisk 也可以安装上。
+早期的 Linux 为了兼容 windows 的磁盘，只支持 MBR ，后面支持了 GPT。传统的老牌的分区工具是 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/04/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/20</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="fs">fs</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -943,46 +982,6 @@
         <a class="post-tag" href="javascript:void(0);" data-tags="原创">原创</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="lamp">lamp</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/01/08/tuling-wx/">
-                
-                <span class="abstract-title-text">微信公众号接入图灵机器人api</span>
-            </a>
-            <div class="abstract-content">
-                <p>最近在弄微信远程控制，闲来无聊把图灵机器人接入自己公众号</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/01/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/08</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="微信">微信</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="原创">原创</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="api">api</a>
     
 </div>
 
@@ -2038,7 +2037,26 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3877,7 +3895,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 153
+        Total : 154
         </div>
         <!-- search  -->
         
@@ -3895,6 +3913,12 @@
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2022/07/12/pod-no-ip-addr/">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/03</span>

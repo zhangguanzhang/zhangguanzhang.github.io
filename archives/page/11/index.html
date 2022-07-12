@@ -444,6 +444,38 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/11/05/10chars/">
+                
+                <span class="abstract-title-text">记录一次十字符病毒清理过程</span>
+            </a>
+            <div class="abstract-content">
+                周五网络组同事告知几个租户的session过大,建议我把租户这几台机器关机了我进去后把网卡down了后开始看稍微看了下是好几个十个字符的进程一直杀不完,叫存储同事把快照挂载了准备周一恢复
+结果今天挂载上去后开机发现还是有,好吧,手动查杀结合猜想和状态输出想了下逻辑是如下思路
+
+
+crontab加计划(&#x2F;var&#x2F;spool&#x2F;cron&#x2F;用户名文件,&#x2F;etc&#x2F;crontab里,&#x2F;etc&#x2F;cron.hourly&#x2F;x.sh)
+进程互相守护,杀掉一个生成一个新的在&#x2F;usr&#x2F;bin&#x2F;...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/11/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/05</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/10/27/create-kubeconfig/">
                 
                 <span class="abstract-title-text">生成kubeconfig常规的两种方法</span>
@@ -807,44 +839,6 @@ Clust...
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/06/03/kubernetes-s-job/">
-                
-                <span class="abstract-title-text">kubernetes&#39;s Job总结和实战以及坑</span>
-            </a>
-            <div class="abstract-content">
-                Job有三种主要类型的 Job：
-Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时候添加-a或者--show-all才能看到job创建的pod
-下面实例先创建一个固定完成数量2,并行数量4的Job
-12345678910111213141516171819202122232425262728293031[root@k8s-m1 k8s]# cat job.yml apiVersion: batch/v1kind: Jobmetadata:  name: test-jobspec:  completions: 2  parallelism: 4  tem...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/06/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/03</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
 </div>
 
@@ -1733,7 +1727,26 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3572,7 +3585,7 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 153
+        Total : 154
         </div>
         <!-- search  -->
         
@@ -3590,6 +3603,12 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2022/07/12/pod-no-ip-addr/">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/03</span>
