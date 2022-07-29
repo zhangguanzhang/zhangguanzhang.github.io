@@ -459,6 +459,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/11/20/disable-swap/">
+                
+                <span class="abstract-title-text">永久关闭swap的正确姿势</span>
+            </a>
+            <div class="abstract-content">
+                今天遇到了 kylin 系统上无法关闭 swap 的情况。记录下和方便别人搜到这个知识点。
+环境信息1234$ at /etc/issueKylin 4.0.2 \n \l$ uname -aLinux H-192-168-63-132 4.15.0- 58-generic #64kord1k1&#x27;SMP Thu Aug 1S15:51:97 csT 2919 aarch64 ......
+
+尝试的步骤fstab 里没有 swap 的挂载，
+1swapoff -a &amp;&amp; sysctl -w vm.swappiness=0
+
+重启后，内核参数是关闭的，但是实际没有关...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/11/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/20</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="swap">swap</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">
                 
                 <span class="abstract-title-text">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</span>
@@ -991,45 +1032,6 @@ cpu按照实际，我给2核，内存我给的2g
         <a class="post-tag" href="javascript:void(0);" data-tags="x86">x86</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/12/dns-formerr/">
-                
-                <span class="abstract-title-text">adguardhome dns FORMERR 错误</span>
-            </a>
-            <div class="abstract-content">
-                由来这几天发现某个 zone 上游时不时地址无法解析，dnsmasq -&gt; adguardhome 的 /xxx.com/10.x.x.x。
-排查先用 dig 排查，发现是上游的问题，加上 noedns 就能解析了
-12345678910111213141516171819202122232425262728293031323334353637383940root@OpenWrt:~# dig @10.x.x.x  xxx.xxxxx.net ; &lt;&lt;&gt;&gt; DiG 9.17.13 &lt;&lt;&gt;&gt; @10.x.x.x xxx.xxxxx.ne...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/05/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="adguardhome">adguardhome</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="dns">dns</a>
     
 </div>
 
@@ -2090,7 +2092,24 @@ cpu按照实际，我给2核，内存我给的2g
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3943,7 +3962,7 @@ cpu按照实际，我给2核，内存我给的2g
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 154
+        Total : 155
         </div>
         <!-- search  -->
         
@@ -3961,6 +3980,12 @@ cpu按照实际，我给2核，内存我给的2g
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2022/07/28/redhat84-vxlan-esxi/">exsi 使用 redhat8.4 搭建k8s集群，flannel vxlan 模式的不正常排错</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/12</span>
@@ -5588,6 +5613,21 @@ cpu按照实际，我给2核，内存我给的2g
             <span class="sidebar-tag-name" data-tags="operator">
                 <span class="iconfont-archer">&#xe606;</span>
                 operator
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="exsi">
+                <span class="iconfont-archer">&#xe606;</span>
+                exsi
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="redhat8.4">
+                <span class="iconfont-archer">&#xe606;</span>
+                redhat8.4
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vxlan">
+                <span class="iconfont-archer">&#xe606;</span>
+                vxlan
             </span>
         
     </div>

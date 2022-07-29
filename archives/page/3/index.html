@@ -444,6 +444,49 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/09/03/openwrt-usb-net/">
+                
+                <span class="abstract-title-text">[持续更新] - Openwrt USB 网络</span>
+            </a>
+            <div class="abstract-content">
+                about记录下 openwrt 下 usb 网络的折腾，后续折腾这块内容的话也在这个文章内更新
+N1 上的 usb 网络共享折腾固件依赖暂时没完全区分 usb 网络共享和 usb-cdc 的关系，所以我编译的时候把很多 usb-net-xxx 都编译进去了
+听其他大佬说编译的时候主要有下面的包:
+
+安卓: kmod-usb-net kmod-usb-net-rndis
+苹果: kmod-usb-net-ipheth usbmuxd
+
+建议下面这些也安装上方便调试:
+123456789101112131415161718CONFIG_PACKAGE_luci-proto-3g=yCONF...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/03</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="usb-net">usb-net</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/02/fio/">
                 
                 <span class="abstract-title-text">fio 静态编译和基础使用</span>
@@ -772,44 +815,6 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="mips64le">mips64le</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">
-                
-                <span class="abstract-title-text">机器重启后 kube-apiserver 无法启动，etcd刷(error &#34;EOF&#34;, ServerName &#34;&#34;)</span>
-            </a>
-            <div class="abstract-content">
-                环境信息三个 master （etcd 也在 master 上，master上也有 kubelet）和 n 个 node。master 上组件(kube-controller-manager,kube-scheduler,kubelet)的 apiserver 的ip 都是 127.0.0.1:6443。kube-apiserver的 etcd 地址写了三个 etcd 的。k8s 版本为 v1.15.5
-故障现象93 这台 master 机器重启后，发现 93 节点 NotReady，上去看了下 kubelet 无法连上本机的 kube-apiserver。kube-apiserver ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/07/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="systemd">systemd</a>
     
 </div>
 
@@ -1703,7 +1708,24 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3556,7 +3578,7 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 154
+        Total : 155
         </div>
         <!-- search  -->
         
@@ -3574,6 +3596,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2022/07/28/redhat84-vxlan-esxi/">exsi 使用 redhat8.4 搭建k8s集群，flannel vxlan 模式的不正常排错</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/12</span>
@@ -5201,6 +5229,21 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <span class="sidebar-tag-name" data-tags="operator">
                 <span class="iconfont-archer">&#xe606;</span>
                 operator
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="exsi">
+                <span class="iconfont-archer">&#xe606;</span>
+                exsi
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="redhat8.4">
+                <span class="iconfont-archer">&#xe606;</span>
+                redhat8.4
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vxlan">
+                <span class="iconfont-archer">&#xe606;</span>
+                vxlan
             </span>
         
     </div>

@@ -444,6 +444,42 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2017/12/24/docker%E5%AE%B9%E5%99%A8%E8%AE%BF%E9%97%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA/">
+                
+                <span class="abstract-title-text">docker容器访问宿主机</span>
+            </a>
+            <div class="abstract-content">
+                有时候使用docker容器的时候经常有需要访问宿主机ip的需求,虽然可以用宿主机网卡的ip访问,但是有时候有些人的宿主机ip是dhcp方式通用方法就是给宿主机加个不可达的回环地址,然后容器的host指向这个回环地址(容器host这步是可选的)(PS:1.1.1.1这个地址在2018&#x2F;04初成为了公共DNS所以能ping通了,不过思路还是一样的)环境如下
+123456[root@guanvps ~]# cat /etc/redhat-release CentOS Linux release 7.4.1708 (Core) [root@guanvps ~]# uname -aLin...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/12/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">
                 
                 <span class="abstract-title-text">docker容器网络互联</span>
@@ -746,42 +782,6 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
         <a class="post-tag" href="javascript:void(0);" data-tags="rpm">rpm</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="rpmbuild">rpmbuild</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/05/12/ssh-trust/">
-                
-                <span class="abstract-title-text">ssh互信</span>
-            </a>
-            <div class="abstract-content">
-                <p>ssh公钥免密码登录</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/05/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ssh">ssh</a>
     
 </div>
 
@@ -1675,7 +1675,24 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3528,7 +3545,7 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 154
+        Total : 155
         </div>
         <!-- search  -->
         
@@ -3546,6 +3563,12 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2022/07/28/redhat84-vxlan-esxi/">exsi 使用 redhat8.4 搭建k8s集群，flannel vxlan 模式的不正常排错</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/12</span>
@@ -5173,6 +5196,21 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
             <span class="sidebar-tag-name" data-tags="operator">
                 <span class="iconfont-archer">&#xe606;</span>
                 operator
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="exsi">
+                <span class="iconfont-archer">&#xe606;</span>
+                exsi
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="redhat8.4">
+                <span class="iconfont-archer">&#xe606;</span>
+                redhat8.4
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vxlan">
+                <span class="iconfont-archer">&#xe606;</span>
+                vxlan
             </span>
         
     </div>
