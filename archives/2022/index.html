@@ -445,6 +445,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/09/07/docker-veth-not-clean/">
+                
+                <span class="abstract-title-text">低版本docker veth没清理造成容器网络问题</span>
+            </a>
+            <div class="abstract-content">
+                <p>帮助同事看一个 gitlab-runner 的问题，最终发现是 docker 低版本的bug，没清理掉 veth 导致的</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/09/07</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="veth">veth</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/07/28/redhat84-vxlan-esxi/">
                 
                 <span class="abstract-title-text">exsi 使用 redhat8.4 搭建k8s集群，flannel vxlan 模式的不正常排错</span>
@@ -769,48 +807,6 @@ ansible报错如下：
         <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/03/16/cannot-assign-requested-address/">
-                
-                <span class="abstract-title-text">server 端的 cannot assign requested address</span>
-            </a>
-            <div class="abstract-content">
-                由来今天碰到了这个问题，但是最终结果出乎意料
-过程项目相关部分客户的 OA 对接我们的应用，使用过程中会调用我们的接口，我们的接口再回调客户的回调地址。调用流是：
-1客户 OA 后端 ----&gt; 我们应用 A 的后端 -----&gt; 我们应用 B 后端  -----&gt; 客户写的回调地址
-
-然后我们接口 A 返回 B 访问回调的报错：
-1&quot;Get http://10.192.xxx.xxx/xxxxinfo?...: dial tcp 10.192.xxx.xxx:80: connect: cannot assign requested address&quot;...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/03/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
     
 </div>
 
@@ -1709,7 +1705,34 @@ ansible报错如下：
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3574,7 +3597,7 @@ ansible报错如下：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 155
+        Total : 156
         </div>
         <!-- search  -->
         
@@ -3592,6 +3615,12 @@ ansible报错如下：
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span>
+            <a class="archive-post-title" href="/2022/09/07/docker-veth-not-clean/">低版本docker veth没清理造成容器网络问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/28</span>
@@ -5240,6 +5269,11 @@ ansible报错如下：
             <span class="sidebar-tag-name" data-tags="vxlan">
                 <span class="iconfont-archer">&#xe606;</span>
                 vxlan
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="veth">
+                <span class="iconfont-archer">&#xe606;</span>
+                veth
             </span>
         
     </div>

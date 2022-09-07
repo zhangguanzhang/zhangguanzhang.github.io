@@ -442,6 +442,45 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/05/15/rpmbuild/">
+                
+                <span class="abstract-title-text">rpm包的制作笔记</span>
+            </a>
+            <div class="abstract-content">
+                文章写于 2021-08-02，防止排列在前面，所以 markdown 里的时间改成 2017-05-15 。
+rpm 一些知识建议起个 centos:7 的容器里去制作
+Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是底层库，或者经常用到的 c 函数。比如说 curl 命令和 wget 命令，他们很多的底层例如 http 请求，dns 解析，hosts 解析这块逻辑是一样的。如果他们全部打包在二进制文件里（也就是静态编译）会造成二进制体积很大（golang 一般都是静态编译的）。如果共用（共用的一个其中原因是因为早期的系统硬盘容量很小）的话体积会很小...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/05/15">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/15</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="rpm">rpm</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="rpmbuild">rpmbuild</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -760,42 +799,6 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="shell">shell</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/04/15/shellsubstring/">
-                
-                <span class="abstract-title-text">shell的字符串截取</span>
-            </a>
-            <div class="abstract-content">
-                <p>shell的字符串截取</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/04/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/15</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
     
         <a class="post-tag" href="javascript:void(0);" data-tags="shell">shell</a>
     
@@ -1696,7 +1699,34 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3561,7 +3591,7 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 155
+        Total : 156
         </div>
         <!-- search  -->
         
@@ -3579,6 +3609,12 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span>
+            <a class="archive-post-title" href="/2022/09/07/docker-veth-not-clean/">低版本docker veth没清理造成容器网络问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/28</span>
@@ -5227,6 +5263,11 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             <span class="sidebar-tag-name" data-tags="vxlan">
                 <span class="iconfont-archer">&#xe606;</span>
                 vxlan
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="veth">
+                <span class="iconfont-archer">&#xe606;</span>
+                veth
             </span>
         
     </div>

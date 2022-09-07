@@ -444,6 +444,51 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/07/16/consul-mips64le/">
+                
+                <span class="abstract-title-text">编译mips64le架构的consul</span>
+            </a>
+            <div class="abstract-content">
+                编译建议使用容器编译，否则建议 clone 进 GOPATH 里
+clone12git clone https://github.com/hashicorp/consul.gitcd consul
+
+
+线上使用的是 v1.8 版本，这里我以 v1.8.14 (2021&#x2F;07&#x2F;19 发布的)搞的。
+1git checkout v1.8.14
+
+准备工作拉取需要的镜像。貌似 golang 1.16 更好的支持 mips64 了，所以条件允许的话，这里可以下改下 golang 的版本试试
+1234$ head -n2 build-support/docker/Build-G...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/07/16">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/16</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="mips64le">mips64le</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">
                 
                 <span class="abstract-title-text">机器重启后 kube-apiserver 无法启动，etcd刷(error &#34;EOF&#34;, ServerName &#34;&#34;)</span>
@@ -768,42 +813,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/12</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/02/02/node-shutdown-dns-unavailable/">
-                
-                <span class="abstract-title-text">集群节点关机导致dns在eviction pod之前几率不可用</span>
-            </a>
-            <div class="abstract-content">
-                由来这几天我们内部在做新项目的容灾测试，业务都是在 K8S 上的。容灾里就是随便选节点 shutdown -h now。关机后同事便发现了（页面有错误，最终问题是）集群内 DNS 解析会有几率无法解析（导致的）。
-根据 SVC 的流程，node 关机后，由于 kubelet 没有 update 自己。node 和 pod 在 apiserver get 的时候显示还是正常的。在 kube-controller-manager 的 --node-monitor-grace-period 时间后再过 --pod-eviction-timeout 时间开始 eviction pod，大概流程是...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/02/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/02/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="coredns">coredns</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1699,7 +1708,34 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3564,7 +3600,7 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 155
+        Total : 156
         </div>
         <!-- search  -->
         
@@ -3582,6 +3618,12 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span>
+            <a class="archive-post-title" href="/2022/09/07/docker-veth-not-clean/">低版本docker veth没清理造成容器网络问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/28</span>
@@ -5230,6 +5272,11 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="vxlan">
                 <span class="iconfont-archer">&#xe606;</span>
                 vxlan
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="veth">
+                <span class="iconfont-archer">&#xe606;</span>
+                veth
             </span>
         
     </div>
