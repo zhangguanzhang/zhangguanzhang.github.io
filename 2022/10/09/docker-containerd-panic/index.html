@@ -19,12 +19,12 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="记录生活点滴">
-    <meta name="description" content="机器磁盘出问题后，重启后 docker 无法启动，和之前的 (docker-panic)[https:&#x2F;&#x2F;zhangguanzhang.github.io&#x2F;2021&#x2F;05&#x2F;26&#x2F;docker-panic-invalid-freelist-page&#x2F;] 一样解决后，发现 containerd 无法启动">
+    <meta name="description" content="机器磁盘出问题后，重启后 docker 无法启动，和之前的 docker-panic 一样解决后，发现 containerd 无法启动">
 <meta property="og:type" content="article">
 <meta property="og:title" content="磁盘问题宕机后 docker 的 containerd 无法启动">
 <meta property="og:url" content="http://zhangguanzhang.github.io/2022/10/09/docker-containerd-panic/">
 <meta property="og:site_name" content="Zhangguanzhang">
-<meta property="og:description" content="机器磁盘出问题后，重启后 docker 无法启动，和之前的 (docker-panic)[https:&#x2F;&#x2F;zhangguanzhang.github.io&#x2F;2021&#x2F;05&#x2F;26&#x2F;docker-panic-invalid-freelist-page&#x2F;] 一样解决后，发现 containerd 无法启动">
+<meta property="og:description" content="机器磁盘出问题后，重启后 docker 无法启动，和之前的 docker-panic 一样解决后，发现 containerd 无法启动">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-09T18:10:30.000Z">
 <meta property="article:modified_time" content="2022-10-09T18:10:30.000Z">
@@ -514,7 +514,7 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <p>机器磁盘出问题后，重启后 docker 无法启动，和之前的 (docker-panic)[<a href="https://zhangguanzhang.github.io/2021/05/26/docker-panic-invalid-freelist-page/]">https://zhangguanzhang.github.io/2021/05/26/docker-panic-invalid-freelist-page/]</a> 一样解决后，发现 containerd 无法启动</p>
+        <p>机器磁盘出问题后，重启后 docker 无法启动，和之前的 <a href="https://zhangguanzhang.github.io/2021/05/26/docker-panic-invalid-freelist-page/">docker-panic</a> 一样解决后，发现 containerd 无法启动</p>
 <span id="more"></span>
 
 <h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>包管理安装的 docker，所以会有一个 systemd 纳管的 containerd 进程，解决了 docker 启动 panic 后，containerd 也是启动后就 panic 了，前台调试下 containerd </p>
