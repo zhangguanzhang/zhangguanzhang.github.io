@@ -444,6 +444,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/03/12/build-arm64-docker-compose-action/">
+                
+                <span class="abstract-title-text">使用github action 配合 docker buildx 编译 arm64 docker-compose</span>
+            </a>
+            <div class="abstract-content">
+                说明git 上搜索了很多 docker-compose 的 arm64 的编译基本都是使用 qemu-user-static 之类的设置下后编译的，也看到过用特权容器启动 qemu-user-static 或者 binfmt 之类的，但是我自己机器上试了无效，貌似是因为我操作系统是低版本内核的 centos ，github 上搜了下，其他很多人的编译感觉太啰嗦了。就在 action 上整了下，测试是可用的，而且非常简单。
+docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里安装 docker，创建 build...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/03/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/12</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/02/02/node-shutdown-dns-unavailable/">
                 
                 <span class="abstract-title-text">集群节点关机导致dns在eviction pod之前几率不可用</span>
@@ -762,43 +790,6 @@
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="uos">uos</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">
-                
-                <span class="abstract-title-text">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</span>
-            </a>
-            <div class="abstract-content">
-                由来同事在客户那边部署的集群问题频繁，先给他解决了个问题后又反映说业务 POD 由于 DNS 无法解析而启动失败，排查完发现这样的情况从没遇到过，挺有意思的，这里记录下。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角度写下排查过程。
-环境信息集群信息:
-12345678910111213141516171819202122232425$ kubectl version -o json&#123;  &quot;clientVersion&quot;: &#123;    &quot;major&quot;: &quot;1&quot;,    &quot;mi...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/10/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/20</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
     
 </div>
 
@@ -1702,7 +1693,16 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -3589,7 +3589,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 156
+        Total : 157
         </div>
         <!-- search  -->
         
@@ -3607,6 +3607,12 @@
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/07</span>
@@ -5266,6 +5272,11 @@
             <span class="sidebar-tag-name" data-tags="veth">
                 <span class="iconfont-archer">&#xe606;</span>
                 veth
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
             </span>
         
     </div>

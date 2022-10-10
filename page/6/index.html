@@ -459,6 +459,42 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/24/deployment-consul-in-k8s/">
+                
+                <span class="abstract-title-text">consul仅当服务发现在k8s无状态部署使用</span>
+            </a>
+            <div class="abstract-content">
+                由来consul server 在机器上的部署已经写完了，但是dba还是希望部署在 k8s 上，昨天搜了下相关文章扣出来部分步骤自己验证实现了。先说下需求，三台物理机单独跑 mysql 主从 mha，利用 consul client 的服务注册+ttl向 consul server 注册成域名，然后配置 k8s 内部的 coredns 把域名*.service.consul转发到 consul server。架构为下图
+123456789101112131415161718Physical server +---------------------+                   ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
                 
                 <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
@@ -994,48 +1030,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="cobra">cobra</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/05/11/container-too-many-open-file/">
-                
-                <span class="abstract-title-text">standard_init_linux.go:211: exec user process caused &#34;too many open files in system&#34;</span>
-            </a>
-            <div class="abstract-content">
-                故障现象部署好业务 pod 后，有很多 pod 一直 Crash 或者无法就绪。
-处理过程describe pod 的状态有显示下面的：
-1Error: failed to start container &quot;xxxxx&quot;: Error response from daemon: OCI runtime start failed: cannot start a container that has stopped: unkown
-
-上去这个节点查看容器状态:
-12345$ docker ps -a | grep 6cb6440a7e90bde reg.xxx.lan:5...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/05/11">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/11</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
 </div>
 
@@ -2112,7 +2106,16 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -3999,7 +4002,7 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 156
+        Total : 157
         </div>
         <!-- search  -->
         
@@ -4017,6 +4020,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/07</span>
@@ -5676,6 +5685,11 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <span class="sidebar-tag-name" data-tags="veth">
                 <span class="iconfont-archer">&#xe606;</span>
                 veth
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
             </span>
         
     </div>

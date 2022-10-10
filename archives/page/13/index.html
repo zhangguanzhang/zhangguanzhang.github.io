@@ -442,6 +442,43 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">
+                
+                <span class="abstract-title-text">慎用docker的--rm选项!!!</span>
+            </a>
+            <div class="abstract-content">
+                Dockerfile里的VOLUME和docker run -v /path的时候挂载容器的挂载点效果是一致的会在宿主机/var/lib/docker/volumes目录生成随机目录发现--rm不单单是删除掉容器，还会删掉挂载点的数据
+首先不使用--rm下看看效果
+1234567891011[root@guan_tx ]#  docker run  -tid --name busybox -v /guan busyboxbe59bd455fbde8a8d195220d96c6676ad8fa6f26e1ebac6533020c83dacbf907[root@guan_tx ]# dock...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/01/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/20</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Dockerfile">Dockerfile</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -737,51 +774,6 @@ keepalived 2方式1：
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/03</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">
-                
-                <span class="abstract-title-text">shell脚本的选项和参数处理</span>
-            </a>
-            <div class="abstract-content">
-                在写shell脚本时经常会用到命令行选项、参数处理方式，如:
-1./test.sh -f 5 -rF --host-file=/etc/hosts
-其中-f和-rF都是短选项,–host-file是长选项短选项又分为可选参数和必选参数,不需要参数的短选项可以合着写例如cat和tail的-n有默认值10在shell中，可以用以下三种方式来处理命令行参数，每种方式都有自己的应用场景
-
-手工处理方式
-getopts
-getopt
-
-手工处理不说了,手工处理高度依赖于你在命令行上所传参数的位置，所以一般都只用来处理较简单的参数下面我们依次讨论这后两种处理方式getopts是shell内置的,只支...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/05/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/25</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="shell">shell</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="bash">bash</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1682,7 +1674,16 @@ getopt
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -3569,7 +3570,7 @@ getopt
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 156
+        Total : 157
         </div>
         <!-- search  -->
         
@@ -3587,6 +3588,12 @@ getopt
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/07</span>
@@ -5246,6 +5253,11 @@ getopt
             <span class="sidebar-tag-name" data-tags="veth">
                 <span class="iconfont-archer">&#xe606;</span>
                 veth
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
             </span>
         
     </div>

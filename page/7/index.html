@@ -459,6 +459,48 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/05/11/container-too-many-open-file/">
+                
+                <span class="abstract-title-text">standard_init_linux.go:211: exec user process caused &#34;too many open files in system&#34;</span>
+            </a>
+            <div class="abstract-content">
+                故障现象部署好业务 pod 后，有很多 pod 一直 Crash 或者无法就绪。
+处理过程describe pod 的状态有显示下面的：
+1Error: failed to start container &quot;xxxxx&quot;: Error response from daemon: OCI runtime start failed: cannot start a container that has stopped: unkown
+
+上去这个节点查看容器状态:
+12345$ docker ps -a | grep 6cb6440a7e90bde reg.xxx.lan:5...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/05/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/11</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/04/28/k8s-java-start-time-not-same/">
                 
                 <span class="abstract-title-text">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</span>
@@ -981,45 +1023,6 @@ CA (Certif...
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kubeconfig">kubeconfig</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/10/12/prometheus-operator/">
-                
-                    <span class="iconfont-archer stick-top">&#xe63d;</span>
-                
-                <span class="abstract-title-text">全手动部署prometheus-operator监控K8S集群以及一些坑</span>
-            </a>
-            <div class="abstract-content">
-                写这篇文章原因所有的监控的agent底层最终都是查询的&#x2F;proc和&#x2F;sys里的信息推送(如果错了轻喷),因为收集宿主机信息方面也想用pod跑,会面临到问题常见的zabbix_agent默认读取fs的&#x2F;proc和&#x2F;sys,容器跑agent会导致读取的不是宿主机的&#x2F;proc和&#x2F;sys而prometheus的node-exporter有选项--path.procfs和--path.sysfs来指定从这俩选项的值的proc和sys读取,容器跑node-exporter只需要挂载宿主机的&#x2F;proc和&#x2F;sys到容器fs的...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/10/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
     
 </div>
 
@@ -2096,7 +2099,16 @@ CA (Certif...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -3983,7 +3995,7 @@ CA (Certif...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 156
+        Total : 157
         </div>
         <!-- search  -->
         
@@ -4001,6 +4013,12 @@ CA (Certif...
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/07</span>
@@ -5660,6 +5678,11 @@ CA (Certif...
             <span class="sidebar-tag-name" data-tags="veth">
                 <span class="iconfont-archer">&#xe606;</span>
                 veth
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
             </span>
         
     </div>

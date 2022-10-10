@@ -444,6 +444,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/09/28/ipvs-svc/">
+                
+                <span class="abstract-title-text">在非容器环境上实现散装的 IPVS SVC</span>
+            </a>
+            <div class="abstract-content">
+                前言内部有非 K8S 环境上需要类似 SVC 的负载实现，一开始是用 NGINX 做的，所有 SVC 域名都解析成一个 dummy IP ，然后 NGINX 根据 server_name 去 proxy 不同的 upstream 。 开始还是能用的，结果后面很多服务依赖 host 这个 header ，报错签名错误，而且毕竟这样是在用户态，效率不如内核态高。于是打算搞下之前的打算：把 IPVS 的 ClusterIP 的 SVC 扣到非 K8S 环境上使用。
+kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT 会被 dnat 成 end...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/28</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="lvs">lvs</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ipvsadm">ipvsadm</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kube-proxy">kube-proxy</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/16/read-containerd-con-reset/">
                 
                 <span class="abstract-title-text">解决 docker 的 read unix @-&gt;/run/containerd/s/xxx read: connection reset by peer: unknown</span>
@@ -768,46 +808,6 @@ buildx 使用见文章 buildx 使用
         <a class="post-tag" href="javascript:void(0);" data-tags="kylin">kylin</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="arm64">arm64</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/07/20/dlv-remote/">
-                
-                <span class="abstract-title-text">dlv命令行的远程调试 golang 进程步骤(包含容器进程)</span>
-            </a>
-            <div class="abstract-content">
-                前情提要记录下 dlv 的远程调试，建议不要在代码里加 fmt 去调试。不谈 goland 啥的远程调试，本文章目前只写 dlv 的命令行配合远端调试。
-一些前提须知符号链接路径1234567891011package mainimport (	&quot;fmt&quot;	&quot;os&quot;)func main() &#123;	f, _ := os.Open(&quot;asdasdasd&quot;)	fmt.Println(f.Name())&#125;
-
-上面代码你编译了后，在其他机器上运行，panic 的堆栈信息会是你机器上的路径信息，路径信息是保留的，例如下面的...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/07/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/20</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="dlv">dlv</a>
     
 </div>
 
@@ -1711,7 +1711,16 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -3598,7 +3607,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 156
+        Total : 157
         </div>
         <!-- search  -->
         
@@ -3616,6 +3625,12 @@ buildx 使用见文章 buildx 使用
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/07</span>
@@ -5275,6 +5290,11 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="veth">
                 <span class="iconfont-archer">&#xe606;</span>
                 veth
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
             </span>
         
     </div>

@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/03/24/python-list-kubernetes-permission/">
+                
+                <span class="abstract-title-text">python kubernetes client list permission</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天内部有个功能就是看 kubernetes client 的权限有哪些
+过程kubeconfig 生成先制作一个非 admin 的 kubeconfig，记得以前有个项目是部署后可以生成 kubeconfig 的，询问了一番后，其他群友提示下想起来是 permission-manager，部署后结果发现生成的 kubeconfig 压根不能用，报错未知机构签署的，结果还是按照以前 生成kubeconfig常规的两种方法 生成了一个简单的。
+尝试过程其实一开始打算自己写逻辑，增删改查需要的资源便利来检查，然后突然想起来 kubectl (忘了哪个版本开始)有个 auth 子命令的 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/03/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/03/16/cannot-assign-requested-address/">
                 
                 <span class="abstract-title-text">server 端的 cannot assign requested address</span>
@@ -1570,7 +1609,16 @@ EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -3457,7 +3505,7 @@ EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 156
+        Total : 157
         </div>
         <!-- search  -->
         
@@ -3475,6 +3523,12 @@ EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒�
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/07</span>
@@ -5134,6 +5188,11 @@ EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒�
             <span class="sidebar-tag-name" data-tags="veth">
                 <span class="iconfont-archer">&#xe606;</span>
                 veth
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
             </span>
         
     </div>

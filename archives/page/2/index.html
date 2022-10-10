@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/03/24/python-list-kubernetes-permission/">
+                
+                <span class="abstract-title-text">python kubernetes client list permission</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天内部有个功能就是看 kubernetes client 的权限有哪些
+过程kubeconfig 生成先制作一个非 admin 的 kubeconfig，记得以前有个项目是部署后可以生成 kubeconfig 的，询问了一番后，其他群友提示下想起来是 permission-manager，部署后结果发现生成的 kubeconfig 压根不能用，报错未知机构签署的，结果还是按照以前 生成kubeconfig常规的两种方法 生成了一个简单的。
+尝试过程其实一开始打算自己写逻辑，增删改查需要的资源便利来检查，然后突然想起来 kubectl (忘了哪个版本开始)有个 auth 子命令的 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/03/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/03/16/cannot-assign-requested-address/">
                 
                 <span class="abstract-title-text">server 端的 cannot assign requested address</span>
@@ -790,46 +829,6 @@ parted
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/09/28/ipvs-svc/">
-                
-                <span class="abstract-title-text">在非容器环境上实现散装的 IPVS SVC</span>
-            </a>
-            <div class="abstract-content">
-                前言内部有非 K8S 环境上需要类似 SVC 的负载实现，一开始是用 NGINX 做的，所有 SVC 域名都解析成一个 dummy IP ，然后 NGINX 根据 server_name 去 proxy 不同的 upstream 。 开始还是能用的，结果后面很多服务依赖 host 这个 header ，报错签名错误，而且毕竟这样是在用户态，效率不如内核态高。于是打算搞下之前的打算：把 IPVS 的 ClusterIP 的 SVC 扣到非 K8S 环境上使用。
-kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT 会被 dnat 成 end...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/09/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="lvs">lvs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ipvsadm">ipvsadm</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kube-proxy">kube-proxy</a>
     
 </div>
 
@@ -1733,7 +1732,16 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
         
         
         
@@ -3620,7 +3628,7 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 156
+        Total : 157
         </div>
         <!-- search  -->
         
@@ -3638,6 +3646,12 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/07</span>
@@ -5297,6 +5311,11 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
             <span class="sidebar-tag-name" data-tags="veth">
                 <span class="iconfont-archer">&#xe606;</span>
                 veth
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
             </span>
         
     </div>
