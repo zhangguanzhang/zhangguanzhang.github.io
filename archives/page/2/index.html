@@ -442,6 +442,46 @@
         
         
             
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/04/11/sdn-tcp-keepalive/">
+                
+                <span class="abstract-title-text">无数据的 tcp 链接被 SDN/防火墙 干掉的一种处理办法</span>
+            </a>
+            <div class="abstract-content">
+                <p>客户的环境下，业务运行在 dmz 区，mysql 在非 dmz 区，业务连 mysql 的空闲 tcp 连接 240s 后会被 SDN 干掉，本文实际介绍一种不动业务(代码)，利用代理的解决办法</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/04/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/04/11</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="keepalive">keepalive</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2022/03/24/python-list-kubernetes-permission/">
@@ -793,42 +833,6 @@ parted
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">
-                
-                <span class="abstract-title-text">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</span>
-            </a>
-            <div class="abstract-content">
-                故障现场 k8s node 很多 pod 都被硬性驱逐显示 Evicted ，现场人员查看分区容量和 inode 都正常，但是一直 reclaim ephemeral-storage。
-处理环境信息12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879$ uname -aLinux xxx-2 3.10.0-693.el7.x86_64 #1 SM...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/10/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/29</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
     
 </div>
 
@@ -1737,7 +1741,24 @@ parted
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3628,7 +3649,7 @@ parted
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 157
+        Total : 158
         </div>
         <!-- search  -->
         
@@ -3646,6 +3667,12 @@ parted
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2022/11/03/pyinstaller-supervisor/">如何打包一个不依赖 python 的 supervisor 的包去离线部署</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
@@ -5316,6 +5343,16 @@ parted
             <span class="sidebar-tag-name" data-tags="panic">
                 <span class="iconfont-archer">&#xe606;</span>
                 panic
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="supervisor">
+                <span class="iconfont-archer">&#xe606;</span>
+                supervisor
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pyinstaller">
+                <span class="iconfont-archer">&#xe606;</span>
+                pyinstaller
             </span>
         
     </div>

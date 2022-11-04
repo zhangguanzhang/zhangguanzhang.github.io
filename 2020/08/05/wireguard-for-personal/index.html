@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3.2k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.3k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -545,9 +545,7 @@
 <p>讲解下配置文件，家里的台式机 proxmox 里有软路由，并不是上面我说的 pc，这样我接入的设备也可以访问。我个人是推荐搞个 proxmox 整虚拟机和软路由。</p>
 <p>家里的路由器网段是 <code>192.168.2.0/24</code>，<code>192.168.2.3</code>是软路由，主要是上面有dns server（adguard home），家里整个网络上添加 hosts 我是直接在dns server上添加的。所以我个人PC那里写了 <code>DNS = 192.168.2.3</code>，这样 dns 解析都走到家里的软路由上，不需要本地配置 hosts。</p>
 <p><code>10.243.0.0/16, 10.76.6.0/24, 172.13.0.0/16</code> 的网段都是家里的内网网段。<code>AllowedIPs</code>意思就是把请求目的 IP 是这些网段的，都发到 wg0 这个接口上，也就是添加路由表。这样我在外面哪里，我个人 pc 打开 wg 后，就能访问这些内网网段了。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
+<p>不要在一些云厂商上使用 <code>100.64.0.0/10</code> 网段, 如果你有兴趣查询了该地址段, 那么你应该明白它叫 CGNAT; 很不幸的是例如 Aliyun 底层的 apt 源等都在这个范围内, 可能会有一些奇怪问题。</p>
 <p>ECS上启动 wg 和停止 wg</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wg-quick up wg0 #默认取 /etc/wireguard/$name.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定配置文件启动 wg-quick up /etc/wireguard/wg0.conf</span></span><br><span class="line">wg-quick down wg0</span><br></pre></td></tr></table></figure>
 
@@ -1577,7 +1575,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3468,7 +3483,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 157
+        Total : 158
         </div>
         <!-- search  -->
         
@@ -3486,6 +3501,12 @@
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2022/11/03/pyinstaller-supervisor/">如何打包一个不依赖 python 的 supervisor 的包去离线部署</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
@@ -5156,6 +5177,16 @@
             <span class="sidebar-tag-name" data-tags="panic">
                 <span class="iconfont-archer">&#xe606;</span>
                 panic
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="supervisor">
+                <span class="iconfont-archer">&#xe606;</span>
+                supervisor
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pyinstaller">
+                <span class="iconfont-archer">&#xe606;</span>
+                pyinstaller
             </span>
         
     </div>

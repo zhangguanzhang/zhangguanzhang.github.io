@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/07/26/kylin-v10-boot-hang/">
+                
+                <span class="abstract-title-text">鲲鹏920的麒麟v10物理服务器断电后无法启动处理</span>
+            </a>
+            <div class="abstract-content">
+                前情提要珠海园区升压前置检查，上周六整个园区关电检查，然后今天来后连不上我们在 鲲鹏920的麒麟v10机器上开的虚拟机了，进 bmc 的 web 看了下是开机进入后卡住。
+信息同步是当初安装系统的同事去处理这个事情的，他 bmc 的 web 上去重启在菜单那里按 e 编辑准备改 boot cmdline 进单用户，结果按 e 后要输入用户名和密码，询问了麒麟他们。很久也没给答复。然后就在那干等，上面的虚机有我的环境，我就过去看了下。
+尝试的处理麒麟那边的人员没有回复，我打算这边同步尝试下其他手段，而且不只一台无法开机，哪怕麒麟的回复了密码也能同步尝试不同手段。Linux 无法开机的就搞个...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/07/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kylin">kylin</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="arm64">arm64</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/07/20/dlv-remote/">
                 
                 <span class="abstract-title-text">dlv命令行的远程调试 golang 进程步骤(包含容器进程)</span>
@@ -780,41 +819,6 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/03/23">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">
-                
-                <span class="abstract-title-text">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</span>
-            </a>
-            <div class="abstract-content">
-                由来今天在折腾 admission webhook 注入一些属性的时候遇到了 Error from server (InternalError): error when creating &quot;xxx.yml&quot;: Internal error occurred: jsonpatch add operation does not apply: doc is missing path: &quot;/spec/template/spec/dnsConfig/options&quot;。折腾半天才发现在代码里使用 jsonPatch 的话不能直接绕过结构体实例去 patch。 ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/03/22">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/22</span>
                 </div>
                 <!-- tags -->
                 
@@ -1730,7 +1734,24 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3621,7 +3642,7 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 157
+        Total : 158
         </div>
         <!-- search  -->
         
@@ -3639,6 +3660,12 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2022/11/03/pyinstaller-supervisor/">如何打包一个不依赖 python 的 supervisor 的包去离线部署</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
@@ -5309,6 +5336,16 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
             <span class="sidebar-tag-name" data-tags="panic">
                 <span class="iconfont-archer">&#xe606;</span>
                 panic
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="supervisor">
+                <span class="iconfont-archer">&#xe606;</span>
+                supervisor
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pyinstaller">
+                <span class="iconfont-archer">&#xe606;</span>
+                pyinstaller
             </span>
         
     </div>

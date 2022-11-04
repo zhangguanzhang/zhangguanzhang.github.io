@@ -444,6 +444,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/01/22/proxmox-cloud-init/">
+                
+                <span class="abstract-title-text">proxmox里使用cloud-init和一些笔记</span>
+            </a>
+            <div class="abstract-content">
+                cloud-init的镜像模板制作模板制作记录下proxmox制作带有 cloud-init 的虚机模板过程因为刚开始制作虚机模板的硬盘是固定大小,后面通过克隆后调整硬盘大小就会自动 growpart ,需要安装 cloud-utils-growpart。好像只能往大的扩,我个人也倾向于最小 20G,所以这里我开的是20G硬盘的虚机另外查了下和实际试了下 cloud-utils-growpart 好像只支持 ext3 和 ext4 不支持 lvm 自动扩,其他的文件系统可以考虑试试 lvm 自己写个脚本去开机启动自动扩。这里我分区不带 swap,标准分区+ext4安装完后进系统里自行配制...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/01/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/22</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openstack">openstack</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="cloud-init">cloud-init</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/12/04/black-box-exporter/">
                 
                 <span class="abstract-title-text">prometheus的黑盒监控</span>
@@ -797,59 +834,6 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/08/03/Kubernetes_install_1.11.1/">
-                
-                <span class="abstract-title-text">Kubernetes v1.11.x HA全手动苦工安装教学</span>
-            </a>
-            <div class="abstract-content">
-                
-多master高可用 或者 单master的ansible部署方案
-
-管理组件采用staticPod或者daemonSet形式跑的,宿主机os能跑docker应该本篇教程能大多适用安装完成仅供学习和实验
-本次安裝的版本：
-
-
-Kubernetes v1.11.1
-CNI v0.7.1
-Etcd v3.3.9
-Flannel v0.10.0 或者 Calico v3.1.3
-Docker CE latest version(18.06)
-
-
-** 不建议用docker 18.05 , docker CE 18.05有bind mount的bug **
-本次部署的网络信息：
-
-
-Clust...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/08/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/03</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
 </div>
 
@@ -1758,7 +1742,24 @@ Clust...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3649,7 +3650,7 @@ Clust...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 157
+        Total : 158
         </div>
         <!-- search  -->
         
@@ -3667,6 +3668,12 @@ Clust...
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2022/11/03/pyinstaller-supervisor/">如何打包一个不依赖 python 的 supervisor 的包去离线部署</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/09</span>
@@ -5337,6 +5344,16 @@ Clust...
             <span class="sidebar-tag-name" data-tags="panic">
                 <span class="iconfont-archer">&#xe606;</span>
                 panic
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="supervisor">
+                <span class="iconfont-archer">&#xe606;</span>
+                supervisor
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pyinstaller">
+                <span class="iconfont-archer">&#xe606;</span>
+                pyinstaller
             </span>
         
     </div>
