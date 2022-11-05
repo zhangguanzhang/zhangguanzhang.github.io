@@ -533,7 +533,7 @@
 <th align="center">安装过程</th>
 <th align="center">支持 env file</th>
 <th align="center">支持给进程 logfile rotate</th>
-<th align="center">通配符或者组纳管</th>
+<th align="center">组(或者label)纳管</th>
 <th align="center">备注</th>
 </tr>
 </thead>
@@ -542,7 +542,7 @@
 <td align="center">不老的系统都自带</td>
 <td align="center">✔</td>
 <td align="center">✔</td>
-<td align="center">x</td>
+<td align="center">有通配符，但是没组的概念</td>
 <td align="center"></td>
 </tr>
 <tr>
@@ -570,7 +570,7 @@
 <td align="center">除了安装过程，貌似我都不了解</td>
 </tr>
 </tbody></table>
-<p>pm2 从安装就不考虑了，supervisor-go 版本感觉开发者都不看 issue，而且它的 master 提交记录修复的 bug 描述看都是很常见的场景，出现这个问题我认为是单元测试覆盖不全面以及用户面小，现阶段和生产上我不会考虑它。而 systemd 不支持通配符或者组纳管，初步是选用 python 版本的 supervisor，但是 supervisor 安装无非就两种，一种是 pip 安装，一种是全套 rpm 包安装：</p>
+<p>pm2 从安装就不考虑了，supervisor-go 版本感觉开发者都不看 issue，而且它的 master 提交记录修复的 bug 描述看都是很常见的场景，出现这个问题我认为是单元测试覆盖不全面以及用户面小，现阶段和生产上我不会考虑它。而 systemd 不支持组纳管，初步是选用 python 版本的 supervisor，但是 supervisor 安装无非就两种，一种是 pip 安装，一种是全套 rpm 包安装：</p>
 <ul>
 <li>python-meld3 &gt;&#x3D; 0.6.5</li>
 <li>python2-meld3</li>
