@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -551,7 +551,7 @@
 <td align="center">x</td>
 <td align="center">✔</td>
 <td align="center">✔</td>
-<td align="center"></td>
+<td align="center">env file 的支持 hack 就行</td>
 </tr>
 <tr>
 <td align="left">supervisor-go版本</td>
@@ -570,7 +570,7 @@
 <td align="center">除了安装过程，貌似我都不了解</td>
 </tr>
 </tbody></table>
-<p>pm2 从安装就不考虑了，supervisor-go 版本感觉开发者都不看 issue，不想使用，而 systemd 不支持通配符或者组纳管，初步是选用 python 版本的 supervisor，但是 supervisor 安装无非就两种，一种是 pip 安装，一种是全套 rpm 包安装：</p>
+<p>pm2 从安装就不考虑了，supervisor-go 版本感觉开发者都不看 issue，而且它的 master 提交记录修复的 bug 描述看都是很常见的场景，出现这个问题我认为是单元测试覆盖不全面以及用户面小，现阶段和生产上我不会考虑它。而 systemd 不支持通配符或者组纳管，初步是选用 python 版本的 supervisor，但是 supervisor 安装无非就两种，一种是 pip 安装，一种是全套 rpm 包安装：</p>
 <ul>
 <li>python-meld3 &gt;&#x3D; 0.6.5</li>
 <li>python2-meld3</li>
@@ -603,7 +603,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rm -rf supervisord* dist/ build</span><br><span class="line"></span><br><span class="line">pyinstaller --onefile `which supervisord`</span><br></pre></td></tr></table></figure>
 
 <p>然后发现可以执行，但是在 arm64 下打包的文件执行会报错 <code>No moudle named supervisor.xxx</code>，需要加 <code>-p DIR, --paths DIR   A path to search for imports (like using PYTHONPATH).</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile -p $dir `which supervisord`</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile -p /usr/local/lib/python3.7/site-packages `which supervisord`</span><br></pre></td></tr></table></figure>
 
 <p>而其实还有其他文件需要打包：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">可以 rpm 包安装下 supervisor ，看下哪些文件需要</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">rpm -ql supervisor | grep -Pv <span class="string">&#x27;\.py|/site-packages/|/share/&#x27;</span></span></span><br><span class="line">/etc/logrotate.d/supervisor</span><br><span class="line">/etc/supervisord.conf</span><br><span class="line">/etc/supervisord.d</span><br><span class="line">/etc/tmpfiles.d/supervisor.conf</span><br><span class="line">/usr/bin/echo_supervisord_conf</span><br><span class="line">/usr/bin/pidproxy</span><br><span class="line">/usr/bin/supervisorctl</span><br><span class="line">/usr/bin/supervisord</span><br><span class="line">/usr/lib/systemd/system/supervisord.service</span><br><span class="line">/var/log/supervisor</span><br><span class="line">/var/run/supervisor</span><br></pre></td></tr></table></figure>
