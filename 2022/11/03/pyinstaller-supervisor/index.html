@@ -602,7 +602,7 @@
 <p>最后搜索了下，加上选项 <code>-F, --onefile         Create a one-file bundled executable.</code> 打包成一个文件：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rm -rf supervisord* dist/ build</span><br><span class="line"></span><br><span class="line">pyinstaller --onefile `which supervisord`</span><br></pre></td></tr></table></figure>
 
-<p>然后发现可以执行，但是在 arm64 下打包的文件执行会报错 <code>No moudle named supervisor.xxx</code>，需要加 <code>-p DIR, --paths DIR   A path to search for imports (like using PYTHONPATH).</code></p>
+<p>然后发现容器内可以执行，但是在 arm64 的 os 上执行会报错 <code>No moudle named supervisor.xxx</code>，需要加 <code>-p DIR, --paths DIR   A path to search for imports (like using PYTHONPATH).</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile -p /usr/local/lib/python3.7/site-packages `which supervisord`</span><br></pre></td></tr></table></figure>
 
 <p>打包成 rpm 包的话，以下文件需要打包：</p>

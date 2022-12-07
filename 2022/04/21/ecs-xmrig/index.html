@@ -543,7 +543,14 @@
 <p>同理查看下 systemd 的</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -V systemd</span><br><span class="line">.M.......  c /etc/machine-id</span><br><span class="line">SM5....T.  c /etc/rc.d/rc.local # 这个文件也记得查下</span><br><span class="line">S.5....T.  c /etc/systemd/system.conf</span><br><span class="line">.M.......  g /etc/udev/hwdb.bin</span><br><span class="line">.M.......  g /var/lib/systemd/random-seed</span><br><span class="line">.M....G..  g /var/log/journal</span><br><span class="line">.M....G..  g /var/log/wtmp</span><br><span class="line">.M....G..  g /var/run/utmp</span><br><span class="line"># 查看下有没有被添加 systemd 的开机启动任务，异常的 timer</span><br><span class="line">$ systemctl list-units</span><br></pre></td></tr></table></figure>
 
-<h3 id="清理进程相关"><a href="#清理进程相关" class="headerlink" title="清理进程相关"></a>清理进程相关</h3><p>我们环境是 k8s 和 docker 的，etcd 没证书，kubelet 的 http 可写，docker 开网络端口不 tls，redis 无密码这种现象是不存在的。看了下我们配置的部署配置文件，初步怀疑是一个有 sudo 的弱密码用户被爆破导致的中毒，查看了具有 sudo 权限和 root 的 <code>~/.ssh/authorized_keys</code> 也没被添加别人的公钥（有的话记得清理下），开始删除挖矿进程的目录：</p>
+<h3 id="清理进程相关"><a href="#清理进程相关" class="headerlink" title="清理进程相关"></a>清理进程相关</h3><p>我们环境是 k8s 和 docker 的，以下情况都不会发生：</p>
+<ul>
+<li>etcd 没证书，</li>
+<li>kubelet 的 http 可写，</li>
+<li>docker 开网络端口不 tls</li>
+<li>redis 无密码</li>
+</ul>
+<p>看了下我们配置的部署配置文件，初步怀疑是一个有 sudo 的弱密码用户被爆破导致的中毒，查看了具有 sudo 权限和 root 的 <code>~/.ssh/authorized_keys</code> 也没被添加别人的公钥（有的话记得清理下），开始删除挖矿进程的目录：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /dev/shm/.x/</span><br><span class="line">kill -9 1206</span><br></pre></td></tr></table></figure>
 
 <h3 id="排查网络"><a href="#排查网络" class="headerlink" title="排查网络"></a>排查网络</h3><p>看看是否还有其他后台进程上报或者下载的，看了下 udp 的正常，tcp监听的端口也没莫名其妙的端口，所以提取所有活跃的 tcp 连接 ip 看看有异常的 IP 没：</p>
