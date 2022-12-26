@@ -444,6 +444,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/02/15/linux-tc/">
+                
+                <span class="abstract-title-text">Linux tc基础使用</span>
+            </a>
+            <div class="abstract-content">
+                ens192 网卡 63%丢包率+6s延迟作用于目标 ip 是 114.114.114.114
+12345tc qdisc add dev ens192 root handle 1: priotc qdisc add dev ens192 parent 1:3 handle 30: netem loss 63% delay 6000mstc filter add dev ens192 protocol ip parent 1:0 u32 match ip dst 114.114.114.114   flowid 1:3# 清理网卡上的规则tc qdisc del dev  ens192 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/02/15">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/02/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/02/05/docker-image-can-t-rm/">
                 
                 <span class="abstract-title-text">docker无法删除掉镜像的解决方法</span>
@@ -740,42 +768,6 @@ keepalived 2方式1：
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/05</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/06/26/lua-list-all-upsteam/">
-                
-                <span class="abstract-title-text">lua列出所有upsteam</span>
-            </a>
-            <div class="abstract-content">
-                需要在http的路由上暴露出所有的upsteam配置段
-12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758upstream names&#123;    server 127.0.0.1:8050 ;    server 127.0.0.1:8060 ;&#125;upstream tuling &#123;    server 127.0.0.1:8051       weight=5;    server 127.0.0....
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/06/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="nginx">nginx</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1686,7 +1678,24 @@ keepalived 2方式1：
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3589,7 +3598,7 @@ keepalived 2方式1：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 158
+        Total : 159
         </div>
         <!-- search  -->
         
@@ -3607,6 +3616,12 @@ keepalived 2方式1：
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2022/12/26/woff2/">ttf转woff工具谷歌woff2的静态编译"</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>
@@ -5293,6 +5308,16 @@ keepalived 2方式1：
             <span class="sidebar-tag-name" data-tags="pyinstaller">
                 <span class="iconfont-archer">&#xe606;</span>
                 pyinstaller
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ttf">
+                <span class="iconfont-archer">&#xe606;</span>
+                ttf
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="woff">
+                <span class="iconfont-archer">&#xe606;</span>
+                woff
             </span>
         
     </div>

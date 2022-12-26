@@ -459,6 +459,42 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/08/16/reserve-compute-resources/">
+                
+                <span class="abstract-title-text">kubelet 为系统配置预留资源</span>
+            </a>
+            <div class="abstract-content">
+                前情提要我们环境有部分 pod 特殊，单独节点部署，oom 的时候会搞挂一些系统进程，这几天折腾了下配置了下 kubelet 相关的 reserved。主要是 kubelet 的配置文件一些参数，不写 systemd 里，全部写配置文件里。版本是如下，因为我们不单单是 x86_64 ，由于还有其他的架构以及会部署在客户的现场，为了减少维护，所以我们都是除了 flanneld 和 coredns 以外。k8s 相关的二进制的形式部署的。
+12345678910111213141516171819202122232425$ kubectl version -o json&#123;  &qu...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/08/16">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/16</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/07/26/kylin-v10-boot-hang/">
                 
                 <span class="abstract-title-text">鲲鹏920的麒麟v10物理服务器断电后无法启动处理</span>
@@ -978,42 +1014,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         <a class="post-tag" href="javascript:void(0);" data-tags="e2fsck">e2fsck</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="fsck">fsck</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/01/23/chrony/">
-                
-                <span class="abstract-title-text">chrony 静态编译和笔记</span>
-            </a>
-            <div class="abstract-content">
-                <p>chrony 静态编译和笔记</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/01/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/01/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="chrony">chrony</a>
     
 </div>
 
@@ -2100,7 +2100,24 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4003,7 +4020,7 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 158
+        Total : 159
         </div>
         <!-- search  -->
         
@@ -4021,6 +4038,12 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/26</span>
+            <a class="archive-post-title" href="/2022/12/26/woff2/">ttf转woff工具谷歌woff2的静态编译"</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>
@@ -5707,6 +5730,16 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="pyinstaller">
                 <span class="iconfont-archer">&#xe606;</span>
                 pyinstaller
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ttf">
+                <span class="iconfont-archer">&#xe606;</span>
+                ttf
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="woff">
+                <span class="iconfont-archer">&#xe606;</span>
+                woff
             </span>
         
     </div>
