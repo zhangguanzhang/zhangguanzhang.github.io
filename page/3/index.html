@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/08/24/cni-plugins-bridge-err/">
+                
+                <span class="abstract-title-text">一次 cni-plugins 导致集群 dns 无法解析的排错</span>
+            </a>
+            <div class="abstract-content">
+                问题环境是 1.15.5 的 x86_64 的 k8s 。命令输出被我查看日志给冲掉了，大致描述下。中间件 kafka 无法连上 zookeeper ，看了下日志报错域名无法解析。看了下 coredns 都挂了：
+12345$ kubectl -n kube-system get po -o wide -l k8s-app=kube-dnsNAME                       READY   STATUS             RESTARTS   AGE     IP           NODE         NOMINATED NODE   READINESS ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/08/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="cni-plugins">cni-plugins</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/08/16/reserve-compute-resources/">
                 
                 <span class="abstract-title-text">kubelet 为系统配置预留资源</span>
@@ -976,44 +1014,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="coredns">coredns</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/01/24/e2fsprogs/">
-                
-                <span class="abstract-title-text">e2fsck 太老报错 has unsupported feature(s): metadata_csum，从而尝试静态编译</span>
-            </a>
-            <div class="abstract-content">
-                <p>e2fsck 静态编译和笔记</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/01/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/01/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="e2fsck">e2fsck</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="fsck">fsck</a>
     
 </div>
 
@@ -2105,7 +2105,46 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4022,7 +4061,7 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 159
+        Total : 160
         </div>
         <!-- search  -->
         
@@ -4040,6 +4079,12 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span>
+            <a class="archive-post-title" href="/2022/12/30/k8s-java-request-cpu/">k8s java 容器未设置 requests.cpu 导致性能问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>

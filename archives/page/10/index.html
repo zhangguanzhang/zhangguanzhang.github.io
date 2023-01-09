@@ -444,6 +444,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/06/23/autoInstallServer/">
+                
+                <span class="abstract-title-text">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</span>
+            </a>
+            <div class="abstract-content">
+                修改镜像以及编程实现了从服务器买来上电就会自动化安装指定 ip 和 hostname 的步骤（包含了自动做raid）,全程非交互
+先讲讲事情的由来，新节点建设，几百台服务器得人为安装系统，虽说服务器有带外 ipmi，但是 raid 和安装系统时候 hostname 和ip啥的得去配置。系统镜像还是修改过的，安装界面的菜单自动应答通用的流程还不行，于是决定看看能不能研究出来。想要达到的一个效果就是：服务器送货到节点后，一个人带着电脑和设备的标签，高主频高io啥的分类好后贴上标签，按照贴的写一个所有设备应该配置的信息的excel:
+123hostname	  序列号	         IPM...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/06/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="raid">raid</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/06/12/CLP/">
                 
                 <span class="abstract-title-text">SMASH CLP的一些笔记</span>
@@ -777,40 +818,6 @@ OS CentOS 7.5.1804
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/02/12/dashboard/">
-                
-                <span class="abstract-title-text">通用的dashboard部署和tls，SSL相关部署</span>
-            </a>
-            <div class="abstract-content">
-                详细的讲解下部署dashboard，比市面上更详细和更多场景的选择，本文dashboard的暴露不会用nodeport(不喜欢使用它)和apiserver的web proxy代理也就是/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/这种
-讲下四种场景方式：
-
-
-纯dashboard http和https不惨合外部证书
-openssl 证书给dashboard当https
-个人向域名使用https小绿锁
-ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/02/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/12</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -1726,7 +1733,46 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3643,7 +3689,7 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 159
+        Total : 160
         </div>
         <!-- search  -->
         
@@ -3661,6 +3707,12 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span>
+            <a class="archive-post-title" href="/2022/12/30/k8s-java-request-cpu/">k8s java 容器未设置 requests.cpu 导致性能问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>

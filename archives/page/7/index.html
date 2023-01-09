@@ -444,6 +444,37 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/06/25/kubernetes-pprof/">
+                
+                <span class="abstract-title-text">k8s pprof 分析 cpu 和内存</span>
+            </a>
+            <div class="abstract-content">
+                简单记录下 k8s 组件的 pprof 看内存和 cpu 情况
+kubectl 收集有证书 curl 也行，这里就偷懒了：
+123# 这个很耗时，耐心等待文件不为 0 即可kubectl get --raw /api/v1/nodes/&lt;nodeName&gt;/proxy/debug/pprof/profile &gt; kubelet.profilekubectl get --raw /api/v1/nodes/&lt;nodeName&gt;/proxy/debug/pprof/heap &gt; kubelet.heap
+
+123yum instal -y graphviz...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/25</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/06/23/host-gw-in-aliyun/">
                 
                 <span class="abstract-title-text">阿里云上使用flannel host-gw跨节点pod不通的解决</span>
@@ -791,47 +822,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="go mod">go mod</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/02/centos6-hung-while-booting/">
-                
-                <span class="abstract-title-text">centos6中毒重启后卡在启动页面</span>
-            </a>
-            <div class="abstract-content">
-                12345678910⣿⣿⣿⣿⣿⣿⢟⣡⣴⣶⣶⣦⣌⡛⠟⣋⣩⣬⣭⣭⡛⢿⣿⣿⣿⣿⣿⣿⣿⣿⠋⢰⣿⣿⠿⣛⣛⣙⣛⠻⢆⢻⣿⠿⠿⠿⣿⡄⠻⣿⣿⣿⣿⣿⣿⠃⢠⣿⣿⣶⣿⣿⡿⠿⢟⣛⣒⠐⠲⣶⡶⠿⠶⠶⠦⠄⠙⢿⣿⠋⣠⠄⣿⣿⣿⠟⡛⢅⣠⡵⡐⠲⣶⣶⣥⡠⣤⣵⠆⠄⠰⣦⣤⡀⠇⣰⣿⣼⣿⣿⣧⣤⡸⢿⣿⡀⠂⠁⣸⣿⣿⣿⣿⣇⠄⠈⢀⣿⣿⠿⣰⣿⣿⣿⣿⣿⣿⣿⣷⣤⣈⣙⠶⢾⠭⢉⣁⣴⢯⣭⣵⣶⠾⠓⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣉⣤⣴⣾⣿⣿⣦⣄⣤⣤⣄⠄⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠈⢿⣿⣿⣿⣿⣿⣿⡟⣰⣞⣛⡒⢒⠤⠦⢬⣉⣉⣉⣉⣉⣉⣉⡥⠴⠂⢸⠻⣿⣿⣿⣿⣏⠻⢌⣉⣉⣩⣉⡛⣛⠒⠶⠶⠶⠶⠶⠶⠶⠶⠂⣸⣿
-
-昨晚刚整好那个ubuntu，今天下午又一台cen...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="centos6">centos6</a>
     
 </div>
 
@@ -1750,7 +1740,46 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3667,7 +3696,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 159
+        Total : 160
         </div>
         <!-- search  -->
         
@@ -3685,6 +3714,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span>
+            <a class="archive-post-title" href="/2022/12/30/k8s-java-request-cpu/">k8s java 容器未设置 requests.cpu 导致性能问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>
