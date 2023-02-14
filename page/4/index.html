@@ -457,6 +457,42 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/02/02/node-shutdown-dns-unavailable/">
+                
+                <span class="abstract-title-text">集群节点关机导致dns在eviction pod之前几率不可用</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天我们内部在做新项目的容灾测试，业务都是在 K8S 上的。容灾里就是随便选节点 shutdown -h now。关机后同事便发现了（页面有错误，最终问题是）集群内 DNS 解析会有几率无法解析（导致的）。
+根据 SVC 的流程，node 关机后，由于 kubelet 没有 update 自己。node 和 pod 在 apiserver get 的时候显示还是正常的。在 kube-controller-manager 的 --node-monitor-grace-period 时间后再过 --pod-eviction-timeout 时间开始 eviction pod，大概流程是...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/02/02">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/02/02</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="coredns">coredns</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -968,46 +1004,6 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/07/05/linux-auditd/">
-                
-                <span class="abstract-title-text">Linux audit 审计</span>
-            </a>
-            <div class="abstract-content">
-                什么是audit？linux audit子系统是一个用于收集记录系统、内核、用户进程发生的行为事件的一种安全审计系统。该系统可以可靠地收集有关上任何与安全相关（或与安全无关）事件的信息，它可以帮助跟踪在系统上执行过的一些操作。
-使用安装好像高版本 os 都自带了，没有就 yum install -y audit
-1systemctl status auditd.service
-
-例如追踪一个内核参数被谁修改要注意的是 auditctl 只能临时生效，要想永久生效使用文件 audit.rules
-基本信息查看12345678910111213# 查看状态$ auditctl -senabl...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/07/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="audit">audit</a>
     
 </div>
 
@@ -2104,21 +2100,12 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4055,7 +4042,7 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 160
+        Total : 161
         </div>
         <!-- search  -->
         
@@ -4069,6 +4056,21 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
         
             
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2023/02/14/openstack-vm-rabbitmqctl/">openstack 虚机上 rabbitmqctl 超时</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2022 </div>
             <ul class="year-list">
@@ -5781,6 +5783,11 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <span class="sidebar-tag-name" data-tags="woff">
                 <span class="iconfont-archer">&#xe606;</span>
                 woff
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hostname">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostname
             </span>
         
     </div>
