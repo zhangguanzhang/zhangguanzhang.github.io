@@ -350,7 +350,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">4.7k</span>阅读时长: <span class="post-count reading-time">28 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">4.9k</span>阅读时长: <span class="post-count reading-time">29 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -538,8 +538,19 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec 0ea rabbitmqctl environment | grep -i dns</span><br><span class="line">      &#123;reverse_dns_lookups,false&#125;,</span><br></pre></td></tr></table></figure>
 
 <h3 id="后续解决"><a href="#后续解决" class="headerlink" title="后续解决"></a>后续解决</h3><p>打算更改下 rabbitmq 的 docker 镜像增加 entrypoint.sh ，增加去掉点后缀的 hosts 记录，避免这种情况，因为 nova 上可以改 dhcp_domain，兼容未知后缀的话就是打地鼠，而且 host 网络容器每次 restart 后都会同步宿主机的 hosts，所以镜像启动脚本兼容是最优解</p>
+<p>在修改期间，看到了官方的 docker-entrypoint.sh 脚本里有类似判断：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># if long and short hostnames are not the same, use long hostnames</span><br><span class="line">if [ &quot;$(hostname)&quot; != &quot;$(hostname -s)&quot; ]; then</span><br><span class="line">	: &quot;$&#123;RABBITMQ_USE_LONGNAME:=true&#125;&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>机器上输出则是下面，确实不一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zhxxxx-xxx-20230203150413-0008 ~]# hostname</span><br><span class="line">zhxxxx-xxx-20230203150413-0008.novalocal</span><br><span class="line">[root@zhxxxx-xxx-20230203150413-0008 ~]# hostname -s</span><br><span class="line">zhxxxx-xxx-20230203150413-0008</span><br></pre></td></tr></table></figure>
+
+<p>官方文档的 clustering.html 里并没有看懂 <code>RABBITMQ_USE_LONGNAME</code> 描述，还是直接 hack entrypoint.sh 在前面添加下面的了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if [ &quot;$(hostname)&quot; != &quot;$(hostname -s)&quot; ]; then</span><br><span class="line">  grep -Eqw `hostname -s`&#x27;$&#x27; /etc/hosts || echo &quot;127.0.0.1 `hostname -s`&quot; &gt;&gt; /etc/hosts</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/docker-library/rabbitmq/blob/master/3.11/ubuntu/docker-entrypoint.sh">https://github.com/docker-library/rabbitmq/blob/master/3.11/ubuntu/docker-entrypoint.sh</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/configure.html">https://www.rabbitmq.com/configure.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/clustering.html">https://www.rabbitmq.com/clustering.html</a></li>
 </ul>
 
     </article>
