@@ -581,12 +581,12 @@
 
 <h3 id="multiarch-x2F-qemu-user-static-做了啥"><a href="#multiarch-x2F-qemu-user-static-做了啥" class="headerlink" title="multiarch&#x2F;qemu-user-static 做了啥"></a>multiarch&#x2F;qemu-user-static 做了啥</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm --privileged multiarch/qemu-user-static --reset -p yes</span><br></pre></td></tr></table></figure>
 
-<p>实际上运行下面的上面的特权容器，等同于:</p>
+<p>实际上运行上面的特权容器，等同于:</p>
 <ol>
 <li>特权容器下，容器内的 &#x2F;proc 和 mount 是和宿主机一致的</li>
 <li>入口 <a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh">register.sh 脚本</a> 挂载 binfmt_misc </li>
 <li>shift 掉 <code>--reset</code> 后，剩下参数传递执行 qemu 的 <a target="_blank" rel="noopener" href="https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh">qemu-binfmt-conf.sh</a> 脚本，注册各种架构二进制的打开方式为对应的 <code>qemu-$arch-static</code></li>
-<li>因为 <code>multiarch/qemu-user-static</code> 镜像里有 <a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/Dockerfile">COPY qemu-*-static &#x2F;usr&#x2F;bin&#x2F;</a>，然后把 <code>-p yes</code> 最终在脚本里，也就是注册的时候会开 flags 的 <code>F</code> ，会把这些 <code>/usr/bin/qemu-*-static</code> 导入到内存里</li>
+<li>因为 <code>multiarch/qemu-user-static</code> 镜像里有 <a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/Dockerfile">COPY qemu-*-static &#x2F;usr&#x2F;bin&#x2F;</a>，然后把 <code>-p yes</code> 传递给最终在脚本里，也就是注册的时候会开 flags 的 <code>F</code> ，会把这些 <code>/usr/bin/qemu-*-static</code> 导入到内存里</li>
 <li>然后在 x86_64 上执行其他架构的镜像，会被 binfmt_misc 拦截，调用内存里的 <code>/usr/bin/qemu-*-static</code> 翻译执行</li>
 </ol>
 <p>还有个 <code>multiarch/qemu-user-static:register</code> 的镜像，运行是:</p>
