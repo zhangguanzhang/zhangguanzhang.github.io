@@ -356,7 +356,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.3k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -587,7 +587,7 @@
 <li>入口 <a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh">register.sh 脚本</a> 挂载 binfmt_misc </li>
 <li>shift 掉 <code>--reset</code> 后，剩下参数传递执行 qemu 的 <a target="_blank" rel="noopener" href="https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh">qemu-binfmt-conf.sh</a> 脚本，注册各种架构二进制的打开方式为对应的 <code>qemu-$arch-static</code></li>
 <li>因为 <code>multiarch/qemu-user-static</code> 镜像里有 <a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/Dockerfile">COPY qemu-*-static &#x2F;usr&#x2F;bin&#x2F;</a>，然后把 <code>-p yes</code> 传递给最终在脚本里，也就是注册的时候会开 flags 的 <code>F</code> ，会把这些 <code>/usr/bin/qemu-*-static</code> 导入到内存里</li>
-<li>然后在 x86_64 上执行其他架构的镜像，会被 binfmt_misc 拦截，调用内存里的 <code>/usr/bin/qemu-*-static</code> 翻译执行</li>
+<li>然后在 x86_64 上执行其他架构的镜像，会被 binfmt_misc 识别，调用内存里的 <code>/usr/bin/qemu-*-static</code> 翻译执行</li>
 </ol>
 <p>还有个 <code>multiarch/qemu-user-static:register</code> 的镜像，运行是:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm --privileged multiarch/qemu-user-static:register --reset</span><br></pre></td></tr></table></figure>
@@ -600,6 +600,9 @@
 
 <p>或者 第一阶段是 golang 交叉编译，第二阶段是最终架构：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM go:xxx as build</span><br><span class="line">RUN GOARCH=arm64 go build -o /xxx cmd/main.go</span><br><span class="line"></span><br><span class="line">FROM multiarch/qemu-user-static:x86_64-aarch64 as qemu</span><br><span class="line">FROM arm64v8/ubuntu</span><br><span class="line">COPY --from=build /xxx /xxx</span><br><span class="line">COPY --from=qemu /usr/bin/qemu-aarch64-static /usr/bin/</span><br><span class="line">RUN apt-get ...</span><br></pre></td></tr></table></figure>
+
+<p>当然，也不是只有 docker，因为是内核拦截的 execute 的 syscall ，所以此刻宿主机上也可以执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./arch_arm64</span><br><span class="line">Runtime: linux</span><br><span class="line">CPU Architecture: arm64</span><br></pre></td></tr></table></figure>
 
 <h3 id="一些注意点"><a href="#一些注意点" class="headerlink" title="一些注意点"></a>一些注意点</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh#L3">register.sh 脚本</a> 里默认是把 <code>QEMU_BIN_DIR</code> 设置为 <code>/usr/bin/</code> ，直接使用 qemu 的脚本默认则是 <code>/usr/local/bin/</code></li>
