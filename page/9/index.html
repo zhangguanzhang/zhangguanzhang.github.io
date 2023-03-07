@@ -459,6 +459,50 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/05/05/Kubernetes_install/">
+                
+                <span class="abstract-title-text">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</span>
+            </a>
+            <div class="abstract-content">
+                转载自https://kairen.github.io/2018/04/05/kubernetes/deploy/manual-v1.10/作者文章的安装步骤文字是复制作者的1.8的安装步骤然后改的,安装过程变了部分,但是文字没有改正过来。
+此过程我写了ansible安装部署方案,地址(一些文件下载不了的话可以去下面的github里找对应的文件)
+
+多master高可用版
+单master版
+
+本文内容所有url都没改过，以下的添加的内容是我的建议和安装的经验
+本文里如果有些范围不知道在哪台主机上执行请看前后命令都可以判断出,不清楚的请下面评论我会更新
+以下我转载过来并修改+上我的提醒
+管...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/05/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/05</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/04/29/kubernetes-configMap-mount/">
                 
                 <span class="abstract-title-text">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</span>
@@ -938,51 +982,6 @@ keepalived 2方式1：
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/03</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">
-                
-                <span class="abstract-title-text">shell脚本的选项和参数处理</span>
-            </a>
-            <div class="abstract-content">
-                在写shell脚本时经常会用到命令行选项、参数处理方式，如:
-1./test.sh -f 5 -rF --host-file=/etc/hosts
-其中-f和-rF都是短选项,–host-file是长选项短选项又分为可选参数和必选参数,不需要参数的短选项可以合着写例如cat和tail的-n有默认值10在shell中，可以用以下三种方式来处理命令行参数，每种方式都有自己的应用场景
-
-手工处理方式
-getopts
-getopt
-
-手工处理不说了,手工处理高度依赖于你在命令行上所传参数的位置，所以一般都只用来处理较简单的参数下面我们依次讨论这后两种处理方式getopts是shell内置的,只支...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/05/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/25</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="shell">shell</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="bash">bash</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -2081,7 +2080,24 @@ getopt
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4018,7 +4034,7 @@ getopt
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 161
+        Total : 162
         </div>
         <!-- search  -->
         
@@ -4036,6 +4052,12 @@ getopt
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/07</span>
+            <a class="archive-post-title" href="/2023/03/07/qemu-binfmt_misc/">利用 qemu user 模式和 binfmt_misc 构建其他架构的 docker 镜像</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -5764,6 +5786,21 @@ getopt
             <span class="sidebar-tag-name" data-tags="hostname">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostname
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="qemu">
+                <span class="iconfont-archer">&#xe606;</span>
+                qemu
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="binfmt_misc">
+                <span class="iconfont-archer">&#xe606;</span>
+                binfmt_misc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="loongarch64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loongarch64
             </span>
         
     </div>

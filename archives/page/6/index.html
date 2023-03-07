@@ -442,6 +442,42 @@
         
         
             
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/11/23/ansible-reload-user/">
+                
+                <span class="abstract-title-text">ansible reload user group</span>
+            </a>
+            <div class="abstract-content">
+                <p>记录下今天被 ansible 会话持久坑到的一个 user group 问题</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/11/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2020/11/23/ansible-hang-in-docker/">
@@ -768,45 +804,6 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="Prometheus">Prometheus</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/07/23/fs-error-fix-k8s-master/">
-                
-                <span class="abstract-title-text">k8s master机器文件系统故障的一次恢复过程</span>
-            </a>
-            <div class="abstract-content">
-                由来研发反馈他们那边一套集群有台master文件系统损坏无法开机，他们是三台openstack上的虚机，是虚拟化宿主机故障导致的虚机文件系统损坏。三台机器是master+node，指导他修复后开机，修复过程和我之前文章opensuse的一次救援步骤一样
-起来后我上去看，因为做了 HA 的，所以只有这个node有问题，集群没影响
-12345[root@k8s-m1 ~]# kubectl get node -o wideNAME             STATUS     ROLES    AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/07/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
     
 </div>
 
@@ -1735,7 +1732,24 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3672,7 +3686,7 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 161
+        Total : 162
         </div>
         <!-- search  -->
         
@@ -3690,6 +3704,12 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/07</span>
+            <a class="archive-post-title" href="/2023/03/07/qemu-binfmt_misc/">利用 qemu user 模式和 binfmt_misc 构建其他架构的 docker 镜像</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -5418,6 +5438,21 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <span class="sidebar-tag-name" data-tags="hostname">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostname
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="qemu">
+                <span class="iconfont-archer">&#xe606;</span>
+                qemu
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="binfmt_misc">
+                <span class="iconfont-archer">&#xe606;</span>
+                binfmt_misc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="loongarch64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loongarch64
             </span>
         
     </div>
