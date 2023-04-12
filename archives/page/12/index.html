@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/10/27/create-kubeconfig/">
+                
+                <span class="abstract-title-text">生成kubeconfig常规的两种方法</span>
+            </a>
+            <div class="abstract-content">
+                方式总得来讲有两种创建 kubeconfig，证书的话市面上很多教程，要注意下面事项为以下:
+
+
+要注意 CN(Common Name) 与 O(Organization) 等内容是会影响 Kubernetes 认证的。具体可见 https://kubernetes.io/docs/setup/best-practices/certificates/CN Common Name, apiserver 会从证书中提取该字段作为请求的用户名 (User Name)O Organization, apiserver 会从证书中提取该字段作为请求用户所属的组 (Group)
+CA (Certif...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/10/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubeconfig">kubeconfig</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/10/12/prometheus-operator/">
                 
                     <span class="iconfont-archer stick-top">&#xe63d;</span>
@@ -806,45 +845,6 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/06/02/kubernetes-nodeSelector/">
-                
-                <span class="abstract-title-text">kubernetes的PodAffinity的不解</span>
-            </a>
-            <div class="abstract-content">
-                官方文档来看是下面的说法,摘自官方文档https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-
-An example of a pod that uses pod affinity:
-
-1234567891011121314151617181920212223242526272829apiVersion: v1kind: Podmetadata:  name: with-pod-affinityspec:  affinity:    podAffinity:      requiredDuringSchedul...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/06/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="PodAffinity">PodAffinity</a>
     
 </div>
 
@@ -1778,7 +1778,24 @@ An example of a pod that uses pod affinity:
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3727,7 +3744,7 @@ An example of a pod that uses pod affinity:
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 162
+        Total : 163
         </div>
         <!-- search  -->
         
@@ -3745,6 +3762,12 @@ An example of a pod that uses pod affinity:
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/12</span>
+            <a class="archive-post-title" href="/2023/04/12/docker-pull-hang/">国产系统上解决docker pull卡住的问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">03/07</span>

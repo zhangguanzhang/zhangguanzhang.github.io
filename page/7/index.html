@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/07/08/nodeport-err/">
+                
+                <span class="abstract-title-text">为什么我不用nodePort之偶然中奖几率</span>
+            </a>
+            <div class="abstract-content">
+                嗯，1.6.7 的老集群。早上反应数据库实例创建不出来。发现接口 port 的 tcp 不可达，查看 kube-proxy 的日志如下
+123456[root@HB1-xxxxx-S03 kubernetes]# tailf  kube-proxy.INFO E0708 09:44:03.437284  394350 proxier.go:1062] can&#x27;t open &quot;nodePort for cloudify/cloudae-cfy-nginx:port1&quot; (:16081/tcp), skipping this nodePort: listen t...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/07/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="nodeport">nodeport</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/07/07/golang-http/">
                 
                 <span class="abstract-title-text">golang的net/http包的客户端简单科普</span>
@@ -979,43 +1017,6 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="cifs">cifs</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/01/22/proxmox-cloud-init/">
-                
-                <span class="abstract-title-text">proxmox里使用cloud-init和一些笔记</span>
-            </a>
-            <div class="abstract-content">
-                cloud-init的镜像模板制作模板制作记录下proxmox制作带有 cloud-init 的虚机模板过程因为刚开始制作虚机模板的硬盘是固定大小,后面通过克隆后调整硬盘大小就会自动 growpart ,需要安装 cloud-utils-growpart。好像只能往大的扩,我个人也倾向于最小 20G,所以这里我开的是20G硬盘的虚机另外查了下和实际试了下 cloud-utils-growpart 好像只支持 ext3 和 ext4 不支持 lvm 自动扩,其他的文件系统可以考虑试试 lvm 自己写个脚本去开机启动自动扩。这里我分区不带 swap,标准分区+ext4安装完后进系统里自行配制...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/01/22">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/22</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="openstack">openstack</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="cloud-init">cloud-init</a>
     
 </div>
 
@@ -2122,7 +2123,24 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4071,7 +4089,7 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 162
+        Total : 163
         </div>
         <!-- search  -->
         
@@ -4089,6 +4107,12 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/12</span>
+            <a class="archive-post-title" href="/2023/04/12/docker-pull-hang/">国产系统上解决docker pull卡住的问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">03/07</span>
