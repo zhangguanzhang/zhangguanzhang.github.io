@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">981</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">985</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -529,7 +529,7 @@
 <p>看注释里的 <code>xz -d -c -q | docker-untar ...</code> ，看了下 unpigz 的 cmdline 和确实有一个卡住的 docker-untar 进程</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ xargs -0 &lt; /proc/1170083/cmdline</span><br><span class="line">/usr/bin/unpigz -d -c</span><br><span class="line">$ ps aux | grep docker-unta[r]</span><br><span class="line">root     1164788  0.0  0.0 1491008 39488 pts/2   Sl+  15:21   0:00 docker-untar / /data/kube/docker/overlay2/546b7b992b53b243450807b8150c4a1905e93afae604da69a21bbaaf443f178e/diff</span><br></pre></td></tr></table></figure>
 
-<p>看着是 exec 调用解压管道，而上面的 unpigz 进程树看到是 docker 默认使用的是 unpigz 而非 xz ，搜了下，发现 unpigz 在 gz 格式处理上比 gzip 更快。既然 docker 是 exec 调用的 unpigz ，源码里搜索下：</p>
+<p>看着是 exec 调用解压管道，而上面的 unpigz 进程树看到是 docker 默认调用的而非 xz ，搜了下，发现 unpigz 在 gz 格式处理上比 gzip 更快。既然 docker 是 exec 调用的 unpigz ，源码里搜索下：</p>
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/moby/moby/blob/v19.03.15/pkg/archive/archive.go#L32-L39</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> path, err := exec.LookPath(<span class="string">&quot;unpigz&quot;</span>); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		logrus.Debug(<span class="string">&quot;unpigz binary not found in PATH, falling back to go gzip library&quot;</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		logrus.Debugf(<span class="string">&quot;Using unpigz binary found at path %s&quot;</span>, path)</span><br><span class="line">		unpigzPath = path</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>往下翻看，发现 <code>unpigzPath</code> 的 exec 调用地方：</p>
@@ -538,7 +538,7 @@
 <p>现场 unpigz 版本：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -qf /bin/unpigz</span><br><span class="line">pigz-2.4-7.uel20.01.aarch64</span><br><span class="line">$ rpm -V pigz</span><br><span class="line"># -V 查看包也没被修改</span><br></pre></td></tr></table></figure>
 
-<p>注意看其中有个 env 设置不适用 PIGZ，然后启动 docker daemon 的时候设置这个 env 就可以拉取镜像了：</p>
+<p>注意看其中有个 env 设置不使用用 PIGZ 而是使用 gzip ，然后启动 docker daemon 的时候设置这个 env 就可以拉取镜像了：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl stop docker</span><br><span class="line">$ MOBY_DISABLE_PIGZ=true dockerd --debug</span><br></pre></td></tr></table></figure>
 
 <h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>让客户联系厂商升级 pigz 包先，不能解决再使用 <code>MOBY_DISABLE_PIGZ</code></p>
