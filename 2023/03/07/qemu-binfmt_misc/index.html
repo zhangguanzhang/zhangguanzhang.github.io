@@ -356,7 +356,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.5k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -540,7 +540,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 你也可以用包管理安装，有些系统的自带的源里没有静态编译的 qemu-$arch</span><br><span class="line"># 所以这里我直接下载别人编译好的静态二进制</span><br><span class="line">$ wget https://github.com/multiarch/qemu-user-static/releases/download/v7.2.0-1/qemu-aarch64-static</span><br><span class="line">$ chmod a+x qemu-aarch64-static</span><br><span class="line">$ ./qemu-aarch64-static arch_arm64</span><br><span class="line">Runtime: linux</span><br><span class="line">CPU Architecture: arm64</span><br><span class="line">$ ./arch_arm64</span><br><span class="line">-bash: ./arch_arm64: cannot execute binary file</span><br></pre></td></tr></table></figure>
 
 <p>如果需要运行的程序不是静态链接的，需要宿主机行支持，或者 chroot 进去后，把 qemu-user-static 拷贝进去执行。</p>
-<h3 id="Linux-的-binfmt-misc"><a href="#Linux-的-binfmt-misc" class="headerlink" title="Linux 的 binfmt_misc"></a>Linux 的 binfmt_misc</h3><p>windows 上可以设置不同的后缀文件使用不同软件打开，在 Linux 上，也有类似的功能。Linux的内核从很早开始就引入了一个叫做 Miscellaneous Binary Format（binfmt_misc）的机制，可以通过要打开文件的特性来选择到底使用哪个程序来打开。比 Windows 更加强大的地方是，它不光可以通过文件的扩展名来判断的，还可以通过文件开始位置的特殊的字节（Magic Byte）来判断。</p>
+<h3 id="Linux-的-binfmt-misc"><a href="#Linux-的-binfmt-misc" class="headerlink" title="Linux 的 binfmt_misc"></a>Linux 的 binfmt_misc</h3><p>windows 上可以设置不同的后缀文件使用不同软件打开，在 Linux 上，也有类似的功能。Linux的内核从很早开始就引入了一个叫做 Miscellaneous Binary Format（binfmt_misc）的机制，可以通过要打开文件的特性来选择到底使用哪个程序来打开。比 Windows 更加强大的地方是，它不光可以通过文件的扩展名来判断的，还可以通过文件开始位置的特殊的字节（ELF Magic Byte）来判断。</p>
 <h4 id="binfmt-misc-开启"><a href="#binfmt-misc-开启" class="headerlink" title="binfmt_misc 开启"></a>binfmt_misc 开启</h4><p>使用下面命令启用这个功能：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 内核编译的选项 Executable file formats / Emulations  ---&gt; &lt;M&gt; Kernel support for MISC binaries</span><br><span class="line">modprobe binfmt_misc</span><br><span class="line"># 也是 /procfs 注册开启</span><br><span class="line">mount binfmt_misc /proc/sys/fs/binfmt_misc</span><br></pre></td></tr></table></figure>
 
@@ -561,7 +561,10 @@
 </li>
 <li>offset 在 type 为 M 的时候有用，指定识别的时候的偏移位置，默认是 0 。</li>
 <li>magic 即用来识别的具体 magic 内容</li>
-<li>mask 在 type 为 M 的时候用，默认值全是 0xFF 的 bitmask，某一位为1，则表示必须和 magic对应的匹配。</li>
+<li>mask 在 type 为 M 的时候用，默认值全是 0xFF 的 bitmask，二进制下某一位为1，则表示文件的 ELF magic 必须和 magic对应的位匹配。magic 长度一般是 40，具体可以去看 <a target="_blank" rel="noopener" href="https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh">qemu-binfmt-conf.sh</a> 脚本，获取二进制文件的 magic 可以使用例如下面的 shell：<ul>
+<li><code>xxd hello_arm64   | awk &#39;&#123;for(i=2;i&lt;NF;i++)&#123;a=a$i;c++;if(c&gt;9)&#123;print a;exit;&#125;&#125;&#125;&#39;</code> 该示例是 40 个</li>
+</ul>
+</li>
 <li>interpreter 具体用来执行的解释器，必须用绝对路径。不能超过127个字符。</li>
 <li>flags 可选的，用来控制 interpreter 打开文件的行为:<ul>
 <li>P 用于保存用户于命令行中输入的原程序名（通过将程序名添加到argv）；interpreter 必须知悉到此标记才能正确将此额外函数作为其argv[0]传递至解释程序。</li>
