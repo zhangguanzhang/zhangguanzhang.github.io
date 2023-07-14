@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.5k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.6k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -555,7 +555,7 @@
 <li>如果不能就 etcdctl 删除掉这个 svc</li>
 <li>最后再启动停止的进程</li>
 </ul>
-<h4 id="ipvs-模式如何使用-externalIPs"><a href="#ipvs-模式如何使用-externalIPs" class="headerlink" title="ipvs 模式如何使用 externalIPs"></a>ipvs 模式如何使用 externalIPs</h4><p>可以设置外部没使用的 IP，然后网络设备添加路由把这个 IP 导向 k8s 的机器</p>
+<h4 id="ipvs-模式如何使用-externalIPs"><a href="#ipvs-模式如何使用-externalIPs" class="headerlink" title="ipvs 模式如何使用 externalIPs"></a>ipvs 模式如何使用 externalIPs</h4><p>可以设置外部没使用的 IP，然后网络设备添加路由把这个 IP 导向 k8s 的机器。或者有其他进程宣告 arp，让外部机器访问 externalIPs 能到 k8s 机器上</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://ipset.netfilter.org/iptables-extensions.man.html">https://ipset.netfilter.org/iptables-extensions.man.html</a></li>
 </ul>
