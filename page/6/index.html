@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/03/02/binfmt-0000/">
+                
+                <span class="abstract-title-text">记录一次request_module: runaway loop modeprobe binfmt-0000</span>
+            </a>
+            <div class="abstract-content">
+                昨天一台 gpu 的主机的阵列卡突然坏了，最终整起来后上面的几台虚机恢复后有一台虚机无法正常开机，开机进 emergency mode，同事看上面的报错以为是挂载了啥 iscsi，当然无法开机应该找到最开始的错误，进到 emergency mode 这个视角的时候已经是雪崩的最后的错误了，多半是没有意义的。输入 root 密码后执行journalctl -xb翻看最开始的错误
+
+按照关键字request_module: runaway loop modeprobe binfmt-0000搜到的都是裁剪内核出现的binfmt-484c啥的或者2.6内核的出错，尝试了换内核和挂载iso进re...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/03/02">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/02</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kernel">kernel</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/02/27/microsoft-graph-for-onedrive/">
                 
                 <span class="abstract-title-text">使用microsoft-graph的api对接onedrive</span>
@@ -994,43 +1033,6 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="preseed">preseed</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/07/14/chromedp/">
-                
-                <span class="abstract-title-text">golang headless browser包chromedp初探</span>
-            </a>
-            <div class="abstract-content">
-                什么是cdp前天晚上想写个网站自动投稿，但是 chrome F12 抓的包里请求的几个参数里的值不知道 js 咋生成的，看不懂 js。询问了下网友，网友看我截图请求蛮多的，说有空帮我看看。并且他说到了模拟过程虽然能成功但是可能反爬措施强会导致封号，建议我用无头浏览器整。搜了下相关概念，无头浏览器的话 python 里就是 selenium驱动的，广泛使用的 headless browser 解决方案 PhantomJS 已经宣布不再继续维护，转而推荐使用 headless chrome。Headless Chrome 是 Chrome 浏览器的无界面形态，可以在不打开浏览器的 gui 前...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/07/14">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/14</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="chromedp">chromedp</a>
     
 </div>
 
@@ -2142,7 +2144,66 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4103,7 +4164,7 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 163
+        Total : 164
         </div>
         <!-- search  -->
         
@@ -4121,6 +4182,12 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/12</span>

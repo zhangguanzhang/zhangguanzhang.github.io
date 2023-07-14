@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/03/23/iptables-docker-no-chain/">
+                
+                <span class="abstract-title-text">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</span>
+            </a>
+            <div class="abstract-content">
+                由来我们内部有套部署的工具， 我们部署的流程是先在部署机器（部署机器可能也是node1 ）上用脚本安装好 docker，然后进容器里去起我们部署平台，有个很久的 bug 就是，部署机器上端口映射起容器会有如下报错
+1iptables --wait -t nat -A DOCKER -p tcp -d 0/8 --dport 8089 -j DNAT --to-destination 172.25.0.2:80 ! -i docker0: iptables NO chain/target/match by that name
+
+排查也很简单，缺少链，添加上即可:
+123sudo iptab...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/03/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">
                 
                 <span class="abstract-title-text">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</span>
@@ -954,43 +993,6 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="skopeo">skopeo</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/08/05/wireguard-for-personal/">
-                
-                <span class="abstract-title-text">个人用 wireguard 笔记</span>
-            </a>
-            <div class="abstract-content">
-                作为 IT homelab 人员，经常需要连到家里的机器， openvpn 之类的配置麻烦啰嗦。这里写下 wireguard 的简单搭建。它比 IPSec 更快，更简单，更精简，更有用。它工作在内核态，比 OpenVPN 更高效。WireGuard 设计为通用 VPN，适用于多种不同情况。它是跨平台的，可大规模部署。
-通常如下图的部署: 一台 ECS 主机，得有公网 IP，下图就是 pc ----&gt; ECS &lt;------ 家里的 pc
-12345678910111213141516            +----------+            |          ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/08/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/08/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="wireguard">wireguard</a>
     
 </div>
 
@@ -2102,7 +2104,66 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4063,7 +4124,7 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 163
+        Total : 164
         </div>
         <!-- search  -->
         
@@ -4081,6 +4142,12 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/12</span>
