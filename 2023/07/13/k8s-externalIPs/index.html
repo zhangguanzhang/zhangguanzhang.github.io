@@ -532,7 +532,7 @@
 <li><code>-m physdev ! --physdev-is-in</code> 意思为不是从桥接接口进来，也就是外部的物理网卡进来的，<code>-m addrtype ! --src-type LOCAL</code> 意思是来源地址不是本机上的 IP，最后是到 svc 的 DNAT 到 podIP</li>
 <li>第三个结尾的 <code>-m addrtype --dst-type LOCAL</code> 是目标 IP 在本机，也就是针对 externalIPs 设置成机器上的 网卡 IP 的，此刻拦截发到 svc。</li>
 </ul>
-<p>iptables 模式针对的都是纯四层，设置为集群机器 IP 这样没啥问题，问题是 ipvs 模式，也就是接下来讲的</p>
+<p>因为前面都是针对 ip:80 的，所以 iptables 模式针对的都是纯四层，设置为集群机器 IP 这样没啥问题，问题是 ipvs 模式，也就是接下来讲的</p>
 <h3 id="ipvs-模式"><a href="#ipvs-模式" class="headerlink" title="ipvs 模式"></a>ipvs 模式</h3><p>清理掉上面的svc：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod nginx</span><br><span class="line">kubectl delete svc nginx-service</span><br></pre></td></tr></table></figure>
 
@@ -550,12 +550,12 @@
 </ul>
 <p>假设已经发生：</p>
 <ul>
-<li>每台机器从 tty 或者虚拟化 vnc 进去后停止 kube-proxy，ip link delete <externalIPs>&#x2F;32 dev kube-ipvs0</li>
+<li>每台机器从 tty 或者虚拟化 vnc 进去后停止 kube-proxy，<code>ip link delete &lt;externalIPs&gt;/32 dev kube-ipvs0</code></li>
 <li>如果操作后能使用 kubectl 就 edit 或者删除那个 svc</li>
 <li>如果不能就 etcdctl 删除掉这个 svc</li>
 <li>最后再启动停止的进程</li>
 </ul>
-<h4 id="ipvs-模式如何使用-externalIPs"><a href="#ipvs-模式如何使用-externalIPs" class="headerlink" title="ipvs 模式如何使用 externalIPs"></a>ipvs 模式如何使用 externalIPs</h4><p>可以设置外部没使用的 IP，然后网络设备添加路由把这个 IP 导向 k8s 的机器。或者有其他进程宣告 arp，让外部机器访问 externalIPs 能到 k8s 机器上</p>
+<h4 id="ipvs-模式如何使用-externalIPs"><a href="#ipvs-模式如何使用-externalIPs" class="headerlink" title="ipvs 模式如何使用 externalIPs"></a>ipvs 模式如何使用 externalIPs</h4><p>可以设置外部没使用的 IP，然后网络设备添加路由把这个 IP 导向 k8s 的机器。或者有其他进程&#x2F;轮子宣告 externalIPs 的 arp，让外部机器访问 externalIPs 能到 k8s 机器上</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://ipset.netfilter.org/iptables-extensions.man.html">https://ipset.netfilter.org/iptables-extensions.man.html</a></li>
 </ul>
