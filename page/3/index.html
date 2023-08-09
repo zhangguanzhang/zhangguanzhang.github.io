@@ -459,6 +459,49 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/09/03/openwrt-usb-net/">
+                
+                <span class="abstract-title-text">[持续更新] - Openwrt USB 网络</span>
+            </a>
+            <div class="abstract-content">
+                about记录下 openwrt 下 usb 网络的折腾，后续折腾这块内容的话也在这个文章内更新
+N1 上的 usb 网络共享折腾固件依赖暂时没完全区分 usb 网络共享和 usb-cdc 的关系，所以我编译的时候把很多 usb-net-xxx 都编译进去了
+听其他大佬说编译的时候主要有下面的包:
+
+安卓: kmod-usb-net kmod-usb-net-rndis
+苹果: kmod-usb-net-ipheth usbmuxd
+
+建议下面这些也安装上方便调试:
+123456789101112131415161718CONFIG_PACKAGE_luci-proto-3g=yCONF...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/03</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="usb-net">usb-net</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/02/fio/">
                 
                 <span class="abstract-title-text">fio 静态编译和基础使用</span>
@@ -973,47 +1016,6 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/04/30">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/30</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/04/08/kubelet-runc-disable-kmem/">
-                
-                <span class="abstract-title-text">kubelet 和 runc 编译关闭 kmem</span>
-            </a>
-            <div class="abstract-content">
-                前提详情在 3.x 的内核上，cgroup 的 kmem account 特性有内存泄露问题。kubelet 和 runc 都需要修复。
-网上有言论说升级 Linux 内核至 kernel-3.10.0-1075.el7 及以上就可以修复这个问题，详细可见 slab leak causing a crash when using kmem control group。但是我测试了下面的都不行：
-
-CentOS7.4
-CentOS7.6
-CentOS7.7的 3.10.0-1062.el7.x86_64 
-CentOS Linux release 7.8.2003 (Core) - 3.1...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/04/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/08</span>
                 </div>
                 <!-- tags -->
                 
@@ -2137,47 +2139,12 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4152,7 +4119,7 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 164
+        Total : 165
         </div>
         <!-- search  -->
         
@@ -4170,6 +4137,12 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2023/08/08/qemu-cgo-build-hang/">qemu-user-static 下 cgo go build 卡住的一次解决</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
@@ -5931,6 +5904,16 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
             <span class="sidebar-tag-name" data-tags="loongarch64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cgo">
+                <span class="iconfont-archer">&#xe606;</span>
+                cgo
             </span>
         
     </div>

@@ -459,6 +459,49 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/06/25/etcd-error/">
+                
+                <span class="abstract-title-text">记录一次线上k8s节点故障</span>
+            </a>
+            <div class="abstract-content">
+                
+
+邮件收到zabbix的告警,业务的网页登陆状态不是200,后面又自愈了
+
+
+说明服务挂掉过一次,登陆到机器上发现集群有台节点状态是nodelost状态上去看到相关服务都挂掉了然后排查到根分区占满了,排查到是k8s日志堆满了&#x2F;var&#x2F;log&#x2F;
+12345678910111213141516[root@cloudos02 ~]# df -hFilesystem               Size  Used Avail Use% Mounted on/dev/mapper/centos-root  219G  216G     0 100% /devtmp...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/25</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/06/03/kubernetes-s-job/">
                 
                 <span class="abstract-title-text">kubernetes&#39;s Job总结和实战以及坑</span>
@@ -950,40 +993,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2017/07/06">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/06</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/07/05/centos7-some-mirror/">
-                
-                <span class="abstract-title-text">centos7 的一些常见软件的安装 mirror</span>
-            </a>
-            <div class="abstract-content">
-                centos 7git 2centos 7 自带的 git 版本很低：
-12$ git versiongit version 1.8.3.1
-
-安装 git 2 
-123yum -y install \   https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm \   &amp;&amp; yum install -y git
-
-keepalived 2方式1：
-12yum install -y http://www.nosuchhost.net/~cheese/fedora/packa...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/07/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/05</span>
                 </div>
                 <!-- tags -->
                 
@@ -2099,47 +2108,12 @@ keepalived 2方式1：
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4114,7 +4088,7 @@ keepalived 2方式1：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 164
+        Total : 165
         </div>
         <!-- search  -->
         
@@ -4132,6 +4106,12 @@ keepalived 2方式1：
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2023/08/08/qemu-cgo-build-hang/">qemu-user-static 下 cgo go build 卡住的一次解决</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
@@ -5893,6 +5873,16 @@ keepalived 2方式1：
             <span class="sidebar-tag-name" data-tags="loongarch64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cgo">
+                <span class="iconfont-archer">&#xe606;</span>
+                cgo
             </span>
         
     </div>

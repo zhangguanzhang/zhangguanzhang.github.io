@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
+                
+                <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
+            </a>
+            <div class="abstract-content">
+                由来该issue见 https://github.com/kubernetes/kubernetes/issues/76956, apiserver和controller-manager每次start的时候会刷下面信息。不影响使用，但是有强迫症可以按照本文思路手动修改。当然本文也是自己编译k8s的教程
+123456E0423 17:35:58.491576       1 prometheus.go:138] failed to register depth metric admission_quota_controller: duplicate metrics collector re...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/21">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/21</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/07/08/nodeport-err/">
                 
                 <span class="abstract-title-text">为什么我不用nodePort之偶然中奖几率</span>
@@ -796,50 +834,6 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/09/18/kubernetes-1-11-x-bin/">
-                
-                <span class="abstract-title-text">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</span>
-            </a>
-            <div class="abstract-content">
-                本次采用二进制文件方式部署
-不建议使用secureCRT这个ssh软件复制本篇博客内容的命令,因为它的部分版本对包含多条命令的处理结果并不完美,可能很多命令不是预期结果
-本文命令里有些是输出,不要乱粘贴输入(虽然也没影响)
-本文命令全部是在k8s-m1上执行
-本文很多步骤是选择其一,别啥都不看一路往下复制粘贴
-如果某些步骤理解不了可以上下内容一起看来理解
-本文后面的几个svc用了externalIPs,上生产的话必须用VIP或者LB代替
-本文的HA是vip,生产和云上可以用LB和SLB,不过阿里的SLB四层有问题,可以每个node上代理127.0.0.1的某个port分摊在所有apise...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/09/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
     
 </div>
 
@@ -1783,47 +1777,12 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3798,7 +3757,7 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 164
+        Total : 165
         </div>
         <!-- search  -->
         
@@ -3816,6 +3775,12 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2023/08/08/qemu-cgo-build-hang/">qemu-user-static 下 cgo go build 卡住的一次解决</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
@@ -5577,6 +5542,16 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
             <span class="sidebar-tag-name" data-tags="loongarch64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cgo">
+                <span class="iconfont-archer">&#xe606;</span>
+                cgo
             </span>
         
     </div>

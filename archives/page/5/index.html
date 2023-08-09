@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">
+                
+                <span class="abstract-title-text">机器重启后 kube-apiserver 无法启动，etcd刷(error &#34;EOF&#34;, ServerName &#34;&#34;)</span>
+            </a>
+            <div class="abstract-content">
+                环境信息三个 master （etcd 也在 master 上，master上也有 kubelet）和 n 个 node。master 上组件(kube-controller-manager,kube-scheduler,kubelet)的 apiserver 的ip 都是 127.0.0.1:6443。kube-apiserver的 etcd 地址写了三个 etcd 的。k8s 版本为 v1.15.5
+故障现象93 这台 master 机器重启后，发现 93 节点 NotReady，上去看了下 kubelet 无法连上本机的 kube-apiserver。kube-apiserver ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/07/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="systemd">systemd</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/07/05/systemctl-start-docker-canceled/">
                 
                 <span class="abstract-title-text">Job for docker.service canceled</span>
@@ -763,44 +801,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="coredns">coredns</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/01/24/e2fsprogs/">
-                
-                <span class="abstract-title-text">e2fsck 太老报错 has unsupported feature(s): metadata_csum，从而尝试静态编译</span>
-            </a>
-            <div class="abstract-content">
-                <p>e2fsck 静态编译和笔记</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/01/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/01/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="e2fsck">e2fsck</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="fsck">fsck</a>
     
 </div>
 
@@ -1744,47 +1744,12 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3759,7 +3724,7 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 164
+        Total : 165
         </div>
         <!-- search  -->
         
@@ -3777,6 +3742,12 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2023/08/08/qemu-cgo-build-hang/">qemu-user-static 下 cgo go build 卡住的一次解决</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
@@ -5538,6 +5509,16 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="loongarch64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cgo">
+                <span class="iconfont-archer">&#xe606;</span>
+                cgo
             </span>
         
     </div>

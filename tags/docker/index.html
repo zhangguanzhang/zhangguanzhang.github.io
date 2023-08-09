@@ -445,42 +445,6 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2023/07/13/k8s-externalIPs/">
-                
-                <span class="abstract-title-text">为什么ipvs下externalIPs乱设置会崩</span>
-            </a>
-            <div class="abstract-content">
-                <p>总有小白不懂跟着网上文章设置externalIPs后集群崩了</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/07/13">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/07/13</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
             <a class="abstract-title" href="/2023/04/12/docker-pull-hang/">
                 
                 <span class="abstract-title-text">国产系统上解决docker pull卡住的问题</span>
@@ -816,6 +780,48 @@ nginx Dockerfile先说下官方的失败尝试。先 clone 项目：
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="containerd">containerd</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/09/02/fio/">
+                
+                <span class="abstract-title-text">fio 静态编译和基础使用</span>
+            </a>
+            <div class="abstract-content">
+                由来amd64,arm64 的静态编译和基础使用
+buildx 使用见文章 buildx 使用
+编译buildx Dockerfile 构建:
+123456789101112131415161718FROM ubuntu as buildWORKDIR /optARG VER=fio-3.29#ARG DEBIAN_FRONTEND=noninteractiveRUN if [  -e /etc/apt/sources.list ];then sed -ri &#x27;s/[a-zA-Z0-9.]+(debian.org|ubuntu.com)/mirrors.aliyun.com/g...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/02">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="fio">fio</a>
     
 </div>
 
@@ -1759,47 +1765,12 @@ nginx Dockerfile先说下官方的失败尝试。先 clone 项目：
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3774,7 +3745,7 @@ nginx Dockerfile先说下官方的失败尝试。先 clone 项目：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 164
+        Total : 165
         </div>
         <!-- search  -->
         
@@ -3792,6 +3763,12 @@ nginx Dockerfile先说下官方的失败尝试。先 clone 项目：
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2023/08/08/qemu-cgo-build-hang/">qemu-user-static 下 cgo go build 卡住的一次解决</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
@@ -5553,6 +5530,16 @@ nginx Dockerfile先说下官方的失败尝试。先 clone 项目：
             <span class="sidebar-tag-name" data-tags="loongarch64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cgo">
+                <span class="iconfont-archer">&#xe606;</span>
+                cgo
             </span>
         
     </div>

@@ -444,6 +444,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/11/06/onlyoffice/">
+                
+                <span class="abstract-title-text">一次docker镜像的解耦--onlyoffice</span>
+            </a>
+            <div class="abstract-content">
+                年初的时候就考虑过搭建个在线编辑excel的,之前试过很多owncloud，seafile,nextcloud,kodexplorer基本都是纯网盘或者不免费
+这几天又有需求多人同时在线编辑office文件,同事找了个onlyoffice的用docker跑起来了. dockerhub上看了下镜像挺大的而且没有跳转到github上Dockerfile的超链接
+稍微用docker history看了下发现里面一堆各种数据库都放同一个镜像里,根本没有解耦
+于是便有了解耦这个镜像的冲动
+先找官方的例子跑跑看
+地址：https://api.onlyoffice.com/editors/demopr...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/11/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/11/05/10chars/">
                 
                 <span class="abstract-title-text">记录一次十字符病毒清理过程</span>
@@ -796,49 +836,6 @@ Clust...
         <a class="post-tag" href="javascript:void(0);" data-tags="dockerhub">dockerhub</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="gcr.io">gcr.io</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/06/25/etcd-error/">
-                
-                <span class="abstract-title-text">记录一次线上k8s节点故障</span>
-            </a>
-            <div class="abstract-content">
-                
-
-邮件收到zabbix的告警,业务的网页登陆状态不是200,后面又自愈了
-
-
-说明服务挂掉过一次,登陆到机器上发现集群有台节点状态是nodelost状态上去看到相关服务都挂掉了然后排查到根分区占满了,排查到是k8s日志堆满了&#x2F;var&#x2F;log&#x2F;
-12345678910111213141516[root@cloudos02 ~]# df -hFilesystem               Size  Used Avail Use% Mounted on/dev/mapper/centos-root  219G  216G     0 100% /devtmp...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/06/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/25</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
     
 </div>
 
@@ -1782,47 +1779,12 @@ Clust...
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3797,7 +3759,7 @@ Clust...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 164
+        Total : 165
         </div>
         <!-- search  -->
         
@@ -3815,6 +3777,12 @@ Clust...
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2023/08/08/qemu-cgo-build-hang/">qemu-user-static 下 cgo go build 卡住的一次解决</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
@@ -5576,6 +5544,16 @@ Clust...
             <span class="sidebar-tag-name" data-tags="loongarch64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="cgo">
+                <span class="iconfont-archer">&#xe606;</span>
+                cgo
             </span>
         
     </div>
