@@ -17,7 +17,7 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>k8s pod 使用 nfs 持久化卡住的解决思路</title>
+    <title>k8s 使用 nfs 下 pod 无法创建的解决思路</title>
     <link href="http://zhangguanzhang.github.io/2023/08/18/kubernetes-nfs-waiting-condition/"/>
     <id>http://zhangguanzhang.github.io/2023/08/18/kubernetes-nfs-waiting-condition/</id>
     <published>2023-08-18T19:27:30.000Z</published>
