@@ -449,9 +449,15 @@
                 <span class="abstract-title-text">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</span>
             </a>
             <div class="abstract-content">
-                由来和前一篇文章不一样，从来没遇到过这样的问题，这里记录下。实施在客户那边部署业务后，业务在浏览器上无法访问，我远程上去查看日志发现 pod 内部无法 DNS 无法解析，nginx 连不上 upsteam 报错而启动失败，实际上也是跨节点不通。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角度写下排查过程。
-环境信息OS 是 arm64 的银河麒麟系统：
-123456789$ cat /etc/os-releaseNAME=&quot;Kylin Linux Advanced Server&quot;VERSION=&quot;V10 (Tercel)&quot...
+                由来2023&#x2F;08&#x2F;21 注意点：
+
+
+&#x3D; v0.15.1 开始，不需要 10-flannel.link 了，flannel 添加随机 mac
+
+
+https://github.com/flannel-io/flannel/issues/1795
+
+和前一篇文章不一样，从来没遇到过这样的问题，这里记录下。实施在客户那边部署业务后，业务在浏览器上无法访问，我远程上去查看日志发现 pod 内部无法 DNS 无法解析，nginx 连不上 upsteam 报错而启动失败，实际上也是跨节点不通。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角...
             </div>
             <!-- read more -->
             
@@ -1447,7 +1453,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3422,7 +3445,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 165
+        Total : 166
         </div>
         <!-- search  -->
         
@@ -3440,6 +3463,12 @@
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span>
+            <a class="archive-post-title" href="/2023/08/18/kubernetes-nfs-waiting-condition/">k8s pod 使用 nfs 持久化卡住的解决思路</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/08</span>
@@ -5217,6 +5246,11 @@
             <span class="sidebar-tag-name" data-tags="cgo">
                 <span class="iconfont-archer">&#xe606;</span>
                 cgo
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfs
             </span>
         
     </div>
