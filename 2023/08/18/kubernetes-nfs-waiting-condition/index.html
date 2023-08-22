@@ -523,7 +523,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubelet_volumes.go:154] orphaned pod &quot;xxx&quot; found, but volume paths are still present on disk : There were a total of 84 errors similar to this. Turn up verbosity to see them.</span><br></pre></td></tr></table></figure>
 
 <p>这个是 1.20 还是哪个版本之前，pod 到其他节点或者删掉后，相关的一些目录还遗留在节点上的 <code>--root-dir</code> 下，默认是 <code>/var/lib/kubelet/pods</code> 下的 uuid 字样的目录，可以 find 下它确认里面的内容，以及看 etc-hosts 文件，看 hostname 后利用 kubectl get pod 查看是否存在这个 pod 名，不存在就是遗留目录，可以手动清理下。 这个问题我记得后续有人提交了 pr kubelet 会定期清理这种目录的。</p>
-<h3 id="Faild-to-get-system-container-stats"><a href="#Faild-to-get-system-container-stats" class="headerlink" title="Faild to get system container stats"></a>Faild to get system container stats</h3><p>以此处理掉上面的日志里错误后，看到下面的</p>
+<h3 id="Faild-to-get-system-container-stats"><a href="#Faild-to-get-system-container-stats" class="headerlink" title="Faild to get system container stats"></a>Faild to get system container stats</h3><p>依次处理掉上面的日志里错误后，看到下面的</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">summary_sys_containers.go:47] Failed to get system container stats for &quot;/system.slice/docker.service&quot;: failed to get cgroup stats for &quot;/system.slice/docker.service&quot;: faild to get container info for &quot;system.slice/docker.service&quot;: unknow container &quot;/system.slice/docker.service&quot;</span><br></pre></td></tr></table></figure>
 
 <p>这个是 kubelet 无法从 docker 获取一些信息，一般是 docker 出问题了，看了下 docker 日志也还正常。询问了下能不能重启 docker ，说上午就重启过了，那就是其他问题了。</p>
