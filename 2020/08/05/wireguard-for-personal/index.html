@@ -515,7 +515,7 @@
 <p>当然，如果你会折腾的话 pc 可以是软路由，有兴趣和条件的可以看我博客 <a href="https://zhangguanzhang.github.io/2020/05/13/x86-router-flash/">proxmox x86软路由笔记</a>。</p>
 <h2 id="登录到-ECS-上"><a href="#登录到-ECS-上" class="headerlink" title="登录到 ECS 上"></a>登录到 ECS 上</h2><p>得益于 wireguard 中没有 client&#x2F;server 的概念，只要所有 nat 中的某台机器能够和 gateway 主机建立连接，即可实现共享所有节点的网络资源。这里 ECS 有公网ip，所以担当 gateway</p>
 <h3 id="安装-wireguard"><a href="#安装-wireguard" class="headerlink" title="安装 wireguard"></a>安装 wireguard</h3><p><a target="_blank" rel="noopener" href="https://www.wireguard.com/install/">官方安装文档</a> ，或者查看 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU1MzY4NzQ1OA==&mid=2247488853&idx=1&sn=38acb5689db9d9d69ab1ebc78248e0ed&chksm=fbee5598cc99dc8ee81dc6e2a6ed12bb1fd61efd19f152c75e6e41aadb79a15562d7a6c9cb81&mpshare=1&scene=1&srcid=1118udSysN19LYkQxZEVWFTY&sharer_sharetime=1605681632258&sharer_shareid=8eaca72194dae7b3d51d5c708436eee4&key=8236791ccb71351070dff27fe2ad7a9f146455609c8c7a4bc57532e008e6e2a92c27e10b673a090dd88e54740c3391dbc2623a4128ba12f4ebfc9f83dbaf4ec0e6f01195f693765eb5690757359f4eaecfd37a78bb722773f7c6fa6a83cfbe73fa5273902c5aa16b765ece15a9130e8b12a3496d7bf2ae684ac9200cc5f39a31&ascene=1&uin=MzA1MzI4OTMzMQ==&devicetype=Windows+10+x64&version=6300002f&lang=zh_CN&exportkey=AREByymqoZ6jfJZckbtVD7I=&pass_ticket=Jm9uDmvylBr7yM4ArNVQwkHhP3TB921kMFgCmo8A4uq+xezPGCG3aYKbPKyDMclJ&wx_header=0">如何在五分钟内装好 WireGuard？</a> ECS 是 linux 系统的话内核要5.x以上，没有就升级下内核，其他个人 pc 电脑则下载客户端，当然软路由的话则去找个带 wireguard的固件。</p>
-<h4 id="centos7"><a href="#centos7" class="headerlink" title="centos7"></a>centos7</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">yum -y install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm</span><br><span class="line">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</span><br><span class="line">yum --enablerepo=elrepo-kernel install -y kernel-lt</span><br><span class="line"></span><br><span class="line">yum -y --enablerepo=elrepo-kernel install kernel-lt-&#123;devel,headers,perf&#125;</span><br><span class="line"># 失败就加   --skip-broken </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">awk -F\&#x27; &#x27;$1==&quot;menuentry &quot; &#123;print i++ &quot; : &quot; $2&#125;&#x27; /etc/grub2.cfg</span><br><span class="line"></span><br><span class="line">#看数字</span><br><span class="line">grub2-set-default 2</span><br><span class="line">grub2-mkconfig -o /etc/grub2.cfg</span><br><span class="line">reboot</span><br><span class="line"></span><br><span class="line">yum install dkms kmod-wireguard wireguard-tools</span><br><span class="line"></span><br><span class="line">reboot</span><br><span class="line"></span><br><span class="line">modprobe wireguard</span><br></pre></td></tr></table></figure>
+<h4 id="centos7"><a href="#centos7" class="headerlink" title="centos7"></a>centos7</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">yum -y install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm</span><br><span class="line">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</span><br><span class="line">yum --enablerepo=elrepo-kernel install -y kernel-lt</span><br><span class="line"></span><br><span class="line">yum -y --enablerepo=elrepo-kernel install kernel-lt-&#123;devel,headers,perf&#125;</span><br><span class="line"># 失败就加   --skip-broken </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">awk -F\&#x27; &#x27;$1==&quot;menuentry &quot; &#123;print i++ &quot; : &quot; $2&#125;&#x27; /etc/grub2.cfg</span><br><span class="line"></span><br><span class="line">#看数字</span><br><span class="line">grub2-set-default 2</span><br><span class="line">grub2-mkconfig -o /etc/grub2.cfg</span><br><span class="line">reboot</span><br><span class="line"></span><br><span class="line">yum install dkms kmod-wireguard wireguard-tools</span><br><span class="line"></span><br><span class="line">reboot</span><br><span class="line"></span><br><span class="line">modprobe wireguard</span><br><span class="line"># 查看下能否加载模块</span><br><span class="line">lsmod | grep wireguard</span><br><span class="line"># 增加模块开机导入</span><br><span class="line">echo wireguard &gt; /etc/modules-load.d/wireguard.conf</span><br><span class="line"></span><br><span class="line"># 设置开机器自启</span><br><span class="line">systemctl enable wg-quick@wg0.service</span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>开启转发</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w net.ipv4.ip_forward=1</span><br></pre></td></tr></table></figure>
@@ -1620,7 +1620,28 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3607,7 +3628,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 166
+        Total : 167
         </div>
         <!-- search  -->
         
@@ -4475,6 +4496,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">12/23</span>
             <a class="archive-post-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">docker容器网络互联</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span>
+            <a class="archive-post-title" href="/2017/08/03/iptables-whitelist/">centos 上 iptables ipset 白名单</a>
         </li>
     
         
@@ -5413,6 +5440,11 @@
             <span class="sidebar-tag-name" data-tags="nfs">
                 <span class="iconfont-archer">&#xe606;</span>
                 nfs
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipset">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipset
             </span>
         
     </div>
