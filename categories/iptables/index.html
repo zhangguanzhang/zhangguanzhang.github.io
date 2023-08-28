@@ -488,10 +488,10 @@
                 <span class="abstract-title-text">centos 上 iptables ipset 白名单</span>
             </a>
             <div class="abstract-content">
-                关于centos7 上 ipset 和 iptables 配合做 ip 白名单
-安装123yum install ipset ipset-service -ysed -ri &#x27;/^IPSET_SAVE_ON_STOP=/s#no#yes#&#x27; /etc/sysconfig/ipset-configsystemctl enable --now ipset
+                关于Linux 上 ipset 和 iptables 配合做 ip 白名单
+安装123456789# rpm 系列 osyum install ipset ipset-service -ysed -ri &#x27;/^IPSET_SAVE_ON_STOP=/s#no#yes#&#x27; /etc/sysconfig/ipset-configsystemctl enable --now ipset# apt 系列 osapt update &amp;&amp; apt install -y ipset-persistent iptables-persistent
 
-配置12ipset create blackiplist hash:net maxelem 1000000    #黑名单ipset create whiteiplist hash:net maxelem 100000...
+配置123# 黑白名...
             </div>
             <!-- read more -->
             
