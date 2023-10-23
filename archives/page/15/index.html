@@ -444,6 +444,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2017/06/03/bash-complete/">
+                
+                <span class="abstract-title-text">bash自定义补全</span>
+            </a>
+            <div class="abstract-content">
+                总结下bash的补全
+终端下按两次tab就是补全
+补全常见的分为下面几种场景:
+
+第一部分的命令补全
+命令补全后补全路径到文件
+变量补全
+类似systemctl命令的选项补全
+
+当然bash支持自定义补全,也就是让我们实现和systemctl命令那样补全
+假设我们要systemctl disable --now firewalldsystemctl空格后按tab键会显示systemctl的第二个部分的所有支持的选项此时继续输入di按tab键会补全成systemctl disable,输入--now(相似的太多了,所以基本输入完)补全,当然最后的服务名此时补全不了,因为systemctl的...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/06/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/03</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">
                 
                 <span class="abstract-title-text">shell脚本的选项和参数处理</span>
@@ -770,44 +807,6 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="fs">fs</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/04/17/iot/">
-                
-                <span class="abstract-title-text">分享下自己做的外网控制硬件</span>
-            </a>
-            <div class="abstract-content">
-                <p>教程+源码+固件</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/04/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/17</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="mqtt">mqtt</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="原创">原创</a>
     
 </div>
 
@@ -1766,7 +1765,70 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3769,7 +3831,7 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 167
+        Total : 168
         </div>
         <!-- search  -->
         
@@ -3791,6 +3853,12 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         <li class="archive-post-item">
             <span class="archive-post-date">08/18</span>
             <a class="archive-post-title" href="/2023/08/18/kubernetes-nfs-waiting-condition/">k8s 使用 nfs 下 pod 无法创建的解决思路</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span>
+            <a class="archive-post-title" href="/2023/08/18/pve7-to-8-hang-on-start/">proxmox 7.4 升级8 后开机卡在 Loading kernel 6.2.16-15</a>
         </li>
     
         
@@ -5586,6 +5654,11 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             <span class="sidebar-tag-name" data-tags="ipset">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipset
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="proxmox">
+                <span class="iconfont-archer">&#xe606;</span>
+                proxmox
             </span>
         
     </div>

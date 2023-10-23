@@ -460,6 +460,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/04/23/nfc/">
+                
+                <span class="abstract-title-text">nfc 折腾笔记，ACR122U/proxmark3</span>
+            </a>
+            <div class="abstract-content">
+                <p>近期折腾 nfc 相关，以后 nfc 的折腾也会更新在这个文章内</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/04/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/04/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="nfc">nfc</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="pm3">pm3</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/04/22/segfault-often/">
                 
                 <span class="abstract-title-text">docker containerd 不定时的 segfault 的一次处理过程</span>
@@ -998,46 +1036,6 @@ parted
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/09/28/ipvs-svc/">
-                
-                <span class="abstract-title-text">在非容器环境上实现散装的 IPVS SVC</span>
-            </a>
-            <div class="abstract-content">
-                前言内部有非 K8S 环境上需要类似 SVC 的负载实现，一开始是用 NGINX 做的，所有 SVC 域名都解析成一个 dummy IP ，然后 NGINX 根据 server_name 去 proxy 不同的 upstream 。 开始还是能用的，结果后面很多服务依赖 host 这个 header ，报错签名错误，而且毕竟这样是在用户态，效率不如内核态高。于是打算搞下之前的打算：把 IPVS 的 ClusterIP 的 SVC 扣到非 K8S 环境上使用。
-kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT 会被 dnat 成 end...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/09/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="lvs">lvs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ipvsadm">ipvsadm</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kube-proxy">kube-proxy</a>
     
 </div>
 
@@ -2169,7 +2167,70 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4172,7 +4233,7 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 167
+        Total : 168
         </div>
         <!-- search  -->
         
@@ -4194,6 +4255,12 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
         <li class="archive-post-item">
             <span class="archive-post-date">08/18</span>
             <a class="archive-post-title" href="/2023/08/18/kubernetes-nfs-waiting-condition/">k8s 使用 nfs 下 pod 无法创建的解决思路</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span>
+            <a class="archive-post-title" href="/2023/08/18/pve7-to-8-hang-on-start/">proxmox 7.4 升级8 后开机卡在 Loading kernel 6.2.16-15</a>
         </li>
     
         
@@ -5989,6 +6056,11 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
             <span class="sidebar-tag-name" data-tags="ipset">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipset
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="proxmox">
+                <span class="iconfont-archer">&#xe606;</span>
+                proxmox
             </span>
         
     </div>

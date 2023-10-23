@@ -459,6 +459,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">
+                
+                <span class="abstract-title-text">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</span>
+            </a>
+            <div class="abstract-content">
+                这个问题和之前的docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理差不多，不过 db 文件不同。客户停止 docker 后起不来了，查看日志：
+1journalctl -xe -u docker
+
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879805月 26 18:42:17 xxx...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/05/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/05/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/04/30/kubernetes-sec-agent-node-network-error/">
                 
                 <span class="abstract-title-text">一次单节点单个pod网络问题排查过程</span>
@@ -964,43 +1004,6 @@ https://github.com/flannel-io/flannel/issues/1795
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="uos">uos</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">
-                
-                <span class="abstract-title-text">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</span>
-            </a>
-            <div class="abstract-content">
-                由来同事在客户那边部署的集群问题频繁，先给他解决了个问题后又反映说业务 POD 由于 DNS 无法解析而启动失败，排查完发现这样的情况从没遇到过，挺有意思的，这里记录下。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角度写下排查过程。
-环境信息集群信息:
-12345678910111213141516171819202122232425$ kubectl version -o json&#123;  &quot;clientVersion&quot;: &#123;    &quot;major&quot;: &quot;1&quot;,    &quot;mi...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/10/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/20</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
     
 </div>
 
@@ -2132,7 +2135,70 @@ https://github.com/flannel-io/flannel/issues/1795
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4135,7 +4201,7 @@ https://github.com/flannel-io/flannel/issues/1795
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 167
+        Total : 168
         </div>
         <!-- search  -->
         
@@ -4157,6 +4223,12 @@ https://github.com/flannel-io/flannel/issues/1795
         <li class="archive-post-item">
             <span class="archive-post-date">08/18</span>
             <a class="archive-post-title" href="/2023/08/18/kubernetes-nfs-waiting-condition/">k8s 使用 nfs 下 pod 无法创建的解决思路</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span>
+            <a class="archive-post-title" href="/2023/08/18/pve7-to-8-hang-on-start/">proxmox 7.4 升级8 后开机卡在 Loading kernel 6.2.16-15</a>
         </li>
     
         
@@ -5952,6 +6024,11 @@ https://github.com/flannel-io/flannel/issues/1795
             <span class="sidebar-tag-name" data-tags="ipset">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipset
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="proxmox">
+                <span class="iconfont-archer">&#xe606;</span>
+                proxmox
             </span>
         
     </div>
