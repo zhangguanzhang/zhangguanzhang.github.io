@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/02/05/docker-image-can-t-rm/">
+                
+                <span class="abstract-title-text">docker无法删除掉镜像的解决方法</span>
+            </a>
+            <div class="abstract-content">
+                碰到了docker rmi无法删除掉image的问题版本如下
+12[root@guanvps ~]# docker --versionDocker version 17.12.1-ce, build 7390fc6
+
+问题如下,也没有任何容器在运行,重启发现依然无法删除掉
+12345678[root@guanvps ~]# docker imagesREPOSITORY          TAG                 IMAGE ID            CREATED             SIZEnginx               latest           ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/02/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/02/05</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">
                 
                 <span class="abstract-title-text">慎用docker的--rm选项!!!</span>
@@ -739,42 +778,6 @@ keepalived 2方式1：
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/05</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/06/26/lua-list-all-upsteam/">
-                
-                <span class="abstract-title-text">lua列出所有upsteam</span>
-            </a>
-            <div class="abstract-content">
-                需要在http的路由上暴露出所有的upsteam配置段
-12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758upstream names&#123;    server 127.0.0.1:8050 ;    server 127.0.0.1:8060 ;&#125;upstream tuling &#123;    server 127.0.0.1:8051       weight=5;    server 127.0.0....
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/06/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="nginx">nginx</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1735,25 +1738,12 @@ keepalived 2方式1：
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3796,7 +3786,7 @@ keepalived 2方式1：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 168
+        Total : 169
         </div>
         <!-- search  -->
         
@@ -3814,6 +3804,12 @@ keepalived 2方式1：
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2023/11/03/non-root-containers/">[持续更新] - 非 root 启动改造的经验</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/20</span>
@@ -5624,6 +5620,16 @@ keepalived 2方式1：
             <span class="sidebar-tag-name" data-tags="proxmox">
                 <span class="iconfont-archer">&#xe606;</span>
                 proxmox
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="non-root">
+                <span class="iconfont-archer">&#xe606;</span>
+                non-root
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="containers">
+                <span class="iconfont-archer">&#xe606;</span>
+                containers
             </span>
         
     </div>

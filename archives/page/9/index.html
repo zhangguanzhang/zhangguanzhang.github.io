@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/02/27/microsoft-graph-for-onedrive/">
+                
+                <span class="abstract-title-text">使用microsoft-graph的api对接onedrive</span>
+            </a>
+            <div class="abstract-content">
+                前言这几天打算把文件备份下，最后看到有网友说onedrive不错，就是容量小了点只有5g，然后酷安去安装安卓客户端，下面看到一堆人送office e5子账户的。看了下大概是微软为了推广自己产品面向开发者送的优惠，账户有免费的5t存储，而且安装office啥的免费。试用30天，30天内调用api来保持活跃度的话就会延期。评论里一大堆都是搭建oneindex或者onelist的，主要作用就是把onedrive给抽象成一个公共的网盘使用，oneindex是php写的，我看issue居然385个，作者的github也在更新，而且作者学了golang，居然也不打算重构下，估计也是烂尾了。oneli...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/02/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/02/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="microsoft">microsoft</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="graph">graph</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="onedrive">onedrive</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/01/15/kill-ctr-with-grace-period/">
                 
                 <span class="abstract-title-text">Killing container &#34;docker://xxx with 30 second grace period</span>
@@ -775,56 +814,6 @@ Linux一些目录规范和systemd
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="ansible">ansible</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/09/27/consul-tls/">
-                
-                <span class="abstract-title-text">高可用的SSL consul cluster实践</span>
-            </a>
-            <div class="abstract-content">
-                同事dnsmasq + consul 整服务自动发现，但是不是 tls 且consul server是单点，而且进程启动用的nohub而不是systemd，这里查了下资料实践了下
-部署过程已经写成了ansible，地址 https://github.com/zhangguanzhang/consul-tls-ansible
-开了五台云主机，总体规划为下面，角色那有条件的可以分开，例如 client 单独一台。不分开的话得配置 client 的端口和 server 的分开，自己去探索
-
-
-
-IP
-Hostname
-CPU
-Memory
-role
-nodeName
-
-
-
-172.19.0.3...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/09/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/27</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
     
         <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
     
@@ -1790,25 +1779,12 @@ nodeName
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3851,7 +3827,7 @@ nodeName
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 168
+        Total : 169
         </div>
         <!-- search  -->
         
@@ -3869,6 +3845,12 @@ nodeName
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2023/11/03/non-root-containers/">[持续更新] - 非 root 启动改造的经验</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/20</span>
@@ -5679,6 +5661,16 @@ nodeName
             <span class="sidebar-tag-name" data-tags="proxmox">
                 <span class="iconfont-archer">&#xe606;</span>
                 proxmox
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="non-root">
+                <span class="iconfont-archer">&#xe606;</span>
+                non-root
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="containers">
+                <span class="iconfont-archer">&#xe606;</span>
+                containers
             </span>
         
     </div>

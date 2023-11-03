@@ -459,6 +459,42 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">
+                
+                <span class="abstract-title-text">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</span>
+            </a>
+            <div class="abstract-content">
+                故障现场 k8s node 很多 pod 都被硬性驱逐显示 Evicted ，现场人员查看分区容量和 inode 都正常，但是一直 reclaim ephemeral-storage。
+处理环境信息12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879$ uname -aLinux xxx-2 3.10.0-693.el7.x86_64 #1 SM...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/10/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/29</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/28/ipvs-svc/">
                 
                 <span class="abstract-title-text">在非容器环境上实现散装的 IPVS SVC</span>
@@ -984,45 +1020,6 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="systemd">systemd</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/06/08/ocp4.5.9-restore-etcd/">
-                
-                <span class="abstract-title-text">openshift 4.5.9 etcd损坏+脑裂修复过程</span>
-            </a>
-            <div class="abstract-content">
-                前言介绍内部机器和环境都是在 vcenter 里，之前的 ocp 集群是 3 master + 1 worker，也就是之前的openshift 4.5.9 离线安装后的环境，后面有几台宿主机负载太高，同事看我机器负载最高，关了几台，这几天需要用下 openshift 环境。登录到 bastion 上 get 超时，看了下 haproxy 的 stat web，全部红了。。然后把所有机器开机后发现还是起不来。
-操作openshift 的 master 节点和 kubeadm 很像，几个组件都是 staticPod 形式起的。客户端也不是 docker，使用 crictl 就行了
-查看 k...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/06/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/08</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="openshift">openshift</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ocp">ocp</a>
     
 </div>
 
@@ -2159,25 +2156,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4220,7 +4204,7 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 168
+        Total : 169
         </div>
         <!-- search  -->
         
@@ -4238,6 +4222,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2023/11/03/non-root-containers/">[持续更新] - 非 root 启动改造的经验</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/20</span>
@@ -6048,6 +6038,16 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <span class="sidebar-tag-name" data-tags="proxmox">
                 <span class="iconfont-archer">&#xe606;</span>
                 proxmox
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="non-root">
+                <span class="iconfont-archer">&#xe606;</span>
+                non-root
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="containers">
+                <span class="iconfont-archer">&#xe606;</span>
+                containers
             </span>
         
     </div>
