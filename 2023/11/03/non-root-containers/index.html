@@ -531,13 +531,13 @@
 </ul>
 <p>对于很多挂载目录持久化数据的，例如各种中间件，例如 mysql，redis ，单纯设置 USER 的话，需要在容器启动之前设置目录的权限。other 权限为 7 的话，很不安全，所以只能是 owner、group 权限，但是容器内的用户名和宿主机用户名是不一致的，只能设置 uid、gid。使用这些需要数据持久化的容器，会存在：</p>
 <ul>
-<li>直接 -v 和在 </li>
-<li>k8s 上使用 hostPath 以及 </li>
+<li>直接 -v 挂载或者 docker volume</li>
+<li>k8s 上使用 hostPath </li>
 <li>固定 pv </li>
 <li>sc 下使用 pvc</li>
 <li>别人的 k8s 集群或者实例上去部署</li>
 </ul>
-<p>如果你提前修改目录权限，上面最后俩场景根本无法自动化，而且说不定某天新版本的官方 Dockerfile 里换基础镜像切忘记添加用户时候设置 uid 和 gid 就变了，只能是加启动脚本里处理。</p>
+<p>如果你提前修改目录权限，上面最后俩场景根本无法自动化，而且说不定某天新版本官方镜像里 Dockerfile 里换基础镜像的同时忘记在添加用户时候设置 uid 和 gid ，uid 和 gid 就变了，只能是加启动脚本里处理。</p>
 <p>对此，<a target="_blank" rel="noopener" href="https://github.com/docker-library/mysql/blob/master/5.7/docker-entrypoint.sh">mysql docker 镜像的官方启动脚本</a> 给了很好的参考，Dockerfile 制作镜像就创建了指定 uid、gid 的 mysql 用户，然后启动容器的时候都是 <code>ENTRYPOINT CMD</code> （k8s 里对应 command、args） 的形式启动：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-entrypoint.sh mysqld</span><br></pre></td></tr></table></figure>
 
