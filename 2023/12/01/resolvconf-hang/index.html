@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">516</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">535</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -523,25 +523,25 @@
 <h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>先拉起业务的，发现 docker daemon 无法启动：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure>
 
-<p>会一直卡住，stop 则会报错 operator timeout。然后 <code>systemctl cat --no-pager docker</code> 后使用前台启动也卡住：</p>
+<p>会一直卡住，stop 则会报错 operator timeout。然后 <code>systemctl cat --no-pager docker</code> 后使用 <code>ExexStart</code> 来前台启动也卡住：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dockerd --debug</span><br></pre></td></tr></table></figure>
 
 <p>然后 strace 下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ strace dockerd --debug</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">openat(AT_FDCWD, &quot;/etc/resolv.conf&quot;, O_RDONLY|O_CLOEXEC</span><br></pre></td></tr></table></figure>
 
-<p>一直卡在这里，<code>ctrl + c</code> 都无法取消，再开 ssh 上去 cat 发现卡住</p>
+<p>一直卡在这里，<code>ctrl + c</code> 都无法取消，再开个 ssh 上去 cat 发现卡住</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l /etc/resolv.conf</span><br><span class="line">-rw-r--r--  1 root  root  54 10月  14 14:20 /etc/resolv.conf</span><br><span class="line">$ cat /etc/resolv.conf</span><br></pre></td></tr></table></figure>
 
-<p>发现 <code>crontab -l</code> 也会卡住，<code>strace crontab -l</code> 发现卡在 <code>openat /var/spool/cron/root</code> ，看着像是安全软件，问了客户说他们没有安装过，然后 top 找了一圈进程列表，发现有个 <code>vsep</code> 进程不是我们的，看看是不是 rpm 的：</p>
+<p>发现 <code>crontab -l</code> 也会卡住，<code>strace crontab -l</code> 发现卡在 <code>openat /var/spool/cron/root</code> ，看着像是安全软件，问了客户说他们没有安装过。<br>然后 top 找了一圈进程列表，发现有个 <code>vsep</code> 进程不是我们的，看看是不是 rpm 的：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -qf /usr/sbin/vsep</span><br></pre></td></tr></table></figure>
 
-<p>然后也卡住，开个 ssh 后发现也调用了 <code>openat /etc/resolv.conf</code>：</p>
+<p>然后也卡住，开个 ssh 后发现 rpm 也调用了 <code>openat /etc/resolv.conf</code>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ strace rpm -qf /usr/sbin/vsep</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">openat(AT_FDCWD, &quot;/etc/resolv.conf&quot;, O_RDONLY|O_CLOEXEC</span><br></pre></td></tr></table></figure>
 
 <p>然后其他正常机器上查看了下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -qf /usr/sbin/vsep</span><br><span class="line">vmware-nsx-gi-file-6,4,5,13288473-1.rhel.x86_64.rpm</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -qf /usr/sbin/vsep</span><br><span class="line">vmware-nsx-gi-file-6.4.5.13288473-1.rhel.x86_64.rpm</span><br></pre></td></tr></table></figure>
 
-<p>手动停止它，发现停止不掉后就kill了：</p>
+<p><code>pstree -sp &lt;vsep_pid&gt;</code> 后发现 systemd 纳管的 vsepd 服务，手动停止它，发现停止不掉后就kill了：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl stop vsepd</span><br><span class="line">^C</span><br><span class="line">$ kill -9 xxxx</span><br><span class="line">$ ps aux | grep vse[p]</span><br><span class="line">..........  [vsep] &lt;defunct&gt;</span><br><span class="line"></span><br><span class="line">$ cat /etc/resolv.conf</span><br><span class="line">nameserver xxxx</span><br><span class="line">$ crontab -l</span><br><span class="line">xxxx</span><br></pre></td></tr></table></figure>
 
 <p>发现都正常了。</p>
