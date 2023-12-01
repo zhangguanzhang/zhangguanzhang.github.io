@@ -459,6 +459,49 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">
+                
+                <span class="abstract-title-text">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                由来2023&#x2F;08&#x2F;21 注意点：
+
+
+&#x3D; v0.15.1 开始，不需要 10-flannel.link 了，flannel 添加随机 mac
+
+
+https://github.com/flannel-io/flannel/issues/1795
+
+和前一篇文章不一样，从来没遇到过这样的问题，这里记录下。实施在客户那边部署业务后，业务在浏览器上无法访问，我远程上去查看日志发现 pod 内部无法 DNS 无法解析，nginx 连不上 upsteam 报错而启动失败，实际上也是跨节点不通。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/11/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/10/30/uos20-nftables/">
                 
                 <span class="abstract-title-text">统信USO 20 hostPort 无法访问</span>
@@ -993,44 +1036,6 @@ cpu按照实际，我给2核，内存我给的2g
         <a class="post-tag" href="javascript:void(0);" data-tags="adguardhome">adguardhome</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="dns">dns</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/12/N1-flash/">
-                
-                <span class="abstract-title-text">斐讯N1刷机和旁路由的设置</span>
-            </a>
-            <div class="abstract-content">
-                由来之前一直是使用k2p刷openwrt或者pandora跑 xx 用，前几天看到了个 xx 的订阅地址给写到openwrt上了。结果运行了几天发现 web 上任何配置都无法更改，ssh 上去发现 touch 报错没有容量(而且重装后感觉还是有问题，github 访问也不稳定了)，意识到 k2p 容量实在太小了，于是去恩山论坛逛了下准备买个 N1 盒子玩玩旁路由。
-N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，132买的刷机版+刷机线套餐(部分固件说好些白色的稳定，如果店铺能选颜色可以选白色的试试？，刷机线是双公头的USB，后期也可以用来救砖...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/05/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="N1">N1</a>
     
 </div>
 
@@ -2172,7 +2177,24 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4215,7 +4237,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 169
+        Total : 170
         </div>
         <!-- search  -->
         
@@ -4233,6 +4255,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span>
+            <a class="archive-post-title" href="/2023/12/01/resolvconf-hang/">openat /etc/resolv.conf 卡住的一次排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>
@@ -6059,6 +6087,16 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="containers">
                 <span class="iconfont-archer">&#xe606;</span>
                 containers
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vmware">
+                <span class="iconfont-archer">&#xe606;</span>
+                vmware
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hung">
+                <span class="iconfont-archer">&#xe606;</span>
+                hung
             </span>
         
     </div>

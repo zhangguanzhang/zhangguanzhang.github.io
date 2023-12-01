@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.1k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.6k</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -611,10 +611,29 @@
 <h4 id="完整流程"><a href="#完整流程" class="headerlink" title="完整流程"></a>完整流程</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -ti -w /test --entrypoint bash centos:7</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">python3 会自带 python3-pip ， binutils 是 pyinstaller 打包的时候依赖</span></span><br><span class="line">yum install -y python3 binutils gcc zlib-devel which</span><br><span class="line"></span><br><span class="line">pip3 install wheel</span><br><span class="line">pip3 install pyinstaller</span><br><span class="line">pip3 install supervisor</span><br><span class="line"></span><br><span class="line">ver=$(find /usr/ -type f -name &#x27;version.txt&#x27; -path &#x27;*/supervisor/*&#x27; -exec cat &#123;&#125; \; )</span><br><span class="line">op_file=$(find /usr/ -type f -name &#x27;options.py&#x27; -path &#x27;*/supervisor/*&#x27;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置 VERSION</span></span><br><span class="line">sed -ri &#x27;/^VERSION\s+=\s+/s#= .+#= &quot;&#x27;&quot;$&#123;ver&#125;&quot;&#x27;&quot;#&#x27; $op_file</span><br><span class="line"></span><br><span class="line">dir=$(find /usr -type d -name supervisor -path &#x27;*/site-packages/*&#x27;  -exec dirname &#123;&#125; \;)</span><br><span class="line">pyinstaller --onefile -p $dir `which pidproxy`</span><br><span class="line">pyinstaller --onefile -p $dir `which supervisord`</span><br><span class="line">pyinstaller --onefile -p $dir `which supervisorctl`</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h3 id="制作-rpm-包"><a href="#制作-rpm-包" class="headerlink" title="制作 rpm 包"></a>制作 rpm 包</h3><p>其实这个步骤也可以用于容器内无 python 添加 supervisor<br>相关步骤和文件存放在我 github 上<br><a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/compile-and-packages">https://github.com/zhangguanzhang/compile-and-packages</a></p>
-<h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>歇逼了，部署上去无法运行，运行报错:</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><h3 id="取消-onefile-打包"><a href="#取消-onefile-打包" class="headerlink" title="取消 onefile 打包"></a>取消 onefile 打包</h3><p>歇逼了，部署上去无法运行，运行报错:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error while loading shared libraries: libz.so.1: failed to map segment from shared object</span><br></pre></td></tr></table></figure>
 
 <p>设置 <code>TMPDIR</code> 啥的都不行，用 staticx 打包成静态依赖也不行，现在取消 <code>--onefile</code> 参数打包整个目录 + 软连接能运行</p>
+<h3 id="被纳管的进程无法启动"><a href="#被纳管的进程无法启动" class="headerlink" title="被纳管的进程无法启动"></a>被纳管的进程无法启动</h3><p>2023&#x2F;05&#x2F;22 发现部署上去后，supervisor 是 rpm 打包部署涉密设备上放在 <code>/opt/supervisor/bin</code> 下的，有个纳管的 Xvfb 无法启动，报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xvfb: /opt/supervisor/bin/libz.so.1: version `ZLIB_1.2.9&#x27; not found (required by /lib64/libpng16.so.16)</span><br></pre></td></tr></table></figure>
+
+<p>思考了一番和结合谷歌，大致知道问题原因了，pyinstaller 非 <code>--onefile</code> 打包会设置最终启动的 supervisord 的 <code>LD_LIBRARY_PATH</code> 为存放目录（因为目录下都是 so），而 supervisord 又会传递自身的变量给纳管进程，需要在启动 Xvfb 前处理下传进来的 <code>LD_LIBRARY_PATH</code>，大概类似下面：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">if command -v supervisorctl &amp;&gt;/dev/null;then</span><br><span class="line">  sp_ld_path=$(dirname $(readlink -f `which supervisorctl`))</span><br><span class="line">  if [ -n &quot;$LD_LIBRARY_PATH&quot; ] &amp;&amp; [ -n &quot;$sp_ld_path&quot; ] &amp;&amp; echo $sp_ld_path | grep -wq supervisor/bin;then</span><br><span class="line">    LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed -e &quot;s#$&#123;sp_ld_path&#125;##&quot; -e &#x27;s#::#:#g&#x27;)</span><br><span class="line">  fi</span><br><span class="line">fi</span><br><span class="line">exec Xvfb -nolisten tcp -dpi 96 -ac :7 -screen 0 1280x1024x8</span><br></pre></td></tr></table></figure>
+
+<p>所以部署的其他依赖 so 的程序也可能会有类似问题，需要处理下 LD_LIBRARY_PATH </p>
+<h3 id="es-jna-行为"><a href="#es-jna-行为" class="headerlink" title="es jna 行为"></a>es jna 行为</h3><p>2023&#x2F;11&#x2F;15 自己制作的 es 不行（es 7.3.2后是 gradlew 打包rpm的，我这里是下载 tar 包的版本自己制作 rpm），部署上去后会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;stacktrace&quot;: [&quot;java.lang.UnsatisfiedLinkError: /tmp/elasticsearch-10723602160698077945/jna12230389653417135224.tmp: /tmp/elasticsearch-10723602160698077945/jna12230389653417135224.tmp: failed to map segment from shared object&quot;,</span><br><span class="line">&quot;at jdk.internal.loader.NativeLibraries.load(Native Method) ~[?:?]&quot;,</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>报错就是 jna 啥库 load 失败，就是 jna 的行为是解压内部的 so 文件到 TMPDIR 里后加载，这个行为被系统安全机制拦截了，最后把 so 解压后处理的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar zxf elasticsearch-*.tar.gz -C SOURCES/elasticsearch/elasticsearch --strip-components=1; \</span><br><span class="line">	cd /opt; \</span><br><span class="line">	# es jna的jar 会自解压so到TMDIR后加载so，会被拦截无法启动，这里解压so出来后配合 ES_JAVA_OPTS=&quot;-Djna.nosys=false&quot; 解决</span><br><span class="line">	/root/rpmbuild/SOURCES/elasticsearch/elasticsearch/jdk/bin/jar -xf /root/rpmbuild/SOURCES/elasticsearch/elasticsearch/lib/jna-?.*.jar; \</span><br><span class="line">	mv com/sun/jna/linux-$(uname -m|tr _ -)/libjnidispatch.so /root/rpmbuild/SOURCES/elasticsearch/elasticsearch/jdk/lib; \</span><br><span class="line">	cd -; \</span><br></pre></td></tr></table></figure>
+
+<p>主要是 jna 有 java 的 -D 选项支持，所以解压出 so 放 lib 目录配合参数就能解决</p>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/8.11/rpm.html#rpm-repo">https://www.elastic.co/guide/en/elasticsearch/reference/8.11/rpm.html#rpm-repo</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/8.11/targz.html">https://www.elastic.co/guide/en/elasticsearch/reference/8.11/targz.html</a></li>
+</ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://rhel.pkgs.org/7/epel-aarch64/supervisor-3.1.4-1.el7.noarch.rpm.html">https://rhel.pkgs.org/7/epel-aarch64/supervisor-3.1.4-1.el7.noarch.rpm.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://src.fedoraproject.org/rpms/supervisor/blob/epel7/f/supervisor.spec">https://src.fedoraproject.org/rpms/supervisor/blob/epel7/f/supervisor.spec</a></li>
@@ -808,7 +827,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%88%9B%E6%B6%89%E5%AF%86%E8%AE%BE%E5%A4%87%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">信创涉密设备介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E5%9E%8B%E8%80%83%E8%99%91"><span class="toc-number">1.2.</span> <span class="toc-text">选型考虑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pyinstaller-%E6%89%93%E5%8C%85"><span class="toc-number">2.1.</span> <span class="toc-text">pyinstaller 打包</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E9%94%99%E8%AF%AF"><span class="toc-number">2.1.1.</span> <span class="toc-text">过程和遇到的错误</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="toc-number">2.1.2.</span> <span class="toc-text">完整流程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C-rpm-%E5%8C%85"><span class="toc-number">2.2.</span> <span class="toc-text">制作 rpm 包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">2.3.</span> <span class="toc-text">后续</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%88%9B%E6%B6%89%E5%AF%86%E8%AE%BE%E5%A4%87%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">信创涉密设备介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E5%9E%8B%E8%80%83%E8%99%91"><span class="toc-number">1.2.</span> <span class="toc-text">选型考虑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pyinstaller-%E6%89%93%E5%8C%85"><span class="toc-number">2.1.</span> <span class="toc-text">pyinstaller 打包</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E5%92%8C%E9%81%87%E5%88%B0%E7%9A%84%E9%94%99%E8%AF%AF"><span class="toc-number">2.1.1.</span> <span class="toc-text">过程和遇到的错误</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="toc-number">2.1.2.</span> <span class="toc-text">完整流程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C-rpm-%E5%8C%85"><span class="toc-number">2.2.</span> <span class="toc-text">制作 rpm 包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">3.</span> <span class="toc-text">后续</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88-onefile-%E6%89%93%E5%8C%85"><span class="toc-number">3.1.</span> <span class="toc-text">取消 onefile 打包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A2%AB%E7%BA%B3%E7%AE%A1%E7%9A%84%E8%BF%9B%E7%A8%8B%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8"><span class="toc-number">3.2.</span> <span class="toc-text">被纳管的进程无法启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#es-jna-%E8%A1%8C%E4%B8%BA"><span class="toc-number">3.3.</span> <span class="toc-text">es jna 行为</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1667,7 +1686,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3710,7 +3746,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 169
+        Total : 170
         </div>
         <!-- search  -->
         
@@ -3728,6 +3764,12 @@
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span>
+            <a class="archive-post-title" href="/2023/12/01/resolvconf-hang/">openat /etc/resolv.conf 卡住的一次排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>
@@ -5554,6 +5596,16 @@
             <span class="sidebar-tag-name" data-tags="containers">
                 <span class="iconfont-archer">&#xe606;</span>
                 containers
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vmware">
+                <span class="iconfont-archer">&#xe606;</span>
+                vmware
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hung">
+                <span class="iconfont-archer">&#xe606;</span>
+                hung
             </span>
         
     </div>

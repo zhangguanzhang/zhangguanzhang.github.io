@@ -445,6 +445,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2023/12/01/resolvconf-hang/">
+                
+                <span class="abstract-title-text">openat /etc/resolv.conf 卡住的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                <p>一次 openat &#x2F;etc&#x2F;resolv.conf hung 排查过程</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/12/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/12/01</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="vmware">vmware</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="hung">hung</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2023/11/03/non-root-containers/">
                 
                 <span class="abstract-title-text">[持续更新] - 容器非 root 启动改造的经验</span>
@@ -781,48 +821,6 @@ EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒�
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="EmuELEC">EmuELEC</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/09/02/fio/">
-                
-                <span class="abstract-title-text">fio 静态编译和基础使用</span>
-            </a>
-            <div class="abstract-content">
-                由来amd64,arm64 的静态编译和基础使用
-buildx 使用见文章 buildx 使用
-编译buildx Dockerfile 构建:
-123456789101112131415161718FROM ubuntu as buildWORKDIR /optARG VER=fio-3.29#ARG DEBIAN_FRONTEND=noninteractiveRUN if [  -e /etc/apt/sources.list ];then sed -ri &#x27;s/[a-zA-Z0-9.]+(debian.org|ubuntu.com)/mirrors.aliyun.com/g...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/09/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="fio">fio</a>
     
 </div>
 
@@ -1791,7 +1789,24 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3834,7 +3849,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 169
+        Total : 170
         </div>
         <!-- search  -->
         
@@ -3852,6 +3867,12 @@ buildx 使用见文章 buildx 使用
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span>
+            <a class="archive-post-title" href="/2023/12/01/resolvconf-hang/">openat /etc/resolv.conf 卡住的一次排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>
@@ -5678,6 +5699,16 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="containers">
                 <span class="iconfont-archer">&#xe606;</span>
                 containers
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vmware">
+                <span class="iconfont-archer">&#xe606;</span>
+                vmware
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hung">
+                <span class="iconfont-archer">&#xe606;</span>
+                hung
             </span>
         
     </div>

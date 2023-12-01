@@ -444,6 +444,49 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">
+                
+                <span class="abstract-title-text">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                由来2023&#x2F;08&#x2F;21 注意点：
+
+
+&#x3D; v0.15.1 开始，不需要 10-flannel.link 了，flannel 添加随机 mac
+
+
+https://github.com/flannel-io/flannel/issues/1795
+
+和前一篇文章不一样，从来没遇到过这样的问题，这里记录下。实施在客户那边部署业务后，业务在浏览器上无法访问，我远程上去查看日志发现 pod 内部无法 DNS 无法解析，nginx 连不上 upsteam 报错而启动失败，实际上也是跨节点不通。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/11/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/10/30/uos20-nftables/">
                 
                 <span class="abstract-title-text">统信USO 20 hostPort 无法访问</span>
@@ -767,57 +810,6 @@ kubectl 收集有证书 curl 也行，这里就偷懒了：
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/25</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/06/23/host-gw-in-aliyun/">
-                
-                <span class="abstract-title-text">阿里云上使用flannel host-gw跨节点pod不通的解决</span>
-            </a>
-            <div class="abstract-content">
-                挺多人问的，写下解决办法
-前言首先主机得在同一个专有vpc下，跨vpc或者经典vpc就扯淡了。还有flannel别把网络信息存储在etcd里，目前flannel只支持v2的etcd api。但是现在k8s都是使用v3 etcd存储了。如果v2和v3共存会导致无法恢复etcd的备份
-所以网上那些etcdctl set flannel的cidr的文章别看了，都没做过备份恢复实验就到处发k8s搭建教程。flannel v3的话看我过往文章
-环境信息先来说下host-gw的包走向，假设两台机器
-
-
-
-IP
-pod cidr
-
-
-
-10.0.6.166
-10.200.1.0&#x2F;24
-
-
-1...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/06/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="host-gw">host-gw</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1783,7 +1775,24 @@ pod cidr
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3826,7 +3835,7 @@ pod cidr
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 169
+        Total : 170
         </div>
         <!-- search  -->
         
@@ -3844,6 +3853,12 @@ pod cidr
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span>
+            <a class="archive-post-title" href="/2023/12/01/resolvconf-hang/">openat /etc/resolv.conf 卡住的一次排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">11/03</span>
@@ -5670,6 +5685,16 @@ pod cidr
             <span class="sidebar-tag-name" data-tags="containers">
                 <span class="iconfont-archer">&#xe606;</span>
                 containers
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="vmware">
+                <span class="iconfont-archer">&#xe606;</span>
+                vmware
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hung">
+                <span class="iconfont-archer">&#xe606;</span>
+                hung
             </span>
         
     </div>
