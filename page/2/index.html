@@ -459,6 +459,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/07/12/pod-no-ip-addr/">
+                
+                <span class="abstract-title-text">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</span>
+            </a>
+            <div class="abstract-content">
+                由来有事回到工位上，还没坐下同事就过来喊我，让我帮忙看个客户的生产环境问题，大致就是客户为了搞安全，开了 ipset，然后发现业务受影响了。
+过程123456$ kubectl get pod -o wide | grep -v RunnNAME                                                  READY   STATUS             RESTARTS   AGE     IP            NODE         NOMINATED NODE   READINESS GATESxxxx-privilege-r97z...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/07/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/12</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/06/03/container-not-forward/">
                 
                 <span class="abstract-title-text">docker info无warning，iptables规则正常，宿主机就是不转发</span>
@@ -992,57 +1020,6 @@ EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒�
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="EmuELEC">EmuELEC</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/12/19/openwrt-update/">
-                
-                <span class="abstract-title-text">openwrt 的在线升级固件和扩容的研究</span>
-            </a>
-            <div class="abstract-content">
-                前言手上有 r2s、N1 和 x86_64 的固件维护，r2s 的参照别人的脚本搞了在线升级固件的脚本，别人的脚本只支持 ext4 升级，而后面我也把 squashfs 格式的固件升级搞出来了。恩山上有的人的固件我也看 x86_64 也可以在线升级，后面我也会去测下 x86_64 的，理论上是通用的。
-升级过程以 r2s 为例讲解。参照目前看到的的 1988 的升级脚本 ，最初的人不知道是谁搞的在线升级，因为很久之前就看到有些人的固件能在线升级了。
-升级前准备相关命令确保固件有下面命令：
-
-
-
-command
-package name
-用途
-
-
-
-parted
-parted
-修改分区和获...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/19">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/19</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="squashfs">squashfs</a>
     
 </div>
 
@@ -2189,7 +2166,24 @@ parted
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4244,7 +4238,7 @@ parted
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -4258,6 +4252,21 @@ parted
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -6104,6 +6113,11 @@ parted
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>

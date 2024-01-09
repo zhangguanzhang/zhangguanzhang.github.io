@@ -444,6 +444,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/11/20/disable-swap/">
+                
+                <span class="abstract-title-text">永久关闭swap的正确姿势</span>
+            </a>
+            <div class="abstract-content">
+                今天遇到了 kylin 系统上无法关闭 swap 的情况。记录下和方便别人搜到这个知识点。
+环境信息1234$ at /etc/issueKylin 4.0.2 \n \l$ uname -aLinux H-192-168-63-132 4.15.0- 58-generic #64kord1k1&#x27;SMP Thu Aug 1S15:51:97 csT 2919 aarch64 ......
+
+尝试的步骤fstab 里没有 swap 的挂载，
+1swapoff -a &amp;&amp; sysctl -w vm.swappiness=0
+
+重启后，内核参数是关闭的，但是实际没有关...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/11/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/20</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="swap">swap</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">
                 
                 <span class="abstract-title-text">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</span>
@@ -784,41 +825,10 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/06/25/kubernetes-pprof/">
-                
-                <span class="abstract-title-text">k8s pprof 分析 cpu 和内存</span>
-            </a>
-            <div class="abstract-content">
-                简单记录下 k8s 组件的 pprof 看内存和 cpu 情况
-kubectl 收集有证书 curl 也行，这里就偷懒了：
-123# 这个很耗时，耐心等待文件不为 0 即可kubectl get --raw /api/v1/nodes/&lt;nodeName&gt;/proxy/debug/pprof/profile &gt; kubelet.profilekubectl get --raw /api/v1/nodes/&lt;nodeName&gt;/proxy/debug/pprof/heap &gt; kubelet.heap
-
-123yum instal -y graphviz...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/06/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/6/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/5/">5</a><a class="page-number" href="/archives/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/archives/page/8/">8</a><a class="page-number" href="/archives/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/17/">17</a><a class="extend next" rel="next" href="/archives/page/8/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/6/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/5/">5</a><a class="page-number" href="/archives/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/archives/page/8/">8</a><a class="page-number" href="/archives/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/18/">18</a><a class="extend next" rel="next" href="/archives/page/8/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1780,7 +1790,24 @@ kubectl 收集有证书 curl 也行，这里就偷懒了：
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3835,7 +3862,7 @@ kubectl 收集有证书 curl 也行，这里就偷懒了：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -3849,6 +3876,21 @@ kubectl 收集有证书 curl 也行，这里就偷懒了：
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -5695,6 +5737,11 @@ kubectl 收集有证书 curl 也行，这里就偷懒了：
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>

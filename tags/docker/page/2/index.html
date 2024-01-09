@@ -444,6 +444,48 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/09/02/fio/">
+                
+                <span class="abstract-title-text">fio 静态编译和基础使用</span>
+            </a>
+            <div class="abstract-content">
+                由来amd64,arm64 的静态编译和基础使用
+buildx 使用见文章 buildx 使用
+编译buildx Dockerfile 构建:
+123456789101112131415161718FROM ubuntu as buildWORKDIR /optARG VER=fio-3.29#ARG DEBIAN_FRONTEND=noninteractiveRUN if [  -e /etc/apt/sources.list ];then sed -ri &#x27;s/[a-zA-Z0-9.]+(debian.org|ubuntu.com)/mirrors.aliyun.com/g...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/02">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="fio">fio</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">
                 
                 <span class="abstract-title-text">机器重启后 kube-apiserver 无法启动，etcd刷(error &#34;EOF&#34;, ServerName &#34;&#34;)</span>
@@ -769,42 +811,6 @@
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2018/02/05">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/02/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">
-                
-                <span class="abstract-title-text">docker的一些概念</span>
-            </a>
-            <div class="abstract-content">
-                <p>总结下容器的一些概念和虚拟机的区别以及<code>CMD</code>和<code>entrypoint</code></p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/01/10">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/10</span>
                 </div>
                 <!-- tags -->
                 
@@ -1785,7 +1791,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3840,7 +3863,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -3854,6 +3877,21 @@
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -5700,6 +5738,11 @@
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>

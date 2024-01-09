@@ -444,6 +444,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/04/08/kubelet-runc-disable-kmem/">
+                
+                <span class="abstract-title-text">kubelet 和 runc 编译关闭 kmem</span>
+            </a>
+            <div class="abstract-content">
+                前提详情在 3.x 的内核上，cgroup 的 kmem account 特性有内存泄露问题。kubelet 和 runc 都需要修复。
+网上有言论说升级 Linux 内核至 kernel-3.10.0-1075.el7 及以上就可以修复这个问题，详细可见 slab leak causing a crash when using kmem control group。但是我测试了下面的都不行：
+
+CentOS7.4
+CentOS7.6
+CentOS7.7的 3.10.0-1062.el7.x86_64 
+CentOS Linux release 7.8.2003 (Core) - 3.1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/04/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/03/23/iptables-docker-no-chain/">
                 
                 <span class="abstract-title-text">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</span>
@@ -757,51 +798,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/11/20/disable-swap/">
-                
-                <span class="abstract-title-text">永久关闭swap的正确姿势</span>
-            </a>
-            <div class="abstract-content">
-                今天遇到了 kylin 系统上无法关闭 swap 的情况。记录下和方便别人搜到这个知识点。
-环境信息1234$ at /etc/issueKylin 4.0.2 \n \l$ uname -aLinux H-192-168-63-132 4.15.0- 58-generic #64kord1k1&#x27;SMP Thu Aug 1S15:51:97 csT 2919 aarch64 ......
-
-尝试的步骤fstab 里没有 swap 的挂载，
-1swapoff -a &amp;&amp; sysctl -w vm.swappiness=0
-
-重启后，内核参数是关闭的，但是实际没有关...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/11/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/20</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="swap">swap</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/5/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/page/7/">7</a><a class="page-number" href="/archives/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/17/">17</a><a class="extend next" rel="next" href="/archives/page/7/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/5/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/page/7/">7</a><a class="page-number" href="/archives/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/18/">18</a><a class="extend next" rel="next" href="/archives/page/7/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1763,7 +1763,24 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3818,7 +3835,7 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -3832,6 +3849,21 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -5678,6 +5710,11 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>

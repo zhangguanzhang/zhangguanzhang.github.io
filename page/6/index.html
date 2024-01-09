@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/05/12/dns-formerr/">
+                
+                <span class="abstract-title-text">adguardhome dns FORMERR 错误</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天发现某个 zone 上游时不时地址无法解析，dnsmasq -&gt; adguardhome 的 /xxx.com/10.x.x.x。
+排查先用 dig 排查，发现是上游的问题，加上 noedns 就能解析了
+12345678910111213141516171819202122232425262728293031323334353637383940root@OpenWrt:~# dig @10.x.x.x  xxx.xxxxx.net ; &lt;&lt;&gt;&gt; DiG 9.17.13 &lt;&lt;&gt;&gt; @10.x.x.x xxx.xxxxx.ne...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/05/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/12</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="adguardhome">adguardhome</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="dns">dns</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/05/12/N1-flash/">
                 
                 <span class="abstract-title-text">斐讯N1刷机和旁路由的设置</span>
@@ -978,48 +1017,6 @@ Linux一些目录规范和systemd
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/12/boot-grub-rescue/">
-                
-                <span class="abstract-title-text">/boot目录被清空下物理机无法开机的一次救援</span>
-            </a>
-            <div class="abstract-content">
-                今天下午到公司被通知苏州一个节点的客户的裸金属无法开机，14:00上去到16:50终于给整好了，这里记录下笔记分享下
-故障现象物理机裸金属，连上跳板机通过带外连上去(等同于现场接了一个显示屏+键盘一样)错误为
-1234.errorL file `/grub2/i386-pc/normal.mod&#x27; not found.Entering rescue mode...grub rescue&gt;
-
-这个物理机是grub2，这个错误和类似的/grub/i386-pc/normal.mod本质上都是文件丢失，但是也分情况，网上的一些恢复步骤都是在丢失部分文件的情况下恢复的查看分区
-1...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/10/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
     
 </div>
 
@@ -2166,7 +2163,24 @@ Linux一些目录规范和systemd
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4221,7 +4235,7 @@ Linux一些目录规范和systemd
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -4235,6 +4249,21 @@ Linux一些目录规范和systemd
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -6081,6 +6110,11 @@ Linux一些目录规范和systemd
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>

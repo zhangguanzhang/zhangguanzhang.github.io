@@ -515,7 +515,7 @@
 <span id="more"></span>
 
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>同事 <code>gitlab-ci.yml</code> 大概内容为下面：</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">include:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">project:</span> <span class="string">&quot;xxx/ci-template&quot;</span></span><br><span class="line">    <span class="attr">file:</span> <span class="string">&quot;/backend/common_mini.yml&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">test:</span></span><br><span class="line">  <span class="attr">services:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">minio/minio</span></span><br><span class="line">      <span class="attr">command:</span> [<span class="string">&quot;server&quot;</span>,<span class="string">&quot;/data&quot;</span>]</span><br><span class="line">      <span class="attr">alias:</span> <span class="string">minio</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mysql:5.7.17</span></span><br><span class="line">  <span class="attr">variables:</span></span><br><span class="line">    <span class="attr">FILTER_COVER_PACKAGES:</span> <span class="string">&quot;grep -E &#x27;impl&#x27;&quot;</span></span><br><span class="line">    <span class="attr">MYSQL_DATABASE:</span> <span class="string">&quot;docmini&quot;</span></span><br><span class="line">    <span class="attr">MINIO_UPODATE:</span> <span class="string">&quot;off&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">include:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">project:</span> <span class="string">&quot;xxx/ci-template&quot;</span></span><br><span class="line">    <span class="attr">file:</span> <span class="string">&quot;/backend/common_mini.yml&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">test:</span></span><br><span class="line">  <span class="attr">services:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">minio/minio</span></span><br><span class="line">      <span class="attr">command:</span> [<span class="string">&quot;server&quot;</span>,<span class="string">&quot;/data&quot;</span>]</span><br><span class="line">      <span class="attr">alias:</span> <span class="string">minio</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mysql:5.7.17</span></span><br><span class="line">  <span class="attr">variables:</span></span><br><span class="line">    <span class="attr">FILTER_COVER_PACKAGES:</span> <span class="string">&quot;grep -E &#x27;impl&#x27;&quot;</span></span><br><span class="line">    <span class="attr">MYSQL_DATABASE:</span> <span class="string">&quot;xxxxxxx&quot;</span></span><br><span class="line">    <span class="attr">MINIO_UPODATE:</span> <span class="string">&quot;off&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>使用的是 <a target="_blank" rel="noopener" href="https://docs.gitlab.com/runner/executors/docker.html">Docker executor</a> 去跑的构建，他反馈说构建容器内部无法访问 minio 的 9000 端口，我大致看了下，发现 service 的 alias 实际上用的是 docker run 的 –link 实现的，也就是容器的 hosts 文件里添加记录指向容器IP，官方文档 <a target="_blank" rel="noopener" href="https://docs.gitlab.com/runner/executors/docker.html#the-services-keyword">service 字段</a> 也是如此说明</p>
 <h2 id="排错过程"><a href="#排错过程" class="headerlink" title="排错过程"></a>排错过程</h2><h3 id="故障现象"><a href="#故障现象" class="headerlink" title="故障现象"></a>故障现象</h3><p>构建过程是 <code>7a9ff9c8ee95</code> 无法访问 minio 里的 9000 端口，直接用 ip，不用 alias 别名都无法访问</p>
@@ -1602,7 +1602,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3657,7 +3674,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -3671,6 +3688,21 @@
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -5517,6 +5549,11 @@
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>

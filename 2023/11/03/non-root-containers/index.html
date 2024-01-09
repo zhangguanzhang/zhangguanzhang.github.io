@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3.6k</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.6k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -584,7 +584,7 @@
 <p>机器上测试：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ dmidecode -s system-uuid | <span class="built_in">tr</span> a-z A-Z</span><br><span class="line">66C0F667-71A0-xxxx-xxxx-4AC0A21F5428</span><br><span class="line">$ go build -o /tmp/uuid-go test.go</span><br><span class="line">$ <span class="built_in">chmod</span> a+r /sys/firmware/dmi/tables/DMI</span><br><span class="line">$ su - guanzhang</span><br><span class="line">guanzhang@guan:~$ /tmp/uuid-go </span><br><span class="line">UUID: 66C0F667-71A0-xxxx-xxxx-4AC0A21F5428</span><br></pre></td></tr></table></figure>
 
-<p>然后把宿主机的 <code>/sys/firmware/dmi/tables</code> 挂载到 <code>/rootfs/sys/firmware/dmi/tables</code> 里，在 gosu 之前 <code>chmod a+r /rootfs/sys/firmware/dmi/tables/DMI</code>，业务使用上面的库 hack 后，从指定路径的 DMI 信息即可获取到机器码。</p>
+<p>然后把宿主机的 <code>/sys/firmware/dmi/</code> 挂载到 <code>/rootfs/sys/firmware/dmi/</code> 里，在 gosu 之前 <code>chmod a+r /rootfs/sys/firmware/dmi/tables/DMI</code>，业务使用上面的库 hack 后，从指定路径的 DMI 信息即可获取到机器码。</p>
 <h4 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h4><p>没啥说的，加了 gosu 后再加启动脚本：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$&#123;1:0:1&#125;</span>&quot;</span> = <span class="string">&#x27;-&#x27;</span> ]; <span class="keyword">then</span></span><br><span class="line">	<span class="built_in">set</span> -- etcd <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># RUN_USER 设置为 nobody 启动</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> = <span class="string">&#x27;etcd&#x27;</span> ] || [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> = <span class="string">&#x27;/usr/local/bin/etcd&#x27;</span> ];<span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;<span class="subst">$(id -u)</span>&quot;</span> = <span class="string">&#x27;0&#x27;</span> -a -n <span class="string">&quot;<span class="variable">$RUN_USER</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">	    find /var/lib/etcd \! -user <span class="variable">$&#123;RUN_USER&#125;</span> -<span class="built_in">exec</span> <span class="built_in">chown</span> <span class="variable">$&#123;RUN_USER&#125;</span> <span class="string">&#x27;&#123;&#125;&#x27;</span> +</span><br><span class="line">	    <span class="built_in">exec</span> gosu <span class="variable">$&#123;RUN_USER&#125;</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br></pre></td></tr></table></figure>
 
@@ -598,11 +598,14 @@
 <p>非 root 用户是无法监听 1024 以下端口的，coredns 监听 53 端口是因为使用了 <code>setcap cap_net_bind_service=+ep /coredns</code>，但是这个属性属于扩展属性，docker 构建多层 COPY 会不支持而丢失，必须使用 buildkit 构建，否则 cap 信息丢失，部署上去无法监听 53 端口：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DOCKER_BUILDKIT=1 docker build --platform=amd64  . -t coredns/coredns:1.10.1  --load</span><br></pre></td></tr></table></figure>
 
+<p>suse12sp5 上发现无法容器镜像无法保持 <code>cap_net_bind_service</code> 属性，启动会报错 permission deny，可以启动脚本里执行下面的，包括结尾的 nginx 也一样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcap cap_net_bind_service=+ep /coredns</span><br></pre></td></tr></table></figure>
+
 <h4 id="consul"><a href="#consul" class="headerlink" title="consul"></a>consul</h4><p>consul 镜像也支持，但是 chown 的时候没带 -R 选项。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if [ &quot;$(stat -c %u &quot;$CONSUL_DATA_DIR&quot;)&quot; != &quot;$&#123;CONSUL_UID&#125;&quot; ]; then</span><br><span class="line">  chown $&#123;CONSUL_UID&#125;:$&#123;CONSUL_GID&#125; &quot;$CONSUL_DATA_DIR&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 
 <p>这里会存在一个问题，如果之前是覆盖了 entrypoint 使用 root 启动的，再切正确姿势下，因为 data 目录下子目录没被 chown，consul 在 data 下子目录写入 node-id 会报错没权限，所以我是这样 hack 重做镜像的：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ARG</span> VER=<span class="number">1.8</span>.<span class="number">3</span></span><br><span class="line"><span class="keyword">FROM</span> consul:$&#123;VER&#125;</span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> sed -ri -e <span class="string">&#x27;s/(chown)(\s+consul:)/\1 -R\2/&#x27;</span> \</span></span><br><span class="line"><span class="language-bash">        -e <span class="string">&#x27;1s@/usr/bin/dumb-init\s+@@&#x27;</span> \</span></span><br><span class="line"><span class="language-bash">    /usr/local/bin/docker-entrypoint.sh</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ARG</span> VER=<span class="number">1.8</span>.<span class="number">3</span></span><br><span class="line"><span class="keyword">FROM</span> consul:$&#123;VER&#125;</span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> sed -ri -e <span class="string">&#x27;s/(chown)(\s+consul:)/\1 -R\2/&#x27;</span> \</span></span><br><span class="line"><span class="language-bash">        -e <span class="string">&#x27;1s@/usr/bin/dumb-init\s+@@&#x27;</span> \</span></span><br><span class="line"><span class="language-bash">    /usr/local/bin/docker-entrypoint.sh; \</span></span><br><span class="line"><span class="language-bash">    sed -ri <span class="string">&quot;/CONSUL_DISABLE_PERM_MGMT/a \ \ \ \ find \$CONSUL_DATA_DIR \\! -user consul -exec chown consul:consul &#x27;&#123;&#125;&#x27; +&quot;</span> /usr/local/bin/docker-entrypoint.sh</span></span><br></pre></td></tr></table></figure>
 
 <p>去掉 <code>dumb-init</code> 是因为客户要求容器内所有进程都是非 root，不去掉 pid 为 1 的就是 root 用户 dumb-init sh 进程</p>
 <h4 id="docker-sock-文件"><a href="#docker-sock-文件" class="headerlink" title="docker.sock 文件"></a>docker.sock 文件</h4><p>有些进程是需要挂载 <code>/var/run</code> 为了使用宿主机的 <code>/var/run/docker.sock</code> 和宿主机 docker 通信的，这里我们使用 cadvisor 举例：</p>
@@ -1683,7 +1686,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3738,7 +3758,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -3752,6 +3772,21 @@
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -5598,6 +5633,11 @@
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>

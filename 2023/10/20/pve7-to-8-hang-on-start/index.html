@@ -514,7 +514,7 @@
         <p>proxmox 7.4 升级 8 后开机卡住的一次解决过程</p>
 <span id="more"></span>
 
-<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>最开始在 7.2 dist-upgrade 后升级刀 7.4 然后按照官方文档升级 8 的过程中，最后的 apt 阶段报错 proxmox-xxx 和 kernel <code>Sub-process /usr/bin/dpkg returned an error code</code></p>
+<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>最开始在 7.2 dist-upgrade 后升级到 7.4 然后按照官方文档升级 8 的过程中，最后的 apt 阶段报错 proxmox-xxx 和 kernel <code>Sub-process /usr/bin/dpkg returned an error code</code></p>
 <h3 id="处理过程"><a href="#处理过程" class="headerlink" title="处理过程"></a>处理过程</h3><p>升级完成后重启卡在 <code>Loading kernel 6.2.16-15</code>，然后重启后切到老内核，进去看了下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ grep -P &#x27;menuentry.+pve&#x27; /boot/grub/grub.cfg </span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 6.2.16-15-pve&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-6.2.16-15-pve-advanced-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 6.2.16-15-pve (recovery mode)&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-6.2.16-15-pve-recovery-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 5.15.126-1-pve&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-5.15.126-1-pve-advanced-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 5.15.126-1-pve (recovery mode)&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-5.15.126-1-pve-recovery-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 5.4.203-1-pve&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-5.4.203-1-pve-advanced-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 5.4.203-1-pve (recovery mode)&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-5.4.203-1-pve-recovery-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 5.4.34-1-pve&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-5.4.34-1-pve-advanced-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br><span class="line">	menuentry &#x27;Proxmox VE GNU/Linux, with Linux 5.4.34-1-pve (recovery mode)&#x27; --class proxmox --class gnu-linux --class gnu --class os $menuentry_id_option &#x27;gnulinux-5.4.34-1-pve-recovery-bcdbdabd-1b22-41df-a6a7-bef0e7fd8e52&#x27; &#123;</span><br></pre></td></tr></table></figure>
 
@@ -1584,7 +1584,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3639,7 +3656,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 171
         </div>
         <!-- search  -->
         
@@ -3653,6 +3670,21 @@
     
         
             
+            
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2023 </div>
             <ul class="year-list">
@@ -5499,6 +5531,11 @@
             <span class="sidebar-tag-name" data-tags="hung">
                 <span class="iconfont-archer">&#xe606;</span>
                 hung
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
             </span>
         
     </div>
