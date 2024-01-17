@@ -444,6 +444,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/06/26/uefi-pxe/">
+                
+                <span class="abstract-title-text">uefi模式下docker+交换机部署pxe批量安装</span>
+            </a>
+            <div class="abstract-content">
+                华三服务器的 ipmi 的 web 提供了 nfs 挂载 iso 去安装，也是我之前使用的，发现研发给的镜像在4g以上(镜像基于centos7.3改的，我之前测试都是用的minimal镜像890M左右)。安装的时候报错，然后当面测试得出结论 nfs 的网速原因，其次也是我们这边办公网是百兆。。。办公网被 it 接管了，交换机密码不给，自己找了台 5130 交换机，下面接服务器和我自己电脑搭建测了下定制iso的pxe流程
+这是组网情况
+123456789101112131415             10.96.4.1/24          +------------+        ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/06/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tftp">tftp</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/06/23/autoInstallServer/">
                 
                 <span class="abstract-title-text">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</span>
@@ -768,53 +809,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/02/19/jira-confluence/">
-                
-                <span class="abstract-title-text">docker部署jira(8.0.0)和confluence(6.14.1)</span>
-            </a>
-            <div class="abstract-content">
-                记录下这几天搭建的过程jira和confluence是分别两台，数据库也是分开的,数据库是用mysql的rpm的repo添加后安装的,jira和confluence是docker跑的,把破解的jar加到镜像里然后改了下别人的Dockerfile本次安装的版本：
-
-
-jira-software 8.0.0
-confluence 6.14.1
-Docker CE 18.06.02
-OS CentOS 7.5.1804
-
-
-系统基本设置
-所有防火墙与SELinux 已关闭：123systemctl disable --now firewalld NetworkManagersetenforce...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/02/19">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/19</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="jira">jira</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="confluence">confluence</a>
     
 </div>
 
@@ -1793,7 +1787,72 @@ OS CentOS 7.5.1804
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3860,7 +3919,7 @@ OS CentOS 7.5.1804
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 171
+        Total : 172
         </div>
         <!-- search  -->
         
@@ -3878,6 +3937,12 @@ OS CentOS 7.5.1804
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/16</span>
+            <a class="archive-post-title" href="/2024/01/16/go-docker-img/">golang 代码层面构建和推送容器镜像到远端仓库</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/08</span>

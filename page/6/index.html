@@ -459,6 +459,55 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/05/13/x86-router-flash/">
+                
+                <span class="abstract-title-text">proxmox x86软路由笔记</span>
+            </a>
+            <div class="abstract-content">
+                由来pve已经安装好系统(如果你还没安装且打算安装，安装完后可以看看我这个文章安装完proxmox的一些设置)，pve 的机器只有一个口子的情况下，就只能作为旁路由使用。
+前置工作虚机准备先去恩山论坛x86版块下一个固件pve上开台机器
+
+一般-高级-开机自启动勾上，有必要的话手动设置下vmID，后面有用
+操作系统不适用任何介质
+系统默认，下一步
+硬盘随便设置，后面会删除
+cpu按照实际，我给2核，内存我给的2g
+网络，模型选VirtIO(半虚拟化)，防火墙的勾去掉
+完成
+选中虚机，硬件-选中硬盘，点击分离，删除
+
+导入img把固件上传到 pve 的机器上，一般是 gz，解压成 img ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/05/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/13</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="x86">x86</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/05/12/dns-formerr/">
                 
                 <span class="abstract-title-text">adguardhome dns FORMERR 错误</span>
@@ -979,44 +1028,6 @@ Linux一些目录规范和systemd
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
-                
-                <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
-            </a>
-            <div class="abstract-content">
-                由来该issue见 https://github.com/kubernetes/kubernetes/issues/76956, apiserver和controller-manager每次start的时候会刷下面信息。不影响使用，但是有强迫症可以按照本文思路手动修改。当然本文也是自己编译k8s的教程
-123456E0423 17:35:58.491576       1 prometheus.go:138] failed to register depth metric admission_quota_controller: duplicate metrics collector re...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/10/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/21</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
     
 </div>
 
@@ -2168,7 +2179,72 @@ Linux一些目录规范和systemd
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4235,7 +4311,7 @@ Linux一些目录规范和systemd
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 171
+        Total : 172
         </div>
         <!-- search  -->
         
@@ -4253,6 +4329,12 @@ Linux一些目录规范和systemd
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/16</span>
+            <a class="archive-post-title" href="/2024/01/16/go-docker-img/">golang 代码层面构建和推送容器镜像到远端仓库</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/08</span>
