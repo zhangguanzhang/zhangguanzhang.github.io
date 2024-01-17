@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.3k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.4k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -542,6 +542,10 @@
 
 <p>我向 <code>google/go-containerregistry</code> 提交了 pr 支持 <a target="_blank" rel="noopener" href="https://github.com/google/go-containerregistry/pull/1858">support gzip on tarball.ImageFromPath</a> 离线镜像推送不支持 gzip 的，也就是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save alpine | gzip -&gt; alpine.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p><code>KANIKO_DIR</code> 为啥说要提前设置环境变量，是因为包下面的 import 级别设置了值，代码里 <code>os.Setenv</code> 是不行的，必须启动设置变量 <code>KANIKO_DIR</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># https://github.com/GoogleContainerTools/kaniko/blob/v1.19.2/pkg/config/init.go#L29-L33</span><br><span class="line">var KanikoDir = func() string &#123;</span><br><span class="line">	if kd, ok := os.LookupEnv(&quot;KANIKO_DIR&quot;); ok &#123;</span><br><span class="line">		return kd</span><br><span class="line">	&#125;</span><br><span class="line">	return constants.DefaultKanikoPath</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+
     </article>
     <!-- license -->
     
@@ -725,7 +729,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F"><span class="toc-number">1.</span> <span class="toc-text">构建镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AA%E6%8E%A8%E9%80%81%E9%95%9C%E5%83%8F%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">只推送镜像的代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#github-com-x2F-google-x2F-go-containerregistry"><span class="toc-number">2.1.</span> <span class="toc-text">github.com&#x2F;google&#x2F;go-containerregistry</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F"><span class="toc-number">1.</span> <span class="toc-text">构建镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AA%E6%8E%A8%E9%80%81%E9%95%9C%E5%83%8F%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">只推送镜像的代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#github-com-x2F-google-x2F-go-containerregistry"><span class="toc-number">2.1.</span> <span class="toc-text">github.com&#x2F;google&#x2F;go-containerregistry</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.</span> <span class="toc-text">注意事项</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
