@@ -444,6 +444,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/k8s-runxtables.lock/">
+                
+                <span class="abstract-title-text">干掉烦人的 open /run/xtables.lock: is a directory</span>
+            </a>
+            <div class="abstract-content">
+                环境信息suse 这辣鸡系统，使用官方文档 docker-static 的二进制安装的话会无法起来，所以我们在 suse 上用的是很久之前的 rpm 安装的 docker。
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162$ cat /etc/os-release NAME=&quot;SLES&quot;VERSION=&quot;12-SP5&quot;VERSION_ID=&quot;12.5&quot...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/08/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/08/25/flannel-a-host-net-tmout/">
                 
                 <span class="abstract-title-text">flannel下集群有个节点网络不通的一次排查</span>
@@ -781,46 +809,6 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         <a class="post-tag" href="javascript:void(0);" data-tags="openshift">openshift</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="ocp">ocp</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">
-                
-                <span class="abstract-title-text">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</span>
-            </a>
-            <div class="abstract-content">
-                这个问题和之前的docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理差不多，不过 db 文件不同。客户停止 docker 后起不来了，查看日志：
-1journalctl -xe -u docker
-
-12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879805月 26 18:42:17 xxx...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/05/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/05/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
 </div>
 
@@ -1804,51 +1792,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3931,7 +3880,7 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 172
+        Total : 173
         </div>
         <!-- search  -->
         
@@ -3949,6 +3898,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2024/01/26/docker-registry-tag-delete/">docker v2 registry 本地仓库如何只删除指定 tag 而非 manifest 下的所有 tag</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/16</span>
