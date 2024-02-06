@@ -459,6 +459,51 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/11/24/kubeadm-base-use/">
+                
+                <span class="abstract-title-text">[长期更新]--应大多数人要求写下kubeadm的基础使用</span>
+            </a>
+            <div class="abstract-content">
+                市面上很多kubeadm的文章都是错误示范或者不够详细，大多数都没写系统设置之类的就直接kubeadm init导致很多跟着做的人会报错
+我期望看到本文的读者最少具备以下知识:
+
+Linux一些目录规范和systemd
+学过一点docker
+懂dns和&#x2F;etc&#x2F;hosts、curl互相结合来测试一些web的接口响应状态
+不要求github有自己项目，至少会浏览github
+
+本教学将以下列节点数与规格来进行部署Kubernetes集群,系统CentOS 7.6+，有条件7.8，不要使用centos7.4以及一下，容器技术依赖于内核技术，低版本系统部署和运行后问题会非常...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/11/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/11/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubeadm">kubeadm</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/24/deployment-consul-in-k8s/">
                 
                 <span class="abstract-title-text">consul仅当服务发现在k8s无状态部署使用</span>
@@ -993,43 +1038,6 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         <a class="post-tag" href="javascript:void(0);" data-tags="ipmi">ipmi</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="CLP">CLP</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/06/02/cobra/">
-                
-                <span class="abstract-title-text">golang cobra的一些笔记</span>
-            </a>
-            <div class="abstract-content">
-                这几天稍微写了下cobra，网上搜到的博客分为两类，一类是把官方的readme翻译一下完事的，一类是写的都太简单了没有实际常见场景的。这里不废话了，先用官方demo讲解下
-Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代的CLI接口，类似于git或者go工具。同时，它也是一个应用，用来生成个人应用框架，从而开发以Cobra为基础的应用。热门的docker和k8s源码中都使用了CobraCobra 结构由三部分组成：命令( Command )、标志( Flag )、参数( Args )。
-1234567type Command struct &#123;    Use ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/06/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="cobra">cobra</a>
     
 </div>
 
@@ -2191,7 +2199,24 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4274,7 +4299,7 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 173
+        Total : 174
         </div>
         <!-- search  -->
         
@@ -4292,6 +4317,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2024/02/06/serviceAccountToken-valid/">高版本client-go在serviceAccountToken下invalid bearer token?</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/26</span>
@@ -6166,6 +6197,11 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <span class="sidebar-tag-name" data-tags="apparmor">
                 <span class="iconfont-archer">&#xe606;</span>
                 apparmor
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="serviceAccountToken">
+                <span class="iconfont-archer">&#xe606;</span>
+                serviceAccountToken
             </span>
         
     </div>

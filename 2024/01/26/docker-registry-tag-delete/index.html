@@ -528,7 +528,7 @@
 <p>然后使用这个 digest 删除 manifest：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 删除</span><br><span class="line">$ curl -u &#x27;xxx:xxxx&#x27; -X DELETE 127.0.0.1:5000/v2/zhangguanzhang/alpine/manifests/sha256:13b7e62e8df80264dbb747995705a986aa530415763a6c58f84a3ca8af9a5bcd</span><br><span class="line"># 查询为 null</span><br><span class="line">$ curl -u &#x27;xxx:xxxx&#x27; 127.0.0.1:5000/v2/zhangguanzhang/alpine/tags/list</span><br><span class="line">&#123;&quot;name&quot;:&quot;zhangguanzhang/alpine&quot;,&quot;tags&quot;:null&#125;</span><br></pre></td></tr></table></figure>
 
-<p>截至 2024&#x2F;01&#x2F;26 ，gitlab 的 <a target="_blank" rel="noopener" href="https://gitlab.com/gitlab-org/container-registry">container-registry</a> 有 API <code>DELETE /v2/&lt;name&gt;/tags/reference/&lt;reference&gt;</code> 支持删除 tag 而非 manifest ，而 registry 官方也跟进了，但是 v3 还没正式发版。</p>
+<p>截至 2024&#x2F;01&#x2F;26 ，gitlab 的 <a target="_blank" rel="noopener" href="https://gitlab.com/gitlab-org/container-registry">container-registry</a> 有 API <code>DELETE /v2/&lt;name&gt;/tags/reference/&lt;reference&gt;</code> 支持删除指定 tag 而非 manifest ，而 registry 官方也跟进了，但是 v3 还没正式发版。</p>
 <h3 id="需求实现"><a href="#需求实现" class="headerlink" title="需求实现"></a>需求实现</h3><h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>今天查看 issue <a target="_blank" rel="noopener" href="https://github.com/distribution/distribution/issues/1755">private registry delete manifest results in broken state</a> 发现有 Contributor 说他写的库 <a target="_blank" rel="noopener" href="https://github.com/regclient/regclient">regclient</a> 可以实现这种需求，然后看了下代码：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># https://github.com/regclient/regclient/blob/v0.5.6/tag.go#L13-L18</span><br><span class="line">// TagDelete deletes a tag from the registry. Since there&#x27;s no API for this,</span><br><span class="line">// you&#x27;d want to normally just delete the manifest. However multiple tags may</span><br><span class="line">// point to the same manifest, so instead you must:</span><br><span class="line">// 1. Make a manifest, for this we put a few labels and timestamps to be unique.</span><br><span class="line">// 2. Push that manifest to the tag.</span><br><span class="line">// 3. Delete the digest for that new manifest that is only used by that tag.</span><br><span class="line"></span><br><span class="line"># https://github.com/regclient/regclient/blob/v0.5.6/scheme/reg/tag.go#L168-L192</span><br></pre></td></tr></table></figure>
 
@@ -584,6 +584,11 @@
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/02/06/serviceAccountToken-valid/" title="高版本client-go在serviceAccountToken下invalid bearer token?">
+                    <div class="nextTitle">高版本client-go在serviceAccountToken下invalid bearer token?</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -1632,7 +1637,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3715,7 +3737,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 173
+        Total : 174
         </div>
         <!-- search  -->
         
@@ -3733,6 +3755,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2024/02/06/serviceAccountToken-valid/">高版本client-go在serviceAccountToken下invalid bearer token?</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/26</span>
@@ -5607,6 +5635,11 @@
             <span class="sidebar-tag-name" data-tags="apparmor">
                 <span class="iconfont-archer">&#xe606;</span>
                 apparmor
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="serviceAccountToken">
+                <span class="iconfont-archer">&#xe606;</span>
+                serviceAccountToken
             </span>
         
     </div>
