@@ -9,12 +9,14 @@
 0.0.0.0 api.netsarangapi.com
 0.0.0.0 activate.netsarang.com
 0.0.0.0 transact.netsarang.com
+0.0.0.0 transact.netsarangapi.com
 0.0.0.0 www.netsarang.co.kr
 0.0.0.0 update.netsarang.com
 0.0.0.0 www.netsarang.com
 0.0.0.0 sales.netsarang.com
 0.0.0.0 cdn.netsarang.net
 0.0.0.0 update.xshell.com
+0.0.0.0 update.netsarangapi.com
 0.0.0.0 update.netsarangupdate.com
 
 # atlium - dxp, ad
