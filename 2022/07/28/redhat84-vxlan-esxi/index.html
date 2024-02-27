@@ -612,12 +612,15 @@
 <p>但是找不到下载内核的地方，redhat 使用 yum 要注册，中间试过安装 centos 8 的内核后起不来：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ grubby --info DEFAULT</span><br><span class="line">index=0</span><br><span class="line">kernel=&quot;/boot/vmlinuz-4.18.0-348.7.1.el8_5.x86_64&quot;</span><br><span class="line">args=&quot;ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet $tuned_params&quot;</span><br><span class="line">root=&quot;/dev/mapper/rhel-root&quot;</span><br><span class="line">initrd=&quot;/boot/initramfs-4.18.0-348.7.1.el8_5.x86_64.img $tuned_initrd&quot;</span><br><span class="line">title=&quot;CentOS Linux (4.18.0-348.7.1.el8_5.x86_64) 8&quot;</span><br><span class="line">id=&quot;d0b79c361c3d4f728f1f9b86bb54acd5-4.18.0-348.7.1.el8_5.x86_64&quot;</span><br></pre></td></tr></table></figure>
 
-<p>然后使用简单粗暴的办法，既然触发的 checksum 错误，关闭 flannel.1 的校验看看：</p>
+<p>修复的链接里看到影响范围是非标准的 vxlan 端口才会出现问题，端口修改挺麻烦的。然后使用简单粗暴的办法，既然触发的 checksum 错误，关闭 flannel.1 的校验看看：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system get cm kube-flannel-cfg -o yaml | grep -PB2 &#x27;847\d\s*$&#x27;</span><br><span class="line">      &quot;Backend&quot;: &#123;</span><br><span class="line">        &quot;Type&quot;: &quot;vxlan&quot;,</span><br><span class="line">        &quot;Port&quot;: 8475</span><br><span class="line">$ curl 172.27.1.2:9153 </span><br><span class="line">^C</span><br><span class="line">$ /sbin/ethtool -K flannel.1 tx-checksum-ip-generic off</span><br><span class="line">Actual changes:</span><br><span class="line">tx-checksum-ip-generic: off</span><br><span class="line">tx-tcp-segmentation: off [not requested]</span><br><span class="line">tx-tcp-ecn-segmentation: off [not requested]</span><br><span class="line">tx-tcp-mangleid-segmentation: off [not requested]</span><br><span class="line">tx-tcp6-segmentation: off [not requested]</span><br><span class="line">$ curl 172.27.1.2:9153 </span><br><span class="line">404 page not found</span><br></pre></td></tr></table></figure>
 
-<p>看了下珠海的虚机网络适配器类型就是 <code>VMXNET 3</code> ，武汉的是 <code>E1000</code>。</p>
+<p>看了下珠海的虚机网络适配器类型就是 <code>VMXNET 3</code> ，武汉的是 <code>E1000</code>。确认是不是 vmxnet3:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ readlink -f /sys/class/net/ens192/device/driver/module</span><br><span class="line">/sys/module/vmxnet3</span><br></pre></td></tr></table></figure>
+
 <h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://access.redhat.com/errata/RHSA-2021:2570">RHSA-2021:2570</a></li>
+<li><a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/drivers/net/vmxnet3?id=b22580233d473dbf7bbfa4f6549c09e2c80e9e64">vmxnet3 driver fix </a></li>
 </ul>
 
     </article>
@@ -626,7 +629,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/">http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/">July 28th 2022, 7:18:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/">七月 28日 2022, 7:18:30 晚上</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/">July 28th 2022, 7:18:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
