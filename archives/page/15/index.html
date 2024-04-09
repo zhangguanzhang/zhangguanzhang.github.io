@@ -444,6 +444,41 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">
+                
+                <span class="abstract-title-text">docker容器网络互联</span>
+            </a>
+            <div class="abstract-content">
+                官方文档说–link将来会被废弃，而且确实很鸡肋,有时候还要进去容器改东西。在 1-2 年前，Docker 所有容器都连接于默认的桥接网络上，也就是很多老文章鼓捣的 docker0 桥接网卡。因此实际上默认情况下所有容器都是可以互联的，没有隔离，当然这样安全性不好。而服务发现，是在这种环境下发展出来的，通过修改容器内的 /etc/hosts 文件来完成的。凡是 --link 的主机的别名就会出现于 /etc/hosts 中，其地址由 Docker 引擎维护。因此容器间才可以通过别名互访。但是这种办法并不是好的解决方案，Docker 早在一年多以前就已经使用自定义网络了。在同一个网络中的容...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/12/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2017/08/03/iptables-whitelist/">
                 
                 <span class="abstract-title-text">Linux 上 iptables ipset 白名单</span>
@@ -749,42 +784,6 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
         <a class="post-tag" href="javascript:void(0);" data-tags="rpm">rpm</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="rpmbuild">rpmbuild</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/05/12/ssh-trust/">
-                
-                <span class="abstract-title-text">ssh互信</span>
-            </a>
-            <div class="abstract-content">
-                <p>ssh公钥免密码登录</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/05/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ssh">ssh</a>
     
 </div>
 
@@ -1778,7 +1777,24 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3873,7 +3889,7 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 174
+        Total : 175
         </div>
         <!-- search  -->
         
@@ -3891,6 +3907,12 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2024/04/08/nvidia-container-toolkit/">docker 和 k8s 使用 gpu 笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/06</span>
@@ -5776,6 +5798,16 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
             <span class="sidebar-tag-name" data-tags="serviceAccountToken">
                 <span class="iconfont-archer">&#xe606;</span>
                 serviceAccountToken
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gpu">
+                <span class="iconfont-archer">&#xe606;</span>
+                gpu
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nvidia">
+                <span class="iconfont-archer">&#xe606;</span>
+                nvidia
             </span>
         
     </div>

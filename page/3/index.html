@@ -460,6 +460,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">
+                
+                <span class="abstract-title-text">proxmox 开机 error: disk &#39;lvmid/[vg uuid]/[lv uuid]&#39; not found</span>
+            </a>
+            <div class="abstract-content">
+                <p>一次 proxmox 机器突然宕机，开机后进入 grub resuce 无法启动的处理过程</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/02/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/02/18</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/02/10/docker-daemon-layer-broken/">
                 
                 <span class="abstract-title-text">18.09.03 docker daemon layer broken 的一次不优雅处理</span>
@@ -991,42 +1029,6 @@ buildx 使用见文章 buildx 使用
         <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="cni-plugins">cni-plugins</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/08/16/reserve-compute-resources/">
-                
-                <span class="abstract-title-text">kubelet 为系统配置预留资源</span>
-            </a>
-            <div class="abstract-content">
-                前情提要我们环境有部分 pod 特殊，单独节点部署，oom 的时候会搞挂一些系统进程，这几天折腾了下配置了下 kubelet 相关的 reserved。主要是 kubelet 的配置文件一些参数，不写 systemd 里，全部写配置文件里。版本是如下，因为我们不单单是 x86_64 ，由于还有其他的架构以及会部署在客户的现场，为了减少维护，所以我们都是除了 flanneld 和 coredns 以外。k8s 相关的二进制的形式部署的。
-12345678910111213141516171819202122232425$ kubectl version -o json&#123;  &qu...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/08/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
     
 </div>
 
@@ -2193,7 +2195,24 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4288,7 +4307,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 174
+        Total : 175
         </div>
         <!-- search  -->
         
@@ -4306,6 +4325,12 @@ buildx 使用见文章 buildx 使用
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2024/04/08/nvidia-container-toolkit/">docker 和 k8s 使用 gpu 笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/06</span>
@@ -6191,6 +6216,16 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="serviceAccountToken">
                 <span class="iconfont-archer">&#xe606;</span>
                 serviceAccountToken
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gpu">
+                <span class="iconfont-archer">&#xe606;</span>
+                gpu
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nvidia">
+                <span class="iconfont-archer">&#xe606;</span>
+                nvidia
             </span>
         
     </div>

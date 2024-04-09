@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3.7k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.9k</span>阅读时长: <span class="post-count reading-time">18 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -584,7 +584,8 @@
 <p>机器上测试：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ dmidecode -s system-uuid | <span class="built_in">tr</span> a-z A-Z</span><br><span class="line">66C0F667-71A0-xxxx-xxxx-4AC0A21F5428</span><br><span class="line">$ go build -o /tmp/uuid-go test.go</span><br><span class="line">$ <span class="built_in">chmod</span> a+r /sys/firmware/dmi/tables/DMI</span><br><span class="line">$ su - guanzhang</span><br><span class="line">guanzhang@guan:~$ /tmp/uuid-go </span><br><span class="line">UUID: 66C0F667-71A0-xxxx-xxxx-4AC0A21F5428</span><br></pre></td></tr></table></figure>
 
-<p>然后把宿主机的 <code>/sys/firmware/dmi/</code> 挂载到 <code>/rootfs/sys/firmware/dmi/</code> 里，在 gosu 之前 <code>chmod a+r /rootfs/sys/firmware/dmi/tables/DMI</code>，业务使用上面的库 hack 后，从指定路径的 DMI 信息即可获取到机器码。部分国产系统或者内核下是没有机器码的，也就是路径 <code>/sys/firmware/dmi/tables</code>，所以挂载 <code>/rootfs/sys/firmware/dmi/</code> 。</p>
+<p>然后把宿主机的 <code>/sys/firmware/dmi/</code> 挂载到 <code>/rootfs/sys/firmware/dmi/</code> 里，在 gosu 之前 <code>chmod a+r /rootfs/sys/firmware/dmi/tables/DMI</code>，业务使用上面的库 hack 后，从指定路径的 DMI 信息即可获取到机器码。</p>
+<p>但是好像某些低版本 linux 上是没有 dmi tables 的，也就是路径 <code>/sys/firmware/dmi/tables</code>，所以挂载 <code>/rootfs/sys/firmware/dmi/</code> ，然后我们启动脚本里 gosu 之前，先 <code>cat /sys/devices/virtual/dmi/id/product_uuid</code> 读取成环境变量X，然后代码内部逻辑是，文件 <code>/sys/devices/virtual/dmi/id/product_uuid</code> 没权限，没 <code>/rootfs/sys/firmware/dmi/tables</code> 目录且存在环境变量X 则使用环境变量的值作为机器码，以及兜底，该服务支持一个 env 设置使用 root 启动，不使用 gosu 且用户。</p>
 <h4 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h4><p>没啥说的，加了 gosu 后再加启动脚本：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$&#123;1:0:1&#125;</span>&quot;</span> = <span class="string">&#x27;-&#x27;</span> ]; <span class="keyword">then</span></span><br><span class="line">	<span class="built_in">set</span> -- etcd <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># RUN_USER 设置为 nobody 启动</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> = <span class="string">&#x27;etcd&#x27;</span> ] || [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> = <span class="string">&#x27;/usr/local/bin/etcd&#x27;</span> ];<span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;<span class="subst">$(id -u)</span>&quot;</span> = <span class="string">&#x27;0&#x27;</span> -a -n <span class="string">&quot;<span class="variable">$RUN_USER</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">	    find /var/lib/etcd \! -user <span class="variable">$&#123;RUN_USER&#125;</span> -<span class="built_in">exec</span> <span class="built_in">chown</span> <span class="variable">$&#123;RUN_USER&#125;</span> <span class="string">&#x27;&#123;&#125;&#x27;</span> +</span><br><span class="line">	    <span class="built_in">exec</span> gosu <span class="variable">$&#123;RUN_USER&#125;</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br></pre></td></tr></table></figure>
 
@@ -628,6 +629,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec gosu  user1 go-crond   --default-user=user1  --include=/etc/cron.d --allow-unprivileged</span><br></pre></td></tr></table></figure>
 
 <h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p><a target="_blank" rel="noopener" href="https://github.com/nginxinc/docker-nginx-unprivileged">https://github.com/nginxinc/docker-nginx-unprivileged</a></p>
+<h4 id="一些权限距离"><a href="#一些权限距离" class="headerlink" title="一些权限距离"></a>一些权限距离</h4><h5 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine</span><br><span class="line">RUN apk update; \</span><br><span class="line">    apk add --no-cache \</span><br><span class="line">        tcpdump \</span><br><span class="line">        libcap \</span><br><span class="line">        su-exec \</span><br><span class="line">        ; \</span><br><span class="line">    rm -rf /var/cache/apk/*;</span><br><span class="line">COPY docker-entrypoint.sh /docker-entrypoint.sh</span><br><span class="line">CMD [&quot;sh&quot;, &quot;/docker-entrypoint.sh&quot;]</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line">set -e</span><br><span class="line">setcap cap_net_raw,cap_net_admin=eip /usr/bin/tcpdump</span><br><span class="line">chmod a+w /dev/std*</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">cap_add:</span><br><span class="line">    - NET_ADMIN</span><br><span class="line">    - NET_RAW</span><br></pre></td></tr></table></figure>
+
 <h4 id="查看本机-root-启动的容器"><a href="#查看本机-root-启动的容器" class="headerlink" title="查看本机 root 启动的容器"></a>查看本机 root 启动的容器</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a --format &#x27;&#123;&#123;.Names&#125;&#125;&#x27; --filter status=running | \</span><br><span class="line">    while read ctr; do docker top $ctr| awk -vc=$ctr &#x27;NR==2&amp;&amp;$1==&quot;root&quot;&#123;print c&#125;&#x27; ; done</span><br></pre></td></tr></table></figure>
 
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -642,7 +645,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">http://zhangguanzhang.github.io/2023/11/03/non-root-containers/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">十一月 3日 2023, 12:37:30 下午</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">November 3rd 2023, 12:37:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">November 3rd 2023, 12:37:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -824,7 +827,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E9%80%A0"><span class="toc-number">2.</span> <span class="toc-text">改造</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E9%A1%BB%E7%9F%A5"><span class="toc-number">2.1.</span> <span class="toc-text">前提须知</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-root-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%BE%E4%BE%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用 root 不安全的举例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-USER-%E8%BF%98%E6%98%AF%E4%BD%BF%E7%94%A8-docker-entrypoint-sh-%E5%85%A5%E5%8F%A3"><span class="toc-number">2.1.2.</span> <span class="toc-text">设置 USER 还是使用 docker-entrypoint.sh 入口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%AE%9E%E6%88%98"><span class="toc-number">2.2.</span> <span class="toc-text">案例实战</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E7%A0%81%E5%A4%84%E7%90%86"><span class="toc-number">2.2.1.</span> <span class="toc-text">机器码处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#etcd"><span class="toc-number">2.2.2.</span> <span class="toc-text">etcd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#coredns"><span class="toc-number">2.2.3.</span> <span class="toc-text">coredns</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#consul"><span class="toc-number">2.2.4.</span> <span class="toc-text">consul</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-sock-%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.5.</span> <span class="toc-text">docker.sock 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cron"><span class="toc-number">2.2.6.</span> <span class="toc-text">cron</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nginx"><span class="toc-number">2.2.7.</span> <span class="toc-text">nginx</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E6%9C%BA-root-%E5%90%AF%E5%8A%A8%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">2.2.8.</span> <span class="toc-text">查看本机 root 启动的容器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E9%80%A0"><span class="toc-number">2.</span> <span class="toc-text">改造</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E9%A1%BB%E7%9F%A5"><span class="toc-number">2.1.</span> <span class="toc-text">前提须知</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-root-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%BE%E4%BE%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用 root 不安全的举例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-USER-%E8%BF%98%E6%98%AF%E4%BD%BF%E7%94%A8-docker-entrypoint-sh-%E5%85%A5%E5%8F%A3"><span class="toc-number">2.1.2.</span> <span class="toc-text">设置 USER 还是使用 docker-entrypoint.sh 入口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%AE%9E%E6%88%98"><span class="toc-number">2.2.</span> <span class="toc-text">案例实战</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E7%A0%81%E5%A4%84%E7%90%86"><span class="toc-number">2.2.1.</span> <span class="toc-text">机器码处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#etcd"><span class="toc-number">2.2.2.</span> <span class="toc-text">etcd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#coredns"><span class="toc-number">2.2.3.</span> <span class="toc-text">coredns</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#consul"><span class="toc-number">2.2.4.</span> <span class="toc-text">consul</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-sock-%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.5.</span> <span class="toc-text">docker.sock 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cron"><span class="toc-number">2.2.6.</span> <span class="toc-text">cron</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nginx"><span class="toc-number">2.2.7.</span> <span class="toc-text">nginx</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%9D%83%E9%99%90%E8%B7%9D%E7%A6%BB"><span class="toc-number">2.2.8.</span> <span class="toc-text">一些权限距离</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#tcpdump"><span class="toc-number">2.2.8.1.</span> <span class="toc-text">tcpdump</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E6%9C%BA-root-%E5%90%AF%E5%8A%A8%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">2.2.9.</span> <span class="toc-text">查看本机 root 启动的容器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1708,7 +1711,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3803,7 +3823,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 174
+        Total : 175
         </div>
         <!-- search  -->
         
@@ -3821,6 +3841,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2024/04/08/nvidia-container-toolkit/">docker 和 k8s 使用 gpu 笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/06</span>
@@ -5706,6 +5732,16 @@
             <span class="sidebar-tag-name" data-tags="serviceAccountToken">
                 <span class="iconfont-archer">&#xe606;</span>
                 serviceAccountToken
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gpu">
+                <span class="iconfont-archer">&#xe606;</span>
+                gpu
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nvidia">
+                <span class="iconfont-archer">&#xe606;</span>
+                nvidia
             </span>
         
     </div>

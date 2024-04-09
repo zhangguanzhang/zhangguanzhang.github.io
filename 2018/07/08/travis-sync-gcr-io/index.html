@@ -364,7 +364,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.5k</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -589,6 +589,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># mkdir .travis;  mv conf.tar.gz.enc .travis/</span></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># cat .travis.yml </span></span><br><span class="line">sudo: required</span><br><span class="line">language: python</span><br><span class="line">python:</span><br><span class="line">- <span class="string">&#x27;2.7&#x27;</span></span><br><span class="line">addons:</span><br><span class="line">  apt:</span><br><span class="line">    packages:</span><br><span class="line">    - docker-ce</span><br><span class="line">branches:</span><br><span class="line">  only:</span><br><span class="line">  - master</span><br><span class="line">install:</span><br><span class="line">- git remote -v</span><br><span class="line">script:</span><br><span class="line">- <span class="string">&quot;bash ./sync.sh 5&quot;</span></span><br><span class="line">before_install:</span><br><span class="line">- <span class="built_in">mkdir</span> -p ~/.docker</span><br><span class="line">- <span class="built_in">mkdir</span> -p ~/.ssh</span><br><span class="line">- openssl aes-256-cbc -K <span class="variable">$encrypted_79f048dff636_key</span> -iv <span class="variable">$encrypted_79f048dff636_iv</span></span><br><span class="line">  -<span class="keyword">in</span> .travis/conf.tar.gz.enc -out ~/conf.tar.gz -d</span><br><span class="line">- tar zxf ~/conf.tar.gz -C ~</span><br><span class="line">- <span class="built_in">chmod</span> 600 ~/.ssh/id_rsa</span><br><span class="line">- <span class="built_in">chmod</span> 600 ~/.docker/config.json</span><br><span class="line">- <span class="built_in">eval</span> $(ssh-agent)</span><br><span class="line">- ssh-add ~/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
 
 
+<p>下面是一个加密和解密 rootfs.tar.gz 的 openssl 命令使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># cbc 不安全，这里全程使用 ofb</span><br><span class="line"># 产生 key</span><br><span class="line">openssl rand -hex 32</span><br><span class="line"># 产生向量</span><br><span class="line">openssl rand -hex 16</span><br><span class="line">enc_key=第一个命令输出</span><br><span class="line">enc_iv=第二个命令输出</span><br><span class="line"></span><br><span class="line">openssl enc -aes-256-ofb -salt -in  rootfs.tar.gz -out rootfs.tar.gz.enc -K $enc_key -iv $enc_iv</span><br><span class="line">rm -f rootfs.tar.gz</span><br><span class="line"></span><br><span class="line"># 其他地方解密，变量值要存着，或者ci里设置</span><br><span class="line">openssl aes-256-ofb  -in  rootfs.tar.gz.enc -out rootfs.tar.gz -K $enc_key -iv $enc_iv -d</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
 <h3 id="准备github仓库文件-master存放源码-develop存放构建过程"><a href="#准备github仓库文件-master存放源码-develop存放构建过程" class="headerlink" title="准备github仓库文件,master存放源码,develop存放构建过程"></a>准备github仓库文件,master存放源码,develop存放构建过程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># ll -a</span></span><br><span class="line">total 36</span><br><span class="line">drwxr-xr-x   4 root root   117 Jul 15 18:40 .</span><br><span class="line">dr-xr-x---. 16 root root  4096 Jul 15 14:30 ..</span><br><span class="line">drwxr-xr-x   8 root root   254 Jul 15 16:10 .git</span><br><span class="line">-rw-r--r--   1 root root   205 Jul 14 14:39 .gitignore</span><br><span class="line">-rw-r--r--   1 root root 11357 Jul 14 14:39 LICENSE</span><br><span class="line">-rw-r--r--   1 root root   576 Jul 14 14:39 README.md</span><br><span class="line">-rw-r--r--   1 root root  5184 Jul 15 14:25 sync.sh</span><br><span class="line">drwxr-xr-x   2 root root    29 Jul 15 16:10 .travis</span><br><span class="line">-rw-r--r--   1 root root  1006 Jul 15 16:10 .travis.yml</span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git config --global user.name &quot;zhangguanzhang&quot;</span></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git config --global user.email zhangguanzhang@qq.com</span></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git add -A</span></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git commit -m &#x27;XXX&#x27;</span></span><br><span class="line"></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git push -u origin master</span></span><br><span class="line"></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git checkout -b develop</span></span><br><span class="line">Switched to a new branch <span class="string">&#x27;develop&#x27;</span></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git status</span></span><br><span class="line"><span class="comment"># On branch develop</span></span><br><span class="line">nothing to commit, working directory clean</span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git add -A</span></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git commit -m &#x27;develop first&#x27;</span></span><br><span class="line"><span class="comment"># On branch develop</span></span><br><span class="line">nothing to commit, working directory clean</span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git remote add origin git@github.com:zhangguanzhang/gcr.io.git</span></span><br><span class="line">[root@k8s-n1 gcr.io]<span class="comment"># git push origin develop -f</span></span><br><span class="line">Total 0 (delta 0), reused 0 (delta 0)</span><br><span class="line">To git@github.com:zhangguanzhang/gcr.io.git</span><br><span class="line"> + ad2758b...3554dde develop -&gt; develop (forced update)</span><br></pre></td></tr></table></figure>
 
 <h3 id="travis设置"><a href="#travis设置" class="headerlink" title="travis设置"></a>travis设置</h3><p>登陆并关联仓库<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/travis-sync-gcr-io/travis3.png" alt=""></p>
@@ -622,7 +626,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2018/07/08/travis-sync-gcr-io/">http://zhangguanzhang.github.io/2018/07/08/travis-sync-gcr-io/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2018/07/08/travis-sync-gcr-io/">七月 8日 2018, 2:34:54 下午</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2018/07/08/travis-sync-gcr-io/">July 8th 2018, 2:34:54 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2018/07/08/travis-sync-gcr-io/">July 8th 2018, 2:34:54 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -1688,7 +1692,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3783,7 +3804,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 174
+        Total : 175
         </div>
         <!-- search  -->
         
@@ -3801,6 +3822,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2024/04/08/nvidia-container-toolkit/">docker 和 k8s 使用 gpu 笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/06</span>
@@ -5686,6 +5713,16 @@
             <span class="sidebar-tag-name" data-tags="serviceAccountToken">
                 <span class="iconfont-archer">&#xe606;</span>
                 serviceAccountToken
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gpu">
+                <span class="iconfont-archer">&#xe606;</span>
+                gpu
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="nvidia">
+                <span class="iconfont-archer">&#xe606;</span>
+                nvidia
             </span>
         
     </div>
