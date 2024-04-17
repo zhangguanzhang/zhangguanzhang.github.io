@@ -459,6 +459,51 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">
+                
+                <span class="abstract-title-text">shell脚本的选项和参数处理</span>
+            </a>
+            <div class="abstract-content">
+                在写shell脚本时经常会用到命令行选项、参数处理方式，如:
+1./test.sh -f 5 -rF --host-file=/etc/hosts
+其中-f和-rF都是短选项,–host-file是长选项短选项又分为可选参数和必选参数,不需要参数的短选项可以合着写例如cat和tail的-n有默认值10在shell中，可以用以下三种方式来处理命令行参数，每种方式都有自己的应用场景
+
+手工处理方式
+getopts
+getopt
+
+手工处理不说了,手工处理高度依赖于你在命令行上所传参数的位置，所以一般都只用来处理较简单的参数下面我们依次讨论这后两种处理方式getopts是shell内置的,只支...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/05/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/25</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="shell">shell</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="bash">bash</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2017/05/15/rpmbuild/">
                 
                 <span class="abstract-title-text">rpm包的制作笔记</span>
@@ -949,35 +994,6 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             </a>
             <div class="abstract-content">
                 1234567891011121314151617181920212223242526272829[root@APP-SRV-001 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0TYPE=EthernetBOOTPROTO=noneDEVICE=eth0NAME=eth0ONBOOT=yesMASTER=bond4SLAVE=yes[root@APP-SRV-001 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth1TYPE=EthernetBOOTPROTO=noneDEVICE=et...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/04/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/03</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/04/03/kubernetes-admission-controllers/">
-                
-                <span class="abstract-title-text">编写一个动态准入控制</span>
-            </a>
-            <div class="abstract-content">
-                12345678apiVersion: v1kind: Podmetadata:  name: testspec:  containers:  - name: test    image: nginx:alpine
-
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354&#123;   &quot;kind&quot;:&quot;Pod&quot;,   &quot;apiVersion&quot;:&quot;v1&quot;,   &qu...
             </div>
             <!-- read more -->
             
@@ -2160,19 +2176,12 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4327,7 +4336,7 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 176
+        Total : 177
         </div>
         <!-- search  -->
         
@@ -4345,6 +4354,12 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span>
+            <a class="archive-post-title" href="/2024/04/16/pprof-small/">golang pprof 转 svg 的最小二进制依赖尝试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/11</span>
@@ -6257,6 +6272,11 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             <span class="sidebar-tag-name" data-tags="cri-dockerd">
                 <span class="iconfont-archer">&#xe606;</span>
                 cri-dockerd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pprof">
+                <span class="iconfont-archer">&#xe606;</span>
+                pprof
             </span>
         
     </div>

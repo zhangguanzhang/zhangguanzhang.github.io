@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/09/16/read-containerd-con-reset/">
+                
+                <span class="abstract-title-text">解决 docker 的 read unix @-&gt;/run/containerd/s/xxx read: connection reset by peer: unknown</span>
+            </a>
+            <div class="abstract-content">
+                由来为了测试关机对集群的影响，关机了几台机器后很多 pod 一直 CrashLoopBackOff 和 RunContainerError 或者一直无法就绪
+环境信息1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253[root@CentOS76 ~]# docker infoClient: Debug Mode: falseServer: Containers: 404  Running: 258  Paused: 0  Stopped: 146...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/16">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/16</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="containerd">containerd</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/03/openwrt-usb-net/">
                 
                 <span class="abstract-title-text">[持续更新] - Openwrt USB 网络</span>
@@ -770,51 +808,6 @@ buildx 使用见文章 buildx 使用
         <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="dlv">dlv</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/07/16/consul-mips64le/">
-                
-                <span class="abstract-title-text">编译mips64le架构的consul</span>
-            </a>
-            <div class="abstract-content">
-                编译建议使用容器编译，否则建议 clone 进 GOPATH 里
-clone12git clone https://github.com/hashicorp/consul.gitcd consul
-
-
-线上使用的是 v1.8 版本，这里我以 v1.8.14 (2021&#x2F;07&#x2F;19 发布的)搞的。
-1git checkout v1.8.14
-
-准备工作拉取需要的镜像。貌似 golang 1.16 更好的支持 mips64 了，所以条件允许的话，这里可以下改下 golang 的版本试试
-1234$ head -n2 build-support/docker/Build-G...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/07/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="mips64le">mips64le</a>
     
 </div>
 
@@ -1818,19 +1811,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -3985,7 +3971,7 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 176
+        Total : 177
         </div>
         <!-- search  -->
         
@@ -4003,6 +3989,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span>
+            <a class="archive-post-title" href="/2024/04/16/pprof-small/">golang pprof 转 svg 的最小二进制依赖尝试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/11</span>
@@ -5915,6 +5907,11 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <span class="sidebar-tag-name" data-tags="cri-dockerd">
                 <span class="iconfont-archer">&#xe606;</span>
                 cri-dockerd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pprof">
+                <span class="iconfont-archer">&#xe606;</span>
+                pprof
             </span>
         
     </div>

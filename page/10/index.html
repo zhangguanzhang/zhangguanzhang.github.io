@@ -459,6 +459,51 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/04/29/kubernetes-configMap-mount/">
+                
+                <span class="abstract-title-text">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</span>
+            </a>
+            <div class="abstract-content">
+                看到configMap这个资源对象,突发奇想
+
+
+如何让一个configMap里文件挂载到容器的不同路径
+
+
+书上和网上都找不到对应例子
+最终github上搜索到了有个subPath选项除了支持路径还不会覆盖容器内部的整个目录参考链接https://github.com/dshulyak/kubernetes.github.io/commit/d58ba7b075bb4848349a2c920caaa08ff3773d70这里记录下
+123456789101112131415161718192021222324252627282930313233343536373839404142434...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/04/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/29</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ConfigMap">ConfigMap</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">
                 
                 <span class="abstract-title-text">使用管理网当作业务网keepalived VIP的心跳线</span>
@@ -931,51 +976,6 @@ keepalived 2方式1：
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/03</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">
-                
-                <span class="abstract-title-text">shell脚本的选项和参数处理</span>
-            </a>
-            <div class="abstract-content">
-                在写shell脚本时经常会用到命令行选项、参数处理方式，如:
-1./test.sh -f 5 -rF --host-file=/etc/hosts
-其中-f和-rF都是短选项,–host-file是长选项短选项又分为可选参数和必选参数,不需要参数的短选项可以合着写例如cat和tail的-n有默认值10在shell中，可以用以下三种方式来处理命令行参数，每种方式都有自己的应用场景
-
-手工处理方式
-getopts
-getopt
-
-手工处理不说了,手工处理高度依赖于你在命令行上所传参数的位置，所以一般都只用来处理较简单的参数下面我们依次讨论这后两种处理方式getopts是shell内置的,只支...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/05/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/25</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="shell">shell</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="bash">bash</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -2149,19 +2149,12 @@ getopt
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4316,7 +4309,7 @@ getopt
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 176
+        Total : 177
         </div>
         <!-- search  -->
         
@@ -4334,6 +4327,12 @@ getopt
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span>
+            <a class="archive-post-title" href="/2024/04/16/pprof-small/">golang pprof 转 svg 的最小二进制依赖尝试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/11</span>
@@ -6246,6 +6245,11 @@ getopt
             <span class="sidebar-tag-name" data-tags="cri-dockerd">
                 <span class="iconfont-archer">&#xe606;</span>
                 cri-dockerd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pprof">
+                <span class="iconfont-archer">&#xe606;</span>
+                pprof
             </span>
         
     </div>

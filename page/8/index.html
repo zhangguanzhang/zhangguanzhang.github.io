@@ -459,6 +459,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/06/26/uefi-pxe/">
+                
+                <span class="abstract-title-text">uefi模式下docker+交换机部署pxe批量安装</span>
+            </a>
+            <div class="abstract-content">
+                华三服务器的 ipmi 的 web 提供了 nfs 挂载 iso 去安装，也是我之前使用的，发现研发给的镜像在4g以上(镜像基于centos7.3改的，我之前测试都是用的minimal镜像890M左右)。安装的时候报错，然后当面测试得出结论 nfs 的网速原因，其次也是我们这边办公网是百兆。。。办公网被 it 接管了，交换机密码不给，自己找了台 5130 交换机，下面接服务器和我自己电脑搭建测了下定制iso的pxe流程
+这是组网情况
+123456789101112131415             10.96.4.1/24          +------------+        ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/06/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tftp">tftp</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/06/23/autoInstallServer/">
                 
                 <span class="abstract-title-text">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</span>
@@ -976,57 +1017,6 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
         <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="exporter">exporter</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/11/24/how-to-use-kubeadm/">
-                
-                <span class="abstract-title-text">对于初入k8s和kubeadm的一些建议</span>
-            </a>
-            <div class="abstract-content">
-                主要还是简单说下kubeadm
-说说一些现象无论docker还是K8s群看见过太多人盲目了有些是赶鸭子上来的,有的是跟风盲目进来乱学的.其中较多的分类为:
-
-
-不学docker直接学k8s的跟风狗
-没有熟悉Linux操作和一些基础知识的开发
-Docker学得不怎么样就迫不及待来学的跟风狗
-
-
-入门最具有争议的问题就是如何开始,k8s各个组件对于小白来说搭建方式和配置文件对于入门的人来说太庞大了,对于环境来学习一般分为下面两种
-
-
-按照别人博客或者文章去手动搭建一个环境后学习
-找个简易部署的方案来部署环境来学(kubeadm或者ansible之类的懒人搭建)
-
-
-  看过无数小白也怼过不少...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/11/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
 </div>
 
@@ -2203,19 +2193,12 @@ Docker学得不怎么样就迫不及待来学的跟风狗
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4370,7 +4353,7 @@ Docker学得不怎么样就迫不及待来学的跟风狗
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 176
+        Total : 177
         </div>
         <!-- search  -->
         
@@ -4388,6 +4371,12 @@ Docker学得不怎么样就迫不及待来学的跟风狗
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span>
+            <a class="archive-post-title" href="/2024/04/16/pprof-small/">golang pprof 转 svg 的最小二进制依赖尝试</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/11</span>
@@ -6300,6 +6289,11 @@ Docker学得不怎么样就迫不及待来学的跟风狗
             <span class="sidebar-tag-name" data-tags="cri-dockerd">
                 <span class="iconfont-archer">&#xe606;</span>
                 cri-dockerd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="pprof">
+                <span class="iconfont-archer">&#xe606;</span>
+                pprof
             </span>
         
     </div>
