@@ -515,7 +515,7 @@
 <span id="more"></span>
 
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>内部同事做了个采集业务 pprof 的功能，发现工具镜像非常臃肿，带了个 golang 出去。用的是 <a target="_blank" rel="noopener" href="https://github.com/uber-archive/go-torch">go-torch</a> 把 <code>curl -o /debug/pprof/profile</code> 采集的文件转成 svg ，转换的日志里发现它命令行调用了 <code>go tool pprof</code>，而且 <code>go-torch</code> 我看仓库已经不维护了。</p>
-<h2 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h2><p>一个是设计到迭代解决安全，另一个 golang 已经 go 自举了，把 <code>go tool pprof</code> 的 <code>pprof</code> 命令抠出来直接用就行了，甚至都不需要 golang 环境了，搜了下发现实际 <code>go tool pprof</code> 就是仓库 <a target="_blank" rel="noopener" href="https://github.com/google/pprof">google&#x2F;pprof</a>。</p>
+<h2 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h2><p>一个是涉及到迭代解决安全，另一个 golang 已经 go 自举了，把 <code>go tool pprof</code> 的 <code>pprof</code> 命令抠出来直接用就行了，甚至都不需要 golang 环境了，搜了下发现实际 <code>go tool pprof</code> 就是仓库 <a target="_blank" rel="noopener" href="https://github.com/google/pprof">google&#x2F;pprof</a>。</p>
 <h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p><code>go-torch</code> 转换的命令如下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">go-torch xxx-profile-20240416110934.pg.gz -f 1.svg</span></span><br><span class="line">INFO[03:12:29] Run pprof command: go tool pprof -raw -seconds 30 xxx-profile-20240416110934.pg.gz</span><br><span class="line">INFO[03:12:29] Writing svg to 1.svg</span><br></pre></td></tr></table></figure>
 
