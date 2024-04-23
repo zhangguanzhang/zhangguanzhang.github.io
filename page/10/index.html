@@ -459,6 +459,50 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/05/05/Kubernetes_install/">
+                
+                <span class="abstract-title-text">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</span>
+            </a>
+            <div class="abstract-content">
+                转载自https://kairen.github.io/2018/04/05/kubernetes/deploy/manual-v1.10/作者文章的安装步骤文字是复制作者的1.8的安装步骤然后改的,安装过程变了部分,但是文字没有改正过来。
+此过程我写了ansible安装部署方案,地址(一些文件下载不了的话可以去下面的github里找对应的文件)
+
+多master高可用版
+单master版
+
+本文内容所有url都没改过，以下的添加的内容是我的建议和安装的经验
+本文里如果有些范围不知道在哪台主机上执行请看前后命令都可以判断出,不清楚的请下面评论我会更新
+以下我转载过来并修改+上我的提醒
+管...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/05/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/05</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/04/29/kubernetes-configMap-mount/">
                 
                 <span class="abstract-title-text">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</span>
@@ -939,43 +983,6 @@ keepalived 2方式1：
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/06/03/bash-complete/">
-                
-                <span class="abstract-title-text">bash自定义补全</span>
-            </a>
-            <div class="abstract-content">
-                总结下bash的补全
-终端下按两次tab就是补全
-补全常见的分为下面几种场景:
-
-第一部分的命令补全
-命令补全后补全路径到文件
-变量补全
-类似systemctl命令的选项补全
-
-当然bash支持自定义补全,也就是让我们实现和systemctl命令那样补全
-假设我们要systemctl disable --now firewalldsystemctl空格后按tab键会显示systemctl的第二个部分的所有支持的选项此时继续输入di按tab键会补全成systemctl disable,输入--now(相似的太多了,所以基本输入完)补全,当然最后的服务名此时补全不了,因为systemctl的...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/06/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/03</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -2154,7 +2161,24 @@ keepalived 2方式1：
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4309,7 +4333,7 @@ keepalived 2方式1：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 177
+        Total : 178
         </div>
         <!-- search  -->
         
@@ -4327,6 +4351,12 @@ keepalived 2方式1：
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2024/04/22/trivy/">开源容器镜像扫描 trivy 懒人重点指南</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/16</span>
@@ -6250,6 +6280,11 @@ keepalived 2方式1：
             <span class="sidebar-tag-name" data-tags="pprof">
                 <span class="iconfont-archer">&#xe606;</span>
                 pprof
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="trivy">
+                <span class="iconfont-archer">&#xe606;</span>
+                trivy
             </span>
         
     </div>

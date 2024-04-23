@@ -459,6 +459,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/03/12/build-arm64-docker-compose-action/">
+                
+                <span class="abstract-title-text">使用github action 配合 docker buildx 编译 arm64 docker-compose</span>
+            </a>
+            <div class="abstract-content">
+                说明git 上搜索了很多 docker-compose 的 arm64 的编译基本都是使用 qemu-user-static 之类的设置下后编译的，也看到过用特权容器启动 qemu-user-static 或者 binfmt 之类的，但是我自己机器上试了无效，貌似是因为我操作系统是低版本内核的 centos ，github 上搜了下，其他很多人的编译感觉太啰嗦了。就在 action 上整了下，测试是可用的，而且非常简单。
+docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里安装 docker，创建 build...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/03/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/12</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/02/02/node-shutdown-dns-unavailable/">
                 
                 <span class="abstract-title-text">集群节点关机导致dns在eviction pod之前几率不可用</span>
@@ -971,45 +999,6 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="Prometheus">Prometheus</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/07/23/fs-error-fix-k8s-master/">
-                
-                <span class="abstract-title-text">k8s master机器文件系统故障的一次恢复过程</span>
-            </a>
-            <div class="abstract-content">
-                由来研发反馈他们那边一套集群有台master文件系统损坏无法开机，他们是三台openstack上的虚机，是虚拟化宿主机故障导致的虚机文件系统损坏。三台机器是master+node，指导他修复后开机，修复过程和我之前文章opensuse的一次救援步骤一样
-起来后我上去看，因为做了 HA 的，所以只有这个node有问题，集群没影响
-12345[root@k8s-m1 ~]# kubectl get node -o wideNAME             STATUS     ROLES    AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/07/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
     
 </div>
 
@@ -2191,7 +2180,24 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4346,7 +4352,7 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 177
+        Total : 178
         </div>
         <!-- search  -->
         
@@ -4364,6 +4370,12 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2024/04/22/trivy/">开源容器镜像扫描 trivy 懒人重点指南</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/16</span>
@@ -6287,6 +6299,11 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <span class="sidebar-tag-name" data-tags="pprof">
                 <span class="iconfont-archer">&#xe606;</span>
                 pprof
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="trivy">
+                <span class="iconfont-archer">&#xe606;</span>
+                trivy
             </span>
         
     </div>

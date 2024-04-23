@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/12/04/black-box-exporter/">
+                
+                <span class="abstract-title-text">prometheus的黑盒监控</span>
+            </a>
+            <div class="abstract-content">
+                常规的各种 exporter 都是和需要监控的机器一起安装的，如果需要监控一些 tcp 端口和七层应用层的状态呢，这个时候就需要黑盒监控了，不需要安装在目标机器上即可从外部去监控。
+9115 是它的 http 默认监听端口，blackbox.yml 它的配置文件里以基础的 http、dns、tcp、icmp 等 prober 定制配置出各种监测模块(module)，在 prometheus server 的配置文件里声明用哪个模块去探测哪个 targets，下面以 docker-compose 启动一组实例，docker 的网络自带 dns，所以里面全部用名字替代 ipdocker-co...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/12/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/04</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="exporter">exporter</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/11/24/how-to-use-kubeadm/">
                 
                 <span class="abstract-title-text">对于初入k8s和kubeadm的一些建议</span>
@@ -812,42 +850,6 @@ Clust...
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/07/18/ecs-vip/">
-                
-                <span class="abstract-title-text">基于openstack的ecs上使用VIP</span>
-            </a>
-            <div class="abstract-content">
-                客户需要在云上使用vip,后面发现不通，查询了后发现openstack的neutron会存在ip和mac绑定的关系,可以阅读下面的链接查看说明https://blog.codecentric.de/en/2016/11/highly-available-vips-openstack-vms-vrrp/即如果网卡上有不是下发的ip在向外发包后包会被drop掉,需要用neutron的cli解绑ip和mac的绑定,我们这这个功能已经做在了web上了,所以可以直接解绑
-存在绑定的关系下，意味着flanneld不能使用host-gw模式，除非云厂商实现了cni-plugins或者不是原生的open...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/07/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="keepavlied">keepavlied</a>
     
 </div>
 
@@ -1856,7 +1858,24 @@ Clust...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4011,7 +4030,7 @@ Clust...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 177
+        Total : 178
         </div>
         <!-- search  -->
         
@@ -4029,6 +4048,12 @@ Clust...
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2024/04/22/trivy/">开源容器镜像扫描 trivy 懒人重点指南</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/16</span>
@@ -5952,6 +5977,11 @@ Clust...
             <span class="sidebar-tag-name" data-tags="pprof">
                 <span class="iconfont-archer">&#xe606;</span>
                 pprof
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="trivy">
+                <span class="iconfont-archer">&#xe606;</span>
+                trivy
             </span>
         
     </div>
