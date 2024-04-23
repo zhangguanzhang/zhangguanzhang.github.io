@@ -532,7 +532,7 @@
 <li><code>ghcr.io/aquasecurity/trivy-db</code></li>
 <li><code>ghcr.io/aquasecurity/trivy-java-db</code></li>
 </ul>
-<p>该文件是 oci（<code>application/vnd.oci.image.manifest.v1</code>） 镜像格式的，同时是存储在 ghcr 的谷歌镜像仓库上的，国内可能能拉取到，更大可能是拉取不到。可以使用国内的同步源：</p>
+<p>该文件是 oci（<code>application/vnd.oci.image.manifest.v1</code>） 镜像格式的，同时是存储在 ghcr 的 github 镜像仓库上的，国内可能能拉取到，更大可能是拉取不到。可以使用国内的同步源：</p>
 <ul>
 <li><code>m.daocloud.io/ghcr.io/aquasecurity/trivy-db</code></li>
 <li><code>m.daocloud.io/ghcr.io/aquasecurity/trivy-java-db</code></li>
@@ -541,7 +541,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">trivy image --db-repository m.daocloud.io/ghcr.io/aquasecurity/trivy-db \</span><br><span class="line">  --java-db-repository m.daocloud.io/ghcr.io/aquasecurity/trivy-java-db  \</span><br><span class="line">  debian:12</span><br></pre></td></tr></table></figure>
 
 <h2 id="cve-准确性"><a href="#cve-准确性" class="headerlink" title="cve 准确性"></a>cve 准确性</h2><p>我们内部使用扫描后，客户现场扫描的报告，查看了结果两者不是一样的，属于两者结果有部分交集的结果。查看<a target="_blank" rel="noopener" href="https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/">官方文档 vulnerability</a> 章节说明了前面俩 db 的数据来源，并不是比较全的 cve 列表，同时 <a target="_blank" rel="noopener" href="https://github.com/aquasecurity/trivy-db">trivy-db</a> 是每隔 6 个小时构建更新的</p>
-<h2 id="内部-ci-上使用"><a href="#内部-ci-上使用" class="headerlink" title="内部 ci 上使用"></a>内部 ci 上使用</h2><p>先得解决机器无法拉取谷歌镜像仓库，需要配同步到内网镜像仓库上比较好，另外 oci 格式是不支持 docker pull 的，可以使用 <a target="_blank" rel="noopener" href="https://github.com/containers/skopeo">skopeo</a> 的 sync 命令每天定时间隔同步:</p>
+<h2 id="内部-ci-上使用"><a href="#内部-ci-上使用" class="headerlink" title="内部 ci 上使用"></a>内部 ci 上使用</h2><p>先得解决机器无法拉取 github 镜像仓库，需要配同步到内网镜像仓库上比较好，另外 oci 格式是不支持 docker pull 的，可以使用 <a target="_blank" rel="noopener" href="https://github.com/containers/skopeo">skopeo</a> 的 sync 命令每天定时间隔同步:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">skopeo --insecure-policy sync --src docker --dest docker m.daocloud.io/ghcr.io/aquasecurity/trivy-db xxx.com/ci-run/</span><br><span class="line"></span><br><span class="line">skopeo --insecure-policy sync --src docker --dest docker m.daocloud.io/ghcr.io/aquasecurity/trivy-java-db xxx.com/ci-run/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>根据官方文档 <a target="_blank" rel="noopener" href="https://aquasecurity.github.io/trivy/latest/docs/references/configuration/cli/trivy_server/">trivy_server</a> 支持 client&#x2F;server 模式的，server 是一直运行的：</p>
