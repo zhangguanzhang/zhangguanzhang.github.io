@@ -512,7 +512,7 @@
 <span id="more"></span>
 
 <h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>介绍下 trivy 的使用和一些注意的点</p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><a target="_blank" rel="noopener" href="https://github.com/aquasecurity/trivy">trivy</a> 是一个漏洞安全扫描，可以扫描</p>
+<h2 id="介绍和安装"><a href="#介绍和安装" class="headerlink" title="介绍和安装"></a>介绍和安装</h2><p><a target="_blank" rel="noopener" href="https://github.com/aquasecurity/trivy">trivy</a> 是一个漏洞安全扫描，可以扫描</p>
 <ul>
 <li>Container Image</li>
 <li>Filesystem</li>
@@ -554,7 +554,7 @@
 <p>发现 redis 的 client 库是使用的 <a href="github.com/go-redis/redis/v8">go-redis</a>，查看它的官方文档，发现可以 DSN 形式传入密码：</p>
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opt, err := redis.ParseURL(<span class="string">&quot;redis://&lt;user&gt;:&lt;pass&gt;@localhost:6379/&lt;db&gt;&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<p>同时，不推荐命令行带参数，不然会泄露密码，参考官方文档[configuration]<a target="_blank" rel="noopener" href="https://aquasecurity.github.io/trivy/v0.50/docs/references/configuration/config-file/">https://aquasecurity.github.io/trivy/v0.50/docs/references/configuration/config-file/</a>) 使用配置文件：</p>
+<p>同时，不推荐命令行带参数，不然会泄露密码，参考官方文档<a target="_blank" rel="noopener" href="https://aquasecurity.github.io/trivy/latest/docs/references/configuration/config-file/">configuration</a> 使用配置文件：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">db:</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">m.daocloud.io/ghcr.io/aquasecurity/trivy-db</span></span><br><span class="line">  <span class="attr">java-repository:</span> <span class="string">m.daocloud.io/ghcr.io/aquasecurity/trivy-java-db</span></span><br><span class="line"><span class="attr">cache:</span></span><br><span class="line">  <span class="attr">backend:</span> <span class="string">&quot;redis://:xxx@redis-server:6379&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>一开始报错 noauth，后面发现必须加冒号，没有用户名就是上面这样的格式，同时官方文档说明了，对于每一个长选项，都可以使用环境变量代替，例如：</p>
@@ -755,7 +755,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E"><span class="toc-number">1.</span> <span class="toc-text">关于</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cve-%E5%87%86%E7%A1%AE%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">cve 准确性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E9%83%A8-ci-%E4%B8%8A%E4%BD%BF%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">内部 ci 上使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E"><span class="toc-number">1.</span> <span class="toc-text">关于</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D%E5%92%8C%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">介绍和安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cve-%E5%87%86%E7%A1%AE%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">cve 准确性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E9%83%A8-ci-%E4%B8%8A%E4%BD%BF%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">内部 ci 上使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
