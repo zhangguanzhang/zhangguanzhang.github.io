@@ -459,6 +459,41 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">
+                
+                <span class="abstract-title-text">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</span>
+            </a>
+            <div class="abstract-content">
+                由来今天在折腾 admission webhook 注入一些属性的时候遇到了 Error from server (InternalError): error when creating &quot;xxx.yml&quot;: Internal error occurred: jsonpatch add operation does not apply: doc is missing path: &quot;/spec/template/spec/dnsConfig/options&quot;。折腾半天才发现在代码里使用 jsonPatch 的话不能直接绕过结构体实例去 patch。 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/03/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/22</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/03/12/build-arm64-docker-compose-action/">
                 
                 <span class="abstract-title-text">使用github action 配合 docker buildx 编译 arm64 docker-compose</span>
@@ -962,43 +997,6 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="wireguard">wireguard</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/07/30/prometheus-rate-and-irate/">
-                
-                <span class="abstract-title-text">prometheus的rate与irate内部是如何计算的</span>
-            </a>
-            <div class="abstract-content">
-                由来市面上的翻译误导人，压根不是啥平均增长率，看了下源码和实际算下来让大家好理解
-rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/promql/functions.go 的extrapolatedRate 和 funcRate，funcRate为
-123func funcRate(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper) Vector &#123;  return extrapolatedRate(vals, args...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/07/30">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/30</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Prometheus">Prometheus</a>
     
 </div>
 
@@ -2185,7 +2183,24 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4352,7 +4367,7 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 178
+        Total : 179
         </div>
         <!-- search  -->
         
@@ -4370,6 +4385,12 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/22</span>
@@ -6304,6 +6325,11 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <span class="sidebar-tag-name" data-tags="trivy">
                 <span class="iconfont-archer">&#xe606;</span>
                 trivy
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="redis">
+                <span class="iconfont-archer">&#xe606;</span>
+                redis
             </span>
         
     </div>
