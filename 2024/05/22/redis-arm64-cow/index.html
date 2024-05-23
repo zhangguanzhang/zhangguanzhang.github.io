@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">974</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">984</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -532,6 +532,9 @@
 <p>然后构建 docker 镜像：</p>
 <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">arch ?= <span class="variable">$(<span class="built_in">shell</span> uname -m)</span></span><br><span class="line"></span><br><span class="line"><span class="section">build:</span></span><br><span class="line"><span class="keyword">ifeq</span> (<span class="variable">$(arch)</span>, aarch64)</span><br><span class="line">	gcc -o check_bug.sh -static check_bug.c</span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"><span class="section">image: build</span></span><br><span class="line">	docker build -t xxx .</span><br></pre></td></tr></table></figure>
 
+<p><code>.gitignore</code> 忽略二进制提交</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">check_bug.sh</span><br></pre></td></tr></table></figure>
+
 <p>dockerfile 里 <code>COPY *.sh</code></p>
 
     </article>
@@ -540,7 +543,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/">http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/">五月 22日 2024, 5:10:30 下午</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/">May 22nd 2024, 5:10:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/">May 22nd 2024, 5:10:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -1626,7 +1629,80 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3805,7 +3881,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 179
+        Total : 180
         </div>
         <!-- search  -->
         
@@ -3920,6 +3996,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
             <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2023/05/22/pod-resolve/">pod 的 /etc/resolv.conf 生成机制</a>
         </li>
     
         
@@ -5768,6 +5850,11 @@
             <span class="sidebar-tag-name" data-tags="redis">
                 <span class="iconfont-archer">&#xe606;</span>
                 redis
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
             </span>
         
     </div>

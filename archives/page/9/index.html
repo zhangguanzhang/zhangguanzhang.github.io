@@ -442,6 +442,57 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/06/23/host-gw-in-aliyun/">
+                
+                <span class="abstract-title-text">阿里云上使用flannel host-gw跨节点pod不通的解决</span>
+            </a>
+            <div class="abstract-content">
+                挺多人问的，写下解决办法
+前言首先主机得在同一个专有vpc下，跨vpc或者经典vpc就扯淡了。还有flannel别把网络信息存储在etcd里，目前flannel只支持v2的etcd api。但是现在k8s都是使用v3 etcd存储了。如果v2和v3共存会导致无法恢复etcd的备份
+所以网上那些etcdctl set flannel的cidr的文章别看了，都没做过备份恢复实验就到处发k8s搭建教程。flannel v3的话看我过往文章
+环境信息先来说下host-gw的包走向，假设两台机器
+
+
+
+IP
+pod cidr
+
+
+
+10.0.6.166
+10.200.1.0&#x2F;24
+
+
+1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/06/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="host-gw">host-gw</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -781,45 +832,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="centos6">centos6</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/02/binfmt-0000/">
-                
-                <span class="abstract-title-text">记录一次request_module: runaway loop modeprobe binfmt-0000</span>
-            </a>
-            <div class="abstract-content">
-                昨天一台 gpu 的主机的阵列卡突然坏了，最终整起来后上面的几台虚机恢复后有一台虚机无法正常开机，开机进 emergency mode，同事看上面的报错以为是挂载了啥 iscsi，当然无法开机应该找到最开始的错误，进到 emergency mode 这个视角的时候已经是雪崩的最后的错误了，多半是没有意义的。输入 root 密码后执行journalctl -xb翻看最开始的错误
-
-按照关键字request_module: runaway loop modeprobe binfmt-0000搜到的都是裁剪内核出现的binfmt-484c啥的或者2.6内核的出错，尝试了换内核和挂载iso进re...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kernel">kernel</a>
     
 </div>
 
@@ -1838,7 +1850,80 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4017,7 +4102,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 179
+        Total : 180
         </div>
         <!-- search  -->
         
@@ -4132,6 +4217,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
             <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2023/05/22/pod-resolve/">pod 的 /etc/resolv.conf 生成机制</a>
         </li>
     
         
@@ -5980,6 +6071,11 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="redis">
                 <span class="iconfont-archer">&#xe606;</span>
                 redis
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
             </span>
         
     </div>

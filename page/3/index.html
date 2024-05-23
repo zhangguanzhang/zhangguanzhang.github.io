@@ -457,6 +457,46 @@
         
         
             
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/04/11/sdn-tcp-keepalive/">
+                
+                <span class="abstract-title-text">无数据的 tcp 链接被 SDN/防火墙 干掉的一种处理办法</span>
+            </a>
+            <div class="abstract-content">
+                <p>客户的环境下，业务运行在 dmz 区，mysql 在非 dmz 区，业务连 mysql 的空闲 tcp 连接 240s 后会被 SDN 干掉，本文实际介绍一种不动业务(代码)，利用代理的解决办法</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/04/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/04/11</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="keepalive">keepalive</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2022/03/24/python-list-kubernetes-permission/">
@@ -1003,48 +1043,6 @@ N1 上的 usb 网络共享折腾固件依赖暂时没完全区分 usb 网络共�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="usb-net">usb-net</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/09/02/fio/">
-                
-                <span class="abstract-title-text">fio 静态编译和基础使用</span>
-            </a>
-            <div class="abstract-content">
-                由来amd64,arm64 的静态编译和基础使用
-buildx 使用见文章 buildx 使用
-编译buildx Dockerfile 构建:
-123456789101112131415161718FROM ubuntu as buildWORKDIR /optARG VER=fio-3.29#ARG DEBIAN_FRONTEND=noninteractiveRUN if [  -e /etc/apt/sources.list ];then sed -ri &#x27;s/[a-zA-Z0-9.]+(debian.org|ubuntu.com)/mirrors.aliyun.com/g...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/09/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="fio">fio</a>
     
 </div>
 
@@ -2236,7 +2234,80 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4415,7 +4486,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 179
+        Total : 180
         </div>
         <!-- search  -->
         
@@ -4530,6 +4601,12 @@ buildx 使用见文章 buildx 使用
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
             <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2023/05/22/pod-resolve/">pod 的 /etc/resolv.conf 生成机制</a>
         </li>
     
         
@@ -6378,6 +6455,11 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="redis">
                 <span class="iconfont-archer">&#xe606;</span>
                 redis
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
             </span>
         
     </div>

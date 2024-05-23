@@ -444,6 +444,50 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/09/18/kubernetes-1-11-x-bin/">
+                
+                <span class="abstract-title-text">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</span>
+            </a>
+            <div class="abstract-content">
+                本次采用二进制文件方式部署
+不建议使用secureCRT这个ssh软件复制本篇博客内容的命令,因为它的部分版本对包含多条命令的处理结果并不完美,可能很多命令不是预期结果
+本文命令里有些是输出,不要乱粘贴输入(虽然也没影响)
+本文命令全部是在k8s-m1上执行
+本文很多步骤是选择其一,别啥都不看一路往下复制粘贴
+如果某些步骤理解不了可以上下内容一起看来理解
+本文后面的几个svc用了externalIPs,上生产的话必须用VIP或者LB代替
+本文的HA是vip,生产和云上可以用LB和SLB,不过阿里的SLB四层有问题,可以每个node上代理127.0.0.1的某个port分摊在所有apise...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/09/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/18</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/08/03/Kubernetes_install_1.11.1/">
                 
                 <span class="abstract-title-text">Kubernetes v1.11.x HA全手动苦工安装教学</span>
@@ -806,34 +850,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/02/15/linux-tc/">
-                
-                <span class="abstract-title-text">Linux tc基础使用</span>
-            </a>
-            <div class="abstract-content">
-                ens192 网卡 63%丢包率+6s延迟作用于目标 ip 是 114.114.114.114
-12345tc qdisc add dev ens192 root handle 1: priotc qdisc add dev ens192 parent 1:3 handle 30: netem loss 63% delay 6000mstc filter add dev ens192 protocol ip parent 1:0 u32 match ip dst 114.114.114.114   flowid 1:3# 清理网卡上的规则tc qdisc del dev  ens192 ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/02/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/02/15</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -1849,7 +1865,80 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4028,7 +4117,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 179
+        Total : 180
         </div>
         <!-- search  -->
         
@@ -4143,6 +4232,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
             <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2023/05/22/pod-resolve/">pod 的 /etc/resolv.conf 生成机制</a>
         </li>
     
         
@@ -5991,6 +6086,11 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <span class="sidebar-tag-name" data-tags="redis">
                 <span class="iconfont-archer">&#xe606;</span>
                 redis
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
             </span>
         
     </div>

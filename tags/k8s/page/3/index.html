@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/09/24/k8s-some-vpc-cluster/">
+                
+                <span class="abstract-title-text">跨VPC或者跨云供应商搭建K8S集群正确姿势</span>
+            </a>
+            <div class="abstract-content">
+                去年开始各大云厂商搞活动 120 元一年的云主机,当时还不会k8s,但是了解到搭建集群需要好几台,于是当时攒了好几台来做准备: tx 一台,阿里两个别人账号买了两台,再加上很久之前几何云送了一台. 当时还有人怼说买这么多干啥,答曰:以后学 k8s，此人曰:呵呵
+后面刚开始接触的时候不太了解网络,用的calico,跨vpc根本不行,有大佬说只能vxlan能跨SDN下的vpc之间但是云厂商的主机都是做的 ip 的nat,网卡ip都是内网ip,kubelet上报的时候和flannel都会用这个ip
+
+calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层只能用ipip模式,另外...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/09/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/09/18/kubernetes-1-11-x-bin/">
                 
                 <span class="abstract-title-text">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</span>
@@ -1714,7 +1752,80 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3893,7 +4004,7 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 179
+        Total : 180
         </div>
         <!-- search  -->
         
@@ -4008,6 +4119,12 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
         <li class="archive-post-item">
             <span class="archive-post-date">07/13</span>
             <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2023/05/22/pod-resolve/">pod 的 /etc/resolv.conf 生成机制</a>
         </li>
     
         
@@ -5856,6 +5973,11 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
             <span class="sidebar-tag-name" data-tags="redis">
                 <span class="iconfont-archer">&#xe606;</span>
                 redis
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
             </span>
         
     </div>
