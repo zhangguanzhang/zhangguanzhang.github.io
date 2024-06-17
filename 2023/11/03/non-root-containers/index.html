@@ -648,8 +648,8 @@
 <h4 id="cron"><a href="#cron" class="headerlink" title="cron"></a>cron</h4><p>非 root 无法使用 cron 启动，使用 <a target="_blank" rel="noopener" href="https://github.com/webdevops/go-crond">go-crond</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec gosu  user1 go-crond   --default-user=user1  --include=/etc/cron.d --allow-unprivileged</span><br></pre></td></tr></table></figure>
 
-<h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p><a target="_blank" rel="noopener" href="https://github.com/nginxinc/docker-nginx-unprivileged">https://github.com/nginxinc/docker-nginx-unprivileged</a></p>
-<h4 id="一些权限距离"><a href="#一些权限距离" class="headerlink" title="一些权限距离"></a>一些权限距离</h4><h5 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine</span><br><span class="line">RUN apk update; \</span><br><span class="line">    apk add --no-cache \</span><br><span class="line">        tcpdump \</span><br><span class="line">        libcap \</span><br><span class="line">        su-exec \</span><br><span class="line">        ; \</span><br><span class="line">    rm -rf /var/cache/apk/*;</span><br><span class="line">COPY docker-entrypoint.sh /docker-entrypoint.sh</span><br><span class="line">CMD [&quot;sh&quot;, &quot;/docker-entrypoint.sh&quot;]</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line">set -e</span><br><span class="line">setcap cap_net_raw,cap_net_admin=eip /usr/bin/tcpdump</span><br><span class="line">chmod a+w /dev/std*</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">cap_add:</span><br><span class="line">    - NET_ADMIN</span><br><span class="line">    - NET_RAW</span><br></pre></td></tr></table></figure>
+<h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p><a target="_blank" rel="noopener" href="https://github.com/nginxinc/docker-nginx-unprivileged">https://github.com/nginxinc/docker-nginx-unprivileged</a><br>最好 hack 下 <code>stable/alpine/Dockerfile</code> 构建，<code>.checksum-deps</code> 里面加入 libcap 和 <code>setcap &#39;cap_net_bind_service=+ep&#39; /usr/sbin/nginx</code></p>
+<h4 id="一些权限举例"><a href="#一些权限举例" class="headerlink" title="一些权限举例"></a>一些权限举例</h4><h5 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine</span><br><span class="line">RUN apk update; \</span><br><span class="line">    apk add --no-cache \</span><br><span class="line">        tcpdump \</span><br><span class="line">        libcap \</span><br><span class="line">        su-exec \</span><br><span class="line">        ; \</span><br><span class="line">    rm -rf /var/cache/apk/*;</span><br><span class="line">COPY docker-entrypoint.sh /docker-entrypoint.sh</span><br><span class="line">CMD [&quot;sh&quot;, &quot;/docker-entrypoint.sh&quot;]</span><br><span class="line"></span><br><span class="line">#!/bin/sh</span><br><span class="line">set -e</span><br><span class="line">setcap cap_net_raw,cap_net_admin=eip /usr/bin/tcpdump</span><br><span class="line">chmod a+w /dev/std*</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">cap_add:</span><br><span class="line">    - NET_ADMIN</span><br><span class="line">    - NET_RAW</span><br></pre></td></tr></table></figure>
 
 <h4 id="查看本机-root-启动的容器"><a href="#查看本机-root-启动的容器" class="headerlink" title="查看本机 root 启动的容器"></a>查看本机 root 启动的容器</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a --format &#x27;&#123;&#123;.Names&#125;&#125;&#x27; --filter status=running | \</span><br><span class="line">    while read ctr; do docker top $ctr| awk -vc=$ctr &#x27;NR==2&amp;&amp;$1==&quot;root&quot;&#123;print c&#125;&#x27; ; done</span><br></pre></td></tr></table></figure>
 
@@ -665,7 +665,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">http://zhangguanzhang.github.io/2023/11/03/non-root-containers/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">November 3rd 2023, 12:37:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">十一月 3日 2023, 12:37:30 下午</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">November 3rd 2023, 12:37:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -847,7 +847,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E9%80%A0"><span class="toc-number">2.</span> <span class="toc-text">改造</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E9%A1%BB%E7%9F%A5"><span class="toc-number">2.1.</span> <span class="toc-text">前提须知</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-root-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%BE%E4%BE%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用 root 不安全的举例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-USER-%E8%BF%98%E6%98%AF%E4%BD%BF%E7%94%A8-docker-entrypoint-sh-%E5%85%A5%E5%8F%A3"><span class="toc-number">2.1.2.</span> <span class="toc-text">设置 USER 还是使用 docker-entrypoint.sh 入口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%AE%9E%E6%88%98"><span class="toc-number">2.2.</span> <span class="toc-text">案例实战</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E7%A0%81%E5%A4%84%E7%90%86"><span class="toc-number">2.2.1.</span> <span class="toc-text">机器码处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9C%9F%E7%9A%84%E9%9C%80%E8%A6%81%E7%89%B9%E6%9D%83%E5%90%97%EF%BC%9F"><span class="toc-number">2.2.2.</span> <span class="toc-text">真的需要特权吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#etcd"><span class="toc-number">2.2.3.</span> <span class="toc-text">etcd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#coredns"><span class="toc-number">2.2.4.</span> <span class="toc-text">coredns</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#consul"><span class="toc-number">2.2.5.</span> <span class="toc-text">consul</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-sock-%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.6.</span> <span class="toc-text">docker.sock 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cron"><span class="toc-number">2.2.7.</span> <span class="toc-text">cron</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nginx"><span class="toc-number">2.2.8.</span> <span class="toc-text">nginx</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%9D%83%E9%99%90%E8%B7%9D%E7%A6%BB"><span class="toc-number">2.2.9.</span> <span class="toc-text">一些权限距离</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#tcpdump"><span class="toc-number">2.2.9.1.</span> <span class="toc-text">tcpdump</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E6%9C%BA-root-%E5%90%AF%E5%8A%A8%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">2.2.10.</span> <span class="toc-text">查看本机 root 启动的容器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E9%80%A0"><span class="toc-number">2.</span> <span class="toc-text">改造</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E9%A1%BB%E7%9F%A5"><span class="toc-number">2.1.</span> <span class="toc-text">前提须知</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-root-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%BE%E4%BE%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用 root 不安全的举例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-USER-%E8%BF%98%E6%98%AF%E4%BD%BF%E7%94%A8-docker-entrypoint-sh-%E5%85%A5%E5%8F%A3"><span class="toc-number">2.1.2.</span> <span class="toc-text">设置 USER 还是使用 docker-entrypoint.sh 入口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%AE%9E%E6%88%98"><span class="toc-number">2.2.</span> <span class="toc-text">案例实战</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E7%A0%81%E5%A4%84%E7%90%86"><span class="toc-number">2.2.1.</span> <span class="toc-text">机器码处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9C%9F%E7%9A%84%E9%9C%80%E8%A6%81%E7%89%B9%E6%9D%83%E5%90%97%EF%BC%9F"><span class="toc-number">2.2.2.</span> <span class="toc-text">真的需要特权吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#etcd"><span class="toc-number">2.2.3.</span> <span class="toc-text">etcd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#coredns"><span class="toc-number">2.2.4.</span> <span class="toc-text">coredns</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#consul"><span class="toc-number">2.2.5.</span> <span class="toc-text">consul</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-sock-%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.6.</span> <span class="toc-text">docker.sock 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cron"><span class="toc-number">2.2.7.</span> <span class="toc-text">cron</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nginx"><span class="toc-number">2.2.8.</span> <span class="toc-text">nginx</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%9D%83%E9%99%90%E4%B8%BE%E4%BE%8B"><span class="toc-number">2.2.9.</span> <span class="toc-text">一些权限举例</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#tcpdump"><span class="toc-number">2.2.9.1.</span> <span class="toc-text">tcpdump</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E6%9C%BA-root-%E5%90%AF%E5%8A%A8%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">2.2.10.</span> <span class="toc-text">查看本机 root 启动的容器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1761,53 +1761,12 @@
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4008,7 +3967,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 180
+        Total : 181
         </div>
         <!-- search  -->
         
@@ -4026,6 +3985,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2024/06/17/hostPort-source-addr-cni0/">hostPort 访问进来的源 IP 是 cni0 地址的排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
@@ -5982,6 +5947,11 @@
             <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
                 <span class="iconfont-archer">&#xe606;</span>
                 /etc/resolv.conf
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
             </span>
         
     </div>

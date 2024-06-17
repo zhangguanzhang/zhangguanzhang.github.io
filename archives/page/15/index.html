@@ -444,6 +444,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">
+                
+                <span class="abstract-title-text">使用管理网当作业务网keepalived VIP的心跳线</span>
+            </a>
+            <div class="abstract-content">
+                客户的业务情况如下，我们连的 vpn2 上去部署的业务，一开始三台机器，上面只有 NC1 这一个网卡，客户给了个 vip 让我们配置上，说 vip 两个 vpn 都能访问到。后面实际配置完发现不通，沟通了一番了解清楚网络后，使用了如下方案。
+NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 172.18.27.99/25 via 172.18.27.1，两个网卡不同的 vlan，172.18.27.0/25 的网络里没有多少 IP 了，所以拿来做 VIP 的话得用 NC1 做心跳线。
+123456789101112131415...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/03/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/18</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="vip">vip</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/02/15/linux-tc/">
                 
                 <span class="abstract-title-text">Linux tc基础使用</span>
@@ -747,40 +784,10 @@
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/07/06/windows/">
-                
-                <span class="abstract-title-text">windows 笔记</span>
-            </a>
-            <div class="abstract-content">
-                激活相关win server
-123https://docs.microsoft.com/zh-cn/windows-server/get-started/kms-client-activation-keyshttp://www.kaixinit.com/info/os/1128.html
-
-
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/07/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/06</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/14/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/13/">13</a><a class="page-number" href="/archives/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/archives/page/16/">16</a><a class="page-number" href="/archives/page/17/">17</a><a class="page-number" href="/archives/page/18/">18</a><a class="extend next" rel="next" href="/archives/page/16/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/14/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/13/">13</a><a class="page-number" href="/archives/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/archives/page/16/">16</a><a class="page-number" href="/archives/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/19/">19</a><a class="extend next" rel="next" href="/archives/page/16/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1792,53 +1799,12 @@
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4039,7 +4005,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 180
+        Total : 181
         </div>
         <!-- search  -->
         
@@ -4057,6 +4023,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2024/06/17/hostPort-source-addr-cni0/">hostPort 访问进来的源 IP 是 cni0 地址的排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
@@ -6013,6 +5985,11 @@
             <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
                 <span class="iconfont-archer">&#xe606;</span>
                 /etc/resolv.conf
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
             </span>
         
     </div>

@@ -459,6 +459,40 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/02/12/dashboard/">
+                
+                <span class="abstract-title-text">通用的dashboard部署和tls，SSL相关部署</span>
+            </a>
+            <div class="abstract-content">
+                详细的讲解下部署dashboard，比市面上更详细和更多场景的选择，本文dashboard的暴露不会用nodeport(不喜欢使用它)和apiserver的web proxy代理也就是/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/这种
+讲下四种场景方式：
+
+
+纯dashboard http和https不惨合外部证书
+openssl 证书给dashboard当https
+个人向域名使用https小绿锁
+ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/02/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/12</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/01/30/fstab/">
                 
                 <span class="abstract-title-text">fstab与systemd.mount自动挂载的一点研究和见解</span>
@@ -1022,53 +1056,10 @@ Clust...
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/06/25/etcd-error/">
-                
-                <span class="abstract-title-text">记录一次线上k8s节点故障</span>
-            </a>
-            <div class="abstract-content">
-                
-
-邮件收到zabbix的告警,业务的网页登陆状态不是200,后面又自愈了
-
-
-说明服务挂掉过一次,登陆到机器上发现集群有台节点状态是nodelost状态上去看到相关服务都挂掉了然后排查到根分区占满了,排查到是k8s日志堆满了&#x2F;var&#x2F;log&#x2F;
-12345678910111213141516[root@cloudos02 ~]# df -hFilesystem               Size  Used Avail Use% Mounted on/dev/mapper/centos-root  219G  216G     0 100% /devtmp...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/06/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/25</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/page/8/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/10/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/page/8/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -2253,53 +2244,12 @@ Clust...
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4500,7 +4450,7 @@ Clust...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 180
+        Total : 181
         </div>
         <!-- search  -->
         
@@ -4518,6 +4468,12 @@ Clust...
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2024/06/17/hostPort-source-addr-cni0/">hostPort 访问进来的源 IP 是 cni0 地址的排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
@@ -6474,6 +6430,11 @@ Clust...
             <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
                 <span class="iconfont-archer">&#xe606;</span>
                 /etc/resolv.conf
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
             </span>
         
     </div>

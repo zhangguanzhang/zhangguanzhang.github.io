@@ -444,6 +444,48 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/12/boot-grub-rescue/">
+                
+                <span class="abstract-title-text">/boot目录被清空下物理机无法开机的一次救援</span>
+            </a>
+            <div class="abstract-content">
+                今天下午到公司被通知苏州一个节点的客户的裸金属无法开机，14:00上去到16:50终于给整好了，这里记录下笔记分享下
+故障现象物理机裸金属，连上跳板机通过带外连上去(等同于现场接了一个显示屏+键盘一样)错误为
+1234.errorL file `/grub2/i386-pc/normal.mod&#x27; not found.Entering rescue mode...grub rescue&gt;
+
+这个物理机是grub2，这个错误和类似的/grub/i386-pc/normal.mod本质上都是文件丢失，但是也分情况，网上的一些恢复步骤都是在丢失部分文件的情况下恢复的查看分区
+1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/12</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/11/ansible-count-Idempotency/">
                 
                 <span class="abstract-title-text">ansible数量限制上的幂等性</span>
@@ -792,51 +834,10 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/06/23/autoInstallServer/">
-                
-                <span class="abstract-title-text">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</span>
-            </a>
-            <div class="abstract-content">
-                修改镜像以及编程实现了从服务器买来上电就会自动化安装指定 ip 和 hostname 的步骤（包含了自动做raid）,全程非交互
-先讲讲事情的由来，新节点建设，几百台服务器得人为安装系统，虽说服务器有带外 ipmi，但是 raid 和安装系统时候 hostname 和ip啥的得去配置。系统镜像还是修改过的，安装界面的菜单自动应答通用的流程还不行，于是决定看看能不能研究出来。想要达到的一个效果就是：服务器送货到节点后，一个人带着电脑和设备的标签，高主频高io啥的分类好后贴上标签，按照贴的写一个所有设备应该配置的信息的excel:
-123hostname	  序列号	         IPM...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/06/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="raid">raid</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/10/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/9/">9</a><a class="page-number" href="/archives/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/archives/page/12/">12</a><a class="page-number" href="/archives/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/18/">18</a><a class="extend next" rel="next" href="/archives/page/12/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/10/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/9/">9</a><a class="page-number" href="/archives/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/archives/page/12/">12</a><a class="page-number" href="/archives/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/19/">19</a><a class="extend next" rel="next" href="/archives/page/12/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1848,53 +1849,12 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4095,7 +4055,7 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 180
+        Total : 181
         </div>
         <!-- search  -->
         
@@ -4113,6 +4073,12 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2024/06/17/hostPort-source-addr-cni0/">hostPort 访问进来的源 IP 是 cni0 地址的排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
@@ -6069,6 +6035,11 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
                 <span class="iconfont-archer">&#xe606;</span>
                 /etc/resolv.conf
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
             </span>
         
     </div>

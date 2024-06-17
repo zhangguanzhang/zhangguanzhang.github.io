@@ -722,7 +722,7 @@
 <p>试了下 <code>docker run --runtime nvidia</code> 是能工作的， kubelet 肯定会把 handler 传递到 CRI runtime 的，也就是 cri-dockerd 上，唯一可能性是 cri-dockerd 没配置 Runtime 传递到 docker 的 create 阶段，最后调试了下发现果然是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">&gt; github.com/Mirantis/cri-dockerd/core.(*dockerService).CreateContainer() ./core/container_create.go:137 (hits goroutine(36839):1 total:1) (PC: 0x229e164)</span><br><span class="line">   132:         cleanupInfo, err := ds.applyPlatformSpecificDockerConfig(r, &amp;createConfig)</span><br><span class="line">   133:         if err != nil &#123;</span><br><span class="line">   134:                 return nil, err</span><br><span class="line">   135:         &#125;</span><br><span class="line">   136:</span><br><span class="line">=&gt; 137:         createResp, createErr := ds.client.CreateContainer(createConfig)</span><br><span class="line">   138:         if createErr != nil &#123;</span><br><span class="line">   139:                 createResp, createErr = recoverFromCreationConflictIfNeeded(</span><br><span class="line">   140:                         ds.client,</span><br><span class="line">   141:                         createConfig,</span><br><span class="line">   142:                         createErr,</span><br><span class="line">(dlv) p createConfig</span><br><span class="line">github.com/docker/docker/api/types.ContainerCreateConfig &#123;</span><br><span class="line">        Name: &quot;k8s_nvidia-device-plugin-ctr_nvidia-device-plugin-daemonset-5tm6...+52 more&quot;,</span><br><span class="line">        Config: *github.com/docker/docker/api/types/container.Config &#123;</span><br><span class="line">                ...</span><br><span class="line">        HostConfig: *github.com/docker/docker/api/types/container.HostConfig &#123;</span><br><span class="line">                Binds: []string len: 4, cap: 4, [</span><br><span class="line">                        &quot;/var/lib/kubelet/device-plugins:/var/lib/kubelet/device-plugins&quot;,</span><br><span class="line">                        &quot;/data/kube/kubelet/pods/59f9fe0c-4397-4a83-a149-97ed696d4551/vol...+99 more&quot;,</span><br><span class="line">                        &quot;/data/kube/kubelet/pods/59f9fe0c-4397-4a83-a149-97ed696d4551/etc...+17 more&quot;,</span><br><span class="line">                        &quot;/data/kube/kubelet/pods/59f9fe0c-4397-4a83-a149-97ed696d4551/con...+62 more&quot;,</span><br><span class="line">                ],</span><br><span class="line">                ContainerIDFile: &quot;&quot;,</span><br><span class="line">                LogConfig: (*&quot;github.com/docker/docker/api/types/container.LogConfig&quot;)(0xc001505228),</span><br><span class="line">                NetworkMode: &quot;container:8d3c044a8c0339faed520efebe9dc199937de3515eb9a3baf723ed...+10 more&quot;,</span><br><span class="line">                PortBindings: github.com/docker/go-connections/nat.PortMap nil,</span><br><span class="line">                RestartPolicy: (*&quot;github.com/docker/docker/api/types/container.RestartPolicy&quot;)(0xc001505258),</span><br><span class="line">                AutoRemove: false,</span><br><span class="line">                VolumeDriver: &quot;&quot;,</span><br><span class="line">                VolumesFrom: []string len: 0, cap: 0, nil,</span><br><span class="line">                ConsoleSize: [2]uint [0,0],</span><br><span class="line">                Annotations: map[string]string nil,</span><br><span class="line">                CapAdd: github.com/docker/docker/api/types/strslice.StrSlice len: 0, cap: 0, nil,</span><br><span class="line">                CapDrop: github.com/docker/docker/api/types/strslice.StrSlice len: 1, cap: 1, [&quot;ALL&quot;],</span><br><span class="line">                CgroupnsMode: &quot;&quot;,</span><br><span class="line">                DNS: []string len: 0, cap: 0, nil,</span><br><span class="line">                DNSOptions: []string len: 0, cap: 0, nil,</span><br><span class="line">                DNSSearch: []string len: 0, cap: 0, nil,</span><br><span class="line">                ExtraHosts: []string len: 0, cap: 0, nil,</span><br><span class="line">                GroupAdd: []string len: 0, cap: 0, nil,</span><br><span class="line">                IpcMode: &quot;container:8d3c044a8c0339faed520efebe9dc199937de3515eb9a3baf723ed...+10 more&quot;,</span><br><span class="line">                Cgroup: &quot;&quot;,</span><br><span class="line">                Links: []string len: 0, cap: 0, nil,</span><br><span class="line">                OomScoreAdj: -997,</span><br><span class="line">                PidMode: &quot;&quot;,</span><br><span class="line">                Privileged: false,</span><br><span class="line">                PublishAllPorts: false,</span><br><span class="line">                ReadonlyRootfs: false,</span><br><span class="line">                SecurityOpt: []string len: 2, cap: 2, [</span><br><span class="line">                        &quot;no-new-privileges&quot;,</span><br><span class="line">                        &quot;seccomp=unconfined&quot;,</span><br><span class="line">                ],</span><br><span class="line">                StorageOpt: map[string]string nil,</span><br><span class="line">                Tmpfs: map[string]string nil,</span><br><span class="line">                UTSMode: &quot;&quot;,</span><br><span class="line">                UsernsMode: &quot;&quot;,</span><br><span class="line">                ShmSize: 0,</span><br><span class="line">                Sysctls: map[string]string nil,</span><br><span class="line">                Runtime: &quot;&quot;,</span><br><span class="line">                Isolation: &quot;&quot;,</span><br><span class="line">                Resources: (*&quot;github.com/docker/docker/api/types/container.Resources&quot;)(0xc001505440),</span><br><span class="line">                Mounts: []github.com/docker/docker/api/types/mount.Mount len: 0, cap: 0, nil,</span><br><span class="line">                MaskedPaths: []string len: 10, cap: 16, [</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>可以看到上面倒数第 11 行，是为空的，上层的调用链里，只允许 <code>RuntimeHandler</code>不为空情况下设置为 docker：</p>
+<p>可以看到上面 <code>Runtime</code> 是空的，上层的调用链里，只允许 <code>RuntimeHandler</code>不为空情况下设置为 docker：</p>
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/Mirantis/cri-dockerd/blob/v0.3.12/core/sandbox_run.go#L54-L56</span></span><br><span class="line">	<span class="keyword">if</span> r.GetRuntimeHandler() != <span class="string">&quot;&quot;</span> &amp;&amp; r.GetRuntimeHandler() != runtimeName &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, fmt.Errorf(<span class="string">&quot;RuntimeHandler %q not supported&quot;</span>, r.GetRuntimeHandler())</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>后面的调用链里也没去使用 <code>r.GetRuntimeHandler()</code> 或者设置 <code>x.HostConfig.Runtime</code> ，意味着不配置 <code>RuntimeClass.handler</code> 或者设置为 <code>docker</code> 都是使用 docker 默认的 runtime。</p>
@@ -739,7 +739,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/04/08/nvidia-container-toolkit/">http://zhangguanzhang.github.io/2024/04/08/nvidia-container-toolkit/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/04/08/nvidia-container-toolkit/">April 8th 2024, 3:05:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/04/08/nvidia-container-toolkit/">四月 8日 2024, 3:05:30 下午</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/04/08/nvidia-container-toolkit/">April 8th 2024, 3:05:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -1835,53 +1835,12 @@
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4082,7 +4041,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 180
+        Total : 181
         </div>
         <!-- search  -->
         
@@ -4100,6 +4059,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2024/06/17/hostPort-source-addr-cni0/">hostPort 访问进来的源 IP 是 cni0 地址的排查</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
@@ -6056,6 +6021,11 @@
             <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
                 <span class="iconfont-archer">&#xe606;</span>
                 /etc/resolv.conf
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
             </span>
         
     </div>
