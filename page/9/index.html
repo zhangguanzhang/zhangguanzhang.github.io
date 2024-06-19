@@ -459,6 +459,53 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/02/19/jira-confluence/">
+                
+                <span class="abstract-title-text">docker部署jira(8.0.0)和confluence(6.14.1)</span>
+            </a>
+            <div class="abstract-content">
+                记录下这几天搭建的过程jira和confluence是分别两台，数据库也是分开的,数据库是用mysql的rpm的repo添加后安装的,jira和confluence是docker跑的,把破解的jar加到镜像里然后改了下别人的Dockerfile本次安装的版本：
+
+
+jira-software 8.0.0
+confluence 6.14.1
+Docker CE 18.06.02
+OS CentOS 7.5.1804
+
+
+系统基本设置
+所有防火墙与SELinux 已关闭：123systemctl disable --now firewalld NetworkManagersetenforce...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/02/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="jira">jira</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="confluence">confluence</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/02/12/dashboard/">
                 
                 <span class="abstract-title-text">通用的dashboard部署和tls，SSL相关部署</span>
@@ -1009,45 +1056,6 @@ Clust...
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="keepavlied">keepavlied</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/07/08/travis-sync-gcr-io/">
-                
-                <span class="abstract-title-text">利用travis同步gcr.io镜像到dockerhub</span>
-            </a>
-            <div class="abstract-content">
-                项目地址https://github.com/zhangguanzhang/gcr.io/tree/master
-利用gcloud sdk去查看谷歌镜像站的镜像,获取每一个镜像的tag后改名推送到自己的dockerhub上面全部是shell思路,脚本一旦写完就需要不断的执行去同步了,所以借用travis去构建两个分支,一个master分支和一个构建分支travis触发构建后拉取仓库后,切换到构建分支,pull构建分支,然后同步镜像
-脚本我写了两种https://github.com/zhangguanzhang/bash/tree/master/google_containers_syn...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/07/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/08</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="dockerhub">dockerhub</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="gcr.io">gcr.io</a>
     
 </div>
 
@@ -2249,7 +2257,22 @@ Clust...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4450,7 +4473,7 @@ Clust...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -4478,6 +4501,12 @@ Clust...
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -6435,6 +6464,11 @@ Clust...
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>

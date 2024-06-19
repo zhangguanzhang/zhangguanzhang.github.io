@@ -444,6 +444,42 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/11/23/ansible-hang-in-docker/">
+                
+                <span class="abstract-title-text">ansible hang in docker container</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天同事发现在 docker 容器里运行 ansible 命令很卡，发来了个命令叫我试试 ansible localhost -m setup -a &#39;filter=ansible_default_ipv4&#39; 2&gt;/dev/null |grep &#39;\&quot;address\&quot;&#39; |awk -F&#39;\&quot;&#39; &#39;&#123;print $4&#125;&#39;
+环境信息12345678910111213141516171819202122232425262728293031323334353637383...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/11/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/11/20/disable-swap/">
                 
                 <span class="abstract-title-text">永久关闭swap的正确姿势</span>
@@ -777,46 +813,6 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/07/05/linux-auditd/">
-                
-                <span class="abstract-title-text">Linux audit 审计</span>
-            </a>
-            <div class="abstract-content">
-                什么是audit？linux audit子系统是一个用于收集记录系统、内核、用户进程发生的行为事件的一种安全审计系统。该系统可以可靠地收集有关上任何与安全相关（或与安全无关）事件的信息，它可以帮助跟踪在系统上执行过的一些操作。
-使用安装好像高版本 os 都自带了，没有就 yum install -y audit
-1systemctl status auditd.service
-
-例如追踪一个内核参数被谁修改要注意的是 auditctl 只能临时生效，要想永久生效使用文件 audit.rules
-基本信息查看12345678910111213# 查看状态$ auditctl -senabl...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/07/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="audit">audit</a>
     
 </div>
 
@@ -1845,7 +1841,22 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4046,7 +4057,7 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -4074,6 +4085,12 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -6031,6 +6048,11 @@ rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/prom
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>

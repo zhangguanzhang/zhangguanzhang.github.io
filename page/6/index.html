@@ -457,6 +457,45 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/09/18/ocp-4.5-install/">
+                
+                <span class="abstract-title-text">openshift 4.5.9 离线安装</span>
+            </a>
+            <div class="abstract-content">
+                本文是全部离线安装，也就是 UPI (User Provisioned Infrastructure) 模式安装，假设机器只能配置静态ip不能有网络配置权限和配置 dhcp 和 pxe。机器可以是物理机和虚拟机。
+前言介绍ocp介绍openshift 分为社区版本 okd 和企业版本 ocp(openshift container platform)，okd 的更新很慢，ocp 个人也是可以安装的，不购买 license 则不会享受 redhat 的官方支持。
+openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己实现了 cs 的三个组件，也给 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/09/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/18</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openshift">openshift</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ocp">ocp</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -992,42 +1031,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="Mismatch">Mismatch</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/10/go-mod-base-use/">
-                
-                <span class="abstract-title-text">go mod的基础使用-科普</span>
-            </a>
-            <div class="abstract-content">
-                go mod由来文章主要是针对新人来介绍 go mod 是啥以及新手如何使用，老手不用看。现阶段go mod已经完全GA了，你会用了的话会非常方便像 python 的项目根目录有requirement.txt记录依赖包，nodejs 是packages.json，同样 go 的包管理从早期的go dep(gopkg)到vendor到现在的go mod.go dep 很早，没有接触过，如果你接触的项目有go dep，看完本文希望你可以学会改造你手上的老项目，vendor则是把包都存放项目的根路径的vendor文件夹里，就像下面。这会导致一个项目很大，多达40M以上。
-12345678910...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/10">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/10</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="go mod">go mod</a>
     
 </div>
 
@@ -2229,7 +2232,22 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4430,7 +4448,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -4458,6 +4476,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -6415,6 +6439,11 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>

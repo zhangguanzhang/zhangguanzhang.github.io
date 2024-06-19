@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
+                
+                <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
+            </a>
+            <div class="abstract-content">
+                由来该issue见 https://github.com/kubernetes/kubernetes/issues/76956, apiserver和controller-manager每次start的时候会刷下面信息。不影响使用，但是有强迫症可以按照本文思路手动修改。当然本文也是自己编译k8s的教程
+123456E0423 17:35:58.491576       1 prometheus.go:138] failed to register depth metric admission_quota_controller: duplicate metrics collector re...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/21">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/21</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/12/boot-grub-rescue/">
                 
                 <span class="abstract-title-text">/boot目录被清空下物理机无法开机的一次救援</span>
@@ -785,47 +823,6 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="http">http</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/06/26/uefi-pxe/">
-                
-                <span class="abstract-title-text">uefi模式下docker+交换机部署pxe批量安装</span>
-            </a>
-            <div class="abstract-content">
-                华三服务器的 ipmi 的 web 提供了 nfs 挂载 iso 去安装，也是我之前使用的，发现研发给的镜像在4g以上(镜像基于centos7.3改的，我之前测试都是用的minimal镜像890M左右)。安装的时候报错，然后当面测试得出结论 nfs 的网速原因，其次也是我们这边办公网是百兆。。。办公网被 it 接管了，交换机密码不给，自己找了台 5130 交换机，下面接服务器和我自己电脑搭建测了下定制iso的pxe流程
-这是组网情况
-123456789101112131415             10.96.4.1/24          +------------+        ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/06/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="tftp">tftp</a>
     
 </div>
 
@@ -1854,7 +1851,22 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4055,7 +4067,7 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -4083,6 +4095,12 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -6040,6 +6058,11 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>

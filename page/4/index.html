@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/09/16/read-containerd-con-reset/">
+                
+                <span class="abstract-title-text">解决 docker 的 read unix @-&gt;/run/containerd/s/xxx read: connection reset by peer: unknown</span>
+            </a>
+            <div class="abstract-content">
+                由来为了测试关机对集群的影响，关机了几台机器后很多 pod 一直 CrashLoopBackOff 和 RunContainerError 或者一直无法就绪
+环境信息1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253[root@CentOS76 ~]# docker infoClient: Debug Mode: falseServer: Containers: 404  Running: 258  Paused: 0  Stopped: 146...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/16">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/16</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="containerd">containerd</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/03/openwrt-usb-net/">
                 
                 <span class="abstract-title-text">[持续更新] - Openwrt USB 网络</span>
@@ -985,44 +1023,6 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/04/30/kubernetes-sec-agent-node-network-error/">
-                
-                <span class="abstract-title-text">一次单节点单个pod网络问题排查过程</span>
-            </a>
-            <div class="abstract-content">
-                about现场反馈客户环境上业务不正常，根据调用链去看某个业务A日志，发现无法请求另一个业务B，把业务 A 的探针取消了，加上
-12tty: truecommand: [&quot;bash&quot;]
-起来后进去 curl 了下 B 对应的 svcIP 接口是能通的。然后手动起业务进程，再开个窗口 exec 进去 curl 发现就不通了，k8s node数量是只有一个，并且只有这一个 pod 有问题。后面排查到是用户的安全软件导致的。软件名是
-1234567$ ps aux | grep agentroot       6349  0.3  0.1 21046316 116820 ?...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/04/30">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/30</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
 </div>
 
@@ -2224,7 +2224,22 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4425,7 +4440,7 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -4453,6 +4468,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -6410,6 +6431,11 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>

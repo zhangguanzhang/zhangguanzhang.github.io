@@ -542,7 +542,7 @@
 
 <h2 id="cve-准确性"><a href="#cve-准确性" class="headerlink" title="cve 准确性"></a>cve 准确性</h2><p>我们内部使用扫描后，客户现场扫描的报告，查看了结果两者不是一样的，属于两者结果有部分交集的结果。查看<a target="_blank" rel="noopener" href="https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/">官方文档 vulnerability</a> 章节说明了前面俩 db 的数据来源，并不是比较全的 cve 列表，同时 <a target="_blank" rel="noopener" href="https://github.com/aquasecurity/trivy-db">trivy-db</a> 是每隔 6 个小时构建更新的</p>
 <h2 id="内部-ci-上使用"><a href="#内部-ci-上使用" class="headerlink" title="内部 ci 上使用"></a>内部 ci 上使用</h2><p>先得解决机器无法拉取 github 镜像仓库，需要配同步到内网镜像仓库上比较好，另外 oci 格式是不支持 docker pull 的，可以使用 <a target="_blank" rel="noopener" href="https://github.com/containers/skopeo">skopeo</a> 的 sync 命令每天定时间隔同步:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">skopeo --insecure-policy sync --src docker --dest docker m.daocloud.io/ghcr.io/aquasecurity/trivy-db xxx.com/ci-run/</span><br><span class="line"></span><br><span class="line">skopeo --insecure-policy sync --src docker --dest docker m.daocloud.io/ghcr.io/aquasecurity/trivy-java-db xxx.com/ci-run/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">declare -a list=(</span><br><span class="line">    &quot;trivy-db:2&quot;</span><br><span class="line">    &quot;trivy-db:1&quot;</span><br><span class="line">    trivy-db</span><br><span class="line">    &quot;trivy-java-db:1&quot;</span><br><span class="line">    trivy-java-db</span><br><span class="line">)</span><br><span class="line">    for image in $&#123;list[@]&#125;;do</span><br><span class="line">        skopeo --insecure-policy copy docker://m.daocloud.io/ghcr.io/aquasecurity/$&#123;image&#125; docker://xxx.com/ci-run/$&#123;image&#125;</span><br><span class="line"></span><br><span class="line">    done</span><br></pre></td></tr></table></figure>
 
 <p>根据官方文档 <a target="_blank" rel="noopener" href="https://aquasecurity.github.io/trivy/latest/docs/references/configuration/cli/trivy_server/">trivy_server</a> 支持 client&#x2F;server 模式的，server 是一直运行的：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">trivy server</span><br><span class="line">trivy image --server http://localhost/remote:4954 alpine</span><br></pre></td></tr></table></figure>
@@ -578,7 +578,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/04/22/trivy/">http://zhangguanzhang.github.io/2024/04/22/trivy/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/04/22/trivy/">四月 22日 2024, 6:35:30 晚上</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/04/22/trivy/">April 22nd 2024, 6:35:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/04/22/trivy/">April 22nd 2024, 6:35:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -588,8 +588,8 @@
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2024/05/22/redis-arm64-cow/" title="arm64 redis COW 检测">
-                    <div class="nextTitle">arm64 redis COW 检测</div>
+                <a href="/2024/05/01/kubernetes-hotplug-resource/" title="k8s node 热扩容内存导致的一次业务故障">
+                    <div class="nextTitle">k8s node 热扩容内存导致的一次业务故障</div>
                 </a>
             
         </li>
@@ -1679,7 +1679,22 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3880,7 +3895,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -3908,6 +3923,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -5865,6 +5886,11 @@
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>

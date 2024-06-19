@@ -444,6 +444,51 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/04/29/kubernetes-configMap-mount/">
+                
+                <span class="abstract-title-text">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</span>
+            </a>
+            <div class="abstract-content">
+                看到configMap这个资源对象,突发奇想
+
+
+如何让一个configMap里文件挂载到容器的不同路径
+
+
+书上和网上都找不到对应例子
+最终github上搜索到了有个subPath选项除了支持路径还不会覆盖容器内部的整个目录参考链接https://github.com/dshulyak/kubernetes.github.io/commit/d58ba7b075bb4848349a2c920caaa08ff3773d70这里记录下
+123456789101112131415161718192021222324252627282930313233343536373839404142434...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/04/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/29</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ConfigMap">ConfigMap</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">
                 
                 <span class="abstract-title-text">使用管理网当作业务网keepalived VIP的心跳线</span>
@@ -745,38 +790,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2017/07/25">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/25</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/07/15/dd-make-boot-device/">
-                
-                <span class="abstract-title-text">使用 dd 利用 iso 文件制作 USB 启动盘</span>
-            </a>
-            <div class="abstract-content">
-                命令1234# bs ，每个块的填充字节，不足用空(NUL) 字符对齐# sync  直接写磁盘，不写缓存dd if=xxx.iso  of=/dev/xxx bs=8M
-
-可以利用 watch -n 5 每 5s 发送信号触发 dd 命令打印进度
-1watch -n 5 pkill -USR1 ^dd$
-
-块大小不带的速度对比1234567891011121314151617181920212223242526272829303132333435363738394041$ dd if=xxxxx.iso of=/dev/sdc oflag=sync2937+0 records in29...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/07/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/15</span>
                 </div>
                 <!-- tags -->
                 
@@ -1804,7 +1817,22 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4005,7 +4033,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -4033,6 +4061,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -5990,6 +6024,11 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>

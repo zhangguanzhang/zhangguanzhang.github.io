@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/08/24/gobot-build/">
+                
+                <span class="abstract-title-text">gobot控制esp8266</span>
+            </a>
+            <div class="abstract-content">
+                材料gobot官网是Arduino的demo，官网上看了下支持esp8266，整好之前整wifi攻击器的时候有就玩了下。我是在windows编译的，没有8266的话自己去淘宝上一块儿node-mcu+数据线(本质上就是个带串口和排针的esp8266-12，买驱动是CH340G的，就是usb口旁边有个长条形ic，方的是cp2102不稳定会导致windows蓝屏)
+环境搭建用goland写代码，不推荐vscode写golang，自行安装golang(记得设置好环境变量)和goland，现在golang最新版本是12.9整个demo分为两部分，客户端gobot去设置和控制esp8266，826...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/08/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/08/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="gobot">gobot</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="esp8266">esp8266</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/08/06/preseed/">
                 
                 <span class="abstract-title-text">ubuntu preseed无人应答安装</span>
@@ -972,53 +1010,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/02/19/jira-confluence/">
-                
-                <span class="abstract-title-text">docker部署jira(8.0.0)和confluence(6.14.1)</span>
-            </a>
-            <div class="abstract-content">
-                记录下这几天搭建的过程jira和confluence是分别两台，数据库也是分开的,数据库是用mysql的rpm的repo添加后安装的,jira和confluence是docker跑的,把破解的jar加到镜像里然后改了下别人的Dockerfile本次安装的版本：
-
-
-jira-software 8.0.0
-confluence 6.14.1
-Docker CE 18.06.02
-OS CentOS 7.5.1804
-
-
-系统基本设置
-所有防火墙与SELinux 已关闭：123systemctl disable --now firewalld NetworkManagersetenforce...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/02/19">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/19</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="jira">jira</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="confluence">confluence</a>
     
 </div>
 
@@ -2220,7 +2211,22 @@ OS CentOS 7.5.1804
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4421,7 +4427,7 @@ OS CentOS 7.5.1804
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 181
+        Total : 182
         </div>
         <!-- search  -->
         
@@ -4449,6 +4455,12 @@ OS CentOS 7.5.1804
         <li class="archive-post-item">
             <span class="archive-post-date">05/22</span>
             <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
         </li>
     
         
@@ -6406,6 +6418,11 @@ OS CentOS 7.5.1804
             <span class="sidebar-tag-name" data-tags="hostPort">
                 <span class="iconfont-archer">&#xe606;</span>
                 hostPort
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
             </span>
         
     </div>
