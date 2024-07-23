@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/10/12/prometheus-operator/">
+                
+                    <span class="iconfont-archer stick-top">&#xe63d;</span>
+                
+                <span class="abstract-title-text">全手动部署prometheus-operator监控K8S集群以及一些坑</span>
+            </a>
+            <div class="abstract-content">
+                写这篇文章原因所有的监控的agent底层最终都是查询的&#x2F;proc和&#x2F;sys里的信息推送(如果错了轻喷),因为收集宿主机信息方面也想用pod跑,会面临到问题常见的zabbix_agent默认读取fs的&#x2F;proc和&#x2F;sys,容器跑agent会导致读取的不是宿主机的&#x2F;proc和&#x2F;sys而prometheus的node-exporter有选项--path.procfs和--path.sysfs来指定从这俩选项的值的proc和sys读取,容器跑node-exporter只需要挂载宿主机的&#x2F;proc和&#x2F;sys到容器fs的...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/10/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/12</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/10/06/IngressController/">
                 
                 <span class="abstract-title-text">IngressController使用和它的高可用落地</span>
@@ -806,50 +845,6 @@ An example of a pod that uses pod affinity:
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="PodAffinity">PodAffinity</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/05/05/Kubernetes_install/">
-                
-                <span class="abstract-title-text">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</span>
-            </a>
-            <div class="abstract-content">
-                转载自https://kairen.github.io/2018/04/05/kubernetes/deploy/manual-v1.10/作者文章的安装步骤文字是复制作者的1.8的安装步骤然后改的,安装过程变了部分,但是文字没有改正过来。
-此过程我写了ansible安装部署方案,地址(一些文件下载不了的话可以去下面的github里找对应的文件)
-
-多master高可用版
-单master版
-
-本文内容所有url都没改过，以下的添加的内容是我的建议和安装的经验
-本文里如果有些范围不知道在哪台主机上执行请看前后命令都可以判断出,不清楚的请下面评论我会更新
-以下我转载过来并修改+上我的提醒
-管...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/05/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
 </div>
 
@@ -1883,7 +1878,24 @@ An example of a pod that uses pod affinity:
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4094,7 +4106,7 @@ An example of a pod that uses pod affinity:
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 182
+        Total : 183
         </div>
         <!-- search  -->
         
@@ -4112,6 +4124,12 @@ An example of a pod that uses pod affinity:
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2024/07/21/Linux-android/">[持续更新] - 安卓折腾笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6090,6 +6108,11 @@ An example of a pod that uses pod affinity:
             <span class="sidebar-tag-name" data-tags="hotplug">
                 <span class="iconfont-archer">&#xe606;</span>
                 hotplug
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
             </span>
         
     </div>

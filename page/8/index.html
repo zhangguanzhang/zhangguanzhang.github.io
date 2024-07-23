@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/09/05/prometheus-change-timezone/">
+                
+                <span class="abstract-title-text">修改源码更改prometheus的时区问题</span>
+            </a>
+            <div class="abstract-content">
+                先说明一点，时区UTC不影响prometheus和grafana，这篇文章只是提供一个修改的思路和步骤
+日志时区修改代码分析先起最新的prometheus挂载时区文件
+1234567docker run --net host -v /etc/localtime:/etc/localtime prom/prometheuslevel=info ts=2019-09-05T09:44:40.409Z caller=main.go:293 msg=&quot;no time or size retention was set so using the default time retentio...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/09/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/05</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="timezone">timezone</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/08/24/gobot-build/">
                 
                 <span class="abstract-title-text">gobot控制esp8266</span>
@@ -973,46 +1012,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/11</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/03/03/kubernetes-1-13-4/">
-                
-                <span class="abstract-title-text">二进制部署Kubernetes v1.13.12 HA可选</span>
-            </a>
-            <div class="abstract-content">
-                本次采用二进制文件方式部署,本文过程写成了更详细更多可选方案的ansible部署方案 https://github.com/zhangguanzhang/Kubernetes-ansible和之前的步骤差不多都是和kubeadm步骤一样,不过这次所有kubelet全部走bootstrap不会像之前master上的kubelet生成证书,另外证书换成openssl生成
-不建议使用secureCRT这个ssh软件复制本篇博客内容的命令,因为它的部分版本对包含多条命令的处理结果并不完美,可能很多命令不是预期结果
-本文命令里有些是输出,不要乱粘贴输入(虽然也没影响)
-本文命令全部是在k8s-m1...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/03/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/03</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -2216,7 +2215,24 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4427,7 +4443,7 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 182
+        Total : 183
         </div>
         <!-- search  -->
         
@@ -4445,6 +4461,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2024/07/21/Linux-android/">[持续更新] - 安卓折腾笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6423,6 +6445,11 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <span class="sidebar-tag-name" data-tags="hotplug">
                 <span class="iconfont-archer">&#xe606;</span>
                 hotplug
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
             </span>
         
     </div>

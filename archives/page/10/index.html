@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/03/26/KubeXXXMismatch/">
+                
+                <span class="abstract-title-text">一次deploy,rs,sts Mismatch 的处理</span>
+            </a>
+            <div class="abstract-content">
+                  这次文章是远程帮群友解决故障后的总结，以时间线描述  群友一开始是apiserver响应慢，使用角度上就是kubectl请求慢，如
+123E0326 07:49:37.586690       1 available_controller.go:416] v1beta1.metrics.k8s.io failed with: failing or missing response  from https://10.99.174.208:443/apis/metrics.k8s.io/v1beta1: Get https://10.99.174.208:443/apis/metrics...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/03/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Mismatch">Mismatch</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/03/10/go-mod-base-use/">
                 
                 <span class="abstract-title-text">go mod的基础使用-科普</span>
@@ -777,42 +815,6 @@ Linux一些目录规范和systemd
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kubeadm">kubeadm</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/24/deployment-consul-in-k8s/">
-                
-                <span class="abstract-title-text">consul仅当服务发现在k8s无状态部署使用</span>
-            </a>
-            <div class="abstract-content">
-                由来consul server 在机器上的部署已经写完了，但是dba还是希望部署在 k8s 上，昨天搜了下相关文章扣出来部分步骤自己验证实现了。先说下需求，三台物理机单独跑 mysql 主从 mha，利用 consul client 的服务注册+ttl向 consul server 注册成域名，然后配置 k8s 内部的 coredns 把域名*.service.consul转发到 consul server。架构为下图
-123456789101112131415161718Physical server +---------------------+                   ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/10/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
     
 </div>
 
@@ -1846,7 +1848,24 @@ Linux一些目录规范和systemd
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4057,7 +4076,7 @@ Linux一些目录规范和systemd
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 182
+        Total : 183
         </div>
         <!-- search  -->
         
@@ -4075,6 +4094,12 @@ Linux一些目录规范和systemd
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2024/07/21/Linux-android/">[持续更新] - 安卓折腾笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6053,6 +6078,11 @@ Linux一些目录规范和systemd
             <span class="sidebar-tag-name" data-tags="hotplug">
                 <span class="iconfont-archer">&#xe606;</span>
                 hotplug
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
             </span>
         
     </div>

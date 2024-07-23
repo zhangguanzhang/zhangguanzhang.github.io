@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/03/26/KubeXXXMismatch/">
+                
+                <span class="abstract-title-text">一次deploy,rs,sts Mismatch 的处理</span>
+            </a>
+            <div class="abstract-content">
+                  这次文章是远程帮群友解决故障后的总结，以时间线描述  群友一开始是apiserver响应慢，使用角度上就是kubectl请求慢，如
+123E0326 07:49:37.586690       1 available_controller.go:416] v1beta1.metrics.k8s.io failed with: failing or missing response  from https://10.99.174.208:443/apis/metrics.k8s.io/v1beta1: Get https://10.99.174.208:443/apis/metrics...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/03/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Mismatch">Mismatch</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/03/10/go-mod-base-use/">
                 
                 <span class="abstract-title-text">go mod的基础使用-科普</span>
@@ -997,45 +1035,6 @@ nodeName
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/09/05/prometheus-change-timezone/">
-                
-                <span class="abstract-title-text">修改源码更改prometheus的时区问题</span>
-            </a>
-            <div class="abstract-content">
-                先说明一点，时区UTC不影响prometheus和grafana，这篇文章只是提供一个修改的思路和步骤
-日志时区修改代码分析先起最新的prometheus挂载时区文件
-1234567docker run --net host -v /etc/localtime:/etc/localtime prom/prometheuslevel=info ts=2019-09-05T09:44:40.409Z caller=main.go:293 msg=&quot;no time or size retention was set so using the default time retentio...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/09/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="timezone">timezone</a>
     
 </div>
 
@@ -2242,7 +2241,24 @@ nodeName
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4453,7 +4469,7 @@ nodeName
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 182
+        Total : 183
         </div>
         <!-- search  -->
         
@@ -4471,6 +4487,12 @@ nodeName
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2024/07/21/Linux-android/">[持续更新] - 安卓折腾笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6449,6 +6471,11 @@ nodeName
             <span class="sidebar-tag-name" data-tags="hotplug">
                 <span class="iconfont-archer">&#xe606;</span>
                 hotplug
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
             </span>
         
     </div>

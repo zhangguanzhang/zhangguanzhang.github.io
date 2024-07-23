@@ -459,6 +459,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">
+                
+                <span class="abstract-title-text">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                由来同事在客户那边部署的集群问题频繁，先给他解决了个问题后又反映说业务 POD 由于 DNS 无法解析而启动失败，排查完发现这样的情况从没遇到过，挺有意思的，这里记录下。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角度写下排查过程。
+环境信息集群信息:
+12345678910111213141516171819202122232425$ kubectl version -o json&#123;  &quot;clientVersion&quot;: &#123;    &quot;major&quot;: &quot;1&quot;,    &quot;mi...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/10/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/20</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/09/18/ocp-4.5-install/">
                 
                 <span class="abstract-title-text">openshift 4.5.9 离线安装</span>
@@ -993,44 +1030,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="go">go</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/26/KubeXXXMismatch/">
-                
-                <span class="abstract-title-text">一次deploy,rs,sts Mismatch 的处理</span>
-            </a>
-            <div class="abstract-content">
-                  这次文章是远程帮群友解决故障后的总结，以时间线描述  群友一开始是apiserver响应慢，使用角度上就是kubectl请求慢，如
-123E0326 07:49:37.586690       1 available_controller.go:416] v1beta1.metrics.k8s.io failed with: failing or missing response  from https://10.99.174.208:443/apis/metrics.k8s.io/v1beta1: Get https://10.99.174.208:443/apis/metrics...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Mismatch">Mismatch</a>
     
 </div>
 
@@ -2237,7 +2236,24 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4448,7 +4464,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 182
+        Total : 183
         </div>
         <!-- search  -->
         
@@ -4466,6 +4482,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2024/07/21/Linux-android/">[持续更新] - 安卓折腾笔记</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6444,6 +6466,11 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="hotplug">
                 <span class="iconfont-archer">&#xe606;</span>
                 hotplug
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
             </span>
         
     </div>
