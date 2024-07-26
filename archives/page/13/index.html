@@ -444,6 +444,34 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/03/11/k8s-ha/">
+                
+                <span class="abstract-title-text">k8s高可用涉及到ip填写的相关配置和一些坑</span>
+            </a>
+            <div class="abstract-content">
+                etcd 就不说了,奇数个副本,可以坏 (n-1)/2 个,但是不可能同时坏那么多,这里不讨论 etcd 单独不单独跑。推荐个文档 https://github.com/etcd-io/etcd/tree/master/Documentation/op-guide
+管理组件先说说 k8s 组件, kubelet 和 kube-proxy 啥的肯定写 LB 或者 VIP:HA_port,如官方的图和 https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/ha-topology/ 里的，这里的文档内容...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/03/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/11</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/03/03/kubernetes-1-13-4/">
                 
                 <span class="abstract-title-text">二进制部署Kubernetes v1.13.12 HA可选</span>
@@ -788,45 +816,6 @@ crontab加计划(&#x2F;var&#x2F;spool&#x2F;cron&#x2F;用户名文件,&#x2F;etc&#
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/05</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/10/27/create-kubeconfig/">
-                
-                <span class="abstract-title-text">生成kubeconfig常规的两种方法</span>
-            </a>
-            <div class="abstract-content">
-                方式总得来讲有两种创建 kubeconfig，证书的话市面上很多教程，要注意下面事项为以下:
-
-
-要注意 CN(Common Name) 与 O(Organization) 等内容是会影响 Kubernetes 认证的。具体可见 https://kubernetes.io/docs/setup/best-practices/certificates/CN Common Name, apiserver 会从证书中提取该字段作为请求的用户名 (User Name)O Organization, apiserver 会从证书中提取该字段作为请求用户所属的组 (Group)
-CA (Certif...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/10/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/27</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubeconfig">kubeconfig</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1862,7 +1851,80 @@ CA (Certif...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4085,7 +4147,7 @@ CA (Certif...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 183
+        Total : 184
         </div>
         <!-- search  -->
         
@@ -4103,6 +4165,12 @@ CA (Certif...
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/headscale/">[持续更新] - headscale 搭建和应用场景</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/21</span>
@@ -6092,6 +6160,16 @@ CA (Certif...
             <span class="sidebar-tag-name" data-tags="android">
                 <span class="iconfont-archer">&#xe606;</span>
                 android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
             </span>
         
     </div>

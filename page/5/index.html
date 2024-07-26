@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/06/08/ocp4.5.9-restore-etcd/">
+                
+                <span class="abstract-title-text">openshift 4.5.9 etcd损坏+脑裂修复过程</span>
+            </a>
+            <div class="abstract-content">
+                前言介绍内部机器和环境都是在 vcenter 里，之前的 ocp 集群是 3 master + 1 worker，也就是之前的openshift 4.5.9 离线安装后的环境，后面有几台宿主机负载太高，同事看我机器负载最高，关了几台，这几天需要用下 openshift 环境。登录到 bastion 上 get 超时，看了下 haproxy 的 stat web，全部红了。。然后把所有机器开机后发现还是起不来。
+操作openshift 的 master 节点和 kubeadm 很像，几个组件都是 staticPod 形式起的。客户端也不是 docker，使用 crictl 就行了
+查看 k...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/06/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openshift">openshift</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ocp">ocp</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">
                 
                 <span class="abstract-title-text">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</span>
@@ -967,43 +1006,6 @@ https://github.com/flannel-io/flannel/issues/1795
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/10/30/uos20-nftables/">
-                
-                <span class="abstract-title-text">统信USO 20 hostPort 无法访问</span>
-            </a>
-            <div class="abstract-content">
-                由来这些天陆续发现很多客户是统信的系统，部署我们业务后无法访问
-环境信息我自己环境和客户的环境都遇到了无法访问，我自己测试的机器信息是:
-1234567891011$ cat /etc/os-releasePRETTY_NAME=&quot;Uniontech OS Server 20 Enterprise&quot;NAME=&quot;Uniontech OS Server 20 Enterprise&quot;VERSION_ID=&quot;20&quot;VERSION=&quot;20&quot;ID=UOSHOME_URL=&quot;https://www.chinauo...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/10/30">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/30</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="uos">uos</a>
     
 </div>
 
@@ -2215,7 +2217,80 @@ https://github.com/flannel-io/flannel/issues/1795
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4438,7 +4513,7 @@ https://github.com/flannel-io/flannel/issues/1795
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 183
+        Total : 184
         </div>
         <!-- search  -->
         
@@ -4456,6 +4531,12 @@ https://github.com/flannel-io/flannel/issues/1795
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/headscale/">[持续更新] - headscale 搭建和应用场景</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/21</span>
@@ -6445,6 +6526,16 @@ https://github.com/flannel-io/flannel/issues/1795
             <span class="sidebar-tag-name" data-tags="android">
                 <span class="iconfont-archer">&#xe606;</span>
                 android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
             </span>
         
     </div>

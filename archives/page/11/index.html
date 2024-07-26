@@ -444,6 +444,51 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/11/24/kubeadm-base-use/">
+                
+                <span class="abstract-title-text">[长期更新]--应大多数人要求写下kubeadm的基础使用</span>
+            </a>
+            <div class="abstract-content">
+                市面上很多kubeadm的文章都是错误示范或者不够详细，大多数都没写系统设置之类的就直接kubeadm init导致很多跟着做的人会报错
+我期望看到本文的读者最少具备以下知识:
+
+Linux一些目录规范和systemd
+学过一点docker
+懂dns和&#x2F;etc&#x2F;hosts、curl互相结合来测试一些web的接口响应状态
+不要求github有自己项目，至少会浏览github
+
+本教学将以下列节点数与规格来进行部署Kubernetes集群,系统CentOS 7.6+，有条件7.8，不要使用centos7.4以及一下，容器技术依赖于内核技术，低版本系统部署和运行后问题会非常...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/11/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/11/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubeadm">kubeadm</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/24/deployment-consul-in-k8s/">
                 
                 <span class="abstract-title-text">consul仅当服务发现在k8s无状态部署使用</span>
@@ -784,44 +829,6 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="chromedp">chromedp</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/07/08/nodeport-err/">
-                
-                <span class="abstract-title-text">为什么我不用nodePort之偶然中奖几率</span>
-            </a>
-            <div class="abstract-content">
-                嗯，1.6.7 的老集群。早上反应数据库实例创建不出来。发现接口 port 的 tcp 不可达，查看 kube-proxy 的日志如下
-123456[root@HB1-xxxxx-S03 kubernetes]# tailf  kube-proxy.INFO E0708 09:44:03.437284  394350 proxier.go:1062] can&#x27;t open &quot;nodePort for cloudify/cloudae-cfy-nginx:port1&quot; (:16081/tcp), skipping this nodePort: listen t...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/07/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/08</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="nodeport">nodeport</a>
     
 </div>
 
@@ -1860,7 +1867,80 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4083,7 +4163,7 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 183
+        Total : 184
         </div>
         <!-- search  -->
         
@@ -4101,6 +4181,12 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/headscale/">[持续更新] - headscale 搭建和应用场景</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/21</span>
@@ -6090,6 +6176,16 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <span class="sidebar-tag-name" data-tags="android">
                 <span class="iconfont-archer">&#xe606;</span>
                 android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
             </span>
         
     </div>

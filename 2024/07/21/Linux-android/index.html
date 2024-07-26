@@ -349,7 +349,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">872</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">885</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -533,7 +533,7 @@
 <h3 id="budtmo-x2F-docker-android"><a href="#budtmo-x2F-docker-android" class="headerlink" title="budtmo&#x2F;docker-android"></a>budtmo&#x2F;docker-android</h3><p><a target="_blank" rel="noopener" href="https://github.com/budtmo/docker-android">https://github.com/budtmo/docker-android</a> 感觉太重了，而且没 arm64 架构镜像。</p>
 <h3 id="remote-android-x2F-redroid-doc"><a href="#remote-android-x2F-redroid-doc" class="headerlink" title="remote-android&#x2F;redroid-doc"></a>remote-android&#x2F;redroid-doc</h3><p><a target="_blank" rel="noopener" href="https://github.com/remote-android/redroid-doc">https://github.com/remote-android/redroid-doc</a> 尝试运行 arm64 的 apk 成功了，chrome 的浏览器不行，需要有些依赖才可以运行，uc 浏览器也不行，最后用的  arm64 firefox 浏览器。另外发现有些 apk 安装后打开黑屏，最后从 proxmox 虚拟机切到宿主机上 docker 起才解决，也看到有人 arm64 M1 mac 上起安卓容器。</p>
 <h2 id="一些软件"><a href="#一些软件" class="headerlink" title="一些软件"></a>一些软件</h2><h3 id="scrcpy"><a href="#scrcpy" class="headerlink" title="scrcpy"></a>scrcpy</h3><p><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a> 牛逼的项目，不用多说，配合 adb 使用：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scrcpy </span><br><span class="line"> -S, --turn-screen-off # 远程时候，关闭设备的屏幕</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scrcpy</span><br><span class="line"> -S, --turn-screen-off # 远程时候，关闭设备的屏幕</span><br><span class="line">#  --max-size 1024 --video-bit-rate=2M --max-fps=15 低画质</span><br></pre></td></tr></table></figure>
 
 <p>关闭屏幕这个，lcd 的触发后，如果关闭 scrcpy 后面屏幕还会亮，而 oled 的则不会，单独想 adb 实现它的关闭屏幕显示而不休眠，可以参考</p>
 <ul>
@@ -563,6 +563,11 @@
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/07/25/headscale/" title="[持续更新] - headscale 搭建和应用场景">
+                    <div class="nextTitle">[持续更新] - headscale 搭建和应用场景</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -1661,7 +1666,80 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3884,7 +3962,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 183
+        Total : 184
         </div>
         <!-- search  -->
         
@@ -3902,6 +3980,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/headscale/">[持续更新] - headscale 搭建和应用场景</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/21</span>
@@ -5891,6 +5975,16 @@
             <span class="sidebar-tag-name" data-tags="android">
                 <span class="iconfont-archer">&#xe606;</span>
                 android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
             </span>
         
     </div>

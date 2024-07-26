@@ -27,6 +27,9 @@
 <meta property="og:description" content="转载自https:&#x2F;&#x2F;kairen.github.io&#x2F;2018&#x2F;04&#x2F;05&#x2F;kubernetes&#x2F;deploy&#x2F;manual-v1.10&#x2F;作者文章的安装步骤文字是复制作者的1.8的安装步骤然后改的,安装过程变了部分,但是文字没有改正过来。 此过程我写了ansible安装部署方案,地址(一些文件下载不了的话可以去下面的github里找对应的文件)  多master高可用版 单master版  本文">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kairen.github.io/images/kube/kubernetes-aa-ha.png">
+<meta property="og:image" content="https://kairen.github.io/images/kube/kubernetes-dashboard.png">
+<meta property="og:image" content="https://kairen.github.io/images/kube/monitoring-grafana.png">
+<meta property="og:image" content="https://kairen.github.io/images/kube/helm-jenkins-v1.10.png">
 <meta property="article:published_time" content="2018-05-05T18:14:35.000Z">
 <meta property="article:modified_time" content="2018-05-05T18:14:35.000Z">
 <meta property="article:author" content="Zhangguanzhang">
@@ -349,7 +352,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">9.1k</span>阅读时长: <span class="post-count reading-time">46 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">8.3k</span>阅读时长: <span class="post-count reading-time">41 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -784,387 +787,161 @@
 </ul>
 </blockquote>
 <p>每台<code>master</code>机器下载<code>haproxy.cfg</code>档案来提供给HAProxy容器使用：</p>
-<pre><code>$ mkdir -p /etc/haproxy/
-$ wget &quot;$&#123;CORE_URL&#125;/haproxy.cfg&quot; -O /etc/haproxy/haproxy.cfg
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; * &lt;span style=&quot;color: red&quot;&gt;若与本教学IP 不同的话，请记得修改文件。&lt;/span&gt;</span><br><span class="line"></span><br><span class="line">每台`master`机器下载`kubelet.service`相关文件来管理kubelet：</span><br></pre></td></tr></table></figure>
-$ mkdir -p /etc/systemd/system/kubelet.service.d
-$ wget &quot;$&#123;CORE_URL&#125;/kubelet.service&quot; -O /lib/systemd/system/kubelet.service
-$ wget &quot;$&#123;CORE_URL&#125;/10-kubelet.conf&quot; -O /etc/systemd/system/kubelet.service.d/10-kubelet.conf
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 若cluster dns或domain有改变的话，需要修改10-kubelet.conf。</span><br><span class="line"></span><br><span class="line">最后每台`master`机器建立var 存放资讯，然后启动kubelet 服务:</span><br></pre></td></tr></table></figure>
-$ mkdir -p /var/lib/kubelet /var/log/kubernetes /var/lib/etcd
-$ systemctl enable kubelet.service &amp;&amp; systemctl start kubelet.service
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">完成后会需要一段时间来下载映像档与启动元件，可以利用该指令来监看：</span><br></pre></td></tr></table></figure>
-$ watch netstat -ntlp
-Active Internet connections (only servers)
-Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
-tcp        0      0 127.0.0.1:10248         0.0.0.0:*               LISTEN      10344/kubelet
-tcp        0      0 127.0.0.1:10251         0.0.0.0:*               LISTEN      11324/kube-schedule
-tcp        0      0 0.0.0.0:6443            0.0.0.0:*               LISTEN      11416/haproxy
-tcp        0      0 127.0.0.1:10252         0.0.0.0:*               LISTEN      11235/kube-controll
-tcp        0      0 0.0.0.0:9090            0.0.0.0:*               LISTEN      11416/haproxy
-tcp6       0      0 :::2379                 :::*                    LISTEN      10479/etcd
-tcp6       0      0 :::2380                 :::*                    LISTEN      10479/etcd
-tcp6       0      0 :::10255                :::*                    LISTEN      10344/kubelet
-tcp6       0      0 :::5443                 :::*                    LISTEN      11295/kube-apiserve
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 此处需要等待时间来拉取镜像,需要耐心等待</span><br><span class="line">&gt; * 若看到以上资讯表示服务正常启动，若发生问题可以用`docker`指令来查看。</span><br><span class="line">&gt; * 若看到关键的几个管理组件容器退出的话就说明操作错误</span><br><span class="line"></span><br><span class="line">&lt;span style=&quot;font-size: 1.3em;color: red;&quot;&gt;上面会去拉取镜像,需要一段时间，具体好没好可以下面的操作来看状态对不对&lt;/span&gt;</span><br><span class="line"></span><br><span class="line">&lt;span style=&quot;font-size: 1.4em;color: #333;font-weight:bold&quot;&gt;验证集群&lt;/span&gt;</span><br><span class="line">完成后，在任意一台`master`节点复制`admin kubeconfig`文件，并通过简单指令验证：</span><br></pre></td></tr></table></figure>
-$ cp /etc/kubernetes/admin.conf ~/.kube/config
-$ kubectl get cs
-NAME                 STATUS    MESSAGE              ERROR
-controller-manager   Healthy   ok
-scheduler            Healthy   ok
-etcd-2               Healthy   &#123;&quot;health&quot;: &quot;true&quot;&#125;
-etcd-1               Healthy   &#123;&quot;health&quot;: &quot;true&quot;&#125;
-etcd-0               Healthy   &#123;&quot;health&quot;: &quot;true&quot;&#125;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /etc/haproxy/</span><br><span class="line">$ wget &quot;$&#123;CORE_URL&#125;/haproxy.cfg&quot; -O /etc/haproxy/haproxy.cfg</span><br></pre></td></tr></table></figure>
 
-$ kubectl get node
-NAME      STATUS     ROLES     AGE       VERSION
-k8s-m1    NotReady   master    52s       v1.10.0
-k8s-m2    NotReady   master    51s       v1.10.0
-k8s-m3    NotReady   master    50s       v1.10.0
+<blockquote>
+<ul>
+<li><span style="color: red">若与本教学IP 不同的话，请记得修改文件。</span></li>
+</ul>
+</blockquote>
+<p>每台<code>master</code>机器下载<code>kubelet.service</code>相关文件来管理kubelet：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /etc/systemd/system/kubelet.service.d</span><br><span class="line">$ wget &quot;$&#123;CORE_URL&#125;/kubelet.service&quot; -O /lib/systemd/system/kubelet.service</span><br><span class="line">$ wget &quot;$&#123;CORE_URL&#125;/10-kubelet.conf&quot; -O /etc/systemd/system/kubelet.service.d/10-kubelet.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>若cluster dns或domain有改变的话，需要修改10-kubelet.conf。</li>
+</ul>
+</blockquote>
+<p>最后每台<code>master</code>机器建立var 存放资讯，然后启动kubelet 服务:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /var/lib/kubelet /var/log/kubernetes /var/lib/etcd</span><br><span class="line">$ systemctl enable kubelet.service &amp;&amp; systemctl start kubelet.service</span><br></pre></td></tr></table></figure>
+<p>完成后会需要一段时间来下载映像档与启动元件，可以利用该指令来监看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ watch netstat -ntlp</span><br><span class="line">Active Internet connections (only servers)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name</span><br><span class="line">tcp        0      0 127.0.0.1:10248         0.0.0.0:*               LISTEN      10344/kubelet</span><br><span class="line">tcp        0      0 127.0.0.1:10251         0.0.0.0:*               LISTEN      11324/kube-schedule</span><br><span class="line">tcp        0      0 0.0.0.0:6443            0.0.0.0:*               LISTEN      11416/haproxy</span><br><span class="line">tcp        0      0 127.0.0.1:10252         0.0.0.0:*               LISTEN      11235/kube-controll</span><br><span class="line">tcp        0      0 0.0.0.0:9090            0.0.0.0:*               LISTEN      11416/haproxy</span><br><span class="line">tcp6       0      0 :::2379                 :::*                    LISTEN      10479/etcd</span><br><span class="line">tcp6       0      0 :::2380                 :::*                    LISTEN      10479/etcd</span><br><span class="line">tcp6       0      0 :::10255                :::*                    LISTEN      10344/kubelet</span><br><span class="line">tcp6       0      0 :::5443                 :::*                    LISTEN      11295/kube-apiserve</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>此处需要等待时间来拉取镜像,需要耐心等待</li>
+<li>若看到以上资讯表示服务正常启动，若发生问题可以用<code>docker</code>指令来查看。</li>
+<li>若看到关键的几个管理组件容器退出的话就说明操作错误</li>
+</ul>
+</blockquote>
+<p><span style="font-size: 1.3em;color: red;">上面会去拉取镜像,需要一段时间，具体好没好可以下面的操作来看状态对不对</span></p>
+<p><span style="font-size: 1.4em;color: #333;font-weight:bold">验证集群</span><br>完成后，在任意一台<code>master</code>节点复制<code>admin kubeconfig</code>文件，并通过简单指令验证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">$ cp /etc/kubernetes/admin.conf ~/.kube/config</span><br><span class="line">$ kubectl get cs</span><br><span class="line">NAME                 STATUS    MESSAGE              ERROR</span><br><span class="line">controller-manager   Healthy   ok</span><br><span class="line">scheduler            Healthy   ok</span><br><span class="line">etcd-2               Healthy   &#123;&quot;health&quot;: &quot;true&quot;&#125;</span><br><span class="line">etcd-1               Healthy   &#123;&quot;health&quot;: &quot;true&quot;&#125;</span><br><span class="line">etcd-0               Healthy   &#123;&quot;health&quot;: &quot;true&quot;&#125;</span><br><span class="line"></span><br><span class="line">$ kubectl get node</span><br><span class="line">NAME      STATUS     ROLES     AGE       VERSION</span><br><span class="line">k8s-m1    NotReady   master    52s       v1.10.0</span><br><span class="line">k8s-m2    NotReady   master    51s       v1.10.0</span><br><span class="line">k8s-m3    NotReady   master    50s       v1.10.0</span><br><span class="line"></span><br><span class="line">$ kubectl -n kube-system get po</span><br><span class="line">NAME                             READY     STATUS    RESTARTS   AGE</span><br><span class="line">etcd-k8s-m1                      1/1       Running   0          7m</span><br><span class="line">etcd-k8s-m2                      1/1       Running   0          8m</span><br><span class="line">etcd-k8s-m3                      1/1       Running   0          7m</span><br><span class="line">haproxy-k8s-m1                   1/1       Running   0          7m</span><br><span class="line">haproxy-k8s-m2                   1/1       Running   0          8m</span><br><span class="line">haproxy-k8s-m3                   1/1       Running   0          8m</span><br><span class="line">keepalived-k8s-m1                1/1       Running   0          8m</span><br><span class="line">keepalived-k8s-m2                1/1       Running   0          7m</span><br><span class="line">keepalived-k8s-m3                1/1       Running   0          7m</span><br><span class="line">kube-apiserver-k8s-m1            1/1       Running   0          7m</span><br><span class="line">kube-apiserver-k8s-m2            1/1       Running   0          6m</span><br><span class="line">kube-apiserver-k8s-m3            1/1       Running   0          7m</span><br><span class="line">kube-controller-manager-k8s-m1   1/1       Running   0          8m</span><br><span class="line">kube-controller-manager-k8s-m2   1/1       Running   0          8m</span><br><span class="line">kube-controller-manager-k8s-m3   1/1       Running   0          8m</span><br><span class="line">kube-scheduler-k8s-m1            1/1       Running   0          8m</span><br><span class="line">kube-scheduler-k8s-m2            1/1       Running   0          8m</span><br><span class="line">kube-scheduler-k8s-m3            1/1       Running   0          8m</span><br></pre></td></tr></table></figure>
+<p>接着确认服务能够执行logs 等指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system logs -f kube-scheduler-k8s-m2</span><br><span class="line">Error from server (Forbidden): Forbidden (user=kube-apiserver, verb=get, resource=nodes, subresource=proxy) ( pods/log kube-scheduler-k8s-m2)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>这边会发现出现403 Forbidden问题，这是因为<code>kube-apiserveruser</code>并没有nodes的资源存取权限，属于正常。</li>
+</ul>
+</blockquote>
+<p><span style="font-size: 1.2em;color: red;">后面kubectl的命令不需要每个master都执行了,任意一台master执行就行了<br>kubectl可以从url读取内容来创建内容里的资源对象,也可以本地文件读取<br>后面kubectl命令结尾的yaml文件记得先下载下来改下里面的镜像仓库部分gcr.io&#x2F;google_containers和k8s.gcr.io部分换成mirrorgooglecontainers,还有里面的apiserver ip啥的<br>然后-f后面指定文件路径即可<br>上面建议后面kubectl命令部分同理,不在多说废话<br></span></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f &quot;$&#123;CORE_URL&#125;/apiserver-to-kubelet-rbac.yml.conf&quot;</span><br><span class="line">clusterrole.rbac.authorization.k8s.io &quot;system:kube-apiserver-to-kubelet&quot; configured</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io &quot;system:kube-apiserver&quot; configured</span><br><span class="line"></span><br><span class="line"># 測試 logs</span><br><span class="line">$ kubectl -n kube-system logs -f kube-scheduler-k8s-m2</span><br><span class="line">...</span><br><span class="line">I0403 02:30:36.375935       1 server.go:555] Version: v1.10.0</span><br><span class="line">I0403 02:30:36.378208       1 server.go:574] starting healthz server on 127.0.0.1:10251</span><br></pre></td></tr></table></figure>
+<p>设定<code>master</code>节点允许Taint：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl taint nodes node-role.kubernetes.io/master=&quot;&quot;:NoSchedule --all</span><br><span class="line">node &quot;k8s-m1&quot; tainted</span><br><span class="line">node &quot;k8s-m2&quot; tainted</span><br><span class="line">node &quot;k8s-m3&quot; tainted</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/" target="_blank" rel="noopener">Taints and Tolerations</a>。</li>
+</ul>
+</blockquote>
+<h3 id="建立TLS-Bootstrapping-RBAC-与Secret"><a href="#建立TLS-Bootstrapping-RBAC-与Secret" class="headerlink" title="建立TLS Bootstrapping RBAC 与Secret"></a>建立TLS Bootstrapping RBAC 与Secret</h3><p>由于本次安装启用了TLS认证，因此每个节点的kubelet都必须使用kube-apiserver的CA的凭证后，才能与kube-apiserver进行沟通，而该过程需要手动针对每台节点单独签署凭证是一件繁琐的事情，且一旦节点增加会延伸出管理不易问题;而TLS bootstrapping目标就是解决该问题，通过让kubelet先使用一个预定低权限使用者连接到kube-apiserver，然后在对kube-apiserver申请凭证签署，当授权Token一致时，Node节点的kubelet凭证将由kube-apiserver动态签署提供。具体作法可以参考<a href="https://kubernetes.io/docs/admin/kubelet-tls-bootstrapping/" target="_blank" rel="noopener">TLS Bootstrapping</a>与<a href="https://kubernetes.io/docs/admin/bootstrap-tokens/" target="_blank" rel="noopener">Authenticating with Bootstrap Tokens</a>。</p>
+<p>首先在<code>k8s-m1</code>建立一个变数来产生<code>BOOTSTRAP_TOKEN</code>，并建立<code>bootstrap-kubelet.conf</code>的Kubernetes config文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ cd /etc/kubernetes/pki</span><br><span class="line">$ export TOKEN_ID=$(openssl rand 3 -hex)</span><br><span class="line">$ export TOKEN_SECRET=$(openssl rand 8 -hex)</span><br><span class="line">$ export BOOTSTRAP_TOKEN=$&#123;TOKEN_ID&#125;.$&#123;TOKEN_SECRET&#125;</span><br><span class="line">$ export KUBE_APISERVER=&quot;https://192.16.35.10:6443&quot;</span><br><span class="line"></span><br><span class="line"># bootstrap set cluster</span><br><span class="line">$ kubectl config set-cluster kubernetes \</span><br><span class="line">    --certificate-authority=ca.pem \</span><br><span class="line">    --embed-certs=true \</span><br><span class="line">    --server=$&#123;KUBE_APISERVER&#125; \</span><br><span class="line">    --kubeconfig=../bootstrap-kubelet.conf</span><br><span class="line"></span><br><span class="line"># bootstrap set credentials</span><br><span class="line">$ kubectl config set-credentials tls-bootstrap-token-user \</span><br><span class="line">    --token=$&#123;BOOTSTRAP_TOKEN&#125; \</span><br><span class="line">    --kubeconfig=../bootstrap-kubelet.conf</span><br><span class="line"></span><br><span class="line"># bootstrap set context</span><br><span class="line">$ kubectl config set-context tls-bootstrap-token-user@kubernetes \</span><br><span class="line">    --cluster=kubernetes \</span><br><span class="line">    --user=tls-bootstrap-token-user \</span><br><span class="line">    --kubeconfig=../bootstrap-kubelet.conf</span><br><span class="line"></span><br><span class="line"># bootstrap use default context</span><br><span class="line">$ kubectl config use-context tls-bootstrap-token-user@kubernetes \</span><br><span class="line">    --kubeconfig=../bootstrap-kubelet.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>若想要用手动签署凭证来进行授权的话，可以参考<a href="https://kubernetes.io/docs/concepts/cluster-administration/certificates/" target="_blank" rel="noopener">Certificate</a>。</li>
+</ul>
+</blockquote>
+<p>接着<code>在k8s-m1</code>建立TLS bootstrap secret来提供自动签证使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl create -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Secret</span><br><span class="line">metadata:</span><br><span class="line">  name: bootstrap-token-$&#123;TOKEN_ID&#125;</span><br><span class="line">  namespace: kube-system</span><br><span class="line">type: bootstrap.kubernetes.io/token</span><br><span class="line">stringData:</span><br><span class="line">  token-id: $&#123;TOKEN_ID&#125;</span><br><span class="line">  token-secret: $&#123;TOKEN_SECRET&#125;</span><br><span class="line">  usage-bootstrap-authentication: &quot;true&quot;</span><br><span class="line">  usage-bootstrap-signing: &quot;true&quot;</span><br><span class="line">  auth-extra-groups: system:bootstrappers:default-node-token</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">secret &quot;bootstrap-token-65a3a9&quot; created</span><br></pre></td></tr></table></figure>
+<p>在<code>k8s-m1</code>建立 TLS Bootstrap Autoapprove RBAC：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f &quot;$&#123;CORE_URL&#125;/kubelet-bootstrap-rbac.yml.conf&quot;</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io &quot;kubelet-bootstrap&quot; created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io &quot;node-autoapprove-bootstrap&quot; created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io &quot;node-autoapprove-certificate-rotation&quot; created</span><br></pre></td></tr></table></figure>
+<p><span style="font-size: 1.4em;color: #333;font-weight:bold">Kubernetes Nodes</span><br>本部分将说明如何建立与设定Kubernetes Node 角色，Node 是主要执行容器实例(Pod)的工作节点。<br>在开始部署前，先在<code>k8-m1</code>将需要用到的文件复制到所有<code>node</code>节点上：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ cd /etc/kubernetes/pki</span><br><span class="line">$ for NODE in k8s-n1 k8s-n2 k8s-n3; do</span><br><span class="line">    echo &quot;--- $NODE ---&quot;</span><br><span class="line">    ssh $&#123;NODE&#125; &quot;mkdir -p /etc/kubernetes/pki/&quot;</span><br><span class="line">    ssh $&#123;NODE&#125; &quot;mkdir -p /etc/etcd/ssl&quot;</span><br><span class="line">    # Etcd</span><br><span class="line">    for FILE in etcd-ca.pem etcd.pem etcd-key.pem; do</span><br><span class="line">      scp /etc/etcd/ssl/$&#123;FILE&#125; $&#123;NODE&#125;:/etc/etcd/ssl/$&#123;FILE&#125;</span><br><span class="line">    done</span><br><span class="line">    # Kubernetes</span><br><span class="line">    for FILE in pki/ca.pem pki/ca-key.pem bootstrap-kubelet.conf; do</span><br><span class="line">      scp /etc/kubernetes/$&#123;FILE&#125; $&#123;NODE&#125;:/etc/kubernetes/$&#123;FILE&#125;</span><br><span class="line">    done</span><br><span class="line">  done</span><br></pre></td></tr></table></figure>
+<p><span style="font-size: 1.4em;color: #333;font-weight:bold">部署与设定</span><br>在每台<code>node</code>节点下载<code>kubelet.service</code>相关文件来管理kubelet：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ export CORE_URL=&quot;https://kairen.github.io/files/manual-v1.10/node&quot;</span><br><span class="line">$ mkdir -p /etc/systemd/system/kubelet.service.d</span><br><span class="line">$ wget &quot;$&#123;CORE_URL&#125;/kubelet.service&quot; -O /lib/systemd/system/kubelet.service</span><br><span class="line">$ wget &quot;$&#123;CORE_URL&#125;/10-kubelet.conf&quot; -O /etc/systemd/system/kubelet.service.d/10-kubelet.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>若<code>cluster dns</code>或<code>domain</code>有改变的话，需要修改<code>10-kubelet.conf</code>。</li>
+</ul>
+</blockquote>
+<p>最后每台<code>node</code>节点建立var 存放资讯，然后启动kubelet 服务:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /var/lib/kubelet /var/log/kubernetes</span><br><span class="line">$ systemctl enable kubelet.service &amp;&amp; systemctl start kubelet.service</span><br></pre></td></tr></table></figure>
+<h3 id="验证集群"><a href="#验证集群" class="headerlink" title="验证集群"></a>验证集群</h3><p>完成后，在任意一台<code>master</code>节点并通过简单指令验证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get csr</span><br><span class="line">NAME                                                   AGE       REQUESTOR                 CONDITION</span><br><span class="line">csr-bvz9l                                              11m       system:node:k8s-m1        Approved,Issued</span><br><span class="line">csr-jwr8k                                              11m       system:node:k8s-m2        Approved,Issued</span><br><span class="line">csr-q867w                                              11m       system:node:k8s-m3        Approved,Issued</span><br><span class="line">node-csr-Y-FGvxZWJqI-8RIK_IrpgdsvjGQVGW0E4UJOuaU8ogk   17s       system:bootstrap:dca3e1   Approved,Issued</span><br><span class="line">node-csr-cnX9T1xp1LdxVDc9QW43W0pYkhEigjwgceRshKuI82c   19s       system:bootstrap:dca3e1   Approved,Issued</span><br><span class="line">node-csr-m7SBA9RAGCnsgYWJB-u2HoB2qLSfiQZeAxWFI2WYN7Y   18s       system:bootstrap:dca3e1   Approved,Issued</span><br><span class="line"></span><br><span class="line">$ kubectl get nodes</span><br><span class="line">NAME      STATUS     ROLES     AGE       VERSION</span><br><span class="line">k8s-m1    NotReady   master    12m       v1.10.0</span><br><span class="line">k8s-m2    NotReady   master    11m       v1.10.0</span><br><span class="line">k8s-m3    NotReady   master    11m       v1.10.0</span><br><span class="line">k8s-n1    NotReady   node      32s       v1.10.0</span><br><span class="line">k8s-n2    NotReady   node      31s       v1.10.0</span><br><span class="line">k8s-n3    NotReady   node      29s       v1.10.0</span><br></pre></td></tr></table></figure>
 
-$ kubectl -n kube-system get po
-NAME                             READY     STATUS    RESTARTS   AGE
-etcd-k8s-m1                      1/1       Running   0          7m
-etcd-k8s-m2                      1/1       Running   0          8m
-etcd-k8s-m3                      1/1       Running   0          7m
-haproxy-k8s-m1                   1/1       Running   0          7m
-haproxy-k8s-m2                   1/1       Running   0          8m
-haproxy-k8s-m3                   1/1       Running   0          8m
-keepalived-k8s-m1                1/1       Running   0          8m
-keepalived-k8s-m2                1/1       Running   0          7m
-keepalived-k8s-m3                1/1       Running   0          7m
-kube-apiserver-k8s-m1            1/1       Running   0          7m
-kube-apiserver-k8s-m2            1/1       Running   0          6m
-kube-apiserver-k8s-m3            1/1       Running   0          7m
-kube-controller-manager-k8s-m1   1/1       Running   0          8m
-kube-controller-manager-k8s-m2   1/1       Running   0          8m
-kube-controller-manager-k8s-m3   1/1       Running   0          8m
-kube-scheduler-k8s-m1            1/1       Running   0          8m
-kube-scheduler-k8s-m2            1/1       Running   0          8m
-kube-scheduler-k8s-m3            1/1       Running   0          8m
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接着确认服务能够执行logs 等指令：</span><br></pre></td></tr></table></figure>
-$ kubectl -n kube-system logs -f kube-scheduler-k8s-m2
-Error from server (Forbidden): Forbidden (user=kube-apiserver, verb=get, resource=nodes, subresource=proxy) ( pods/log kube-scheduler-k8s-m2)
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 这边会发现出现403 Forbidden问题，这是因为`kube-apiserveruser`并没有nodes的资源存取权限，属于正常。</span><br><span class="line"></span><br><span class="line">&lt;span style=&quot;font-size: 1.2em;color: red;&quot;&gt;后面kubectl的命令不需要每个master都执行了,任意一台master执行就行了</span><br><span class="line">kubectl可以从url读取内容来创建内容里的资源对象,也可以本地文件读取</span><br><span class="line">后面kubectl命令结尾的yaml文件记得先下载下来改下里面的镜像仓库部分gcr.io/google_containers和k8s.gcr.io部分换成mirrorgooglecontainers,还有里面的apiserver ip啥的</span><br><span class="line">然后-f后面指定文件路径即可</span><br><span class="line">上面建议后面kubectl命令部分同理,不在多说废话</span><br><span class="line">&lt;/span&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-$ kubectl apply -f &quot;$&#123;CORE_URL&#125;/apiserver-to-kubelet-rbac.yml.conf&quot;
-clusterrole.rbac.authorization.k8s.io &quot;system:kube-apiserver-to-kubelet&quot; configured
-clusterrolebinding.rbac.authorization.k8s.io &quot;system:kube-apiserver&quot; configured
+<h2 id="Kubernetes-Core-Addons部署"><a href="#Kubernetes-Core-Addons部署" class="headerlink" title="Kubernetes Core Addons部署"></a>Kubernetes Core Addons部署</h2><p>当完成上面所有步骤后，接着需要部署一些插件，其中如<code>Kubernetes DNS</code>与<code>Kubernetes Proxy</code>等这种Addons是非常重要的。</p>
+<h3 id="Kubernetes-Proxy"><a href="#Kubernetes-Proxy" class="headerlink" title="Kubernetes Proxy"></a>Kubernetes Proxy</h3><p><a href="https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/kube-proxy" target="_blank" rel="noopener">Kube-proxy</a>是实现Service的关键插件，kube-proxy会在每台节点上执行，然后监听API Server的Service与Endpoint资源物件的改变，然后来依据变化执行iptables来实现网路的转发。这边我们会需要建议一个DaemonSet来执行，并且建立一些需要的Certificates。</p>
+<p>在<code>k8s-m1</code>下载<code>kube-proxy.yml</code>来建立Kubernetes Proxy Addon：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/kube-proxy.yml.conf&quot;</span><br><span class="line">serviceaccount &quot;kube-proxy&quot; created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io &quot;system:kube-proxy&quot; created</span><br><span class="line">configmap &quot;kube-proxy&quot; created</span><br><span class="line">daemonset.apps &quot;kube-proxy&quot; created</span><br><span class="line"></span><br><span class="line">$ kubectl -n kube-system get po -o wide -l k8s-app=kube-proxy</span><br><span class="line">NAME               READY     STATUS    RESTARTS   AGE       IP             NODE</span><br><span class="line">kube-proxy-8j5w8   1/1       Running   0          29s       192.16.35.16   k8s-n3</span><br><span class="line">kube-proxy-c4zvt   1/1       Running   0          29s       192.16.35.11   k8s-m1</span><br><span class="line">kube-proxy-clpl6   1/1       Running   0          29s       192.16.35.12   k8s-m2</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-# 測試 logs
-$ kubectl -n kube-system logs -f kube-scheduler-k8s-m2
-...
-I0403 02:30:36.375935       1 server.go:555] Version: v1.10.0
-I0403 02:30:36.378208       1 server.go:574] starting healthz server on 127.0.0.1:10251
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">设定`master`节点允许Taint：</span><br></pre></td></tr></table></figure>
-$ kubectl taint nodes node-role.kubernetes.io/master=&quot;&quot;:NoSchedule --all
-node &quot;k8s-m1&quot; tainted
-node &quot;k8s-m2&quot; tainted
-node &quot;k8s-m3&quot; tainted
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; * &lt;a href=&quot;https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Taints and Tolerations&lt;/a&gt;。</span><br><span class="line"></span><br><span class="line">### 建立TLS Bootstrapping RBAC 与Secret</span><br><span class="line">由于本次安装启用了TLS认证，因此每个节点的kubelet都必须使用kube-apiserver的CA的凭证后，才能与kube-apiserver进行沟通，而该过程需要手动针对每台节点单独签署凭证是一件繁琐的事情，且一旦节点增加会延伸出管理不易问题;而TLS bootstrapping目标就是解决该问题，通过让kubelet先使用一个预定低权限使用者连接到kube-apiserver，然后在对kube-apiserver申请凭证签署，当授权Token一致时，Node节点的kubelet凭证将由kube-apiserver动态签署提供。具体作法可以参考&lt;a href=&quot;https://kubernetes.io/docs/admin/kubelet-tls-bootstrapping/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;TLS Bootstrapping&lt;/a&gt;与&lt;a href=&quot;https://kubernetes.io/docs/admin/bootstrap-tokens/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Authenticating with Bootstrap Tokens&lt;/a&gt;。</span><br><span class="line"></span><br><span class="line">首先在`k8s-m1`建立一个变数来产生`BOOTSTRAP_TOKEN`，并建立`bootstrap-kubelet.conf`的Kubernetes config文件：</span><br></pre></td></tr></table></figure>
-$ cd /etc/kubernetes/pki
-$ export TOKEN_ID=$(openssl rand 3 -hex)
-$ export TOKEN_SECRET=$(openssl rand 8 -hex)
-$ export BOOTSTRAP_TOKEN=$&#123;TOKEN_ID&#125;.$&#123;TOKEN_SECRET&#125;
-$ export KUBE_APISERVER=&quot;https://192.16.35.10:6443&quot;
+<h3 id="Kubernetes-DNS"><a href="#Kubernetes-DNS" class="headerlink" title="Kubernetes DNS"></a>Kubernetes DNS</h3><p><a href="https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns" target="_blank" rel="noopener">Kube DNS</a>是Kubernetes集群内部Pod之间互相沟通的重要Addon，它允许Pod可以通过Domain Name方式来连接Service，其主要由Kube DNS与Sky DNS组合而成，通过Kube DNS监听Service与Endpoint变化，来提供给Sky DNS资讯，已更新解析位址。</p>
+<p>在<code>k8s-m1</code>下载<code>kube-dns.yml</code>来建立Kubernetes Proxy Addon：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/kube-dns.yml.conf&quot;</span><br><span class="line">serviceaccount &quot;kube-dns&quot; created</span><br><span class="line">service &quot;kube-dns&quot; created</span><br><span class="line">deployment.extensions &quot;kube-dns&quot; created</span><br><span class="line"></span><br><span class="line">$ kubectl -n kube-system get po -l k8s-app=kube-dns</span><br><span class="line">NAME                        READY     STATUS    RESTARTS   AGE</span><br><span class="line">kube-dns-654684d656-zq5t8   0/3       Pending   0          1m</span><br></pre></td></tr></table></figure>
+<p>这边会发现处于<code>Pending</code>状态，是由于Kubernetes Pod Network还未建立完成，因此所有节点会处于<code>NotReady</code>状态，而造成Pod无法被排程分配到指定节点上启动，由于为了解决该问题，下节将说明如何建立Pod Network。</p>
+<h3 id="Calico-Network-安装与设定"><a href="#Calico-Network-安装与设定" class="headerlink" title="Calico Network 安装与设定"></a>Calico Network 安装与设定</h3><p>Calico 是一款纯3层的资料中心网路方案(不需要Overlay 网路)，Calico 好处是它整合了各种云原生平台，且Calico 在每一个节点利用Linux Kernel 实现高效的vRouter 来负责资料的转发，而当资料中心复杂度增加时，可以用BGP route reflector 来达成。</p>
+<blockquote>
+<ul>
+<li>本次不采用手动方式来建立Calico网路，若想了解可以参考<a href="https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/integration" target="_blank" rel="noopener">Integration Guide</a>。</li>
+</ul>
+</blockquote>
+<p>在<code>k8s-m1</code>下载<code>calico.yaml</code>来建立Calico Network：(yaml里的interface网卡名记得改成和宿主机网卡名一致)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/network/calico.yml.conf&quot;</span><br><span class="line">configmap &quot;calico-config&quot; created</span><br><span class="line">daemonset &quot;calico-node&quot; created</span><br><span class="line">deployment &quot;calico-kube-controllers&quot; created</span><br><span class="line">clusterrolebinding &quot;calico-cni-plugin&quot; created</span><br><span class="line">clusterrole &quot;calico-cni-plugin&quot; created</span><br><span class="line">serviceaccount &quot;calico-cni-plugin&quot; created</span><br><span class="line">clusterrolebinding &quot;calico-kube-controllers&quot; created</span><br><span class="line">clusterrole &quot;calico-kube-controllers&quot; created</span><br><span class="line">serviceaccount &quot;calico-kube-controllers&quot; created</span><br><span class="line"></span><br><span class="line">$ kubectl -n kube-system get po -l k8s-app=calico-node -o wide</span><br><span class="line">NAME                READY     STATUS    RESTARTS   AGE       IP             NODE</span><br><span class="line">calico-node-22mbb   2/2       Running   0          1m        192.16.35.12   k8s-m2</span><br><span class="line">calico-node-2qwf5   2/2       Running   0          1m        192.16.35.11   k8s-m1</span><br><span class="line">calico-node-g2sp8   2/2       Running   0          1m        192.16.35.13   k8s-m3</span><br><span class="line">calico-node-hghp4   2/2       Running   0          1m        192.16.35.14   k8s-n1</span><br><span class="line">calico-node-qp6gf   2/2       Running   0          1m        192.16.35.15   k8s-n2</span><br><span class="line">calico-node-zfx4n   2/2       Running   0          1m        192.16.35.16   k8s-n3</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>这边若节点IP与网卡不同的话，请修改calico.yml文件。</li>
+</ul>
+</blockquote>
+<p>在<code>k8s-m1</code>下载Calico CLI来查看Calico nodes:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/projectcalico/calicoctl/releases/download/v3.1.0/calicoctl -O /usr/local/bin/calicoctl</span><br><span class="line">$ chmod u+x /usr/local/bin/calicoctl</span><br><span class="line">$ cat &lt;&lt;EOF &gt; ~/calico-rc</span><br><span class="line">export ETCD_ENDPOINTS=&quot;https://192.16.35.11:2379,https://192.16.35.12:2379,https://192.16.35.13:2379&quot;</span><br><span class="line">export ETCD_CA_CERT_FILE=&quot;/etc/etcd/ssl/etcd-ca.pem&quot;</span><br><span class="line">export ETCD_CERT_FILE=&quot;/etc/etcd/ssl/etcd.pem&quot;</span><br><span class="line">export ETCD_KEY_FILE=&quot;/etc/etcd/ssl/etcd-key.pem&quot;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">$ . ~/calico-rc</span><br><span class="line">$ calicoctl node status</span><br><span class="line">Calico process is running.</span><br><span class="line"></span><br><span class="line">IPv4 BGP status</span><br><span class="line">+--------------+-------------------+-------+----------+-------------+</span><br><span class="line">| PEER ADDRESS |     PEER TYPE     | STATE |  SINCE   |    INFO     |</span><br><span class="line">+--------------+-------------------+-------+----------+-------------+</span><br><span class="line">| 192.16.35.12 | node-to-node mesh | up    | 04:42:37 | Established |</span><br><span class="line">| 192.16.35.13 | node-to-node mesh | up    | 04:42:42 | Established |</span><br><span class="line">| 192.16.35.14 | node-to-node mesh | up    | 04:42:37 | Established |</span><br><span class="line">| 192.16.35.15 | node-to-node mesh | up    | 04:42:41 | Established |</span><br><span class="line">| 192.16.35.16 | node-to-node mesh | up    | 04:42:36 | Established |</span><br><span class="line">+--------------+-------------------+-------+----------+-------------+</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-# bootstrap set cluster
-$ kubectl config set-cluster kubernetes \
-    --certificate-authority=ca.pem \
-    --embed-certs=true \
-    --server=$&#123;KUBE_APISERVER&#125; \
-    --kubeconfig=../bootstrap-kubelet.conf
+<p>查看pending 的pod 是否已执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system get po -l k8s-app=kube-dns</span><br><span class="line">kubectl -n kube-system get po -l k8s-app=kube-dns</span><br><span class="line">NAME                        READY     STATUS    RESTARTS   AGE</span><br><span class="line">kube-dns-654684d656-j8xzx   3/3       Running   0          10m</span><br></pre></td></tr></table></figure>
 
-# bootstrap set credentials
-$ kubectl config set-credentials tls-bootstrap-token-user \
-    --token=$&#123;BOOTSTRAP_TOKEN&#125; \
-    --kubeconfig=../bootstrap-kubelet.conf
+<h2 id="Kubernets-Extra-Addons部署"><a href="#Kubernets-Extra-Addons部署" class="headerlink" title="Kubernets Extra Addons部署"></a>Kubernets Extra Addons部署</h2><p>本节说明如何部署一些官方常用的Addons，如Dashboard、Heapster 等。</p>
+<h3 id="Dashboard"><a href="#Dashboard" class="headerlink" title="Dashboard"></a>Dashboard</h3><p><a href="https://github.com/kubernetes/dashboard" target="_blank" rel="noopener">Dashboard</a>是Kubernetes社区官方开发的仪表板，有了仪表板后管理者就能够通过Web-based方式来管理Kubernetes集群，除了提升管理方便，也让资源视觉化，让人更直觉看见系统资讯的呈现结果。</p>
+<p>在<code>k8s-m1</code>通过kubectl来建立kubernetes dashboard即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml</span><br><span class="line">$ kubectl -n kube-system get po,svc -l k8s-app=kubernetes-dashboard</span><br><span class="line">NAME                                    READY     STATUS    RESTARTS   AGE</span><br><span class="line">kubernetes-dashboard-7d5dcdb6d9-j492l   1/1       Running   0          12s</span><br><span class="line"></span><br><span class="line">NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">kubernetes-dashboard   ClusterIP   10.111.22.111   &lt;none&gt;        443/TCP   12s</span><br></pre></td></tr></table></figure>
+<p>这边会额外建立一个名称为<code>open-api</code> Cluster Role Binding，这仅作为方便测试时使用，在一般情况下不要开启，不然就会直接被存取所有API:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl create -f -</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  name: open-api</span><br><span class="line">  namespace: &quot;&quot;</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: cluster-admin</span><br><span class="line">subjects:</span><br><span class="line">  - apiGroup: rbac.authorization.k8s.io</span><br><span class="line">    kind: User</span><br><span class="line">    name: system:anonymous</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>注意!管理者可以针对特定使用者来开放API 存取权限，但这边方便使用直接绑在cluster-admin cluster role。</li>
+</ul>
+</blockquote>
+<p>完成后，就可以通过浏览器存取Dashboard  <a href="https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/" target="_blank" rel="noopener">https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/</a>。<br>在 1.7 版本以後的 Dashboard 將不再提供所有權限，因此需要建立一個 service account 來綁定 cluster-admin role：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system create sa dashboard</span><br><span class="line">$ kubectl create clusterrolebinding dashboard --clusterrole cluster-admin --serviceaccount=kube-system:dashboard</span><br><span class="line">$ kubectl -n kube-system describe secrets | sed -rn &#x27;/\sdashboard-token-/,/^token/&#123;/^token/s#\S+\s+##p&#125;&#x27;</span><br><span class="line">eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtdG9rZW4tdzVocmgiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiYWJmMTFjYzMtZjRlYi0xMWU3LTgzYWUtMDgwMDI3NjdkOWI5Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOmRhc2hib2FyZCJ9.Xuyq34ci7Mk8bI97o4IldDyKySOOqRXRsxVWIJkPNiVUxKT4wpQZtikNJe2mfUBBD-JvoXTzwqyeSSTsAy2CiKQhekW8QgPLYelkBPBibySjBhJpiCD38J1u7yru4P0Pww2ZQJDjIxY4vqT46ywBklReGVqY3ogtUQg-eXueBmz-o7lJYMjw8L14692OJuhBjzTRSaKW8U2MPluBVnD7M2SOekDff7KpSxgOwXHsLVQoMrVNbspUCvtIiEI1EiXkyCNRGwfnd2my3uzUABIHFhm0_RZSmGwExPbxflr8Fc6bxmuz-_jSdOtUidYkFIzvEWw2vRovPgs3MXTv59RwUw</span><br></pre></td></tr></table></figure>
 
-# bootstrap set context
-$ kubectl config set-context tls-bootstrap-token-user@kubernetes \
-    --cluster=kubernetes \
-    --user=tls-bootstrap-token-user \
-    --kubeconfig=../bootstrap-kubelet.conf
+<blockquote>
+<ul>
+<li>复制<code>token</code>，然后贴到Kubernetes dashboard。注意这边一般来说要针对不同User开启特定存取权限。</li>
+</ul>
+</blockquote>
+<p><img src="https://kairen.github.io/images/kube/kubernetes-dashboard.png" alt="cmd-markdown-logo"></p>
+<h3 id="Heapster"><a href="#Heapster" class="headerlink" title="Heapster"></a>Heapster</h3><p><a href="https://github.com/kubernetes/heapster" target="_blank" rel="noopener">Heapster</a>是Kubernetes社区维护的容器集群监控与效能分析工具。Heapster会从Kubernetes apiserver取得所有Node资讯，然后再通过这些Node来取得kubelet上的资料，最后再将所有收集到资料送到Heapster的后台储存InfluxDB，最后利用Grafana来抓取InfluxDB的资料源来进行视觉化。</p>
+<p>在<code>k8s-m1</code>通过kubectl来建立kubernetes monitor即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/kube-monitor.yml.conf&quot;</span><br><span class="line">$ kubectl -n kube-system get po,svc</span><br><span class="line">NAME                                           READY     STATUS    RESTARTS   AGE</span><br><span class="line">...</span><br><span class="line">po/heapster-74fb5c8cdc-62xzc                   4/4       Running   0          7m</span><br><span class="line">po/influxdb-grafana-55bd7df44-nw4nc            2/2       Running   0          7m</span><br><span class="line"></span><br><span class="line">NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE</span><br><span class="line">...</span><br><span class="line">svc/heapster               ClusterIP   10.100.242.225   &lt;none&gt;        80/TCP              7m</span><br><span class="line">svc/monitoring-grafana     ClusterIP   10.101.106.180   &lt;none&gt;        80/TCP              7m</span><br><span class="line">svc/monitoring-influxdb    ClusterIP   10.109.245.142   &lt;none&gt;        8083/TCP,8086/TCP   7m</span><br><span class="line">···</span><br></pre></td></tr></table></figure>
+<p>完成后，就可以通过浏览器存取Grafana Dashboard  <a href="https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy/" target="_blank" rel="noopener">https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy/</a>。</p>
+<p><img src="https://kairen.github.io/images/kube/monitoring-grafana.png" alt="cmd-markdown-logo"></p>
+<h3 id="Ingress"><a href="#Ingress" class="headerlink" title="Ingress"></a>Ingress</h3><p><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/" target="_blank" rel="noopener">Ingress</a>是利用Nginx或HAProxy等负载平衡器来暴露集群内服务的元件，Ingress主要通过设定Ingress规格来定义Domain Name映射Kubernetes内部Service，这种方式可以避免掉使用过多的NodePort问题。</p>
+<p>在<code>k8s-m1</code>通过kubectl来建立Ingress Controller即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create ns ingress-nginx</span><br><span class="line">$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/ingress-controller.yml.conf&quot;</span><br><span class="line">$ kubectl -n ingress-nginx get po</span><br><span class="line">NAME                                       READY     STATUS    RESTARTS   AGE</span><br><span class="line">default-http-backend-5c6d95c48-rzxfb       1/1       Running   0          7m</span><br><span class="line">nginx-ingress-controller-699cdf846-982n4   1/1       Running   0          7m</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>这里也可以选择<a href="https://github.com/containous/traefik" target="_blank" rel="noopener">Traefik</a> 的Ingress Controller。</li>
+</ul>
+</blockquote>
+<p><span style="font-size: 1.3em;color: #333;font-weight:bold">测试Ingress 功能</span><br>这边先建立一个Nginx HTTP server Deployment 与Service：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run nginx-dp --image nginx --port 80</span><br><span class="line">$ kubectl expose deploy nginx-dp --port 80</span><br><span class="line">$ kubectl get po,svc</span><br><span class="line">$ cat &lt;&lt;EOF | kubectl create -f -</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: test-nginx-ingress</span><br><span class="line">  annotations:</span><br><span class="line">    ingress.kubernetes.io/rewrite-target: /</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: test.nginx.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: nginx-dp</span><br><span class="line">          servicePort: 80</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>通过curl 来进行测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ curl 192.16.35.10 -H &#x27;Host: test.nginx.com&#x27;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"># 測試其他 domain name 是否會回傳 404</span><br><span class="line">$ curl 192.16.35.10 -H &#x27;Host: test.nginx.com1&#x27;</span><br><span class="line">default backend - 404</span><br></pre></td></tr></table></figure>
+<h3 id="Helm-Tiller-Server"><a href="#Helm-Tiller-Server" class="headerlink" title="Helm Tiller Server"></a>Helm Tiller Server</h3><p><a href="https://github.com/kubernetes/helm" target="_blank" rel="noopener">Helm</a>是Kubernetes Chart的管理工具，Kubernetes Chart是一套预先组态的Kubernetes资源套件。其中<code>Tiller Server</code>主要负责接收来至Client的指令，并通过kube-apiserver与Kubernetes集群做沟通，根据Chart定义的内容，来产生与管理各种对应API物件的Kubernetes部署文件(又称为<code>Release</code>)。</p>
+<p>首先在<code>k8s-m1</code>安装Helm tool：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ wget -qO- https://kubernetes-helm.storage.googleapis.com/helm-v2.8.1-linux-amd64.tar.gz | tar -zx</span><br><span class="line">$ sudo mv linux-amd64/helm /usr/local/bin/</span><br></pre></td></tr></table></figure>
+<p>另外在所有<code>node</code>机器安裝 socat：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install -y socat</span><br></pre></td></tr></table></figure>
+<p>接着初始化 Helm(这边会安装 Tiller Server)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system create sa tiller</span><br><span class="line">$ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller</span><br><span class="line">$ helm init --service-account tiller</span><br><span class="line">...</span><br><span class="line">Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.</span><br><span class="line">Happy Helming!</span><br><span class="line"></span><br><span class="line">$ kubectl -n kube-system get po -l app=helm</span><br><span class="line">NAME                             READY     STATUS    RESTARTS   AGE</span><br><span class="line">tiller-deploy-5f789bd9f7-tzss6   1/1       Running   0          29s</span><br><span class="line"></span><br><span class="line">$ helm version</span><br><span class="line">Client: &amp;version.Version&#123;SemVer:&quot;v2.8.1&quot;, GitCommit:&quot;6af75a8fd72e2aa18a2b278cfe5c7a1c5feca7f2&quot;, GitTreeState:&quot;clean&quot;&#125;</span><br><span class="line">Server: &amp;version.Version&#123;SemVer:&quot;v2.8.1&quot;, GitCommit:&quot;6af75a8fd72e2aa18a2b278cfe5c7a1c5feca7f2&quot;, GitTreeState:&quot;clean&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p><span style="font-size: 1.3em;color: #333;font-weight:bold">测试Helm 功能</span><br>这边部署简单Jenkins 来进行功能测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ helm install --name demo --set Persistence.Enabled=false stable/jenkins</span><br><span class="line">$ kubectl get po,svc  -l app=demo-jenkins</span><br><span class="line">NAME                           READY     STATUS    RESTARTS   AGE</span><br><span class="line">demo-jenkins-7bf4bfcff-q74nt   1/1       Running   0          2m</span><br><span class="line"></span><br><span class="line">NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE</span><br><span class="line">demo-jenkins         LoadBalancer   10.103.15.129    &lt;pending&gt;     8080:31161/TCP   2m</span><br><span class="line">demo-jenkins-agent   ClusterIP      10.103.160.126   &lt;none&gt;        50000/TCP        2m</span><br><span class="line"></span><br><span class="line"># 取得 admin 账号的密码</span><br><span class="line">$ printf $(kubectl get secret --namespace default demo-jenkins -o jsonpath=&quot;&#123;.data.jenkins-admin-password&#125;&quot; | base64 --decode);echo</span><br><span class="line">r6y9FMuF2u</span><br></pre></td></tr></table></figure>
 
-# bootstrap use default context
-$ kubectl config use-context tls-bootstrap-token-user@kubernetes \
-    --kubeconfig=../bootstrap-kubelet.conf
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 若想要用手动签署凭证来进行授权的话，可以参考&lt;a href=&quot;https://kubernetes.io/docs/concepts/cluster-administration/certificates/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Certificate&lt;/a&gt;。</span><br><span class="line"></span><br><span class="line">接着`在k8s-m1`建立TLS bootstrap secret来提供自动签证使用：</span><br></pre></td></tr></table></figure>
-$ cat &lt;&lt;EOF | kubectl create -f -
-apiVersion: v1
-kind: Secret
-metadata:
-  name: bootstrap-token-$&#123;TOKEN_ID&#125;
-  namespace: kube-system
-type: bootstrap.kubernetes.io/token
-stringData:
-  token-id: $&#123;TOKEN_ID&#125;
-  token-secret: $&#123;TOKEN_SECRET&#125;
-  usage-bootstrap-authentication: &quot;true&quot;
-  usage-bootstrap-signing: &quot;true&quot;
-  auth-extra-groups: system:bootstrappers:default-node-token
-EOF
+<p>完成后，就可以通过浏览器存取Jenkins Web <a href="http://192.16.35.10:31161" target="_blank" rel="noopener">http://192.16.35.10:31161</a>。</p>
+<p><img src="https://kairen.github.io/images/kube/helm-jenkins-v1.10.png" alt="cmd-markdown-logo"><br>测试完成后，即可删除：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ helm ls</span><br><span class="line">NAME    REVISION    UPDATED                     STATUS      CHART             NAMESPACE</span><br><span class="line">demo    1           Tue Apr 10 07:29:51 2018    DEPLOYED    jenkins-0.14.4    default</span><br><span class="line"></span><br><span class="line">$ helm delete demo --purge</span><br><span class="line">release &quot;demo&quot; deleted</span><br></pre></td></tr></table></figure>
+<p>更多Helm Apps可以到<a href="https://hub.kubeapps.com/" target="_blank" rel="noopener">Kubeapps Hub</a>寻找。</p>
+<h2 id="测试集群高可用"><a href="#测试集群高可用" class="headerlink" title="测试集群高可用"></a>测试集群高可用</h2><p>SSH进入<code>k8s-m1</code>节点，然后关闭该节点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo poweroff</span><br></pre></td></tr></table></figure>
+<p>接着进入到<code>k8s-m2</code>节点，通过kubectl来检查集群是否能够正常执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 先检查 etcd 状态，可以发现 etcd-0 因為关机而中断</span><br><span class="line">$ kubectl get cs</span><br><span class="line">NAME                 STATUS      MESSAGE                                                                                                                                          ERROR</span><br><span class="line">scheduler            Healthy     ok</span><br><span class="line">controller-manager   Healthy     ok</span><br><span class="line">etcd-1               Healthy     &#123;&quot;health&quot;: &quot;true&quot;&#125;</span><br><span class="line">etcd-2               Healthy     &#123;&quot;health&quot;: &quot;true&quot;&#125;</span><br><span class="line">etcd-0               Unhealthy   Get https://192.16.35.11:2379/health: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)</span><br><span class="line"></span><br><span class="line"># 测试是否可以建立 Pod</span><br><span class="line">$ kubectl run nginx --image nginx --restart=Never --port 80</span><br><span class="line">$ kubectl get po</span><br><span class="line">NAME      READY     STATUS    RESTARTS   AGE</span><br><span class="line">nginx     1/1       Running   0          22s</span><br></pre></td></tr></table></figure>
 
-secret &quot;bootstrap-token-65a3a9&quot; created
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在`k8s-m1`建立 TLS Bootstrap Autoapprove RBAC：</span><br></pre></td></tr></table></figure>
-$ kubectl apply -f &quot;$&#123;CORE_URL&#125;/kubelet-bootstrap-rbac.yml.conf&quot;
-clusterrolebinding.rbac.authorization.k8s.io &quot;kubelet-bootstrap&quot; created
-clusterrolebinding.rbac.authorization.k8s.io &quot;node-autoapprove-bootstrap&quot; created
-clusterrolebinding.rbac.authorization.k8s.io &quot;node-autoapprove-certificate-rotation&quot; created
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;span style=&quot;font-size: 1.4em;color: #333;font-weight:bold&quot;&gt;Kubernetes Nodes&lt;/span&gt;</span><br><span class="line">本部分将说明如何建立与设定Kubernetes Node 角色，Node 是主要执行容器实例(Pod)的工作节点。</span><br><span class="line">在开始部署前，先在`k8-m1`将需要用到的文件复制到所有`node`节点上：</span><br></pre></td></tr></table></figure>
-$ cd /etc/kubernetes/pki
-$ for NODE in k8s-n1 k8s-n2 k8s-n3; do
-    echo &quot;--- $NODE ---&quot;
-    ssh $&#123;NODE&#125; &quot;mkdir -p /etc/kubernetes/pki/&quot;
-    ssh $&#123;NODE&#125; &quot;mkdir -p /etc/etcd/ssl&quot;
-    # Etcd
-    for FILE in etcd-ca.pem etcd.pem etcd-key.pem; do
-      scp /etc/etcd/ssl/$&#123;FILE&#125; $&#123;NODE&#125;:/etc/etcd/ssl/$&#123;FILE&#125;
-    done
-    # Kubernetes
-    for FILE in pki/ca.pem pki/ca-key.pem bootstrap-kubelet.conf; do
-      scp /etc/kubernetes/$&#123;FILE&#125; $&#123;NODE&#125;:/etc/kubernetes/$&#123;FILE&#125;
-    done
-  done
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;span style=&quot;font-size: 1.4em;color: #333;font-weight:bold&quot;&gt;部署与设定&lt;/span&gt;</span><br><span class="line">在每台`node`节点下载`kubelet.service`相关文件来管理kubelet：</span><br></pre></td></tr></table></figure>
-$ export CORE_URL=&quot;https://kairen.github.io/files/manual-v1.10/node&quot;
-$ mkdir -p /etc/systemd/system/kubelet.service.d
-$ wget &quot;$&#123;CORE_URL&#125;/kubelet.service&quot; -O /lib/systemd/system/kubelet.service
-$ wget &quot;$&#123;CORE_URL&#125;/10-kubelet.conf&quot; -O /etc/systemd/system/kubelet.service.d/10-kubelet.conf
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 若`cluster dns`或`domain`有改变的话，需要修改`10-kubelet.conf`。</span><br><span class="line"></span><br><span class="line">最后每台`node`节点建立var 存放资讯，然后启动kubelet 服务:</span><br></pre></td></tr></table></figure>
-$ mkdir -p /var/lib/kubelet /var/log/kubernetes
-$ systemctl enable kubelet.service &amp;&amp; systemctl start kubelet.service
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 验证集群</span><br><span class="line">完成后，在任意一台`master`节点并通过简单指令验证：</span><br></pre></td></tr></table></figure>
-$ kubectl get csr
-NAME                                                   AGE       REQUESTOR                 CONDITION
-csr-bvz9l                                              11m       system:node:k8s-m1        Approved,Issued
-csr-jwr8k                                              11m       system:node:k8s-m2        Approved,Issued
-csr-q867w                                              11m       system:node:k8s-m3        Approved,Issued
-node-csr-Y-FGvxZWJqI-8RIK_IrpgdsvjGQVGW0E4UJOuaU8ogk   17s       system:bootstrap:dca3e1   Approved,Issued
-node-csr-cnX9T1xp1LdxVDc9QW43W0pYkhEigjwgceRshKuI82c   19s       system:bootstrap:dca3e1   Approved,Issued
-node-csr-m7SBA9RAGCnsgYWJB-u2HoB2qLSfiQZeAxWFI2WYN7Y   18s       system:bootstrap:dca3e1   Approved,Issued
 
-$ kubectl get nodes
-NAME      STATUS     ROLES     AGE       VERSION
-k8s-m1    NotReady   master    12m       v1.10.0
-k8s-m2    NotReady   master    11m       v1.10.0
-k8s-m3    NotReady   master    11m       v1.10.0
-k8s-n1    NotReady   node      32s       v1.10.0
-k8s-n2    NotReady   node      31s       v1.10.0
-k8s-n3    NotReady   node      29s       v1.10.0
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## Kubernetes Core Addons部署</span><br><span class="line">当完成上面所有步骤后，接着需要部署一些插件，其中如`Kubernetes DNS`与`Kubernetes Proxy`等这种Addons是非常重要的。</span><br><span class="line">### Kubernetes Proxy</span><br><span class="line">&lt;a href=&quot;https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/kube-proxy&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Kube-proxy&lt;/a&gt;是实现Service的关键插件，kube-proxy会在每台节点上执行，然后监听API Server的Service与Endpoint资源物件的改变，然后来依据变化执行iptables来实现网路的转发。这边我们会需要建议一个DaemonSet来执行，并且建立一些需要的Certificates。</span><br><span class="line"></span><br><span class="line">在`k8s-m1`下载`kube-proxy.yml`来建立Kubernetes Proxy Addon：</span><br></pre></td></tr></table></figure>
-$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/kube-proxy.yml.conf&quot;
-serviceaccount &quot;kube-proxy&quot; created
-clusterrolebinding.rbac.authorization.k8s.io &quot;system:kube-proxy&quot; created
-configmap &quot;kube-proxy&quot; created
-daemonset.apps &quot;kube-proxy&quot; created
-
-$ kubectl -n kube-system get po -o wide -l k8s-app=kube-proxy
-NAME               READY     STATUS    RESTARTS   AGE       IP             NODE
-kube-proxy-8j5w8   1/1       Running   0          29s       192.16.35.16   k8s-n3
-kube-proxy-c4zvt   1/1       Running   0          29s       192.16.35.11   k8s-m1
-kube-proxy-clpl6   1/1       Running   0          29s       192.16.35.12   k8s-m2
-...
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### Kubernetes DNS</span><br><span class="line">&lt;a href=&quot;https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Kube DNS&lt;/a&gt;是Kubernetes集群内部Pod之间互相沟通的重要Addon，它允许Pod可以通过Domain Name方式来连接Service，其主要由Kube DNS与Sky DNS组合而成，通过Kube DNS监听Service与Endpoint变化，来提供给Sky DNS资讯，已更新解析位址。</span><br><span class="line"></span><br><span class="line">在`k8s-m1`下载`kube-dns.yml`来建立Kubernetes Proxy Addon：</span><br></pre></td></tr></table></figure>
-$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/kube-dns.yml.conf&quot;
-serviceaccount &quot;kube-dns&quot; created
-service &quot;kube-dns&quot; created
-deployment.extensions &quot;kube-dns&quot; created
-
-$ kubectl -n kube-system get po -l k8s-app=kube-dns
-NAME                        READY     STATUS    RESTARTS   AGE
-kube-dns-654684d656-zq5t8   0/3       Pending   0          1m
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">这边会发现处于`Pending`状态，是由于Kubernetes Pod Network还未建立完成，因此所有节点会处于`NotReady`状态，而造成Pod无法被排程分配到指定节点上启动，由于为了解决该问题，下节将说明如何建立Pod Network。</span><br><span class="line"></span><br><span class="line">### Calico Network 安装与设定</span><br><span class="line">Calico 是一款纯3层的资料中心网路方案(不需要Overlay 网路)，Calico 好处是它整合了各种云原生平台，且Calico 在每一个节点利用Linux Kernel 实现高效的vRouter 来负责资料的转发，而当资料中心复杂度增加时，可以用BGP route reflector 来达成。</span><br><span class="line"></span><br><span class="line">&gt; * 本次不采用手动方式来建立Calico网路，若想了解可以参考&lt;a href=&quot;https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/integration&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Integration Guide&lt;/a&gt;。</span><br><span class="line"></span><br><span class="line">在`k8s-m1`下载`calico.yaml`来建立Calico Network：(yaml里的interface网卡名记得改成和宿主机网卡名一致)</span><br></pre></td></tr></table></figure>
-$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/network/calico.yml.conf&quot;
-configmap &quot;calico-config&quot; created
-daemonset &quot;calico-node&quot; created
-deployment &quot;calico-kube-controllers&quot; created
-clusterrolebinding &quot;calico-cni-plugin&quot; created
-clusterrole &quot;calico-cni-plugin&quot; created
-serviceaccount &quot;calico-cni-plugin&quot; created
-clusterrolebinding &quot;calico-kube-controllers&quot; created
-clusterrole &quot;calico-kube-controllers&quot; created
-serviceaccount &quot;calico-kube-controllers&quot; created
-
-$ kubectl -n kube-system get po -l k8s-app=calico-node -o wide
-NAME                READY     STATUS    RESTARTS   AGE       IP             NODE
-calico-node-22mbb   2/2       Running   0          1m        192.16.35.12   k8s-m2
-calico-node-2qwf5   2/2       Running   0          1m        192.16.35.11   k8s-m1
-calico-node-g2sp8   2/2       Running   0          1m        192.16.35.13   k8s-m3
-calico-node-hghp4   2/2       Running   0          1m        192.16.35.14   k8s-n1
-calico-node-qp6gf   2/2       Running   0          1m        192.16.35.15   k8s-n2
-calico-node-zfx4n   2/2       Running   0          1m        192.16.35.16   k8s-n3
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 这边若节点IP与网卡不同的话，请修改calico.yml文件。</span><br><span class="line"></span><br><span class="line">在`k8s-m1`下载Calico CLI来查看Calico nodes:</span><br></pre></td></tr></table></figure>
-$ wget https://github.com/projectcalico/calicoctl/releases/download/v3.1.0/calicoctl -O /usr/local/bin/calicoctl
-$ chmod u+x /usr/local/bin/calicoctl
-$ cat &lt;&lt;EOF &gt; ~/calico-rc
-export ETCD_ENDPOINTS=&quot;https://192.16.35.11:2379,https://192.16.35.12:2379,https://192.16.35.13:2379&quot;
-export ETCD_CA_CERT_FILE=&quot;/etc/etcd/ssl/etcd-ca.pem&quot;
-export ETCD_CERT_FILE=&quot;/etc/etcd/ssl/etcd.pem&quot;
-export ETCD_KEY_FILE=&quot;/etc/etcd/ssl/etcd-key.pem&quot;
-EOF
-
-$ . ~/calico-rc
-$ calicoctl node status
-Calico process is running.
-
-IPv4 BGP status
-+--------------+-------------------+-------+----------+-------------+
-| PEER ADDRESS |     PEER TYPE     | STATE |  SINCE   |    INFO     |
-+--------------+-------------------+-------+----------+-------------+
-| 192.16.35.12 | node-to-node mesh | up    | 04:42:37 | Established |
-| 192.16.35.13 | node-to-node mesh | up    | 04:42:42 | Established |
-| 192.16.35.14 | node-to-node mesh | up    | 04:42:37 | Established |
-| 192.16.35.15 | node-to-node mesh | up    | 04:42:41 | Established |
-| 192.16.35.16 | node-to-node mesh | up    | 04:42:36 | Established |
-+--------------+-------------------+-------+----------+-------------+
-...
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">查看pending 的pod 是否已执行：</span><br></pre></td></tr></table></figure>
-$ kubectl -n kube-system get po -l k8s-app=kube-dns
-kubectl -n kube-system get po -l k8s-app=kube-dns
-NAME                        READY     STATUS    RESTARTS   AGE
-kube-dns-654684d656-j8xzx   3/3       Running   0          10m
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## Kubernets Extra Addons部署</span><br><span class="line">本节说明如何部署一些官方常用的Addons，如Dashboard、Heapster 等。</span><br><span class="line"></span><br><span class="line">### Dashboard</span><br><span class="line">&lt;a href=&quot;https://github.com/kubernetes/dashboard&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Dashboard&lt;/a&gt;是Kubernetes社区官方开发的仪表板，有了仪表板后管理者就能够通过Web-based方式来管理Kubernetes集群，除了提升管理方便，也让资源视觉化，让人更直觉看见系统资讯的呈现结果。</span><br><span class="line"></span><br><span class="line">在`k8s-m1`通过kubectl来建立kubernetes dashboard即可：</span><br></pre></td></tr></table></figure>
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-$ kubectl -n kube-system get po,svc -l k8s-app=kubernetes-dashboard
-NAME                                    READY     STATUS    RESTARTS   AGE
-kubernetes-dashboard-7d5dcdb6d9-j492l   1/1       Running   0          12s
-
-NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-kubernetes-dashboard   ClusterIP   10.111.22.111   &lt;none&gt;        443/TCP   12s
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这边会额外建立一个名称为`open-api` Cluster Role Binding，这仅作为方便测试时使用，在一般情况下不要开启，不然就会直接被存取所有API:</span><br></pre></td></tr></table></figure>
-$ cat &lt;&lt;EOF | kubectl create -f -
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: open-api
-  namespace: &quot;&quot;
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - apiGroup: rbac.authorization.k8s.io
-    kind: User
-    name: system:anonymous
-EOF
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 注意!管理者可以针对特定使用者来开放API 存取权限，但这边方便使用直接绑在cluster-admin cluster role。</span><br><span class="line"></span><br><span class="line">完成后，就可以通过浏览器存取Dashboard  &lt;a href=&quot;https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/&lt;/a&gt;。</span><br><span class="line">在 1.7 版本以後的 Dashboard 將不再提供所有權限，因此需要建立一個 service account 來綁定 cluster-admin role：</span><br></pre></td></tr></table></figure>
-$ kubectl -n kube-system create sa dashboard
-$ kubectl create clusterrolebinding dashboard --clusterrole cluster-admin --serviceaccount=kube-system:dashboard
-$ kubectl -n kube-system describe secrets | sed -rn &#39;/\sdashboard-token-/,/^token/&#123;/^token/s#\S+\s+##p&#125;&#39;
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtdG9rZW4tdzVocmgiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiYWJmMTFjYzMtZjRlYi0xMWU3LTgzYWUtMDgwMDI3NjdkOWI5Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOmRhc2hib2FyZCJ9.Xuyq34ci7Mk8bI97o4IldDyKySOOqRXRsxVWIJkPNiVUxKT4wpQZtikNJe2mfUBBD-JvoXTzwqyeSSTsAy2CiKQhekW8QgPLYelkBPBibySjBhJpiCD38J1u7yru4P0Pww2ZQJDjIxY4vqT46ywBklReGVqY3ogtUQg-eXueBmz-o7lJYMjw8L14692OJuhBjzTRSaKW8U2MPluBVnD7M2SOekDff7KpSxgOwXHsLVQoMrVNbspUCvtIiEI1EiXkyCNRGwfnd2my3uzUABIHFhm0_RZSmGwExPbxflr8Fc6bxmuz-_jSdOtUidYkFIzvEWw2vRovPgs3MXTv59RwUw
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; * 复制`token`，然后贴到Kubernetes dashboard。注意这边一般来说要针对不同User开启特定存取权限。</span><br><span class="line"></span><br><span class="line">![cmd-markdown-logo](https://kairen.github.io/images/kube/kubernetes-dashboard.png)</span><br><span class="line"></span><br><span class="line">### Heapster</span><br><span class="line">&lt;a href=&quot;https://github.com/kubernetes/heapster&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Heapster&lt;/a&gt;是Kubernetes社区维护的容器集群监控与效能分析工具。Heapster会从Kubernetes apiserver取得所有Node资讯，然后再通过这些Node来取得kubelet上的资料，最后再将所有收集到资料送到Heapster的后台储存InfluxDB，最后利用Grafana来抓取InfluxDB的资料源来进行视觉化。</span><br><span class="line"></span><br><span class="line">在`k8s-m1`通过kubectl来建立kubernetes monitor即可：</span><br></pre></td></tr></table></figure>
-$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/kube-monitor.yml.conf&quot;
-$ kubectl -n kube-system get po,svc
-NAME                                           READY     STATUS    RESTARTS   AGE
-...
-po/heapster-74fb5c8cdc-62xzc                   4/4       Running   0          7m
-po/influxdb-grafana-55bd7df44-nw4nc            2/2       Running   0          7m
-
-NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
-...
-svc/heapster               ClusterIP   10.100.242.225   &lt;none&gt;        80/TCP              7m
-svc/monitoring-grafana     ClusterIP   10.101.106.180   &lt;none&gt;        80/TCP              7m
-svc/monitoring-influxdb    ClusterIP   10.109.245.142   &lt;none&gt;        8083/TCP,8086/TCP   7m
-···
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">完成后，就可以通过浏览器存取Grafana Dashboard  &lt;a href=&quot;https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://192.16.35.10:6443/api/v1/namespaces/kube-system/services/monitoring-grafana/proxy/&lt;/a&gt;。</span><br><span class="line"></span><br><span class="line">![cmd-markdown-logo](https://kairen.github.io/images/kube/monitoring-grafana.png)</span><br><span class="line"></span><br><span class="line">### Ingress</span><br><span class="line">&lt;a href=&quot;https://kubernetes.io/docs/concepts/services-networking/ingress/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Ingress&lt;/a&gt;是利用Nginx或HAProxy等负载平衡器来暴露集群内服务的元件，Ingress主要通过设定Ingress规格来定义Domain Name映射Kubernetes内部Service，这种方式可以避免掉使用过多的NodePort问题。</span><br><span class="line"></span><br><span class="line">在`k8s-m1`通过kubectl来建立Ingress Controller即可：</span><br></pre></td></tr></table></figure>
-$ kubectl create ns ingress-nginx
-$ kubectl apply -f &quot;https://kairen.github.io/files/manual-v1.10/addon/ingress-controller.yml.conf&quot;
-$ kubectl -n ingress-nginx get po
-NAME                                       READY     STATUS    RESTARTS   AGE
-default-http-backend-5c6d95c48-rzxfb       1/1       Running   0          7m
-nginx-ingress-controller-699cdf846-982n4   1/1       Running   0          7m
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; * 这里也可以选择&lt;a href=&quot;https://github.com/containous/traefik&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Traefik&lt;/a&gt; 的Ingress Controller。</span><br><span class="line"></span><br><span class="line">&lt;span style=&quot;font-size: 1.3em;color: #333;font-weight:bold&quot;&gt;测试Ingress 功能&lt;/span&gt;</span><br><span class="line">这边先建立一个Nginx HTTP server Deployment 与Service：</span><br></pre></td></tr></table></figure>
-$ kubectl run nginx-dp --image nginx --port 80
-$ kubectl expose deploy nginx-dp --port 80
-$ kubectl get po,svc
-$ cat &lt;&lt;EOF | kubectl create -f -
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: test-nginx-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: test.nginx.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: nginx-dp
-          servicePort: 80
-EOF
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过curl 来进行测试：</span><br></pre></td></tr></table></figure>
-$ curl 192.16.35.10 -H &#39;Host: test.nginx.com&#39;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;title&gt;Welcome to nginx!&lt;/title&gt;
-...
-
-# 測試其他 domain name 是否會回傳 404
-$ curl 192.16.35.10 -H &#39;Host: test.nginx.com1&#39;
-default backend - 404
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### Helm Tiller Server</span><br><span class="line">&lt;a href=&quot;https://github.com/kubernetes/helm&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Helm&lt;/a&gt;是Kubernetes Chart的管理工具，Kubernetes Chart是一套预先组态的Kubernetes资源套件。其中`Tiller Server`主要负责接收来至Client的指令，并通过kube-apiserver与Kubernetes集群做沟通，根据Chart定义的内容，来产生与管理各种对应API物件的Kubernetes部署文件(又称为`Release`)。</span><br><span class="line"></span><br><span class="line">首先在`k8s-m1`安装Helm tool：</span><br></pre></td></tr></table></figure>
-$ wget -qO- https://kubernetes-helm.storage.googleapis.com/helm-v2.8.1-linux-amd64.tar.gz | tar -zx
-$ sudo mv linux-amd64/helm /usr/local/bin/
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">另外在所有`node`机器安裝 socat：</span><br></pre></td></tr></table></figure>
-$ sudo apt-get install -y socat
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接着初始化 Helm(这边会安装 Tiller Server)：</span><br></pre></td></tr></table></figure>
-$ kubectl -n kube-system create sa tiller
-$ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-$ helm init --service-account tiller
-...
-Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
-Happy Helming!
-
-$ kubectl -n kube-system get po -l app=helm
-NAME                             READY     STATUS    RESTARTS   AGE
-tiller-deploy-5f789bd9f7-tzss6   1/1       Running   0          29s
-
-$ helm version
-Client: &amp;version.Version&#123;SemVer:&quot;v2.8.1&quot;, GitCommit:&quot;6af75a8fd72e2aa18a2b278cfe5c7a1c5feca7f2&quot;, GitTreeState:&quot;clean&quot;&#125;
-Server: &amp;version.Version&#123;SemVer:&quot;v2.8.1&quot;, GitCommit:&quot;6af75a8fd72e2aa18a2b278cfe5c7a1c5feca7f2&quot;, GitTreeState:&quot;clean&quot;&#125;
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;span style=&quot;font-size: 1.3em;color: #333;font-weight:bold&quot;&gt;测试Helm 功能&lt;/span&gt;</span><br><span class="line">这边部署简单Jenkins 来进行功能测试：</span><br></pre></td></tr></table></figure>
-$ helm install --name demo --set Persistence.Enabled=false stable/jenkins
-$ kubectl get po,svc  -l app=demo-jenkins
-NAME                           READY     STATUS    RESTARTS   AGE
-demo-jenkins-7bf4bfcff-q74nt   1/1       Running   0          2m
-
-NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
-demo-jenkins         LoadBalancer   10.103.15.129    &lt;pending&gt;     8080:31161/TCP   2m
-demo-jenkins-agent   ClusterIP      10.103.160.126   &lt;none&gt;        50000/TCP        2m
-
-# 取得 admin 账号的密码
-$ printf $(kubectl get secret --namespace default demo-jenkins -o jsonpath=&quot;&#123;.data.jenkins-admin-password&#125;&quot; | base64 --decode);echo
-r6y9FMuF2u
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">完成后，就可以通过浏览器存取Jenkins Web &lt;a href=&quot;http://192.16.35.10:31161&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;http://192.16.35.10:31161&lt;/a&gt;。</span><br><span class="line"></span><br><span class="line">![cmd-markdown-logo](https://kairen.github.io/images/kube/helm-jenkins-v1.10.png)</span><br><span class="line">测试完成后，即可删除：</span><br></pre></td></tr></table></figure>
-$ helm ls
-NAME    REVISION    UPDATED                     STATUS      CHART             NAMESPACE
-demo    1           Tue Apr 10 07:29:51 2018    DEPLOYED    jenkins-0.14.4    default
-
-$ helm delete demo --purge
-release &quot;demo&quot; deleted
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">更多Helm Apps可以到&lt;a href=&quot;https://hub.kubeapps.com/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Kubeapps Hub&lt;/a&gt;寻找。</span><br><span class="line">## 测试集群高可用</span><br><span class="line">SSH进入`k8s-m1`节点，然后关闭该节点：</span><br></pre></td></tr></table></figure>
-$ sudo poweroff
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接着进入到`k8s-m2`节点，通过kubectl来检查集群是否能够正常执行：</span><br></pre></td></tr></table></figure>
-# 先检查 etcd 状态，可以发现 etcd-0 因為关机而中断
-$ kubectl get cs
-NAME                 STATUS      MESSAGE                                                                                                                                          ERROR
-scheduler            Healthy     ok
-controller-manager   Healthy     ok
-etcd-1               Healthy     &#123;&quot;health&quot;: &quot;true&quot;&#125;
-etcd-2               Healthy     &#123;&quot;health&quot;: &quot;true&quot;&#125;
-etcd-0               Unhealthy   Get https://192.16.35.11:2379/health: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
-
-# 测试是否可以建立 Pod
-$ kubectl run nginx --image nginx --restart=Never --port 80
-$ kubectl get po
-NAME      READY     STATUS    RESTARTS   AGE
-nginx     1/1       Running   0          22s
-```
-
-</code></pre>
 
     </article>
     <!-- license -->
@@ -1354,7 +1131,7 @@ nginx     1/1       Running   0          22s
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%89%8D%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">事前准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E9%9B%86%E7%BE%A4CA-keys-%E4%B8%8ECertificates"><span class="toc-number">2.</span> <span class="toc-text">建立集群CA keys 与Certificates</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Etcd-CA"><span class="toc-number">2.1.</span> <span class="toc-text">Etcd CA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-CA"><span class="toc-number">2.2.</span> <span class="toc-text">Kubernetes CA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#API-Server-Certificate"><span class="toc-number">2.3.</span> <span class="toc-text">API Server Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Front-Proxy-Certificate"><span class="toc-number">2.4.</span> <span class="toc-text">Front Proxy Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Admin-Certificate"><span class="toc-number">2.5.</span> <span class="toc-text">Admin Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Controller-Manager-Certificate"><span class="toc-number">2.6.</span> <span class="toc-text">Controller Manager Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scheduler-Certificate"><span class="toc-number">2.7.</span> <span class="toc-text">Scheduler Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Master-Kubelet-Certificate"><span class="toc-number">2.8.</span> <span class="toc-text">Master Kubelet Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service-Account-Key"><span class="toc-number">2.9.</span> <span class="toc-text">Service Account Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E8%87%B3%E5%85%B6%E4%BB%96%E8%8A%82%E7%82%B9"><span class="toc-number">2.10.</span> <span class="toc-text">复制文件至其他节点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-Masters"><span class="toc-number">3.</span> <span class="toc-text">Kubernetes Masters</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%B8%8E%E8%AE%BE%E5%AE%9A"><span class="toc-number">3.1.</span> <span class="toc-text">部署与设定</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%89%8D%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">事前准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E9%9B%86%E7%BE%A4CA-keys-%E4%B8%8ECertificates"><span class="toc-number">2.</span> <span class="toc-text">建立集群CA keys 与Certificates</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Etcd-CA"><span class="toc-number">2.1.</span> <span class="toc-text">Etcd CA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-CA"><span class="toc-number">2.2.</span> <span class="toc-text">Kubernetes CA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#API-Server-Certificate"><span class="toc-number">2.3.</span> <span class="toc-text">API Server Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Front-Proxy-Certificate"><span class="toc-number">2.4.</span> <span class="toc-text">Front Proxy Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Admin-Certificate"><span class="toc-number">2.5.</span> <span class="toc-text">Admin Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Controller-Manager-Certificate"><span class="toc-number">2.6.</span> <span class="toc-text">Controller Manager Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scheduler-Certificate"><span class="toc-number">2.7.</span> <span class="toc-text">Scheduler Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Master-Kubelet-Certificate"><span class="toc-number">2.8.</span> <span class="toc-text">Master Kubelet Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service-Account-Key"><span class="toc-number">2.9.</span> <span class="toc-text">Service Account Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E8%87%B3%E5%85%B6%E4%BB%96%E8%8A%82%E7%82%B9"><span class="toc-number">2.10.</span> <span class="toc-text">复制文件至其他节点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-Masters"><span class="toc-number">3.</span> <span class="toc-text">Kubernetes Masters</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E4%B8%8E%E8%AE%BE%E5%AE%9A"><span class="toc-number">3.1.</span> <span class="toc-text">部署与设定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8BTLS-Bootstrapping-RBAC-%E4%B8%8ESecret"><span class="toc-number">3.2.</span> <span class="toc-text">建立TLS Bootstrapping RBAC 与Secret</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E9%9B%86%E7%BE%A4"><span class="toc-number">3.3.</span> <span class="toc-text">验证集群</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-Core-Addons%E9%83%A8%E7%BD%B2"><span class="toc-number">4.</span> <span class="toc-text">Kubernetes Core Addons部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-Proxy"><span class="toc-number">4.1.</span> <span class="toc-text">Kubernetes Proxy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes-DNS"><span class="toc-number">4.2.</span> <span class="toc-text">Kubernetes DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Calico-Network-%E5%AE%89%E8%A3%85%E4%B8%8E%E8%AE%BE%E5%AE%9A"><span class="toc-number">4.3.</span> <span class="toc-text">Calico Network 安装与设定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernets-Extra-Addons%E9%83%A8%E7%BD%B2"><span class="toc-number">5.</span> <span class="toc-text">Kubernets Extra Addons部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dashboard"><span class="toc-number">5.1.</span> <span class="toc-text">Dashboard</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Heapster"><span class="toc-number">5.2.</span> <span class="toc-text">Heapster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ingress"><span class="toc-number">5.3.</span> <span class="toc-text">Ingress</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Helm-Tiller-Server"><span class="toc-number">5.4.</span> <span class="toc-text">Helm Tiller Server</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E9%9B%86%E7%BE%A4%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">测试集群高可用</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -2283,7 +2060,80 @@ nginx     1/1       Running   0          22s
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4506,7 +4356,7 @@ nginx     1/1       Running   0          22s
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 183
+        Total : 184
         </div>
         <!-- search  -->
         
@@ -4524,6 +4374,12 @@ nginx     1/1       Running   0          22s
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/headscale/">[持续更新] - headscale 搭建和应用场景</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/21</span>
@@ -6513,6 +6369,16 @@ nginx     1/1       Running   0          22s
             <span class="sidebar-tag-name" data-tags="android">
                 <span class="iconfont-archer">&#xe606;</span>
                 android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
             </span>
         
     </div>

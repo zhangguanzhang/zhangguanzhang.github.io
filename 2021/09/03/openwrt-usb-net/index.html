@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.1k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -560,6 +560,10 @@
 <p>理论上获取配置和修改配置应该使用 <code>/lib/functions.sh</code> 里提供的函数，但是我没细看，上面脚本我在非 N1 设备测试的。</p>
 <h3 id="命令设置-wifi"><a href="#命令设置-wifi" class="headerlink" title="命令设置 wifi"></a>命令设置 wifi</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># https://openwrt.org/docs/guide-quick-start/basic_wifi</span><br><span class="line"></span><br><span class="line">uci set wireless.default_radio0.ssid=&#x27;OpenWrt-5G&#x27;</span><br><span class="line">uci set wireless.default_radio0.encryption=&#x27;psk-mixed&#x27;</span><br><span class="line">uci set wireless.default_radio0.key=&#x27;password&#x27;</span><br><span class="line">uci set wireless.radio0.legacy_rates=&#x27;1&#x27;</span><br><span class="line"></span><br><span class="line">uci set wireless.default_radio1.ssid=&#x27;OpenWrt&#x27;</span><br><span class="line">uci set wireless.default_radio1.encryption=&#x27;psk-mixed&#x27;</span><br><span class="line">uci set wireless.default_radio1.key=&#x27;password&#x27;</span><br><span class="line">uci set wireless.radio1.legacy_rates=&#x27;1&#x27;</span><br><span class="line">uci commit wireless</span><br><span class="line">wifi reload</span><br></pre></td></tr></table></figure>
 
+<h3 id="手机和-WIFI-断开"><a href="#手机和-WIFI-断开" class="headerlink" title="手机和 WIFI 断开"></a>手机和 WIFI 断开</h3><p>发现连 OP WIFI 的手机上玩游戏经常断开，查看日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ logread</span><br><span class="line">Wed Jul 24 14:12:00 2024 daemon.info hostapd: phy1-ap0: STA 28:16:7f:3d:xx:xx IEEE 802.11: disconnected due to excessive missing ACKs</span><br><span class="line">Wed Jul 24 14:12:00 2024 daemon.notice hostapd: phy1-ap0: AP-STA-DISCONNECTED 28:16:7f:3d:xx:xx</span><br><span class="line">Wed Jul 24 14:12:23 2024 daemon.info hostapd: phy1-ap0: STA 28:16:7f:3d:xx:xx IEEE 802.11: authenticated</span><br><span class="line">Wed Jul 24 14:12:23 2024 daemon.info hostapd: phy1-ap0: STA 28:16:7f:3d:xx:xx IEEE 802.11: associated (aid 2)</span><br><span class="line">Wed Jul 24 14:12:23 2024 daemon.notice hostapd: phy1-ap0: AP-STA-CONNECTED 28:16:7f:3d:xx:xx auth_alg=open</span><br><span class="line">Wed Jul 24 14:12:23 2024 daemon.info hostapd: phy1-ap0: STA 28:16:7f:3d:xx:xx RADIUS: starting accounting session 9DECBE0A8AF1BB8A</span><br><span class="line">Wed Jul 24 14:12:23 2024 daemon.info hostapd: phy1-ap0: STA 28:16:7f:3d:xx:xx WPA: pairwise key handshake completed (RSN)</span><br><span class="line">Wed Jul 24 14:12:23 2024 daemon.notice hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED 28:16:7f:3d:xx:xx</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>/etc/config/wireless</code> 下的 <code>wifi-iface</code> 下增加了 <code>option disassoc_low_ack &#39;0&#39;</code>（对应 web 上 <code>在低 Ack 应答时断开连接</code>） 后执行 <code>wifi</code> 命令。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考:"></a>参考:</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://www.right.com.cn/forum/thread-220887-1-1.html">https://www.right.com.cn/forum/thread-220887-1-1.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://iyzm.net/openwrt/775.html">https://iyzm.net/openwrt/775.html</a></li>
@@ -754,7 +758,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#about"><span class="toc-number">1.</span> <span class="toc-text">about</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N1-%E4%B8%8A%E7%9A%84-usb-%E7%BD%91%E7%BB%9C%E5%85%B1%E4%BA%AB%E6%8A%98%E8%85%BE"><span class="toc-number">2.</span> <span class="toc-text">N1 上的 usb 网络共享折腾</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BA%E4%BB%B6%E4%BE%9D%E8%B5%96"><span class="toc-number">2.1.</span> <span class="toc-text">固件依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">2.2.</span> <span class="toc-text">实战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hotplug-%E8%84%9A%E6%9C%AC"><span class="toc-number">2.3.</span> <span class="toc-text">hotplug 脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%AE%BE%E7%BD%AE-wifi"><span class="toc-number">2.4.</span> <span class="toc-text">命令设置 wifi</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考:</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#about"><span class="toc-number">1.</span> <span class="toc-text">about</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N1-%E4%B8%8A%E7%9A%84-usb-%E7%BD%91%E7%BB%9C%E5%85%B1%E4%BA%AB%E6%8A%98%E8%85%BE"><span class="toc-number">2.</span> <span class="toc-text">N1 上的 usb 网络共享折腾</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BA%E4%BB%B6%E4%BE%9D%E8%B5%96"><span class="toc-number">2.1.</span> <span class="toc-text">固件依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">2.2.</span> <span class="toc-text">实战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hotplug-%E8%84%9A%E6%9C%AC"><span class="toc-number">2.3.</span> <span class="toc-text">hotplug 脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%AE%BE%E7%BD%AE-wifi"><span class="toc-number">2.4.</span> <span class="toc-text">命令设置 wifi</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E6%9C%BA%E5%92%8C-WIFI-%E6%96%AD%E5%BC%80"><span class="toc-number">2.5.</span> <span class="toc-text">手机和 WIFI 断开</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考:</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1683,7 +1687,80 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3906,7 +3983,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 183
+        Total : 184
         </div>
         <!-- search  -->
         
@@ -3924,6 +4001,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/headscale/">[持续更新] - headscale 搭建和应用场景</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/21</span>
@@ -5913,6 +5996,16 @@
             <span class="sidebar-tag-name" data-tags="android">
                 <span class="iconfont-archer">&#xe606;</span>
                 android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
             </span>
         
     </div>
