@@ -558,7 +558,8 @@
 <p>启动后检查下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br><span class="line"># 由于修改了 web index，所以是空的 200</span><br><span class="line">curl -vk https://127.0.0.1:12345/</span><br></pre></td></tr></table></figure>
 
-<h3 id="客户端接入"><a href="#客户端接入" class="headerlink" title="客户端接入"></a>客户端接入</h3><h4 id="创建-authkeys"><a href="#创建-authkeys" class="headerlink" title="创建 authkeys"></a>创建 authkeys</h4><p>Tailscale 中有一个概念叫 tailnet，你可以理解成租户，租户与租户之间是相互隔离的，具体看参考 Tailscale 的官方文档： <a target="_blank" rel="noopener" href="https://tailscale.com/kb/1136/tailnet">What is a tailnet</a>。<br>Headscale 也有类似的实现叫 user，即用户。我们需要先创建一个 user，以便后续客户端接入，例如：</p>
+<h3 id="客户端接入"><a href="#客户端接入" class="headerlink" title="客户端接入"></a>客户端接入</h3><p>所有客户端有微皮恩的，需要把 ecs 的公网 IP 设置成直链。</p>
+<h4 id="创建-authkeys"><a href="#创建-authkeys" class="headerlink" title="创建 authkeys"></a>创建 authkeys</h4><p>Tailscale 中有一个概念叫 tailnet，你可以理解成租户，租户与租户之间是相互隔离的，具体看参考 Tailscale 的官方文档： <a target="_blank" rel="noopener" href="https://tailscale.com/kb/1136/tailnet">What is a tailnet</a>。<br>Headscale 也有类似的实现叫 user，即用户。我们需要先创建一个 user，以便后续客户端接入，例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">headscale user create default</span><br></pre></td></tr></table></figure>
 
 <p>其他客户端接入需要首先在服务端生成 pre-authkey 的 key ：</p>
