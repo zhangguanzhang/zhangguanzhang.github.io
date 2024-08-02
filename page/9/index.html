@@ -459,6 +459,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/03/15/flannel-bin/">
+                
+                <span class="abstract-title-text">不走etcd v2 api下二进制跑flannel的总结</span>
+            </a>
+            <div class="abstract-content">
+                前言这几天给线上搭建 k8s 集群，文件和 systemd 参数大多是从 kubeadm 的 staticPod 的 yml 里扣出来的，起初是除了 flanneld 全部是 systemd 管理二进制。脚本问题导致 kube-proxy 的 kubeocnfig 少执行了 use-context 所以显示的是匿名用户无法 list node 信息，kube-proxy 是在运行但是无法维持 svc 的网络，flanneld 因为是 pod 要 watch 节点是通过 kubernetes 这个 svc 走的连接导致不通，然后 pod 状态变成退出，而 kubelet 在不手动清理掉退出...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/03/15">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/15</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="flannel">flannel</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/03/11/k8s-ha/">
                 
                 <span class="abstract-title-text">k8s高可用涉及到ip填写的相关配置和一些坑</span>
@@ -991,50 +1028,6 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/09/18/kubernetes-1-11-x-bin/">
-                
-                <span class="abstract-title-text">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</span>
-            </a>
-            <div class="abstract-content">
-                本次采用二进制文件方式部署
-不建议使用secureCRT这个ssh软件复制本篇博客内容的命令,因为它的部分版本对包含多条命令的处理结果并不完美,可能很多命令不是预期结果
-本文命令里有些是输出,不要乱粘贴输入(虽然也没影响)
-本文命令全部是在k8s-m1上执行
-本文很多步骤是选择其一,别啥都不看一路往下复制粘贴
-如果某些步骤理解不了可以上下内容一起看来理解
-本文后面的几个svc用了externalIPs,上生产的话必须用VIP或者LB代替
-本文的HA是vip,生产和云上可以用LB和SLB,不过阿里的SLB四层有问题,可以每个node上代理127.0.0.1的某个port分摊在所有apise...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/09/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
     
 </div>
 
@@ -2251,43 +2244,12 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4542,7 +4504,7 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 184
+        Total : 185
         </div>
         <!-- search  -->
         
@@ -4560,6 +4522,12 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span>
+            <a class="archive-post-title" href="/2024/08/02/k8s-ipv6/">在 IPv6 单栈下适配部署 K8S、中间件、应用适配</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>

@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/07/05/systemctl-start-docker-canceled/">
+                
+                <span class="abstract-title-text">Job for docker.service canceled</span>
+            </a>
+            <div class="abstract-content">
+                故障现象内部安装 docker 的脚本报错 docker 安装失败。然后启动发现下面奇怪的问题:
+1234567$ systemctl status docker● docker.service - Docker Application Container Engine   Loaded: loaded (/etc/systemd/system/docker.service; enabled; vendor preset: enabled)   Active: inactive (dead)     Docs: http://docs.docker.io$ systemctl start...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/07/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/05</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="systemd">systemd</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/06/08/ocp4.5.9-restore-etcd/">
                 
                 <span class="abstract-title-text">openshift 4.5.9 etcd损坏+脑裂修复过程</span>
@@ -963,49 +1001,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="swap">swap</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">
-                
-                <span class="abstract-title-text">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</span>
-            </a>
-            <div class="abstract-content">
-                由来2023&#x2F;08&#x2F;21 注意点：
-
-
-&#x3D; v0.15.1 开始，不需要 10-flannel.link 了，flannel 添加随机 mac
-
-
-https://github.com/flannel-io/flannel/issues/1795
-
-和前一篇文章不一样，从来没遇到过这样的问题，这里记录下。实施在客户那边部署业务后，业务在浏览器上无法访问，我远程上去查看日志发现 pod 内部无法 DNS 无法解析，nginx 连不上 upsteam 报错而启动失败，实际上也是跨节点不通。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/11/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
     
 </div>
 
@@ -2222,43 +2217,12 @@ https://github.com/flannel-io/flannel/issues/1795
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4513,7 +4477,7 @@ https://github.com/flannel-io/flannel/issues/1795
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 184
+        Total : 185
         </div>
         <!-- search  -->
         
@@ -4531,6 +4495,12 @@ https://github.com/flannel-io/flannel/issues/1795
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span>
+            <a class="archive-post-title" href="/2024/08/02/k8s-ipv6/">在 IPv6 单栈下适配部署 K8S、中间件、应用适配</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>

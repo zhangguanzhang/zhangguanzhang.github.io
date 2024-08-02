@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/06/03/container-not-forward/">
+                
+                <span class="abstract-title-text">docker info无warning，iptables规则正常，宿主机就是不转发</span>
+            </a>
+            <div class="abstract-content">
+                由来06、02 凌晨被喊醒帮忙看问题，客户侧重启部分 k8s 节点机器后，业务的部分接口出现问题，环境无法向日葵之类的远程，只能发命令后，现场人员执行。
+具体现象业务 pod 日志看是无法连到非 k8s 机器上的 mysql 的 3306， docker info 命令无 warning 也就是代表下面的几个内核参数正常：
+1234net.bridge.bridge-nf-call-ip6tables = 1net.bridge.bridge-nf-call-iptables = 1net.bridge.bridge-nf-call-arptables = 1net.ipv4.ip_fo...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/06/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/03</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kernal">kernal</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/05/13/overlayfs-unix-socket/">
                 
                 <span class="abstract-title-text">低版本内核下容器内部无法使用 unix socket 通信</span>
@@ -780,44 +819,6 @@ buildx 使用见文章 ...
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="keepalived">keepalived</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">
-                
-                <span class="abstract-title-text">proxmox 开机 error: disk &#39;lvmid/[vg uuid]/[lv uuid]&#39; not found</span>
-            </a>
-            <div class="abstract-content">
-                <p>一次 proxmox 机器突然宕机，开机后进入 grub resuce 无法启动的处理过程</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/02/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/02/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
     
 </div>
 
@@ -1861,43 +1862,12 @@ buildx 使用见文章 ...
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4152,7 +4122,7 @@ buildx 使用见文章 ...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 184
+        Total : 185
         </div>
         <!-- search  -->
         
@@ -4170,6 +4140,12 @@ buildx 使用见文章 ...
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span>
+            <a class="archive-post-title" href="/2024/08/02/k8s-ipv6/">在 IPv6 单栈下适配部署 K8S、中间件、应用适配</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>

@@ -517,7 +517,7 @@
 <p>上面代码你编译了后，在其他机器上运行，panic 的堆栈信息会是你机器上的路径信息，路径信息是保留的，例如下面的是我在 windows 上交叉编译仍到 Linux 上执行的:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">panic: runtime error: invalid memory address or nil pointer dereference</span><br><span class="line">[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x497d50]</span><br><span class="line"></span><br><span class="line">goroutine 1 [running]:</span><br><span class="line">os.(*File).Name(...)</span><br><span class="line">	D:/Install/Go/src/os/file.go:55</span><br><span class="line">main.main()</span><br><span class="line">	D:/github_dir/go/dlv-test/main.go:10 +0x50</span><br></pre></td></tr></table></figure>
 <p>可以通过下面的编译选项去掉（项目路径也就是<code>$PWD</code>显示的不要带空格，否则会编译报错）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go build -gcflags=&quot;all=-trimpath=$PWD&quot; -asmflags &quot;all=-trimpath=$PWD&quot;  main.go</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go build -gcflags=&quot;all=-trimpath=$PWD -N -l&quot; -asmflags &quot;all=-trimpath=$PWD&quot;  main.go</span><br></pre></td></tr></table></figure>
 
 <p>使用上面的参数编译完后的，这里注意下下面的 <code>D:/Install/Go</code>，后面文章会用到。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">panic: runtime error: invalid memory address or nil pointer dereference</span><br><span class="line">[signal 0xc0000005 code=0x0 addr=0x0 pc=0x649857]</span><br><span class="line"></span><br><span class="line">goroutine 1 [running]:</span><br><span class="line">os.(*File).Name(...)</span><br><span class="line">        D:/Install/Go/src/os/file.go:55</span><br><span class="line">main.main()</span><br><span class="line">        main2.go:10 +0x57</span><br></pre></td></tr></table></figure>
@@ -599,7 +599,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2021/07/20/dlv-remote/">http://zhangguanzhang.github.io/2021/07/20/dlv-remote/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2021/07/20/dlv-remote/">July 20th 2021, 8:08:06 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2021/07/20/dlv-remote/">七月 20日 2021, 8:08:06 晚上</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2021/07/20/dlv-remote/">July 20th 2021, 8:08:06 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -1715,43 +1715,12 @@
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4006,7 +3975,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 184
+        Total : 185
         </div>
         <!-- search  -->
         
@@ -4024,6 +3993,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span>
+            <a class="archive-post-title" href="/2024/08/02/k8s-ipv6/">在 IPv6 单栈下适配部署 K8S、中间件、应用适配</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/25</span>
