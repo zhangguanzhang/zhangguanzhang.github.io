@@ -563,7 +563,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install -y bash-completion</span><br><span class="line">headscale completion bash &gt; /etc/bash_completion.d/headscale</span><br><span class="line">. /etc/bash_completion.d/headscale</span><br></pre></td></tr></table></figure>
 
 <p>启动 headscale daemon 进程：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试文件</span></span><br><span class="line">headscale configtest</span><br><span class="line"></span><br><span class="line">headscale serve</span><br><span class="line"><span class="comment"># 配置文件没问题就 ctrl +c 取消掉使用 systemd 启动</span></span><br><span class="line"><span class="built_in">chmod</span> </span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl <span class="built_in">enable</span> --now headscale</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试文件</span></span><br><span class="line">headscale configtest</span><br><span class="line"></span><br><span class="line">headscale serve</span><br><span class="line"><span class="comment"># 配置文件没问题就 ctrl +c 取消掉使用 systemd 启动</span></span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl <span class="built_in">enable</span> --now headscale</span><br></pre></td></tr></table></figure>
 
 <h3 id="derper-部署"><a href="#derper-部署" class="headerlink" title="derper 部署"></a>derper 部署</h3><p>headscale 是控制层面，下发信息和路由配置，而 derper 是中继和打洞服务器，利用修改版本的 stun 协议打洞，例如两个无公网 IP 但是可以访问到公网的客户端，客户端和另一个客户端建立连接都是先 连 derp 看看自己和对端能否打洞成功，成功就直连对方，否则就走 derper 中继来转发。</p>
 <p>官方推荐的使用 https 绿锁证书部署，但是我们没有。并且官方不提供 derp 编译，所以需要 hack 和编译，相关文件在 <a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/compile-and-packages/tree/master/tailscale">compile-and-packages&#x2F;tailscale</a>，基于 alpine 镜像，并且能自动生成 https 证书。</p>
@@ -582,7 +582,7 @@
 <p>而 <a target="_blank" rel="noopener" href="https://github.com/juanfont/headscale/blob/v0.14.0/go.mod#L42">三年前的 headscale 版本是 0.14.0</a> 里看到使用的 tailscale 版本是 v1.20.4，压根不存在网上一些 <code>insecurefortests</code> 只能写 json 里配置的说法（<code>DERPPort</code> 和 <code>InsecureForTests</code> 都是 golang json tag，yaml 读取如果没 yaml tag 就使用 json tag），网上好多人互相抄袭还单独创建一个 web server 写 json 文件，我不理解。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br><span class="line"><span class="comment"># 由于修改了 web index，所以是空的 200</span></span><br><span class="line">curl -vk https://127.0.0.1:12345/</span><br></pre></td></tr></table></figure>
 
-<h3 id="客户端接入"><a href="#客户端接入" class="headerlink" title="客户端接入"></a>客户端接入</h3><p>所有客户端有微皮恩的，需要把 ecs 的公网 IP 设置成直连不走代理。</p>
+<h3 id="客户端接入"><a href="#客户端接入" class="headerlink" title="客户端接入"></a>客户端接入</h3><p>所有客户端有微皮恩的，需要把 ecs 的公网 IP 设置成直连不走代理，以及如果是家里宽带，可以把 Upnp 打开，这样打洞直连成功率会高些。</p>
 <h4 id="创建-authkeys"><a href="#创建-authkeys" class="headerlink" title="创建 authkeys"></a>创建 authkeys</h4><p>Tailscale 中有一个概念叫 tailnet，你可以理解成租户，租户与租户之间是相互隔离的，具体看参考 Tailscale 的官方文档： <a target="_blank" rel="noopener" href="https://tailscale.com/kb/1136/tailnet">What is a tailnet</a>。<br>Headscale 也有类似的实现叫 user，即用户。我们需要先创建一个 user，以便后续客户端接入，例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">headscale user create default</span><br></pre></td></tr></table></figure>
 
@@ -701,7 +701,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">http://zhangguanzhang.github.io/2024/07/25/headscale/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">July 25th 2024, 11:10:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">七月 25日 2024, 11:10:30 晚上</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">July 25th 2024, 11:10:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
