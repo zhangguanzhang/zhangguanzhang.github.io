@@ -570,7 +570,7 @@
 <li><code>::1</code> 等同于ipv4 的 <code>127.0.0.1</code> 和 <code>localhost</code></li>
 </ul>
 <p>url 格式是 <code>http(s)://[xxx]:port</code> ，host 部分多了方括号。</p>
-<h3 id="K8S"><a href="#K8S" class="headerlink" title="K8S"></a>K8S</h3><p>内部有 ansible 部署的，主要是基础上修改，之前节点名都是用的 IPv4 地址，直接部署后报错 kubelet 节点名无效，需要 <code>RFC 1123</code> 明明规范：</p>
+<h3 id="K8S"><a href="#K8S" class="headerlink" title="K8S"></a>K8S</h3><p>内部有 ansible 部署的，主要是基础上修改，之前节点名都是用的 IPv4 地址，直接部署后报错 kubelet 节点名无效，需要 <code>RFC 1123</code> 命名规范：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubelet_node_status.go:92] &quot;Unable to register node with API server&quot; err=&quot;Node \&quot;2002.db8.0.1..101\&quot; is invalid: metadata.name: </span><br><span class="line">Invalid value: \&quot;2002.db8.0.1..101\&quot;: </span><br><span class="line">a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, &#x27;-&#x27; or &#x27;.&#x27;, </span><br><span class="line">and must start and end with an alphanumeric character (e.g. &#x27;example.com&#x27;, </span><br><span class="line">regex used for validation is &#x27;[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*&#x27;)&quot; node=&quot;2002.db8.0.1..101&quot;</span><br></pre></td></tr></table></figure>
 
 <p>从1.21 版本支持双栈，下面的 CIDR 我只配置 IPv6 单栈，总结下改的点：</p>
