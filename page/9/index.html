@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/03/22/k8s-controller-error/">
+                
+                <span class="abstract-title-text">一次kube-controller-manager的bug导致的线上无法调度处理过程</span>
+            </a>
+            <div class="abstract-content">
+                线上的k8s环境普遍版本很低，今天同事心血来潮去一个新节点上去看了下发现根分区满了,清理了后发有一个pod没有创建出来。清理后把因为文件系统满了而down掉的k8s相关进程起来后发现kubelet的log一直报错cannot remove &#x2F;var&#x2F;lib&#x2F;kubelet&#x2F;xxxxconfig&#x2F;key resource busy now 啥的。查看了下describe对应rc还没有任何Event
+1234567891011121314151617181920212223242526272829303132333435363738$ kub...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/03/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/22</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kube-controller-manager">kube-controller-manager</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/03/15/flannel-bin/">
                 
                 <span class="abstract-title-text">不走etcd v2 api下二进制跑flannel的总结</span>
@@ -990,44 +1028,6 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="ingress">ingress</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/09/24/k8s-some-vpc-cluster/">
-                
-                <span class="abstract-title-text">跨VPC或者跨云供应商搭建K8S集群正确姿势</span>
-            </a>
-            <div class="abstract-content">
-                去年开始各大云厂商搞活动 120 元一年的云主机,当时还不会k8s,但是了解到搭建集群需要好几台,于是当时攒了好几台来做准备: tx 一台,阿里两个别人账号买了两台,再加上很久之前几何云送了一台. 当时还有人怼说买这么多干啥,答曰:以后学 k8s，此人曰:呵呵
-后面刚开始接触的时候不太了解网络,用的calico,跨vpc根本不行,有大佬说只能vxlan能跨SDN下的vpc之间但是云厂商的主机都是做的 ip 的nat,网卡ip都是内网ip,kubelet上报的时候和flannel都会用这个ip
-
-calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层只能用ipip模式,另外...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/09/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
 </div>
 
@@ -2249,7 +2249,24 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4504,7 +4521,7 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 185
+        Total : 186
         </div>
         <!-- search  -->
         
@@ -4522,6 +4539,12 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2024/09/16/hostPort-problem/">hostPort 不通排查，以及挖掘问题根源</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/02</span>
@@ -6533,6 +6556,11 @@ calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层�
             <span class="sidebar-tag-name" data-tags="derper">
                 <span class="iconfont-archer">&#xe606;</span>
                 derper
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="iptables">
+                <span class="iconfont-archer">&#xe606;</span>
+                iptables
             </span>
         
     </div>

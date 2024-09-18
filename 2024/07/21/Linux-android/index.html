@@ -349,7 +349,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -554,24 +554,35 @@
 </ul>
 <h3 id="常见逆向"><a href="#常见逆向" class="headerlink" title="常见逆向"></a>常见逆向</h3><ul>
 <li>frida objection</li>
+<li><a target="_blank" rel="noopener" href="https://kuizuo.cn/docs/frida-so-hook/">https://kuizuo.cn/docs/frida-so-hook/</a></li>
+</ul>
+<h3 id="frida"><a href="#frida" class="headerlink" title="frida"></a>frida</h3><p>spwan</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-U usb， -f 是Attach模式，不带-f是Spawn 模式，前者会启动app注入，后者是自己选择啥时候注入</span></span><br><span class="line">frida -U -f &lt;app_name&gt; -l hook.js</span><br></pre></td></tr></table></figure>
+
+<p>js 的话，hook 内容如下类似：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setImmediate</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Java</span>.<span class="title function_">perform</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> <span class="title class_">MainActivity</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;com.example.MainActivity&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Hook Java 方法</span></span><br><span class="line">        <span class="title class_">MainActivity</span>.<span class="property">foo</span>.<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">str</span>) &#123;</span><br><span class="line">            <span class="comment">// 调用方法</span></span><br><span class="line">            <span class="keyword">var</span> ret = <span class="variable language_">this</span>.<span class="title function_">foo</span>(str);</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Return value:&#x27;</span>, ret);</span><br><span class="line">            <span class="comment">// 返回</span></span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>过检测 frida <a target="_blank" rel="noopener" href="https://github.com/Ylarod/Florida">Ylarod&#x2F;Florida</a></p>
+<p>抓包:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/siyujie/OkHttpLogger-Frida">https://github.com/siyujie/OkHttpLogger-Frida</a></li>
 </ul>
 <h3 id="unit-游戏逆向"><a href="#unit-游戏逆向" class="headerlink" title="unit 游戏逆向"></a>unit 游戏逆向</h3><p><code>libs/&#123;libil2cpp,libmain,libunity,libxlua&#125;.so</code></p>
 <ul>
-<li><p><a target="_blank" rel="noopener" href="https://veo.pub/2020/xlua/">https://veo.pub/2020/xlua/</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-257678.htm">https://bbs.kanxue.com/thread-257678.htm</a> </p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/linxinfa/article/details/116572369">https://blog.csdn.net/linxinfa/article/details/116572369</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/vfsfitvnm/frida-il2cpp-bridge">https://github.com/vfsfitvnm/frida-il2cpp-bridge</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/MlgmXyysd/IL2CppMemoryDumper">https://github.com/MlgmXyysd/IL2CppMemoryDumper</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://bbs.kanxue.com/thread-280500.htm</span></span><br><span class="line">npm install frida-compile</span><br><span class="line">npm install --save-dev frida-il2cpp-bridge</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/dnSpyEx/dnSpy">https://github.com/dnSpyEx/dnSpy</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=NBjGm7YAZUQ">https://www.youtube.com/watch?v=NBjGm7YAZUQ</a></p>
-</li>
+<li><a target="_blank" rel="noopener" href="https://veo.pub/2020/xlua/">https://veo.pub/2020/xlua/</a></li>
+<li><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-257678.htm">https://bbs.kanxue.com/thread-257678.htm</a> </li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/linxinfa/article/details/116572369">https://blog.csdn.net/linxinfa/article/details/116572369</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vfsfitvnm/frida-il2cpp-bridge">https://github.com/vfsfitvnm/frida-il2cpp-bridge</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/MlgmXyysd/IL2CppMemoryDumper">https://github.com/MlgmXyysd/IL2CppMemoryDumper</a></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://bbs.kanxue.com/thread-280500.htm</span></span><br><span class="line">npm install frida-compile</span><br><span class="line">npm install --save-dev frida-il2cpp-bridge</span><br><span class="line">npm run watch</span><br><span class="line"></span><br><span class="line">frida -f xxx -l hook.js</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/dnSpyEx/dnSpy">https://github.com/dnSpyEx/dnSpy</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=NBjGm7YAZUQ">https://www.youtube.com/watch?v=NBjGm7YAZUQ</a></li>
+</ul>
+<h3 id="辅助逆向"><a href="#辅助逆向" class="headerlink" title="辅助逆向"></a>辅助逆向</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_56039202/article/details/126980383">某直装外挂卡密校验逆向分析</a></li>
 </ul>
 
     </article>
@@ -762,7 +773,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb"><span class="toc-number">2.</span> <span class="toc-text">adb</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#adb-shell"><span class="toc-number">2.3.</span> <span class="toc-text">adb shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-number">2.4.</span> <span class="toc-text">一些问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%8D%93%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">安卓虚拟化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bliss-OS"><span class="toc-number">3.1.</span> <span class="toc-text">Bliss OS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Waydroid"><span class="toc-number">3.2.</span> <span class="toc-text">Waydroid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#budtmo-x2F-docker-android"><span class="toc-number">3.3.</span> <span class="toc-text">budtmo&#x2F;docker-android</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#remote-android-x2F-redroid-doc"><span class="toc-number">3.4.</span> <span class="toc-text">remote-android&#x2F;redroid-doc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%BD%AF%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">一些软件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#scrcpy"><span class="toc-number">4.1.</span> <span class="toc-text">scrcpy</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb-%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">adb 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#golang"><span class="toc-number">5.1.</span> <span class="toc-text">golang</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91"><span class="toc-number">6.</span> <span class="toc-text">逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text">教程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%80%86%E5%90%91"><span class="toc-number">6.2.</span> <span class="toc-text">常见逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unit-%E6%B8%B8%E6%88%8F%E9%80%86%E5%90%91"><span class="toc-number">6.3.</span> <span class="toc-text">unit 游戏逆向</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb"><span class="toc-number">2.</span> <span class="toc-text">adb</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#adb-shell"><span class="toc-number">2.3.</span> <span class="toc-text">adb shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-number">2.4.</span> <span class="toc-text">一些问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%8D%93%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">安卓虚拟化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bliss-OS"><span class="toc-number">3.1.</span> <span class="toc-text">Bliss OS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Waydroid"><span class="toc-number">3.2.</span> <span class="toc-text">Waydroid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#budtmo-x2F-docker-android"><span class="toc-number">3.3.</span> <span class="toc-text">budtmo&#x2F;docker-android</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#remote-android-x2F-redroid-doc"><span class="toc-number">3.4.</span> <span class="toc-text">remote-android&#x2F;redroid-doc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%BD%AF%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">一些软件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#scrcpy"><span class="toc-number">4.1.</span> <span class="toc-text">scrcpy</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb-%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">adb 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#golang"><span class="toc-number">5.1.</span> <span class="toc-text">golang</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91"><span class="toc-number">6.</span> <span class="toc-text">逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text">教程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%80%86%E5%90%91"><span class="toc-number">6.2.</span> <span class="toc-text">常见逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#frida"><span class="toc-number">6.3.</span> <span class="toc-text">frida</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unit-%E6%B8%B8%E6%88%8F%E9%80%86%E5%90%91"><span class="toc-number">6.4.</span> <span class="toc-text">unit 游戏逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E9%80%86%E5%90%91"><span class="toc-number">6.5.</span> <span class="toc-text">辅助逆向</span></a></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1701,7 +1712,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3956,7 +3984,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 185
+        Total : 186
         </div>
         <!-- search  -->
         
@@ -3974,6 +4002,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2024/09/16/hostPort-problem/">hostPort 不通排查，以及挖掘问题根源</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/02</span>
@@ -5985,6 +6019,11 @@
             <span class="sidebar-tag-name" data-tags="derper">
                 <span class="iconfont-archer">&#xe606;</span>
                 derper
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="iptables">
+                <span class="iconfont-archer">&#xe606;</span>
+                iptables
             </span>
         
     </div>

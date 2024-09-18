@@ -561,7 +561,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">trivy --config xxx.yml xxx</span><br><span class="line">TRIVY_CONFIG=xxx.yml trivy xxx</span><br></pre></td></tr></table></figure>
 
 <p>这样 ci 里运行也不用带 cmdline 泄露配置文件路径。当然还支持模板和 output format 以及设置 <code>--exit-code </code> 会在 ci 里很实用。避免扫描的时候下载缓存失败导致扫描结果没出来，可以扫描之前，执行下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">until trivy image --download-db-only --download-java-db-only; do</span><br><span class="line">	echo &quot;Command failed. Retrying...&quot;</span><br><span class="line">	sleep 1</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">until trivy image --download-db-only; do</span><br><span class="line">	echo &quot;Command failed. Retrying...&quot;</span><br><span class="line">	sleep 1</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">until trivy image --download-java-db-only; do</span><br><span class="line">	echo &quot;Command failed. Retrying...&quot;</span><br><span class="line">	sleep 1</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
 
 <p>jenkins 里，扫描可以使用官方的 html.tpl 模板，最后用 <a target="_blank" rel="noopener" href="https://www.jenkins.io/doc/pipeline/steps/htmlpublisher/">publishHTML</a> 展示。由于 trivy 不支持一次扫描多个镜像，可以把官方的模板文件下载后分割成三部分拼接：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cp &quot;$&#123;tpl_dir&#125;/trivy-html-head.tpl&quot; report.html</span><br><span class="line">while read -r line; do</span><br><span class="line">    if [ -f &quot;$line&quot; ];then</span><br><span class="line">        trivy image --format template --template &quot;@$&#123;tpl_dir&#125;/trivy-html-body.tpl&quot; -o report.tmp --input $line</span><br><span class="line">        cat report.tmp &gt;&gt; report.html</span><br><span class="line">        # break</span><br><span class="line">    fi</span><br><span class="line">done &lt; &quot;/dev/stdin&quot;</span><br><span class="line">rm -f report.tmp</span><br><span class="line">cat &quot;$&#123;tpl_dir&#125;/trivy-html-end.tpl&quot; &gt;&gt; report.html</span><br></pre></td></tr></table></figure>
@@ -1699,7 +1699,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3954,7 +3971,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 185
+        Total : 186
         </div>
         <!-- search  -->
         
@@ -3972,6 +3989,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2024/09/16/hostPort-problem/">hostPort 不通排查，以及挖掘问题根源</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/02</span>
@@ -5983,6 +6006,11 @@
             <span class="sidebar-tag-name" data-tags="derper">
                 <span class="iconfont-archer">&#xe606;</span>
                 derper
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="iptables">
+                <span class="iconfont-archer">&#xe606;</span>
+                iptables
             </span>
         
     </div>

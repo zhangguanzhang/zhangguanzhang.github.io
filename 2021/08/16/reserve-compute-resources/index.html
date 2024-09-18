@@ -618,6 +618,9 @@
 <p>apply 后机器上日志最先 oom 的是 <code>4G</code> 这个:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Oct 11 10:38:03 82-174-zhang kernel: [1266038.261910] Memory cgroup out of memory: Kill process 7017 (stress-4-BestEf) score 1070 or sacrifice child</span><br><span class="line">Oct 11 10:38:03 82-174-zhang kernel: [1266038.267444] Killed process 7017 (stress-4-BestEf), UID 0, total-vm:2140696kB, anon-rss:2097272kB, file-rss:8kB, shmem-rss:4kB</span><br></pre></td></tr></table></figure>
 
+<h2 id="相关推荐阅读"><a href="#相关推荐阅读" class="headerlink" title="相关推荐阅读"></a>相关推荐阅读</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://midbai.com/post/scheduler-always-place-pod-on-the-same-node/">pod一直往一个节点上调度</a></li>
+</ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/tasks/administer-cluster/reserve-compute-resources/">官方文档</a> 和 </li>
 <li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/node/node-allocatable.md">最初的设计文档</a></li>
@@ -814,7 +817,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">前情提要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.</span> <span class="toc-text">相关说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95"><span class="toc-number">2.</span> <span class="toc-text">尝试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">最终配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%91"><span class="toc-number">4.</span> <span class="toc-text">坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#oom-killer"><span class="toc-number">5.</span> <span class="toc-text">oom killer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s-%E7%9A%84-qosClass"><span class="toc-number">5.1.</span> <span class="toc-text">k8s 的 qosClass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9-OOM-%E8%A1%8C%E4%B8%BA%E5%92%8C-qosClass-%E7%9A%84-oom-score-adj"><span class="toc-number">5.2.</span> <span class="toc-text">节点 OOM 行为和 qosClass 的 oom_score_adj</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">6.</span> <span class="toc-text">测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#no-oom-adjust"><span class="toc-number">6.1.</span> <span class="toc-text">no-oom-adjust</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">前情提要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.</span> <span class="toc-text">相关说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95"><span class="toc-number">2.</span> <span class="toc-text">尝试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">最终配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%91"><span class="toc-number">4.</span> <span class="toc-text">坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#oom-killer"><span class="toc-number">5.</span> <span class="toc-text">oom killer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s-%E7%9A%84-qosClass"><span class="toc-number">5.1.</span> <span class="toc-text">k8s 的 qosClass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9-OOM-%E8%A1%8C%E4%B8%BA%E5%92%8C-qosClass-%E7%9A%84-oom-score-adj"><span class="toc-number">5.2.</span> <span class="toc-text">节点 OOM 行为和 qosClass 的 oom_score_adj</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">6.</span> <span class="toc-text">测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#no-oom-adjust"><span class="toc-number">6.1.</span> <span class="toc-text">no-oom-adjust</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB"><span class="toc-number">7.</span> <span class="toc-text">相关推荐阅读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1753,7 +1756,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4008,7 +4028,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 185
+        Total : 186
         </div>
         <!-- search  -->
         
@@ -4026,6 +4046,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2024/09/16/hostPort-problem/">hostPort 不通排查，以及挖掘问题根源</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/02</span>
@@ -6037,6 +6063,11 @@
             <span class="sidebar-tag-name" data-tags="derper">
                 <span class="iconfont-archer">&#xe606;</span>
                 derper
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="iptables">
+                <span class="iconfont-archer">&#xe606;</span>
+                iptables
             </span>
         
     </div>
