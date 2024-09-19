@@ -546,7 +546,7 @@
 <p>跳转的链名字 <code>CNI-DN-XXX</code> 看了下 portmap 源码是根据 名字+ 容器ID sha512 生成的，手动计算如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> -n <span class="string">&#x27;cbr0fb7cdb0a4f8da673da0a9818ec9a1576f953a8e8decf87a081827c11e4aa7138&#x27;</span> \</span></span><br><span class="line"><span class="language-bash">   | <span class="built_in">sha512sum</span> | <span class="built_in">cut</span> -c 1-21</span></span><br><span class="line">b24a4eb3a38dc5843c23a</span><br></pre></td></tr></table></figure>
 
-<p>说明确实是这个容器。看了下 portmap 源码使用的 iptables 库封装的命令选项是有带 –wait 选项的，即使 iptables 数量多也没问题：</p>
+<p>说明确实是这个容器。看了下 portmap 源码使用的 iptables 库封装的命令选项是有带 <code>--wait</code> 选项的，即使 iptables 数量多也没问题：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">iptables -w -t nat -S | <span class="built_in">wc</span> -l</span></span><br><span class="line">1705</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">iptables -w -t nat -S | grep -Pv <span class="string">&#x27;KUBE-SVC|KUBE-SEP&#x27;</span> | <span class="built_in">wc</span> -l</span></span><br><span class="line">180</span><br></pre></td></tr></table></figure>
 
 <p>理论上发生的可能性是 cri-dockerd 清理掉老 Pod 的时候没清理，但是看代码是有清理的：</p>
@@ -560,10 +560,10 @@
 
 <p>询问了下测试人员，说这个时间点执行了卸载步骤，所以整个问题流程是:</p>
 <ul>
-<li>删掉所有的 pod</li>
-<li>cri-dockerd 清理下线相关容器，但是同步的我们卸载步骤会停止了 docker 和删了 docker 目录</li>
-<li>cir-dockerd 清理过程中连不上 docker ，导致 cri-dockerd 清理容器的时候无法执行完整的 <code>StopPodSandbox</code> 流程清理掉 nat 链规则。</li>
-<li>卸载完成后再部署环境，最后 hostPort 老规则还在先匹配</li>
+<li>执行卸载流程，会先kubectl delete 删掉所有资源，触发 pod 删除</li>
+<li>kubelet 调用 cri-dockerd 清理下线相关容器，但是同步的我们卸载步骤会停止了 docker 和删了 docker 目录</li>
+<li>cir-dockerd 清理过程中连不上 docker ，导致 cri-dockerd 清理容器的时候无法执行完整的 <code>StopPodSandbox</code> 流程清理掉 nat 表的 <code>CNI-HOSTPORT-DNAT</code> 链规则。</li>
+<li>卸载过程会完成后再部署环境，最后 hostPort 老规则还在先匹配</li>
 </ul>
 <p>避免就是卸载 docker 过程中，清理掉 nat 表的相关规则。</p>
 <h2 id="类似的情况"><a href="#类似的情况" class="headerlink" title="类似的情况"></a>类似的情况</h2><ul>
