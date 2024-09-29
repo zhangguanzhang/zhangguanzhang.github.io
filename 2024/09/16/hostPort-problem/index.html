@@ -562,7 +562,7 @@
 <ul>
 <li>执行卸载流程，会先kubectl delete 删掉所有资源，触发 pod 删除</li>
 <li>kubelet 调用 cri-dockerd 清理下线相关容器，但是同步的我们卸载步骤会停止了 docker 和删了 docker 目录</li>
-<li>cir-dockerd 清理过程中连不上 docker ，导致 cri-dockerd 清理容器的时候无法执行完整的 <code>StopPodSandbox</code> 流程清理掉 nat 表的 <code>CNI-HOSTPORT-DNAT</code> 链规则。</li>
+<li>cri-dockerd 清理过程中连不上 docker ，导致 cri-dockerd 清理容器的时候无法执行完整的 <code>StopPodSandbox</code> 流程清理掉 nat 表的 <code>CNI-HOSTPORT-DNAT</code> 链规则。</li>
 <li>卸载过程会完成后再部署环境，最后 hostPort 老规则还在先匹配</li>
 </ul>
 <p>避免就是卸载 docker 过程中，清理掉 nat 表的相关规则。</p>
