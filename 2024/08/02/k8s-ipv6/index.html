@@ -352,7 +352,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3.9k</span>阅读时长: <span class="post-count reading-time">19 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">5.2k</span>阅读时长: <span class="post-count reading-time">25 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -649,20 +649,72 @@
 <li><a href="https://zhangguanzhang.github.io/2024/07/25/headscale/">安装 headsacle</a> ，<code>ip_prefix</code> 关闭 IPv4 保留 IPv6 那个网段 <code>fd7a:115c:a1e0::/48</code></li>
 <li>安装 derp + tailscale，这个 <code>tailscale up</code> 时候带上 <code>--advertise-routes 2002:db8:0:1::/64</code></li>
 <li>然后开启这个的路由 <code>headscale routes enable -r 1</code></li>
+<li>双栈机器开启 ipv4 ipv6 forward sysctl</li>
 </ul>
 <p>后面发现 windows 上开了客户端后访问 101 发现来源 IP 是双栈机器的 IPv6 IP，因为 tailscale linux 客户端默认是开启了 SNAT，把双栈机器上的 snat 关了：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale <span class="built_in">set</span> --snat-subnet-routes=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
 
-<p>因为双栈机器是 IPv6 网关，所以这样没做 SNAT 后：</p>
+<p>因为双栈机器是 IPv6 机器的网关，所以这样没做 SNAT 后：</p>
 <ul>
 <li>windows&#x2F;MacOS&#x2F;手机（<code>fd7a:115c:a1e0::/48</code>） 访问 <code>2002:db8:0:1::/64</code> 走本机路由到接口 tailscale ，会封包隧道发往到双栈机器上。</li>
-<li>然后双栈机器上路由 <code>2002:db8:0:1::/64</code> 到右侧的机器，右侧机器回包（<code>fd7a:115c:a1e0::/48</code>）走默认路由到双栈机器，再发到客户端。</li>
+<li>然后双栈机器上解包后，本机开了ipv4 ipv6 forward ，走路由 <code>2002:db8:0:1::/64</code> 到右侧的单栈机器，右侧机器回包（<code>fd7a:115c:a1e0::/48</code>）走自己默认路由到双栈机器，再发到客户端。</li>
 </ul>
 <p>然后测试了下发现偶尔会断：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ssh 2002:db8:0:1::101</span><br><span class="line">ssh: connect to host 2002:db8:0:1::101 port 22: No route to host</span><br><span class="line">$ ssh 2002:db8:0:1::101</span><br><span class="line">root@2002:db8:0:1::101<span class="string">&#x27;s password: </span></span><br></pre></td></tr></table></figure>
 
-<p>双栈机器上 <code>ip -6 r s | grep 2002:db8</code> 看路由表又没问题，怀疑是 <code>2002:db8:0:1::/64</code> 的偶尔走出去到物理交换机上了，然后给双栈机器增加了个网卡隔离开，把 IPv6 主机位 1 配置在该网卡上，测试下发现很稳定。</p>
+<p>双栈机器上 <code>ip -6 r s | grep 2002:db8</code> 看路由表又没问题，怀疑是 <code>2002:db8:0:1::/64</code> 的偶尔走出去到物理交换机上了，然后给双栈机器增加了个网卡隔离开，也就是把 IPv6 主机位 1 的 IP 配置在该网卡上，测试下发现很稳定。</p>
 <p>然后给研发和测试写了个安装 tailscale 客户端和接入文档，很方便。</p>
+<h2 id="2024-x2F-10-后续的一些问题和发现"><a href="#2024-x2F-10-后续的一些问题和发现" class="headerlink" title="2024&#x2F;10 后续的一些问题和发现"></a>2024&#x2F;10 后续的一些问题和发现</h2><p>pc 端也有应用研发，适配后，反馈用 ipv6 IP url 软件内的登录页可以弹出来，配置的 hosts 域名则不行也就是下面相关逻辑：</p>
+<ol>
+<li>点击登录按钮后有个弹出的内嵌页面，会请求域名 url</li>
+<li>把获取到 http body 展示在内嵌页</li>
+</ol>
+<p>现象是内嵌页一直是空白，反馈说打开 Charles 抓包就能正常显示。没办法只有让他改源码，让在 1 的网络请求结果和错误都打印下看看，给我反馈说是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERR_NAME_NOT_RESOLVED</span><br></pre></td></tr></table></figure>
+
+<p>确实是域名无法解析，但是我们业务也可以直接浏览器访问，浏览器用 hosts 域名可以访问的，有些软件会无视系统的 hosts 文件是自己实现相关域名解析逻辑，让他从这方面排查下看看。</p>
+<p>第二天他在 Linux 上发现相关问题，开了猫咪代理后内嵌页有内容，问他是不是猫咪自动更新了，给我截图了下界面，看了下 <code>IPv6</code> 选项开启的，让他关闭后再试试就不行了，而 windows 上猫咪开不开都不行。<br>发现很奇怪，就要来了安装包，自己开了个 windows 也复现了问题，看了下猫咪 meta 内核源码 yaml ipv6 字段使用的地方：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> General <span class="keyword">struct</span> &#123;</span><br><span class="line">	Inbound</span><br><span class="line">	Mode                    T.TunnelMode      <span class="string">`json:&quot;mode&quot;`</span></span><br><span class="line">	UnifiedDelay            <span class="type">bool</span>              <span class="string">`json:&quot;unified-delay&quot;`</span></span><br><span class="line">	LogLevel                log.LogLevel      <span class="string">`json:&quot;log-level&quot;`</span></span><br><span class="line">	IPv6                    <span class="type">bool</span>              <span class="string">`json:&quot;ipv6&quot;`</span></span><br></pre></td></tr></table></figure>
+
+<p>然后传递配置变量里</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> general.IPv6 != <span class="literal">nil</span> &#123;</span><br><span class="line">	resolver.DisableIPv6 = !*general.IPv6</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解析行为相关的函数</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">LookupIPWithResolver</span><span class="params">(ctx context.Context, host <span class="type">string</span>, r Resolver)</span></span> ([]netip.Addr, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> node, ok := DefaultHosts.Search(host, <span class="literal">false</span>); ok &#123;</span><br><span class="line">		<span class="keyword">return</span> node.IPs, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> r != <span class="literal">nil</span> &amp;&amp; r.Invalid() &#123;</span><br><span class="line">		<span class="keyword">if</span> DisableIPv6 &#123;</span><br><span class="line">			<span class="keyword">return</span> r.LookupIPv4(ctx, host)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> r.LookupIP(ctx, host)</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> DisableIPv6 &#123;</span><br><span class="line">		<span class="keyword">return</span> LookupIPv4WithResolver(ctx, host, r)</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面开启 ipv6 走的是 <code>r.LookupIP</code> 方法，跳转过去是走的 ipv6 dns 解析</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r *Resolver)</span></span> LookupIP(ctx context.Context, host <span class="type">string</span>) (ips []netip.Addr, err <span class="type">error</span>) &#123;</span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> []netip.Addr, <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">defer</span> <span class="built_in">close</span>(ch)</span><br><span class="line">		ip, err := r.lookupIP(ctx, host, D.TypeAAAA)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		ch &lt;- ip</span><br><span class="line">	&#125;()</span><br></pre></td></tr></table></figure>
+
+<p>开了猫咪的 ipv6 影响了解析相关，类似强制使用 ipv6 解析而导致正常，也就是说明不正常现象是因为走的 ipv4 解析了，怎么配置使用 IPv6 优先级，发现 windows 是下面查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\system32&gt;netsh interface ipv6 show prefixpolicies</span><br><span class="line">查询活动状态...</span><br><span class="line"></span><br><span class="line">优先顺序    标签   前缀</span><br><span class="line">----------  -----  --------------------------------</span><br><span class="line">        50      0  ::1/128   </span><br><span class="line">        40      1  ::/0</span><br><span class="line">        35      4  ::ffff:0:0/96</span><br><span class="line">        30      2  2002::/16</span><br><span class="line">         5      5  2001::/32</span><br><span class="line">         3     13  fc00::/7</span><br><span class="line">         1     11  fec0::/10</span><br><span class="line">         1     12  3ffe::/16</span><br><span class="line">         1      3  ::/96</span><br></pre></td></tr></table></figure>
+
+<p>搜到的都是这个默认配置是 IPv6 优先级比 IPv4 高，他们想优先使用 IPv4 而改上面优先级，我们这个问题是想 IPv6 优先级高，这个默认配置是没有问题。没办法了，就在上面的双栈机器搭建 coredns 起 dns server 看下解析记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; docker-compose.yml &lt;&lt; EOF</span><br><span class="line">services:</span><br><span class="line">  coredns:</span><br><span class="line">    image: docker.m.daocloud.io/coredns/coredns:1.11.3</span><br><span class="line">    container_name: coredns</span><br><span class="line">    restart: always</span><br><span class="line">    network_mode: host</span><br><span class="line">    cap_drop:</span><br><span class="line">      - ALL</span><br><span class="line">    cap_add:</span><br><span class="line">      - NET_BIND_SERVICE</span><br><span class="line">    volumes:</span><br><span class="line">      - ./config/:/etc/coredns/</span><br><span class="line">      - /etc/localtime:/etc/localtime:ro</span><br><span class="line">    command: [&quot;-conf&quot;, &quot;/etc/coredns/Corefile&quot;]</span><br><span class="line"></span><br><span class="line">mkdir -p ./config/</span><br><span class="line">cat &gt; ./config/Corefile &lt;&lt; EOF</span><br><span class="line">.:53 &#123;</span><br><span class="line">   bind 0.0.0.0 ::</span><br><span class="line">   #bind  ::</span><br><span class="line">   hosts &#123;</span><br><span class="line">     10.xxx.xx.63 xxx.xxx.cn</span><br><span class="line">     2002:db8:0:1::101 xxx.xxx.cn</span><br><span class="line">     fallthrough</span><br><span class="line">   &#125;</span><br><span class="line">   forward . 223.5.5.5</span><br><span class="line">   log </span><br><span class="line">   errors</span><br><span class="line">   reload</span><br><span class="line">&#125;</span><br><span class="line">chmod a+r ./config/Corefile</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>该域名 A 记录和 AAAA 记录都有，设置下测试 windows 的 dns server 指向双栈机器点了下登录后，发现 coredns 日志里解析的是 A 记录解析请求，问题就是这了，A 记录的机器上抓包发现登录请求发过来了，但是没有端口，所以内嵌登录页还是空白内容。</p>
+<p>但是很奇怪的是为啥 hosts 有还走 dns 解析请求，后面测试了下发现以下几个现象：</p>
+<ul>
+<li>机器上配置 IPv6 hosts，不启动 tailscale：<ul>
+<li>无法 ping 通该域名</li>
+<li><code>Resolve-DnsName xxx.xxx.cn</code> 可以解析出域名，<code>ipconfig /displaydns</code> 里也有显示有 AAAA 记录</li>
+</ul>
+</li>
+<li>机器上配置 IPv6 hosts，启动 tailscale：<ul>
+<li>可以被路由的 IPv6 hosts 域名可以解析</li>
+<li>不可以被路由的 IPv6 hosts 域名无法解析</li>
+</ul>
+</li>
+</ul>
+<p>研发反馈内嵌页用到了 Chromium Embedded Framework 框架，但是我自己的 chrome 浏览器访问域名业务是可以的，想着会不会研发他们的 CEF 框架内的 chrome 版本低的问题，搜相关关键字 <code>chrome not use hosts file ipv6</code> 搜到了同样的问题 <a target="_blank" rel="noopener" href="https://superuser.com/questions/1421602/chrome-not-using-hosts-file-for-ipv6-addresses-since-v73">Chrome not using hosts file for IPv6 addresses since v73</a></p>
+<p>下面的回答是 chrome 早期版本探测 IPv6 是否可用是看 <code>2001:4860:4860::8888/128</code> 网段是否可以被路由，然后尝试了 powershell 管理员身份运行添加 IPv6 路由解决：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh interface ipv6  add route 2001:4860:4860::8888/128 interface=1</span><br></pre></td></tr></table></figure>
+
+<p>然后优雅解决的话，不能让相关 windows 测试人员本机添加路由，而是利用 headscale 下发路由，给双栈机器上的 tailscale 增加上这个路由下发到所有其他 tailscale 上，双栈机器上使用 tailscale set：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale set --advertise-routes 2002:db8:0:1::/64,2001:4860:4860::8888/128 --snat-subnet-routes=false</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://ipw.cn/doc/ipv6/user/ipv4_ipv6_prefix_precedence.html">Windows 10&#x2F;11 设置 IPv4&#x2F;IPv6 访问优先级</a></li>
+</ul>
 
     </article>
     <!-- license -->
@@ -852,7 +904,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86"><span class="toc-number">2.2.</span> <span class="toc-text">一些知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S"><span class="toc-number">2.3.</span> <span class="toc-text">K8S</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flannel"><span class="toc-number">2.4.</span> <span class="toc-text">flannel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodelocaldns-%E5%92%8C-link-local-%E9%97%AE%E9%A2%98"><span class="toc-number">2.5.</span> <span class="toc-text">nodelocaldns 和 link local 问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%B1%82%E9%9D%A2"><span class="toc-number">2.6.</span> <span class="toc-text">中间件层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#elasticsearch"><span class="toc-number">2.6.1.</span> <span class="toc-text">elasticsearch</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E9%9D%A2"><span class="toc-number">2.7.</span> <span class="toc-text">应用层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#redis"><span class="toc-number">2.7.1.</span> <span class="toc-text">redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql"><span class="toc-number">2.7.2.</span> <span class="toc-text">mysql</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%BD%91%E6%B5%8B%E8%AF%95"><span class="toc-number">2.8.</span> <span class="toc-text">组网测试</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86"><span class="toc-number">2.2.</span> <span class="toc-text">一些知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S"><span class="toc-number">2.3.</span> <span class="toc-text">K8S</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flannel"><span class="toc-number">2.4.</span> <span class="toc-text">flannel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodelocaldns-%E5%92%8C-link-local-%E9%97%AE%E9%A2%98"><span class="toc-number">2.5.</span> <span class="toc-text">nodelocaldns 和 link local 问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%B1%82%E9%9D%A2"><span class="toc-number">2.6.</span> <span class="toc-text">中间件层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#elasticsearch"><span class="toc-number">2.6.1.</span> <span class="toc-text">elasticsearch</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E9%9D%A2"><span class="toc-number">2.7.</span> <span class="toc-text">应用层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#redis"><span class="toc-number">2.7.1.</span> <span class="toc-text">redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql"><span class="toc-number">2.7.2.</span> <span class="toc-text">mysql</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%BD%91%E6%B5%8B%E8%AF%95"><span class="toc-number">2.8.</span> <span class="toc-text">组网测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2024-x2F-10-%E5%90%8E%E7%BB%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E5%92%8C%E5%8F%91%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">2024&#x2F;10 后续的一些问题和发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1797,6 +1849,8 @@
         
         
     
+        
+        
         
         
         
@@ -5101,7 +5155,7 @@
         
         <li class="archive-post-item">
             <span class="archive-post-date">05/25</span>
-            <a class="archive-post-title" href="/2017/05/25/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E9%80%89%E9%A1%B9%E5%A4%84%E7%90%86/">shell脚本的选项和参数处理</a>
+            <a class="archive-post-title" href="/2017/05/25/shell-opts/">shell脚本的选项和参数处理</a>
         </li>
     
         
