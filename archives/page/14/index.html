@@ -444,6 +444,95 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/12/04/black-box-exporter/">
+                
+                <span class="abstract-title-text">prometheus的黑盒监控</span>
+            </a>
+            <div class="abstract-content">
+                常规的各种 exporter 都是和需要监控的机器一起安装的，如果需要监控一些 tcp 端口和七层应用层的状态呢，这个时候就需要黑盒监控了，不需要安装在目标机器上即可从外部去监控。
+9115 是它的 http 默认监听端口，blackbox.yml 它的配置文件里以基础的 http、dns、tcp、icmp 等 prober 定制配置出各种监测模块(module)，在 prometheus server 的配置文件里声明用哪个模块去探测哪个 targets，下面以 docker-compose 启动一组实例，docker 的网络自带 dns，所以里面全部用名字替代 ipdocker-co...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/12/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/04</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="exporter">exporter</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2018/11/24/how-to-use-kubeadm/">
+                
+                <span class="abstract-title-text">对于初入k8s和kubeadm的一些建议</span>
+            </a>
+            <div class="abstract-content">
+                主要还是简单说下kubeadm
+说说一些现象无论docker还是K8s群看见过太多人盲目了有些是赶鸭子上来的,有的是跟风盲目进来乱学的.其中较多的分类为:
+
+
+不学docker直接学k8s的跟风狗
+没有熟悉Linux操作和一些基础知识的开发
+Docker学得不怎么样就迫不及待来学的跟风狗
+
+
+入门最具有争议的问题就是如何开始,k8s各个组件对于小白来说搭建方式和配置文件对于入门的人来说太庞大了,对于环境来学习一般分为下面两种
+
+
+按照别人博客或者文章去手动搭建一个环境后学习
+找个简易部署的方案来部署环境来学(kubeadm或者ansible之类的懒人搭建)
+
+
+  看过无数小白也怼过不少...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/11/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/11/06/onlyoffice/">
                 
                 <span class="abstract-title-text">一次docker镜像的解耦--onlyoffice</span>
@@ -761,81 +850,6 @@ Clust...
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/07/18/ecs-vip/">
-                
-                <span class="abstract-title-text">基于openstack的ecs上使用VIP</span>
-            </a>
-            <div class="abstract-content">
-                客户需要在云上使用vip,后面发现不通，查询了后发现openstack的neutron会存在ip和mac绑定的关系,可以阅读下面的链接查看说明https://blog.codecentric.de/en/2016/11/highly-available-vips-openstack-vms-vrrp/即如果网卡上有不是下发的ip在向外发包后包会被drop掉,需要用neutron的cli解绑ip和mac的绑定,我们这这个功能已经做在了web上了,所以可以直接解绑
-存在绑定的关系下，意味着flanneld不能使用host-gw模式，除非云厂商实现了cni-plugins或者不是原生的open...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/07/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="keepavlied">keepavlied</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/07/08/travis-sync-gcr-io/">
-                
-                <span class="abstract-title-text">利用travis同步gcr.io镜像到dockerhub</span>
-            </a>
-            <div class="abstract-content">
-                项目地址https://github.com/zhangguanzhang/gcr.io/tree/master
-利用gcloud sdk去查看谷歌镜像站的镜像,获取每一个镜像的tag后改名推送到自己的dockerhub上面全部是shell思路,脚本一旦写完就需要不断的执行去同步了,所以借用travis去构建两个分支,一个master分支和一个构建分支travis触发构建后拉取仓库后,切换到构建分支,pull构建分支,然后同步镜像
-脚本我写了两种https://github.com/zhangguanzhang/bash/tree/master/google_containers_syn...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/07/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/08</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="dockerhub">dockerhub</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="gcr.io">gcr.io</a>
     
 </div>
 
@@ -1889,7 +1903,28 @@ Clust...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4158,7 +4193,7 @@ Clust...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4176,6 +4211,12 @@ Clust...
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -4772,6 +4813,12 @@ Clust...
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5281,12 +5328,6 @@ Clust...
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6198,6 +6239,16 @@ Clust...
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

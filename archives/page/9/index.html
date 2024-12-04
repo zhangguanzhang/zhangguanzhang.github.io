@@ -442,6 +442,45 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/09/18/ocp-4.5-install/">
+                
+                <span class="abstract-title-text">openshift 4.5.9 离线安装</span>
+            </a>
+            <div class="abstract-content">
+                本文是全部离线安装，也就是 UPI (User Provisioned Infrastructure) 模式安装，假设机器只能配置静态ip不能有网络配置权限和配置 dhcp 和 pxe。机器可以是物理机和虚拟机。
+前言介绍ocp介绍openshift 分为社区版本 okd 和企业版本 ocp(openshift container platform)，okd 的更新很慢，ocp 个人也是可以安装的，不购买 license 则不会享受 redhat 的官方支持。
+openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己实现了 cs 的三个组件，也给 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/09/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/18</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openshift">openshift</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ocp">ocp</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -777,55 +816,6 @@ pod cidr
         <a class="post-tag" href="javascript:void(0);" data-tags="63s">63s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="timeout">timeout</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/13/x86-router-flash/">
-                
-                <span class="abstract-title-text">proxmox x86软路由笔记</span>
-            </a>
-            <div class="abstract-content">
-                由来pve已经安装好系统(如果你还没安装且打算安装，安装完后可以看看我这个文章安装完proxmox的一些设置)，pve 的机器只有一个口子的情况下，就只能作为旁路由使用。
-前置工作虚机准备先去恩山论坛x86版块下一个固件pve上开台机器
-
-一般-高级-开机自启动勾上，有必要的话手动设置下vmID，后面有用
-操作系统不适用任何介质
-系统默认，下一步
-硬盘随便设置，后面会删除
-cpu按照实际，我给2核，内存我给的2g
-网络，模型选VirtIO(半虚拟化)，防火墙的勾去掉
-完成
-选中虚机，硬件-选中硬盘，点击分离，删除
-
-导入img把固件上传到 pve 的机器上，一般是 gz，解压成 img ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/05/13">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/13</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="x86">x86</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
     
 </div>
 
@@ -1879,7 +1869,28 @@ cpu按照实际，我给2核，内存我给的2g
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4148,7 +4159,7 @@ cpu按照实际，我给2核，内存我给的2g
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4166,6 +4177,12 @@ cpu按照实际，我给2核，内存我给的2g
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -4762,6 +4779,12 @@ cpu按照实际，我给2核，内存我给的2g
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5271,12 +5294,6 @@ cpu按照实际，我给2核，内存我给的2g
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6188,6 +6205,16 @@ cpu按照实际，我给2核，内存我给的2g
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

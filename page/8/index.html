@@ -459,6 +459,80 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/24/deployment-consul-in-k8s/">
+                
+                <span class="abstract-title-text">consul仅当服务发现在k8s无状态部署使用</span>
+            </a>
+            <div class="abstract-content">
+                由来consul server 在机器上的部署已经写完了，但是dba还是希望部署在 k8s 上，昨天搜了下相关文章扣出来部分步骤自己验证实现了。先说下需求，三台物理机单独跑 mysql 主从 mha，利用 consul client 的服务注册+ttl向 consul server 注册成域名，然后配置 k8s 内部的 coredns 把域名*.service.consul转发到 consul server。架构为下图
+123456789101112131415161718Physical server +---------------------+                   ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
+                
+                <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
+            </a>
+            <div class="abstract-content">
+                由来该issue见 https://github.com/kubernetes/kubernetes/issues/76956, apiserver和controller-manager每次start的时候会刷下面信息。不影响使用，但是有强迫症可以按照本文思路手动修改。当然本文也是自己编译k8s的教程
+123456E0423 17:35:58.491576       1 prometheus.go:138] failed to register depth metric admission_quota_controller: duplicate metrics collector re...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/21">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/21</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/12/boot-grub-rescue/">
                 
                 <span class="abstract-title-text">/boot目录被清空下物理机无法开机的一次救援</span>
@@ -956,87 +1030,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="cobra">cobra</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/05/11/container-too-many-open-file/">
-                
-                <span class="abstract-title-text">standard_init_linux.go:211: exec user process caused &#34;too many open files in system&#34;</span>
-            </a>
-            <div class="abstract-content">
-                故障现象部署好业务 pod 后，有很多 pod 一直 Crash 或者无法就绪。
-处理过程describe pod 的状态有显示下面的：
-1Error: failed to start container &quot;xxxxx&quot;: Error response from daemon: OCI runtime start failed: cannot start a container that has stopped: unkown
-
-上去这个节点查看容器状态:
-12345$ docker ps -a | grep 6cb6440a7e90bde reg.xxx.lan:5...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/05/11">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/11</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/04/28/k8s-java-start-time-not-same/">
-                
-                <span class="abstract-title-text">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</span>
-            </a>
-            <div class="abstract-content">
-                线上用的k8s版本是1.6.7非常老，而且HA有问题，上个月研发想把里面的一些服务迁出来到一个新集群里，新集群的搭建是我负责的。上周开始陆陆续续的迁移过来了，但是同等limit下部分pod在测试环境上(测试环境和老环境部署是一样的,下文的老环境和测试环境可以理解为一样)启动非常快，在我搭建的新k8s环境上启动非常慢，研发他们应用都是java+springboot，这里不谈jvm无法识别cgroup，已经加选项识别到了还有那个随机熵的选项肯定也是加了的。因为之前一次有个用户反映他们本地虚机启动springboot应用20s，我们云上启动就三分钟，后面漠然大佬教我加java的启动参数输出lo...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/04/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="java">java</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="springboot">springboot</a>
     
 </div>
 
@@ -2263,7 +2256,28 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4532,7 +4546,7 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4550,6 +4564,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -5146,6 +5166,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5655,12 +5681,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6572,6 +6592,16 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

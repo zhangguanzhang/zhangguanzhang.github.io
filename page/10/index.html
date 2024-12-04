@@ -459,6 +459,92 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/10/12/prometheus-operator/">
+                
+                    <span class="iconfont-archer stick-top">&#xe63d;</span>
+                
+                <span class="abstract-title-text">全手动部署prometheus-operator监控K8S集群以及一些坑</span>
+            </a>
+            <div class="abstract-content">
+                写这篇文章原因所有的监控的agent底层最终都是查询的&#x2F;proc和&#x2F;sys里的信息推送(如果错了轻喷),因为收集宿主机信息方面也想用pod跑,会面临到问题常见的zabbix_agent默认读取fs的&#x2F;proc和&#x2F;sys,容器跑agent会导致读取的不是宿主机的&#x2F;proc和&#x2F;sys而prometheus的node-exporter有选项--path.procfs和--path.sysfs来指定从这俩选项的值的proc和sys读取,容器跑node-exporter只需要挂载宿主机的&#x2F;proc和&#x2F;sys到容器fs的...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/10/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/12</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2018/10/06/IngressController/">
+                
+                <span class="abstract-title-text">IngressController使用和它的高可用落地</span>
+            </a>
+            <div class="abstract-content">
+                从之前对ingress controller到现在了解架构和一些经验总结下,顺带给人科普少走弯路需要看懂本文要具备一下知识点
+
+svc实现原理和会应用
+知道反向代理原理,了解nginx和apache的vhost概念
+了解svc的几种类型(Nodeport,clusterip,LB)
+四层和七层区别(不明白就这样去理解,七层最常见就是应用层的http,也就是url,四层是传输层,为tcp&#x2F;udp端口)
+域名解析,&#x2F;etc&#x2F;hosts等基础知识
+知道pod互斥或者ds的使用
+
+Ingress Controller介绍与部署本文档不具备时效性，请各位看概念就行了
+...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/10/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ingress">ingress</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/09/24/k8s-some-vpc-cluster/">
                 
                 <span class="abstract-title-text">跨VPC或者跨云供应商搭建K8S集群正确姿势</span>
@@ -960,79 +1046,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2018/02/05">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/02/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">
-                
-                <span class="abstract-title-text">慎用docker的--rm选项!!!</span>
-            </a>
-            <div class="abstract-content">
-                Dockerfile里的VOLUME和docker run -v /path的时候挂载容器的挂载点效果是一致的会在宿主机/var/lib/docker/volumes目录生成随机目录发现--rm不单单是删除掉容器，还会删掉挂载点的数据
-首先不使用--rm下看看效果
-1234567891011[root@guan_tx ]#  docker run  -tid --name busybox -v /guan busyboxbe59bd455fbde8a8d195220d96c6676ad8fa6f26e1ebac6533020c83dacbf907[root@guan_tx ]# dock...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/01/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/20</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Dockerfile">Dockerfile</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">
-                
-                <span class="abstract-title-text">docker的一些概念</span>
-            </a>
-            <div class="abstract-content">
-                <p>总结下容器的一些概念和虚拟机的区别以及<code>CMD</code>和<code>entrypoint</code></p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/01/10">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/10</span>
                 </div>
                 <!-- tags -->
                 
@@ -2266,7 +2279,28 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4535,7 +4569,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4553,6 +4587,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -5149,6 +5189,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5658,12 +5704,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6575,6 +6615,16 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

@@ -442,6 +442,46 @@
         
         
             
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/07/28/redhat84-vxlan-esxi/">
+                
+                <span class="abstract-title-text">exsi 使用 redhat8.4 搭建k8s集群，flannel vxlan 模式的不正常排错</span>
+            </a>
+            <div class="abstract-content">
+                <p>这几天处理的一个问题，exsi 上 redhat8.4 搭建 k8s 环境，使用 flannel vxlan 模式，pod 的网络表现得非常异常</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/07/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/28</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="exsi">exsi</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="redhat8.4">redhat8.4</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="vxlan">vxlan</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2022/07/12/pod-no-ip-addr/">
@@ -767,48 +807,6 @@ ansible报错如下：
         <a class="post-tag" href="javascript:void(0);" data-tags="ttf">ttf</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="woff">woff</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/03/16/cannot-assign-requested-address/">
-                
-                <span class="abstract-title-text">server 端的 cannot assign requested address</span>
-            </a>
-            <div class="abstract-content">
-                由来今天碰到了这个问题，但是最终结果出乎意料
-过程项目相关部分客户的 OA 对接我们的应用，使用过程中会调用我们的接口，我们的接口再回调客户的回调地址。调用流是：
-1客户 OA 后端 ----&gt; 我们应用 A 的后端 -----&gt; 我们应用 B 后端  -----&gt; 客户写的回调地址
-
-然后我们接口 A 返回 B 访问回调的报错：
-1&quot;Get http://10.192.xxx.xxx/xxxxinfo?...: dial tcp 10.192.xxx.xxx:80: connect: cannot assign requested address&quot;...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/03/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/16</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
     
 </div>
 
@@ -1862,7 +1860,28 @@ ansible报错如下：
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4131,7 +4150,7 @@ ansible报错如下：
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4149,6 +4168,12 @@ ansible报错如下：
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -4745,6 +4770,12 @@ ansible报错如下：
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5254,12 +5285,6 @@ ansible报错如下：
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6171,6 +6196,16 @@ ansible报错如下：
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

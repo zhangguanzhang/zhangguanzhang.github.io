@@ -583,7 +583,7 @@
 <li>DNS IP 是第十个主机位，我设置的 <code>2001:cafe:43::a</code></li>
 </ul>
 </li>
-<li>Cluster CIDR 设置为 <code>2001:cafe:42::/56</code></li>
+<li>Cluster CIDR 设置为 <code>2001:cafe:42::/56</code>，如果选择更大的掩码段，需要设置 kube-controller-manager 的 <code>--node-cidr-mask-size-ipv6=</code></li>
 </ul>
 <p>两个网段来源于参考 <a target="_blank" rel="noopener" href="https://docs.k3s.io/zh/networking/basic-network-options#dual-stack-ipv4--ipv6-networking">k3s 的 dual-stack-ipv4–ipv6-networking</a></p>
 <h3 id="flannel"><a href="#flannel" class="headerlink" title="flannel"></a>flannel</h3><p>最终部署完发现 flannel 报错：</p>
@@ -1848,7 +1848,28 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4117,7 +4138,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4135,6 +4156,12 @@
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -4731,6 +4758,12 @@
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5240,12 +5273,6 @@
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6157,6 +6184,16 @@
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

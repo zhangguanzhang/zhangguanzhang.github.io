@@ -444,6 +444,83 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/09/05/prometheus-change-timezone/">
+                
+                <span class="abstract-title-text">修改源码更改prometheus的时区问题</span>
+            </a>
+            <div class="abstract-content">
+                先说明一点，时区UTC不影响prometheus和grafana，这篇文章只是提供一个修改的思路和步骤
+日志时区修改代码分析先起最新的prometheus挂载时区文件
+1234567docker run --net host -v /etc/localtime:/etc/localtime prom/prometheuslevel=info ts=2019-09-05T09:44:40.409Z caller=main.go:293 msg=&quot;no time or size retention was set so using the default time retentio...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/09/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/05</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="timezone">timezone</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2019/08/24/gobot-build/">
+                
+                <span class="abstract-title-text">gobot控制esp8266</span>
+            </a>
+            <div class="abstract-content">
+                材料gobot官网是Arduino的demo，官网上看了下支持esp8266，整好之前整wifi攻击器的时候有就玩了下。我是在windows编译的，没有8266的话自己去淘宝上一块儿node-mcu+数据线(本质上就是个带串口和排针的esp8266-12，买驱动是CH340G的，就是usb口旁边有个长条形ic，方的是cp2102不稳定会导致windows蓝屏)
+环境搭建用goland写代码，不推荐vscode写golang，自行安装golang(记得设置好环境变量)和goland，现在golang最新版本是12.9整个demo分为两部分，客户端gobot去设置和控制esp8266，826...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/08/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/08/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="gobot">gobot</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="esp8266">esp8266</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/08/06/preseed/">
                 
                 <span class="abstract-title-text">ubuntu preseed无人应答安装</span>
@@ -733,87 +810,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="cobra">cobra</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/05/11/container-too-many-open-file/">
-                
-                <span class="abstract-title-text">standard_init_linux.go:211: exec user process caused &#34;too many open files in system&#34;</span>
-            </a>
-            <div class="abstract-content">
-                故障现象部署好业务 pod 后，有很多 pod 一直 Crash 或者无法就绪。
-处理过程describe pod 的状态有显示下面的：
-1Error: failed to start container &quot;xxxxx&quot;: Error response from daemon: OCI runtime start failed: cannot start a container that has stopped: unkown
-
-上去这个节点查看容器状态:
-12345$ docker ps -a | grep 6cb6440a7e90bde reg.xxx.lan:5...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/05/11">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/11</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/04/28/k8s-java-start-time-not-same/">
-                
-                <span class="abstract-title-text">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</span>
-            </a>
-            <div class="abstract-content">
-                线上用的k8s版本是1.6.7非常老，而且HA有问题，上个月研发想把里面的一些服务迁出来到一个新集群里，新集群的搭建是我负责的。上周开始陆陆续续的迁移过来了，但是同等limit下部分pod在测试环境上(测试环境和老环境部署是一样的,下文的老环境和测试环境可以理解为一样)启动非常快，在我搭建的新k8s环境上启动非常慢，研发他们应用都是java+springboot，这里不谈jvm无法识别cgroup，已经加选项识别到了还有那个随机熵的选项肯定也是加了的。因为之前一次有个用户反映他们本地虚机启动springboot应用20s，我们云上启动就三分钟，后面漠然大佬教我加java的启动参数输出lo...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/04/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="java">java</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="springboot">springboot</a>
     
 </div>
 
@@ -1867,7 +1863,28 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4136,7 +4153,7 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4154,6 +4171,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -4750,6 +4773,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5259,12 +5288,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6176,6 +6199,16 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

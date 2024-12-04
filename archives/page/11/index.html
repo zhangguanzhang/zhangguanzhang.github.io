@@ -444,6 +444,75 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/01/15/kill-ctr-with-grace-period/">
+                
+                <span class="abstract-title-text">Killing container &#34;docker://xxx with 30 second grace period</span>
+            </a>
+            <div class="abstract-content">
+                由来开发反应他们环境上有个 pod 不正常。他们先操作然后卡住后来找我的。
+12345$ kubectl -n xxx get pod -o wide | grep 0/1xstorage-6d959cd8c8-rdscv      0/1     Init:0/1    0       15m     xxxx$ kubectl -n xxx delete po xstorage-6d959cd8c8-rdscvpod &quot;xstorage-6d959cd8c8-rdscv&quot; deleted      ^[[A^[[A^[[A^[[A
+
+处理过程查看日志：
+1234$...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/01/15">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/15</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/01/08/docker-panic-invalid-page-type/">
+                
+                <span class="abstract-title-text">docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理</span>
+            </a>
+            <div class="abstract-content">
+                凌晨 pod 状态异常且没有恢复，上线查看后 docker ps -a 命令无响应，kubelet 日志也刷和 docker 的 rpc 通信context deadline cancel重启了 docker 后 docker 无法启动，前台运行开 debug log level刚开始刷了个 /var/lib/docker/tmp 是个文件，对比了下其他机器上这个路径应该是个目录，然后改名后创建个权限和正常 docker 下权限一样的 tmp 文件夹再起
+1234567891011121314151617181920212223242526272829303132333435363738...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/01/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/12/05/suse-fix-data-but-device-busy/">
                 
                 <span class="abstract-title-text">opensuse的一次救援</span>
@@ -758,83 +827,6 @@ nodeName
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/09/05/prometheus-change-timezone/">
-                
-                <span class="abstract-title-text">修改源码更改prometheus的时区问题</span>
-            </a>
-            <div class="abstract-content">
-                先说明一点，时区UTC不影响prometheus和grafana，这篇文章只是提供一个修改的思路和步骤
-日志时区修改代码分析先起最新的prometheus挂载时区文件
-1234567docker run --net host -v /etc/localtime:/etc/localtime prom/prometheuslevel=info ts=2019-09-05T09:44:40.409Z caller=main.go:293 msg=&quot;no time or size retention was set so using the default time retentio...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/09/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="timezone">timezone</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/08/24/gobot-build/">
-                
-                <span class="abstract-title-text">gobot控制esp8266</span>
-            </a>
-            <div class="abstract-content">
-                材料gobot官网是Arduino的demo，官网上看了下支持esp8266，整好之前整wifi攻击器的时候有就玩了下。我是在windows编译的，没有8266的话自己去淘宝上一块儿node-mcu+数据线(本质上就是个带串口和排针的esp8266-12，买驱动是CH340G的，就是usb口旁边有个长条形ic，方的是cp2102不稳定会导致windows蓝屏)
-环境搭建用goland写代码，不推荐vscode写golang，自行安装golang(记得设置好环境变量)和goland，现在golang最新版本是12.9整个demo分为两部分，客户端gobot去设置和控制esp8266，826...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/08/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/08/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="gobot">gobot</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="esp8266">esp8266</a>
     
 </div>
 
@@ -1888,7 +1880,28 @@ nodeName
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4157,7 +4170,7 @@ nodeName
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4175,6 +4188,12 @@ nodeName
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -4771,6 +4790,12 @@ nodeName
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5280,12 +5305,6 @@ nodeName
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6197,6 +6216,16 @@ nodeName
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>

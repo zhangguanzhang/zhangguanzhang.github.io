@@ -459,6 +459,55 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/05/13/x86-router-flash/">
+                
+                <span class="abstract-title-text">proxmox x86软路由笔记</span>
+            </a>
+            <div class="abstract-content">
+                由来pve已经安装好系统(如果你还没安装且打算安装，安装完后可以看看我这个文章安装完proxmox的一些设置)，pve 的机器只有一个口子的情况下，就只能作为旁路由使用。
+前置工作虚机准备先去恩山论坛x86版块下一个固件pve上开台机器
+
+一般-高级-开机自启动勾上，有必要的话手动设置下vmID，后面有用
+操作系统不适用任何介质
+系统默认，下一步
+硬盘随便设置，后面会删除
+cpu按照实际，我给2核，内存我给的2g
+网络，模型选VirtIO(半虚拟化)，防火墙的勾去掉
+完成
+选中虚机，硬件-选中硬盘，点击分离，删除
+
+导入img把固件上传到 pve 的机器上，一般是 gz，解压成 img ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/05/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/13</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="x86">x86</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/05/12/dns-formerr/">
                 
                 <span class="abstract-title-text">adguardhome dns FORMERR 错误</span>
@@ -560,6 +609,35 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
 </div>
 
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/04/03/kubernetes-admission-controllers/">
+                
+                <span class="abstract-title-text">编写一个动态准入控制</span>
+            </a>
+            <div class="abstract-content">
+                12345678apiVersion: v1kind: Podmetadata:  name: testspec:  containers:  - name: test    image: nginx:alpine
+
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354&#123;   &quot;kind&quot;:&quot;Pod&quot;,   &quot;apiVersion&quot;:&quot;v1&quot;,   &qu...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/04/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/03</span>
+                </div>
+                <!-- tags -->
                 
             </div>
         </article>
@@ -943,80 +1021,6 @@ Linux一些目录规范和systemd
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kubeadm">kubeadm</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/24/deployment-consul-in-k8s/">
-                
-                <span class="abstract-title-text">consul仅当服务发现在k8s无状态部署使用</span>
-            </a>
-            <div class="abstract-content">
-                由来consul server 在机器上的部署已经写完了，但是dba还是希望部署在 k8s 上，昨天搜了下相关文章扣出来部分步骤自己验证实现了。先说下需求，三台物理机单独跑 mysql 主从 mha，利用 consul client 的服务注册+ttl向 consul server 注册成域名，然后配置 k8s 内部的 coredns 把域名*.service.consul转发到 consul server。架构为下图
-123456789101112131415161718Physical server +---------------------+                   ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/10/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
-                
-                <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
-            </a>
-            <div class="abstract-content">
-                由来该issue见 https://github.com/kubernetes/kubernetes/issues/76956, apiserver和controller-manager每次start的时候会刷下面信息。不影响使用，但是有强迫症可以按照本文思路手动修改。当然本文也是自己编译k8s的教程
-123456E0423 17:35:58.491576       1 prometheus.go:138] failed to register depth metric admission_quota_controller: duplicate metrics collector re...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/10/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/21</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
     
 </div>
 
@@ -2243,7 +2247,28 @@ Linux一些目录规范和systemd
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4512,7 +4537,7 @@ Linux一些目录规范和systemd
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 187
         </div>
         <!-- search  -->
         
@@ -4530,6 +4555,12 @@ Linux一些目录规范和systemd
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/16</span>
@@ -5126,6 +5157,12 @@ Linux一些目录规范和systemd
     
         
         <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
             <span class="archive-post-date">03/26</span>
             <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
         </li>
@@ -5635,12 +5672,6 @@ Linux一些目录规范和systemd
         <li class="archive-post-item">
             <span class="archive-post-date">04/03</span>
             <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
-        </li>
-    
-        
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/03</span>
-            <a class="archive-post-title" href="/2017/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
         </li>
     
         
@@ -6552,6 +6583,16 @@ Linux一些目录规范和systemd
             <span class="sidebar-tag-name" data-tags="iptables">
                 <span class="iconfont-archer">&#xe606;</span>
                 iptables
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
         
     </div>
