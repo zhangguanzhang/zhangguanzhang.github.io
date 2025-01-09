@@ -459,6 +459,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/07/20/dlv-remote/">
+                
+                <span class="abstract-title-text">dlv命令行的远程调试 golang 进程步骤(包含容器进程)</span>
+            </a>
+            <div class="abstract-content">
+                前情提要记录下 dlv 的远程调试，建议不要在代码里加 fmt 去调试。不谈 goland 啥的远程调试，本文章目前只写 dlv 的命令行配合远端调试。
+一些前提须知符号链接路径1234567891011package mainimport (	&quot;fmt&quot;	&quot;os&quot;)func main() &#123;	f, _ := os.Open(&quot;asdasdasd&quot;)	fmt.Println(f.Name())&#125;
+
+上面代码你编译了后，在其他机器上运行，panic 的堆栈信息会是你机器上的路径信息，路径信息是保留的，例如下面的...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/07/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/20</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="dlv">dlv</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/07/16/consul-mips64le/">
                 
                 <span class="abstract-title-text">编译mips64le架构的consul</span>
@@ -971,42 +1011,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="hang">hang</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/11/23/ansible-reload-user/">
-                
-                <span class="abstract-title-text">ansible reload user group</span>
-            </a>
-            <div class="abstract-content">
-                <p>记录下今天被 ansible 会话持久坑到的一个 user group 问题</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/11/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
 </div>
 
@@ -2238,7 +2242,88 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4523,7 +4608,7 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 187
+        Total : 188
         </div>
         <!-- search  -->
         
@@ -4537,6 +4622,21 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
         
             
+            
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2025/01/08/docker-login-hang/">docker login hang</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
@@ -6579,6 +6679,11 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="confd">
                 <span class="iconfont-archer">&#xe606;</span>
                 confd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="net">
+                <span class="iconfont-archer">&#xe606;</span>
+                net
             </span>
         
     </div>

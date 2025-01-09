@@ -442,6 +442,45 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/06/03/container-not-forward/">
+                
+                <span class="abstract-title-text">docker info无warning，iptables规则正常，宿主机就是不转发</span>
+            </a>
+            <div class="abstract-content">
+                由来06、02 凌晨被喊醒帮忙看问题，客户侧重启部分 k8s 节点机器后，业务的部分接口出现问题，环境无法向日葵之类的远程，只能发命令后，现场人员执行。
+具体现象业务 pod 日志看是无法连到非 k8s 机器上的 mysql 的 3306， docker info 命令无 warning 也就是代表下面的几个内核参数正常：
+1234net.bridge.bridge-nf-call-ip6tables = 1net.bridge.bridge-nf-call-iptables = 1net.bridge.bridge-nf-call-arptables = 1net.ipv4.ip_fo...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/06/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/03</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kernal">kernal</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -765,42 +804,6 @@ buildx 使用见文章 buildx 使用
             </a>
             <div class="abstract-content">
                 <p>记录下今天被 ansible 会话持久坑到的一个 user group 问题</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/11/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/23</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/11/23/ansible-hang-in-docker/">
-                
-                <span class="abstract-title-text">ansible hang in docker container</span>
-            </a>
-            <div class="abstract-content">
-                由来这几天同事发现在 docker 容器里运行 ansible 命令很卡，发来了个命令叫我试试 ansible localhost -m setup -a &#39;filter=ansible_default_ipv4&#39; 2&gt;/dev/null |grep &#39;\&quot;address\&quot;&#39; |awk -F&#39;\&quot;&#39; &#39;&#123;print $4&#125;&#39;
-环境信息12345678910111213141516171819202122232425262728293031323334353637383...
             </div>
             <!-- read more -->
             
@@ -1873,7 +1876,88 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4158,7 +4242,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 187
+        Total : 188
         </div>
         <!-- search  -->
         
@@ -4172,6 +4256,21 @@ buildx 使用见文章 buildx 使用
     
         
             
+            
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2025/01/08/docker-login-hang/">docker login hang</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
@@ -6214,6 +6313,11 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="confd">
                 <span class="iconfont-archer">&#xe606;</span>
                 confd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="net">
+                <span class="iconfont-archer">&#xe606;</span>
+                net
             </span>
         
     </div>

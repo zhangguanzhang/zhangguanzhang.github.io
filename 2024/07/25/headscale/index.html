@@ -667,6 +667,9 @@
 <p>或者可以 down 后 up 带单一需要修改的参数执行下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tailscale down</span><br><span class="line">tailscale up --xxx</span><br><span class="line"><span class="comment"># 然后会打印全部参数，复制执行下</span></span><br></pre></td></tr></table></figure>
 
+<p>查看当前的参数列表，官方没有 cmdline 形式打印，只有 json 的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale debug prefs</span><br></pre></td></tr></table></figure>
+
 <h3 id="derp-调试"><a href="#derp-调试" class="headerlink" title="derp 调试"></a>derp 调试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -vk https://127.0.0.1:12345/debug/vars</span><br></pre></td></tr></table></figure>
 
 <h3 id="打通内网"><a href="#打通内网" class="headerlink" title="打通内网"></a>打通内网</h3><p>Linux 端都要开启转发，windows 和安卓转发自行查找怎么配置。</p>
@@ -709,7 +712,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">http://zhangguanzhang.github.io/2024/07/25/headscale/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">July 25th 2024, 11:10:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">七月 25日 2024, 11:10:30 晚上</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/07/25/headscale/">July 25th 2024, 11:10:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -1840,7 +1843,88 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4125,7 +4209,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 187
+        Total : 188
         </div>
         <!-- search  -->
         
@@ -4139,6 +4223,21 @@
     
         
             
+            
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2025/01/08/docker-login-hang/">docker login hang</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
             
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
@@ -6181,6 +6280,11 @@
             <span class="sidebar-tag-name" data-tags="confd">
                 <span class="iconfont-archer">&#xe606;</span>
                 confd
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="net">
+                <span class="iconfont-archer">&#xe606;</span>
+                net
             </span>
         
     </div>
