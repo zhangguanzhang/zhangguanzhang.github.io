@@ -350,7 +350,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">548</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">569</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -515,7 +515,7 @@
 <span id="more"></span>
 
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>现场客户单机测试环境，反馈 docker login 和 docker pull 和 pod 拉取镜像非常慢，现场大致查了下查不出来后我上去远程查了下。</p>
-<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>我们私有化都会部署一个镜像仓库的，镜像都推送到仓库上，现场恢复拉取镜像很慢和 docker login 很慢</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>我们私有化都会部署一个镜像仓库的，镜像都推送到仓库上，现场说拉取镜像很慢和 docker login 很慢</p>
 <h3 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/redhat-release </span><br><span class="line">Red Hat Enterprise Linux Server release 7.8 (Maipo)</span><br><span class="line">$ uname -a</span><br><span class="line">Linux poc-xxxx 3.10.0-1127.el7.x86_64 #1 SMP Tue Feb 18 16:39:12 EST 2020 x86_64 x86_64 x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
 
 <h3 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h3><p>上去看了下，login 非常慢：</p>
@@ -533,7 +533,7 @@
 <p>发现代码逻辑也没啥逻辑问题，先发 HEAD 请求有问题再尝试 GET 请求。机器上看了下也没安全软件啥的。最后尝试下 127 访问试试：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login -u xxx -p xxxx 127.0.0.1:5000</span><br></pre></td></tr></table></figure>
 
-<p>发现很快，感觉不会是 hosts 解析相关吧，查看下 <code>/etc/nsswitch.conf</code> 发现果然被修改了：</p>
+<p>发现很快，感觉不会是 hosts 解析相关吧，<code>tcpdump -nn -i ens224 port 53 -v | grep -A2 reg.xxx.lan</code> 看了下果然发往外面了。查看下 <code>/etc/nsswitch.conf</code> 发现果然被修改了：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">grep hosts /etc/nsswitch.conf</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">hosts:     db files nisplus nis dns</span></span><br><span class="line">hosts:      dns files myhostname</span><br></pre></td></tr></table></figure>
 
 <p>改回就正常了，询问客户没有人改，应该是他们制作虚机模板时候修改的。</p>
