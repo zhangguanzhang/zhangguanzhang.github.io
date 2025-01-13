@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">4.4k</span>阅读时长: <span class="post-count reading-time">19 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">4.5k</span>阅读时长: <span class="post-count reading-time">20 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -633,7 +633,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TS_NO_LOGS_NO_SUPPORT=true</span><br></pre></td></tr></table></figure>
 
 <h4 id="安卓"><a href="#安卓" class="headerlink" title="安卓"></a>安卓</h4><p><a target="_blank" rel="noopener" href="https://github.com/tailscale/tailscale-android">https://github.com/tailscale/tailscale-android</a></p>
-<p>推荐 <a target="_blank" rel="noopener" href="https://f-droid.org/packages/com.tailscale.ipn/">https://f-droid.org/packages/com.tailscale.ipn/</a> 下载，安装后在 <code>右上角 - Accounts - 三个点 - Settings Accounts  Use an alternate server</code>，输入 <code>http://xxx:8081</code>，然后下面 <code>Use an auth key</code> 可能会没使用 authkey 跳转到浏览器出现一个 <code>headscale nodes register ... --key nodekey:xxxx</code> ，所以我们需要回到 headscale 上命令授权：</p>
+<p>推荐 <a target="_blank" rel="noopener" href="https://f-droid.org/packages/com.tailscale.ipn/">https://f-droid.org/packages/com.tailscale.ipn/</a> 下载，如果 headscale 是 <code>v0.22.3</code> 请下载 <code>1.72.0</code> ，我尝试开发版本 <code>1.78.1-t89039</code> 版本无法注册。</p>
+<p>安装后在 <code>右上角 - Accounts - 三个点 - Settings Accounts  Use an alternate server</code>，输入 <code>http://xxx:8081</code>，然后下面 <code>Use an auth key</code> 可能会没使用 authkey 跳转到浏览器出现一个 <code>headscale nodes register ... --key nodekey:xxxx</code> ，所以我们需要回到 headscale 上命令授权：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日志里会打印长串 key，所以不需要在其他端复制 nodekey</span></span><br><span class="line">journalctl -xe --no-pager -u headscale | grep nodekey</span><br><span class="line"></span><br><span class="line">headscale nodes register --user default --key nodekey:xxxxx</span><br></pre></td></tr></table></figure>
 
 <p>对于一些没有浏览器也没 tailscale cli 的都可以这样手动授权下。安卓上点击每个 peer 进去的右上角图标等于 <code>tailscale ping xxx</code> ，会显示能否直连和延迟。也可以后续使用 Magisk tailscale，那样可以有 cli 了，另外 apk 是使用 V-P-N 形式，断网和切换流量会断开，而 Magisk tailscale 则不会。</p>
@@ -695,7 +696,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 多条用英文逗号间隔</span></span><br><span class="line">tailscale <span class="built_in">set</span> --advertise-routes xx.xx.xx.0/24,xx,xxx.xxx.00.00/16</span><br></pre></td></tr></table></figure>
 
 <h3 id="信息修改"><a href="#信息修改" class="headerlink" title="信息修改"></a>信息修改</h3><p>例如安卓的 hostname 由于没有 cli 无法修改，而默认 db 使用 sqlite，可以修改：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sqlite3 /var/lib/headscale/db.sqlite</span><br><span class="line">.tables</span><br><span class="line">update machines <span class="built_in">set</span> given_name=<span class="string">&quot;redmi8&quot;</span> <span class="built_in">where</span> <span class="built_in">id</span>=3;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ip_addresses</span></span><br><span class="line">修改 ip 需要先 tailscale down 改好后再 tailscale up</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sqlite3 /var/lib/headscale/db.sqlite</span><br><span class="line">.tables</span><br><span class="line">update machines <span class="built_in">set</span> given_name=<span class="string">&quot;redmi8&quot;</span> <span class="built_in">where</span> <span class="built_in">id</span>=3;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ip_addresses=&quot;100.64.0.3&quot;</span></span><br><span class="line">修改 ip 需要先 tailscale down 改好后再 tailscale up，修改后配置会同步到所有 tailscale client 上，特别是游戏可能会闪断下</span><br></pre></td></tr></table></figure>
 
 <p>其他的修改自己琢磨。</p>
 <h3 id="源码修改-tailscale-网段"><a href="#源码修改-tailscale-网段" class="headerlink" title="源码修改 tailscale 网段"></a>源码修改 tailscale 网段</h3><p>修改 tailscale 避免阿里云 <code>100.64.0.0/16</code> 上出问题，见漠然博客<a target="_blank" rel="noopener" href="https://mritd.com/2022/10/19/use-headscale-to-build-a-p2p-network/#7-3%E3%80%81%E9%98%BF%E9%87%8C%E4%BA%91%E5%AE%89%E8%A3%85%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%90%8E%E6%97%A0%E6%B3%95%E6%9B%B4%E6%96%B0%E8%BD%AF%E4%BB%B6">阿里云安装客户端后无法更新软件</a></p>

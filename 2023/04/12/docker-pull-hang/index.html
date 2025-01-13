@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -541,7 +541,8 @@
 <p>注意看其中有个 env 设置不使用 PIGZ 而是使用 gzip ，然后启动 docker daemon 的时候设置这个 env 就可以拉取镜像了：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl stop docker</span><br><span class="line"># 临时命令行前台 debug 启动下看看是没问题的</span><br><span class="line">$ MOBY_DISABLE_PIGZ=true dockerd --debug</span><br></pre></td></tr></table></figure>
 
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>uos 这个系统是要授权才能使用 yum 安装升级，去 repo 里的 url 访问报错 401，只有让客户联系 uos 厂商升级 pigz 包先，不能解决再使用 <code>MOBY_DISABLE_PIGZ</code></p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>uos 这个系统是要授权才能使用 yum 安装升级，去 repo 里的 url 访问报错 401，只有让客户联系 uos 厂商升级 pigz 包先，不能解决再使用 <code>MOBY_DISABLE_PIGZ</code>，遵守 LFS 规范，固化该配置使用 systemd.d 目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/systemd/system/docker.service.d/</span><br><span class="line">cat &gt; /etc/systemd/system/docker.service.d/environment.conf &lt;&lt; EOF</span><br><span class="line">[Service]</span><br><span class="line">Environment=&quot;MOBY_DISABLE_PIGZ=true&quot;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
 
     </article>
     <!-- license -->
