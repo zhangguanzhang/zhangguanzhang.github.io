@@ -442,6 +442,45 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/03/24/python-list-kubernetes-permission/">
+                
+                <span class="abstract-title-text">python kubernetes client list permission</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天内部有个功能就是看 kubernetes client 的权限有哪些
+过程kubeconfig 生成先制作一个非 admin 的 kubeconfig，记得以前有个项目是部署后可以生成 kubeconfig 的，询问了一番后，其他群友提示下想起来是 permission-manager，部署后结果发现生成的 kubeconfig 压根不能用，报错未知机构签署的，结果还是按照以前 生成kubeconfig常规的两种方法 生成了一个简单的。
+尝试过程其实一开始打算自己写逻辑，增删改查需要的资源便利来检查，然后突然想起来 kubectl (忘了哪个版本开始)有个 auth 子命令的 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/03/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -792,42 +831,6 @@ parted
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">
-                
-                <span class="abstract-title-text">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</span>
-            </a>
-            <div class="abstract-content">
-                故障现场 k8s node 很多 pod 都被硬性驱逐显示 Evicted ，现场人员查看分区容量和 inode 都正常，但是一直 reclaim ephemeral-storage。
-处理环境信息12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879$ uname -aLinux xxx-2 3.10.0-693.el7.x86_64 #1 SM...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/10/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/29</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
     
 </div>
 
@@ -1891,87 +1894,12 @@ parted
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4252,7 +4180,7 @@ parted
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 188
+        Total : 189
         </div>
         <!-- search  -->
         
@@ -4270,6 +4198,12 @@ parted
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span>
+            <a class="archive-post-title" href="/2025/02/13/clickhouse-arm64-v8.0-build/">给鲲鹏920和低版本飞腾编译arm64 clickhouse</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">01/08</span>
@@ -6328,6 +6262,11 @@ parted
             <span class="sidebar-tag-name" data-tags="net">
                 <span class="iconfont-archer">&#xe606;</span>
                 net
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="clickhouse">
+                <span class="iconfont-archer">&#xe606;</span>
+                clickhouse
             </span>
         
     </div>
