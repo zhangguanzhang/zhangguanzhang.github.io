@@ -442,6 +442,57 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/06/23/host-gw-in-aliyun/">
+                
+                <span class="abstract-title-text">阿里云上使用flannel host-gw跨节点pod不通的解决</span>
+            </a>
+            <div class="abstract-content">
+                挺多人问的，写下解决办法
+前言首先主机得在同一个专有vpc下，跨vpc或者经典vpc就扯淡了。还有flannel别把网络信息存储在etcd里，目前flannel只支持v2的etcd api。但是现在k8s都是使用v3 etcd存储了。如果v2和v3共存会导致无法恢复etcd的备份
+所以网上那些etcdctl set flannel的cidr的文章别看了，都没做过备份恢复实验就到处发k8s搭建教程。flannel v3的话看我过往文章
+环境信息先来说下host-gw的包走向，假设两台机器
+
+
+
+IP
+pod cidr
+
+
+
+10.0.6.166
+10.200.1.0&#x2F;24
+
+
+1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/06/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="host-gw">host-gw</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -769,47 +820,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="go mod">go mod</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/02/centos6-hung-while-booting/">
-                
-                <span class="abstract-title-text">centos6中毒重启后卡在启动页面</span>
-            </a>
-            <div class="abstract-content">
-                12345678910⣿⣿⣿⣿⣿⣿⢟⣡⣴⣶⣶⣦⣌⡛⠟⣋⣩⣬⣭⣭⡛⢿⣿⣿⣿⣿⣿⣿⣿⣿⠋⢰⣿⣿⠿⣛⣛⣙⣛⠻⢆⢻⣿⠿⠿⠿⣿⡄⠻⣿⣿⣿⣿⣿⣿⠃⢠⣿⣿⣶⣿⣿⡿⠿⢟⣛⣒⠐⠲⣶⡶⠿⠶⠶⠦⠄⠙⢿⣿⠋⣠⠄⣿⣿⣿⠟⡛⢅⣠⡵⡐⠲⣶⣶⣥⡠⣤⣵⠆⠄⠰⣦⣤⡀⠇⣰⣿⣼⣿⣿⣧⣤⡸⢿⣿⡀⠂⠁⣸⣿⣿⣿⣿⣇⠄⠈⢀⣿⣿⠿⣰⣿⣿⣿⣿⣿⣿⣿⣷⣤⣈⣙⠶⢾⠭⢉⣁⣴⢯⣭⣵⣶⠾⠓⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣉⣤⣴⣾⣿⣿⣦⣄⣤⣤⣄⠄⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠈⢿⣿⣿⣿⣿⣿⣿⡟⣰⣞⣛⡒⢒⠤⠦⢬⣉⣉⣉⣉⣉⣉⣉⡥⠴⠂⢸⠻⣿⣿⣿⣿⣏⠻⢌⣉⣉⣩⣉⡛⣛⠒⠶⠶⠶⠶⠶⠶⠶⠶⠂⣸⣿
-
-昨晚刚整好那个ubuntu，今天下午又一台cen...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/02</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="centos6">centos6</a>
     
 </div>
 
@@ -1878,7 +1888,24 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4159,7 +4186,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 189
+        Total : 190
         </div>
         <!-- search  -->
         
@@ -4177,6 +4204,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2025/02/14/aliyun-ecs-ssl/">阿里云 ecs 上 etcd SSL reset</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/13</span>
@@ -6246,6 +6279,16 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="clickhouse">
                 <span class="iconfont-archer">&#xe606;</span>
                 clickhouse
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ssl">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssl
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="aliyun">
+                <span class="iconfont-archer">&#xe606;</span>
+                aliyun
             </span>
         
     </div>

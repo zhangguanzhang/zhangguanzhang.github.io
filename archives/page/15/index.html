@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/09/24/k8s-some-vpc-cluster/">
+                
+                <span class="abstract-title-text">跨VPC或者跨云供应商搭建K8S集群正确姿势</span>
+            </a>
+            <div class="abstract-content">
+                去年开始各大云厂商搞活动 120 元一年的云主机,当时还不会k8s,但是了解到搭建集群需要好几台,于是当时攒了好几台来做准备: tx 一台,阿里两个别人账号买了两台,再加上很久之前几何云送了一台. 当时还有人怼说买这么多干啥,答曰:以后学 k8s，此人曰:呵呵
+后面刚开始接触的时候不太了解网络,用的calico,跨vpc根本不行,有大佬说只能vxlan能跨SDN下的vpc之间但是云厂商的主机都是做的 ip 的nat,网卡ip都是内网ip,kubelet上报的时候和flannel都会用这个ip
+
+calico的 BGP 不能跨子网(好像需要人为干预配置才能跨)跨三层只能用ipip模式,另外...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/09/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/09/18/kubernetes-1-11-x-bin/">
                 
                 <span class="abstract-title-text">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</span>
@@ -810,43 +848,6 @@ An example of a pod that uses pod affinity:
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="ConfigMap">ConfigMap</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">
-                
-                <span class="abstract-title-text">使用管理网当作业务网keepalived VIP的心跳线</span>
-            </a>
-            <div class="abstract-content">
-                客户的业务情况如下，我们连的 vpn2 上去部署的业务，一开始三台机器，上面只有 NC1 这一个网卡，客户给了个 vip 让我们配置上，说 vip 两个 vpn 都能访问到。后面实际配置完发现不通，沟通了一番了解清楚网络后，使用了如下方案。
-NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 172.18.27.99/25 via 172.18.27.1，两个网卡不同的 vlan，172.18.27.0/25 的网络里没有多少 IP 了，所以拿来做 VIP 的话得用 NC1 做心跳线。
-123456789101112131415...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/03/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="vip">vip</a>
     
 </div>
 
@@ -1915,7 +1916,24 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4196,7 +4214,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 189
+        Total : 190
         </div>
         <!-- search  -->
         
@@ -4214,6 +4232,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2025/02/14/aliyun-ecs-ssl/">阿里云 ecs 上 etcd SSL reset</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/13</span>
@@ -6283,6 +6307,16 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <span class="sidebar-tag-name" data-tags="clickhouse">
                 <span class="iconfont-archer">&#xe606;</span>
                 clickhouse
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ssl">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssl
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="aliyun">
+                <span class="iconfont-archer">&#xe606;</span>
+                aliyun
             </span>
         
     </div>
