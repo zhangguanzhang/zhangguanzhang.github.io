@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">4.4k</span>阅读时长: <span class="post-count reading-time">20 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">4.5k</span>阅读时长: <span class="post-count reading-time">21 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -642,6 +642,7 @@
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">...</span></span><br><span class="line">      <span class="attr">args:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">-docker_only=true</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">-housekeeping_interval=20s</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">-disable_metrics=accelerator,cpu_topology,tcp,udp,percpu,sched,process,hugetlb,referenced_memory,resctrl</span></span><br></pre></td></tr></table></figure>
 
 <p>promtail 官方在 <a target="_blank" rel="noopener" href="https://github.com/grafana/loki/issues/1813#issuecomment-694969497">Promtail should run as non-root in docker</a> 推荐在 k8s 里设置安全上下文，有少部分老哥指定的 gid 为 0 可以运行，但是还是很多人有权限问题，所以应该也要像上面这样，用 gid 为 0 和配合脚本设置权限。</p>
+<p>当然，如何 docker 开了 tls tcp 端口，可以考虑挂载证书进去远程操作，这样不需要关注上面的 sock 用户组啥的。</p>
 <h4 id="cron"><a href="#cron" class="headerlink" title="cron"></a>cron</h4><p>非 root 无法使用 cron 启动，使用 <a target="_blank" rel="noopener" href="https://github.com/webdevops/go-crond">go-crond</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec gosu  user1 go-crond   --default-user=user1  --include=/etc/cron.d --allow-unprivileged</span><br></pre></td></tr></table></figure>
 
@@ -662,7 +663,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">http://zhangguanzhang.github.io/2023/11/03/non-root-containers/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">November 3rd 2023, 12:37:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">十一月 3日 2023, 12:37:30 下午</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2023/11/03/non-root-containers/">November 3rd 2023, 12:37:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
