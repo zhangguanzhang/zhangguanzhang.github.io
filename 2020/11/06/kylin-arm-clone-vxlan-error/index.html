@@ -19,12 +19,12 @@
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
     <meta name="description" content="记录生活点滴">
-    <meta name="description" content="由来2023&#x2F;08&#x2F;21 注意点：   &#x3D; v0.15.1 开始，不需要 10-flannel.link 了，flannel 添加随机 mac   https:&#x2F;&#x2F;github.com&#x2F;flannel-io&#x2F;flannel&#x2F;issues&#x2F;1795  和前一篇文章不一样，从来没遇到过这样的问题，这里记录下。实施在客户那边部署业务后，业务在浏览器上无法访问，我远程上去查看">
+    <meta name="description" content="由来2025&#x2F;03&#x2F;27 又遇到了，设置的 MACAddress&#x3D; 才让生成的 flannel.1 地址不固定 12345678910111213141516171819rootgdggphis281527:~H cat &#x2F;etc&#x2F;os-releasePRETTY NAME&#x3D;&quot;Ubuntu 22.04.4 LTS&quot;NaME&#x3D;&quot;Ubuntu&amp;quot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查">
 <meta property="og:url" content="http://zhangguanzhang.github.io/2020/11/06/kylin-arm-clone-vxlan-error/">
 <meta property="og:site_name" content="Zhangguanzhang">
-<meta property="og:description" content="由来2023&#x2F;08&#x2F;21 注意点：   &#x3D; v0.15.1 开始，不需要 10-flannel.link 了，flannel 添加随机 mac   https:&#x2F;&#x2F;github.com&#x2F;flannel-io&#x2F;flannel&#x2F;issues&#x2F;1795  和前一篇文章不一样，从来没遇到过这样的问题，这里记录下。实施在客户那边部署业务后，业务在浏览器上无法访问，我远程上去查看">
+<meta property="og:description" content="由来2025&#x2F;03&#x2F;27 又遇到了，设置的 MACAddress&#x3D; 才让生成的 flannel.1 地址不固定 12345678910111213141516171819rootgdggphis281527:~H cat &#x2F;etc&#x2F;os-releasePRETTY NAME&#x3D;&quot;Ubuntu 22.04.4 LTS&quot;NaME&#x3D;&quot;Ubuntu&amp;quot">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-11-06T19:31:01.000Z">
 <meta property="article:modified_time" content="2020-11-06T19:31:01.000Z">
@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3.4k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.5k</span>阅读时长: <span class="post-count reading-time">18 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -508,7 +508,11 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>2023&#x2F;08&#x2F;21 注意点：</p>
+        <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>2025&#x2F;03&#x2F;27 又遇到了，设置的 <code>MACAddress=</code> 才让生成的 flannel.1 地址不固定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">rootgdggphis281527:~H cat /etc/os-release</span><br><span class="line">PRETTY NAME=&quot;Ubuntu 22.04.4 LTS&quot;</span><br><span class="line">NaME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION_ID=&quot;22.04&quot;</span><br><span class="line">VERSION=&quot;22.04.4 LTs (Jammy Jellyfish)&quot;</span><br><span class="line">VERSION_CODENAME-Jamny</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">UBUNTU_CODENAME=jammy</span><br><span class="line">rootQdggphis281527:~# uname -a</span><br><span class="line">Linux dggphis281527 5.15.0-102-generic #112-Ubuntu SMP Tue Mar 5 16:50:32 UTC 2024 x86_64 x86_64 x86_64 CNU/Linux</span><br><span class="line">toot0dggphis281527:~# tail -n2 /etc/systemd/network/10-flannel.1.link</span><br><span class="line">[Link]</span><br><span class="line">#MACAddressPolicy=none</span><br><span class="line">MACAddress=xx:xx:xx....</span><br></pre></td></tr></table></figure>
+
+
+<p>2023&#x2F;08&#x2F;21 注意点：</p>
 <ul>
 <li><blockquote>
 <p>&#x3D; v0.15.1 开始，不需要 10-flannel.link 了，<a target="_blank" rel="noopener" href="https://github.com/flannel-io/flannel/pull/1485/commits/0198d5dd0f9d2e83a6ce03ff29b9a160fb69e71b">flannel 添加随机 mac</a></p>
@@ -588,6 +592,7 @@
 
 <h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
 <li><a target="_blank" rel="noopener" href="http://www.jinbuguo.com/systemd/systemd.link.html">systemd link</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.freedesktop.org/software/systemd/man/systemd.link.html#Examples">systemd.link.html#Examples</a></li>
 <li><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Systemd-networkd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">arch linux</a></li>
 </ul>
 
