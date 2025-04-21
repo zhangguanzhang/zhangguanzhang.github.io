@@ -444,6 +444,53 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/02/19/jira-confluence/">
+                
+                <span class="abstract-title-text">docker部署jira(8.0.0)和confluence(6.14.1)</span>
+            </a>
+            <div class="abstract-content">
+                记录下这几天搭建的过程jira和confluence是分别两台，数据库也是分开的,数据库是用mysql的rpm的repo添加后安装的,jira和confluence是docker跑的,把破解的jar加到镜像里然后改了下别人的Dockerfile本次安装的版本：
+
+
+jira-software 8.0.0
+confluence 6.14.1
+Docker CE 18.06.02
+OS CentOS 7.5.1804
+
+
+系统基本设置
+所有防火墙与SELinux 已关闭：123systemctl disable --now firewalld NetworkManagersetenforce...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/02/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="jira">jira</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="confluence">confluence</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/02/12/dashboard/">
                 
                 <span class="abstract-title-text">通用的dashboard部署和tls，SSL相关部署</span>
@@ -784,57 +831,10 @@ CA (Certif...
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/10/06/IngressController/">
-                
-                <span class="abstract-title-text">IngressController使用和它的高可用落地</span>
-            </a>
-            <div class="abstract-content">
-                从之前对ingress controller到现在了解架构和一些经验总结下,顺带给人科普少走弯路需要看懂本文要具备一下知识点
-
-svc实现原理和会应用
-知道反向代理原理,了解nginx和apache的vhost概念
-了解svc的几种类型(Nodeport,clusterip,LB)
-四层和七层区别(不明白就这样去理解,七层最常见就是应用层的http,也就是url,四层是传输层,为tcp&#x2F;udp端口)
-域名解析,&#x2F;etc&#x2F;hosts等基础知识
-知道pod互斥或者ds的使用
-
-Ingress Controller介绍与部署本文档不具备时效性，请各位看概念就行了
-...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/10/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ingress">ingress</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/13/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/12/">12</a><a class="page-number" href="/archives/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/archives/page/15/">15</a><a class="page-number" href="/archives/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/19/">19</a><a class="extend next" rel="next" href="/archives/page/15/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/13/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/12/">12</a><a class="page-number" href="/archives/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/archives/page/15/">15</a><a class="page-number" href="/archives/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/20/">20</a><a class="extend next" rel="next" href="/archives/page/15/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1896,7 +1896,24 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4189,7 +4206,7 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 190
+        Total : 191
         </div>
         <!-- search  -->
         
@@ -4207,6 +4224,12 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -6292,6 +6315,16 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
             <span class="sidebar-tag-name" data-tags="aliyun">
                 <span class="iconfont-archer">&#xe606;</span>
                 aliyun
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-log-runner">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-log-runner
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="logrotate">
+                <span class="iconfont-archer">&#xe606;</span>
+                logrotate
             </span>
         
     </div>

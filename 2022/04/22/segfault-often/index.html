@@ -530,7 +530,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Apr 15 13:46:32 xxx supervisord: 2022-04-15 13:46:32,958 INFO exited: prometheus_00 (exit status 2; expected)</span><br><span class="line">Apr 15 13:46:33 xxx supervisord: 2022-04-15 13:46:33,962 INFO spawned: &#x27;prometheus_00&#x27; with pid 3751</span><br><span class="line">Apr 15 13:46:35 xxx supervisord: 2022-04-15 13:46:35,379 INFO success: prometheus_00 entered RUNNING state, process has stayed up for &gt; than 1 seconds (startsecs)</span><br><span class="line">Apr 15 13:46:35 xxx dockerd: failed to start daemon: failed to dial &quot;/run/containerd/containerd.sock&quot;: failed to dial &quot;/run/containerd/containerd.sock&quot;: context deadline exceeded</span><br><span class="line">Apr 15 13:46:35 xxx systemd: docker.service: main process exited, code=exited, status=1/FAILURE</span><br><span class="line">Apr 15 13:46:35 xxx systemd: Unit docker.service entered failed state.</span><br><span class="line">Apr 15 13:46:35 xxx systemd: docker.service failed.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: docker.service holdoff time over, scheduling restart.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: Starting Docker Application Container Engine...</span><br><span class="line">Apr 15 13:46:40 xxx systemd: Started Docker Application Container Engine.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: docker.service: main process exited, code=killed, status=11/SEGV</span><br><span class="line">Apr 15 13:46:40 xxx systemd: Unit docker.service entered failed state.</span><br><span class="line">Apr 15 13:46:40 xxx systemd: docker.service failed.</span><br><span class="line">Apr 15 13:46:42 xxx kernel: bash[4028]: segfault at fa8 ip 0000000000440c58 sp 00007fff8528e830 error 4 in bash[400000+de000]</span><br></pre></td></tr></table></figure>
 
 <p>单独看看 <code>segfault</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ grep kernal /var/log/messages | grep -i segfault</span><br><span class="line"></span><br><span class="line">Apr 15 11:17:31 xxx kernel: celery[13267]: segfault at 6de410 ip 000000000041b720 sp 00007ffccf1813c0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:35 xxx kernel: redis-server[21118]: segfault at 5dd030 ip 00000000005dd030 sp 00007ffc05cbe440 error 14 in redis-server[6dd000+1000]</span><br><span class="line">Apr 15 11:20:35 xxx kernel: supervisord[20844]: segfault at 29 ip 000000000045c030 sp 00007ffd48aa29d0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:51 xxx kernel: gunicorn[23241]: segfault at 8 ip 00000000004272c8 sp 00007ffc0c4f34e0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:56 xxx kernel: celery[23193]: segfault at 10 ip 0000000000454a29 sp 00007ffd17acce78 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:56 xxx kernel: python[23196]: segfault at 154c0ab0 ip 0000000000420eb0 sp 00007fff43b9fe08 error 6 in python3.7[400000+293000]</span><br><span class="line">Apr 15 12:38:34 xxx kernel: init.ipv6-globa[1154]: segfault at 68 ip 000000000044f62f sp 00007ffc2cf307a8 error 6 in bash[400000+de000]</span><br><span class="line">Apr 15 12:59:25 xxx kernel: bash[11112]: segfault at 18 ip 0000000000449dc9 sp 00007ffffbc2dac8 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:00:58 xxx kernel: bash[14117]: segfault at ffffffff8d48ffff ip 0000000000440c36 sp 00007ffe9be29640 error 7 in bash[400000+de000]</span><br><span class="line">Apr 15 13:01:19 xxx kernel: strace[14852]: segfault at 0 ip           (null) sp 00007ffc836a2be8 error 14 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:10:44 xxx kernel: grep[2587]: segfault at a0d ip 000000000040c43f sp 00007ffcda056be8 error 4 in grep[400000+25000]</span><br><span class="line">Apr 15 13:14:06 xxx kernel: strace[9484]: segfault at ffffffff89489abc ip 00000000004336c2 sp 00007ffcb217a758 error 7 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:27:57 xxx kernel: grep[32713]: segfault at 0 ip           (null) sp 00007ffebf181d10 error 14 in grep[400000+25000]</span><br><span class="line">Apr 15 13:30:22 xxx kernel: bash[5138]: segfault at 108 ip 000000000040cc32 sp 00007ffd55de2728 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:35:56 xxx kernel: strace[15846]: segfault at 0 ip           (null) sp 00007ffef0a931e0 error 14 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:36:27 xxx kernel: bash[16818]: segfault at 33173b0 ip 000000000046d584 sp 00007ffdb71ff5c8 error 6 in bash[400000+de000]</span><br><span class="line">Apr 15 13:37:04 xxx kernel: bash[17993]: segfault at 46a0 ip 0000000000440c58 sp 00007fffd76cf1e0 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:39:49 xxx kernel: bash[23124]: segfault at 5aa0 ip 0000000000440c58 sp 00007fff98271ac0 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:46:42 xxx kernel: bash[4028]: segfault at fa8 ip 0000000000440c58 sp 00007fff8528e830 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:59:04 xxx kernel: redis_exporter-[21520]: segfault at 43b8ba ip 000000000043b892 sp 000000c000057f48 error 7 in redis_exporter-1.23.1.linux-x86_64[400000+41f000]</span><br><span class="line">Apr 15 14:12:12 xxx kernel: grepconf.sh[20714]: segfault at 0 ip           (null) sp 00007ffe3009c158 error 14 in bash[400000+de000]</span><br><span class="line">Apr 15 14:14:43 xxx kernel: bash[25463]: segfault at 313f4023 ip 00000000313f4023 sp 00007ffd25075948 error 14 in ISO8859-1.so[7f6335587000+2000]</span><br><span class="line">Apr 15 14:22:32 xxx kernel: bash[7390]: segfault at 18 ip 0000000000449dc9 sp 00007ffc765d0558 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 14:38:21 xxx kernel: prometheus[26806]: segfault at 440eb5 ip 0000000000421391 sp 000000c0002f1f38 error 7 in prometheus[400000+20ec000]</span><br><span class="line">Apr 15 14:38:21 xxx kernel: prometheus[26801]: segfault at bffffffff8 ip 0000000000440ea3 sp 000000c000000000 error 6 in prometheus[400000+20ec000]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ grep kernel /var/log/messages | grep -i segfault</span><br><span class="line"></span><br><span class="line">Apr 15 11:17:31 xxx kernel: celery[13267]: segfault at 6de410 ip 000000000041b720 sp 00007ffccf1813c0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:35 xxx kernel: redis-server[21118]: segfault at 5dd030 ip 00000000005dd030 sp 00007ffc05cbe440 error 14 in redis-server[6dd000+1000]</span><br><span class="line">Apr 15 11:20:35 xxx kernel: supervisord[20844]: segfault at 29 ip 000000000045c030 sp 00007ffd48aa29d0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:51 xxx kernel: gunicorn[23241]: segfault at 8 ip 00000000004272c8 sp 00007ffc0c4f34e0 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:56 xxx kernel: celery[23193]: segfault at 10 ip 0000000000454a29 sp 00007ffd17acce78 error 4 in python3.7[400000+293000]</span><br><span class="line">Apr 15 11:20:56 xxx kernel: python[23196]: segfault at 154c0ab0 ip 0000000000420eb0 sp 00007fff43b9fe08 error 6 in python3.7[400000+293000]</span><br><span class="line">Apr 15 12:38:34 xxx kernel: init.ipv6-globa[1154]: segfault at 68 ip 000000000044f62f sp 00007ffc2cf307a8 error 6 in bash[400000+de000]</span><br><span class="line">Apr 15 12:59:25 xxx kernel: bash[11112]: segfault at 18 ip 0000000000449dc9 sp 00007ffffbc2dac8 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:00:58 xxx kernel: bash[14117]: segfault at ffffffff8d48ffff ip 0000000000440c36 sp 00007ffe9be29640 error 7 in bash[400000+de000]</span><br><span class="line">Apr 15 13:01:19 xxx kernel: strace[14852]: segfault at 0 ip           (null) sp 00007ffc836a2be8 error 14 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:10:44 xxx kernel: grep[2587]: segfault at a0d ip 000000000040c43f sp 00007ffcda056be8 error 4 in grep[400000+25000]</span><br><span class="line">Apr 15 13:14:06 xxx kernel: strace[9484]: segfault at ffffffff89489abc ip 00000000004336c2 sp 00007ffcb217a758 error 7 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:27:57 xxx kernel: grep[32713]: segfault at 0 ip           (null) sp 00007ffebf181d10 error 14 in grep[400000+25000]</span><br><span class="line">Apr 15 13:30:22 xxx kernel: bash[5138]: segfault at 108 ip 000000000040cc32 sp 00007ffd55de2728 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:35:56 xxx kernel: strace[15846]: segfault at 0 ip           (null) sp 00007ffef0a931e0 error 14 in strace[400000+f7000]</span><br><span class="line">Apr 15 13:36:27 xxx kernel: bash[16818]: segfault at 33173b0 ip 000000000046d584 sp 00007ffdb71ff5c8 error 6 in bash[400000+de000]</span><br><span class="line">Apr 15 13:37:04 xxx kernel: bash[17993]: segfault at 46a0 ip 0000000000440c58 sp 00007fffd76cf1e0 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:39:49 xxx kernel: bash[23124]: segfault at 5aa0 ip 0000000000440c58 sp 00007fff98271ac0 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:46:42 xxx kernel: bash[4028]: segfault at fa8 ip 0000000000440c58 sp 00007fff8528e830 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 13:59:04 xxx kernel: redis_exporter-[21520]: segfault at 43b8ba ip 000000000043b892 sp 000000c000057f48 error 7 in redis_exporter-1.23.1.linux-x86_64[400000+41f000]</span><br><span class="line">Apr 15 14:12:12 xxx kernel: grepconf.sh[20714]: segfault at 0 ip           (null) sp 00007ffe3009c158 error 14 in bash[400000+de000]</span><br><span class="line">Apr 15 14:14:43 xxx kernel: bash[25463]: segfault at 313f4023 ip 00000000313f4023 sp 00007ffd25075948 error 14 in ISO8859-1.so[7f6335587000+2000]</span><br><span class="line">Apr 15 14:22:32 xxx kernel: bash[7390]: segfault at 18 ip 0000000000449dc9 sp 00007ffc765d0558 error 4 in bash[400000+de000]</span><br><span class="line">Apr 15 14:38:21 xxx kernel: prometheus[26806]: segfault at 440eb5 ip 0000000000421391 sp 000000c0002f1f38 error 7 in prometheus[400000+20ec000]</span><br><span class="line">Apr 15 14:38:21 xxx kernel: prometheus[26801]: segfault at bffffffff8 ip 0000000000440ea3 sp 000000c000000000 error 6 in prometheus[400000+20ec000]</span><br></pre></td></tr></table></figure>
 
 <p>看了下内存容量也正常，很多东西都会触发 segmenft fault，但是最常见的就是内存越界，但是根据系统日志看并不存在内存越界（毕竟这么多进程都 segfault，不可能这么多进程代码写的有问题），使用 <code>rpm -V glibc</code> 也没看到 so 文件被修改，初步怀疑客户的宿主机内存有问题，让客户迁移下这台机器。</p>
 <h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>2022&#x2F;04&#x2F;22 反馈迁移后一切都正常了。</p>
@@ -548,6 +548,7 @@
 
 <p><code>limit.d/*.conf</code> 配置 coredump 文件限制</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* soft core 1024</span><br></pre></td></tr></table></figure>
+
     </article>
     <!-- license -->
     
@@ -1700,7 +1701,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3993,7 +4011,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 190
+        Total : 191
         </div>
         <!-- search  -->
         
@@ -4011,6 +4029,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -6096,6 +6120,16 @@
             <span class="sidebar-tag-name" data-tags="aliyun">
                 <span class="iconfont-archer">&#xe606;</span>
                 aliyun
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-log-runner">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-log-runner
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="logrotate">
+                <span class="iconfont-archer">&#xe606;</span>
+                logrotate
             </span>
         
     </div>

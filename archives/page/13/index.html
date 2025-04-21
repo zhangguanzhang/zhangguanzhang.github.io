@@ -444,6 +444,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/06/26/uefi-pxe/">
+                
+                <span class="abstract-title-text">uefi模式下docker+交换机部署pxe批量安装</span>
+            </a>
+            <div class="abstract-content">
+                华三服务器的 ipmi 的 web 提供了 nfs 挂载 iso 去安装，也是我之前使用的，发现研发给的镜像在4g以上(镜像基于centos7.3改的，我之前测试都是用的minimal镜像890M左右)。安装的时候报错，然后当面测试得出结论 nfs 的网速原因，其次也是我们这边办公网是百兆。。。办公网被 it 接管了，交换机密码不给，自己找了台 5130 交换机，下面接服务器和我自己电脑搭建测了下定制iso的pxe流程
+这是组网情况
+123456789101112131415             10.96.4.1/24          +------------+        ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/06/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tftp">tftp</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/06/23/autoInstallServer/">
                 
                 <span class="abstract-title-text">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</span>
@@ -776,57 +817,10 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/02/19/jira-confluence/">
-                
-                <span class="abstract-title-text">docker部署jira(8.0.0)和confluence(6.14.1)</span>
-            </a>
-            <div class="abstract-content">
-                记录下这几天搭建的过程jira和confluence是分别两台，数据库也是分开的,数据库是用mysql的rpm的repo添加后安装的,jira和confluence是docker跑的,把破解的jar加到镜像里然后改了下别人的Dockerfile本次安装的版本：
-
-
-jira-software 8.0.0
-confluence 6.14.1
-Docker CE 18.06.02
-OS CentOS 7.5.1804
-
-
-系统基本设置
-所有防火墙与SELinux 已关闭：123systemctl disable --now firewalld NetworkManagersetenforce...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/02/19">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/19</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="jira">jira</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="confluence">confluence</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/12/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/11/">11</a><a class="page-number" href="/archives/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/archives/page/14/">14</a><a class="page-number" href="/archives/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/19/">19</a><a class="extend next" rel="next" href="/archives/page/14/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/12/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/11/">11</a><a class="page-number" href="/archives/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/archives/page/14/">14</a><a class="page-number" href="/archives/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/20/">20</a><a class="extend next" rel="next" href="/archives/page/14/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1888,7 +1882,24 @@ OS CentOS 7.5.1804
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4181,7 +4192,7 @@ OS CentOS 7.5.1804
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 190
+        Total : 191
         </div>
         <!-- search  -->
         
@@ -4199,6 +4210,12 @@ OS CentOS 7.5.1804
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -6284,6 +6301,16 @@ OS CentOS 7.5.1804
             <span class="sidebar-tag-name" data-tags="aliyun">
                 <span class="iconfont-archer">&#xe606;</span>
                 aliyun
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-log-runner">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-log-runner
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="logrotate">
+                <span class="iconfont-archer">&#xe606;</span>
+                logrotate
             </span>
         
     </div>

@@ -444,6 +444,57 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/12/19/openwrt-update/">
+                
+                <span class="abstract-title-text">openwrt 的在线升级固件和扩容的研究</span>
+            </a>
+            <div class="abstract-content">
+                前言手上有 r2s、N1 和 x86_64 的固件维护，r2s 的参照别人的脚本搞了在线升级固件的脚本，别人的脚本只支持 ext4 升级，而后面我也把 squashfs 格式的固件升级搞出来了。恩山上有的人的固件我也看 x86_64 也可以在线升级，后面我也会去测下 x86_64 的，理论上是通用的。
+升级过程以 r2s 为例讲解。参照目前看到的的 1988 的升级脚本 ，最初的人不知道是谁搞的在线升级，因为很久之前就看到有些人的固件能在线升级了。
+升级前准备相关命令确保固件有下面命令：
+
+
+
+command
+package name
+用途
+
+
+
+parted
+parted
+修改分区和获...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/12/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/19</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="squashfs">squashfs</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/12/12/mod-rejected-by-service/">
                 
                 <span class="abstract-title-text">docker数据盘损坏后启动报错 Error starting daemon: Error initializing network controller: Error creating default &#34;bridge&#34; network: package not installed</span>
@@ -775,48 +826,10 @@ buildx 使用见文章 buildx 使用
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/08/24/cni-plugins-bridge-err/">
-                
-                <span class="abstract-title-text">一次 cni-plugins 导致集群 dns 无法解析的排错</span>
-            </a>
-            <div class="abstract-content">
-                问题环境是 1.15.5 的 x86_64 的 k8s 。命令输出被我查看日志给冲掉了，大致描述下。中间件 kafka 无法连上 zookeeper ，看了下日志报错域名无法解析。看了下 coredns 都挂了：
-12345$ kubectl -n kube-system get po -o wide -l k8s-app=kube-dnsNAME                       READY   STATUS             RESTARTS   AGE     IP           NODE         NOMINATED NODE   READINESS ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/08/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="cni-plugins">cni-plugins</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/5/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/page/7/">7</a><a class="page-number" href="/archives/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/19/">19</a><a class="extend next" rel="next" href="/archives/page/7/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/5/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/archives/page/7/">7</a><a class="page-number" href="/archives/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/20/">20</a><a class="extend next" rel="next" href="/archives/page/7/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1878,7 +1891,24 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4171,7 +4201,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 190
+        Total : 191
         </div>
         <!-- search  -->
         
@@ -4189,6 +4219,12 @@ buildx 使用见文章 buildx 使用
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -6274,6 +6310,16 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="aliyun">
                 <span class="iconfont-archer">&#xe606;</span>
                 aliyun
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="kube-log-runner">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-log-runner
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="logrotate">
+                <span class="iconfont-archer">&#xe606;</span>
+                logrotate
             </span>
         
     </div>
