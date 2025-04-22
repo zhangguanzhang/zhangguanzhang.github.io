@@ -517,7 +517,7 @@
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>kubelet 和一些 kube 组件在二进制 systemd service 管理下，日志最终会在 <code>/var/log/messages</code> 里，我们的客户对该文件会有关键字（Error、Failed …）监控，让我们把相关组件日志写到其他文件里去。</p>
 <h2 id="经过"><a href="#经过" class="headerlink" title="经过"></a>经过</h2><h3 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h3><p>根据官方文档 <a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/cluster-administration/system-logs/">系统日志</a> 得知 <code>v1.26</code> 开始移除了以前的日志文件、目录和轮转之类的参数，而是让使用 <code>kube-log-runner</code> 代替，该二进制已经内置在二进制下载压缩包里了。如果是使用镜像，官方的容器镜像内置了，只是名字叫做 <code>/go-runner</code>。</p>
 <p>根据 <a target="_blank" rel="noopener" href="https://github.com/kubernetes/component-base/tree/master/logs/kube-log-runner">github kube-log-runner</a> 得知使用方式和源码，它就是 golang 写的一个简单工具，启动命令，把命令的标准输出和错误输出捕获写到文件，然后转发信号给进程。</p>
-<h3 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl cat --no-pager kube-apiserver</span><br><span class="line">...</span><br><span class="line">ExecStart=/usr/local/bin/kube-log-runner \</span><br><span class="line">  --log-file=/var/logs/kube-proxy.log \</span><br><span class="line">  /usr/local/bin/kube-proxy </span><br></pre></td></tr></table></figure>
+<h3 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl cat --no-pager kube-apiserver</span><br><span class="line">...</span><br><span class="line">ExecStart=/usr/local/bin/kube-log-runner \</span><br><span class="line">  --log-file=/var/logs/kube-apiserver.log \</span><br><span class="line">  /usr/local/bin/kube-apiserver </span><br></pre></td></tr></table></figure>
 
 <p>直接测试了下发现启动报错下面：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4月 18 10:30:25 xxx systemd[1]: Got notification message from PID 9885, but reception only permitted for main PID 9880</span><br></pre></td></tr></table></figure>
@@ -531,7 +531,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NotifyAccess=all</span><br></pre></td></tr></table></figure>
 
 <h3 id="logrotate"><a href="#logrotate" class="headerlink" title="logrotate"></a>logrotate</h3><p>日志要写入到文件，那就一定要遵守 Linux 规范配置 logrotate 避免日志写满分区。然后相关配置完，写完配置用一个小的 size 参数测试了 logrotate 发现不行：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logrotate  /etc/logrotate.d/kube-apiserver</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logrotate -v /etc/logrotate.d/kube-apiserver</span><br></pre></td></tr></table></figure>
 
 <p>logrotate 轮转日志分为两种模式，create 和 copytruncate，默认是 create，两种大致原理如下：</p>
 <ul>
