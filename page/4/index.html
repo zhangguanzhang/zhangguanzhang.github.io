@@ -459,6 +459,48 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/03/16/cannot-assign-requested-address/">
+                
+                <span class="abstract-title-text">server 端的 cannot assign requested address</span>
+            </a>
+            <div class="abstract-content">
+                由来今天碰到了这个问题，但是最终结果出乎意料
+过程项目相关部分客户的 OA 对接我们的应用，使用过程中会调用我们的接口，我们的接口再回调客户的回调地址。调用流是：
+1客户 OA 后端 ----&gt; 我们应用 A 的后端 -----&gt; 我们应用 B 后端  -----&gt; 客户写的回调地址
+
+然后我们接口 A 返回 B 访问回调的报错：
+1&quot;Get http://10.192.xxx.xxx/xxxxinfo?...: dial tcp 10.192.xxx.xxx:80: connect: cannot assign requested address&quot;...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/03/16">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/16</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/02/24/keepalived-static-build/">
                 
                 <span class="abstract-title-text">keepalived static link build</span>
@@ -993,45 +1035,6 @@ buildx 使用见文章 buildx 使用
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/08/25/flannel-a-host-net-tmout/">
-                
-                <span class="abstract-title-text">flannel下集群有个节点网络不通的一次排查</span>
-            </a>
-            <div class="abstract-content">
-                故障问题和版本没关系，客户的 node 信息啥的后面排错里有。有个节点通信有问题，其余节点都没问题。
-排查惯例信息先看下 flannel 的 vxlan 的 vtep 信息，客户是双网卡的，但是默认路由是这个网卡，不用管另外的网卡了。下面信息看了下 VtepMAC 和 public-ip 都正常。
-123456789101112131415161718192021222324252627282930313233343536$ kubectl get node -o yaml | grep -B4 public    annotations:      flannel.alpha.core...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/08/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/25</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="flannel">flannel</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -2280,7 +2283,82 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4585,7 +4663,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 191
+        Total : 192
         </div>
         <!-- search  -->
         
@@ -4607,6 +4685,12 @@ buildx 使用见文章 buildx 使用
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span>
+            <a class="archive-post-title" href="/2025/04/14/android-tun2sock/">开发一个让指定应用走代理的安卓 app 过程</a>
         </li>
     
         
@@ -6704,6 +6788,11 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="logrotate">
                 <span class="iconfont-archer">&#xe606;</span>
                 logrotate
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tun2sock2">
+                <span class="iconfont-archer">&#xe606;</span>
+                tun2sock2
             </span>
         
     </div>

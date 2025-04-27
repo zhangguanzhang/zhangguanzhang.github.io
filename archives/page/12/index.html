@@ -444,6 +444,42 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/24/deployment-consul-in-k8s/">
+                
+                <span class="abstract-title-text">consul仅当服务发现在k8s无状态部署使用</span>
+            </a>
+            <div class="abstract-content">
+                由来consul server 在机器上的部署已经写完了，但是dba还是希望部署在 k8s 上，昨天搜了下相关文章扣出来部分步骤自己验证实现了。先说下需求，三台物理机单独跑 mysql 主从 mha，利用 consul client 的服务注册+ttl向 consul server 注册成域名，然后配置 k8s 内部的 coredns 把域名*.service.consul转发到 consul server。架构为下图
+123456789101112131415161718Physical server +---------------------+                   ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
                 
                 <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
@@ -786,43 +822,6 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="nodeport">nodeport</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/07/07/golang-http/">
-                
-                <span class="abstract-title-text">golang的net/http包的客户端简单科普</span>
-            </a>
-            <div class="abstract-content">
-                之前准备写个简单的 api 的调用，百度和问了很多人后发现基本对于 http 的客户端熟悉的人非常少。或者对包的不了解自己造了效率很低的轮子，而且官方一些包里有坑，被坑过，这里简单科普下
-简单的get和posthttp 包里下列可以直接使用的请求方法
-1234func Head(url string) (resp *Response, err error)func Get(url string) (resp *Response, err error)func Post(url string, bodyType string, body io.Reader) (resp *Response...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/07/07">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/07</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="http">http</a>
     
 </div>
 
@@ -1901,7 +1900,82 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4206,7 +4280,7 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 191
+        Total : 192
         </div>
         <!-- search  -->
         
@@ -4228,6 +4302,12 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span>
+            <a class="archive-post-title" href="/2025/04/14/android-tun2sock/">开发一个让指定应用走代理的安卓 app 过程</a>
         </li>
     
         
@@ -6325,6 +6405,11 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <span class="sidebar-tag-name" data-tags="logrotate">
                 <span class="iconfont-archer">&#xe606;</span>
                 logrotate
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tun2sock2">
+                <span class="iconfont-archer">&#xe606;</span>
+                tun2sock2
             </span>
         
     </div>

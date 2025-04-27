@@ -457,6 +457,43 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/06/03/bash-complete/">
+                
+                <span class="abstract-title-text">bash自定义补全</span>
+            </a>
+            <div class="abstract-content">
+                总结下bash的补全
+终端下按两次tab就是补全
+补全常见的分为下面几种场景:
+
+第一部分的命令补全
+命令补全后补全路径到文件
+变量补全
+类似systemctl命令的选项补全
+
+当然bash支持自定义补全,也就是让我们实现和systemctl命令那样补全
+假设我们要systemctl disable --now firewalldsystemctl空格后按tab键会显示systemctl的第二个部分的所有支持的选项此时继续输入di按tab键会补全成systemctl disable,输入--now(相似的太多了,所以基本输入完)补全,当然最后的服务名此时补全不了,因为systemctl的...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/06/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/03</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -969,33 +1006,6 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/04/03/bond/">
-                
-                <span class="abstract-title-text">centos配置bond</span>
-            </a>
-            <div class="abstract-content">
-                1234567891011121314151617181920212223242526272829[root@APP-SRV-001 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0TYPE=EthernetBOOTPROTO=noneDEVICE=eth0NAME=eth0ONBOOT=yesMASTER=bond4SLAVE=yes[root@APP-SRV-001 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth1TYPE=EthernetBOOTPROTO=noneDEVICE=et...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/04/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/03</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -2244,7 +2254,82 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4549,7 +4634,7 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 191
+        Total : 192
         </div>
         <!-- search  -->
         
@@ -4571,6 +4656,12 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span>
+            <a class="archive-post-title" href="/2025/04/14/android-tun2sock/">开发一个让指定应用走代理的安卓 app 过程</a>
         </li>
     
         
@@ -6668,6 +6759,11 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             <span class="sidebar-tag-name" data-tags="logrotate">
                 <span class="iconfont-archer">&#xe606;</span>
                 logrotate
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="tun2sock2">
+                <span class="iconfont-archer">&#xe606;</span>
+                tun2sock2
             </span>
         
     </div>
