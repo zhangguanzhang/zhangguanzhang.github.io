@@ -556,7 +556,7 @@
 </ul>
 <p>快速看完官方文档的 compose 开发后，基于 <a target="_blank" rel="noopener" href="https://github.com/google-developer-training/basic-android-kotlin-compose-training-inventory-app">inventory-app</a> 复制修改开始，各个界面跳转用 navigate ，另外还发现 <a target="_blank" rel="noopener" href="https://github.com/tailscale/tailscale-android/tree/main/android">tailscale-android</a> 也是全部用 kotlin + jetpack compose 开发的，可以从里面学下代码。</p>
 <h3 id="tun2socks-aar"><a href="#tun2socks-aar" class="headerlink" title="tun2socks aar"></a>tun2socks aar</h3><p>根据文档 tun2socks 的 <a target="_blank" rel="noopener" href="https://github.com/xjasonlyu/tun2socks/issues/123">How to use file descriptor in Android</a> 得知，集成到安卓是要利用 gomobile 编译出安卓的 aar 后代码里加载（而不是 <code>v2rxxNG</code> 那样运行二进制文件）。先编译出来后写个最小 demo 试试看，需要 NDK 和 SDK_TOOLS 和 golang，搜索了下后制作了一个带环境的 docker 镜像，直接下面步骤快速编译：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/xjasonlyu/tun2socks</span><br><span class="line"><span class="built_in">cd</span> tun2socks</span><br><span class="line"><span class="comment"># 不要在低配置机器上编译，会卡死机器</span></span><br><span class="line">docker run --<span class="built_in">rm</span> -ti \</span><br><span class="line"> -e GOPROXY=<span class="string">&#x27;https://goproxy.cn,https://mirrors.aliyun.com/goproxy/,https://goproxy.io,https://proxy.golang.com.cn,direct&#x27;</span> \</span><br><span class="line">  --entrypoint bash -v <span class="variable">$PWD</span>:/w -w /w registry.aliyuncs.com/zhangguanzhang/gomobile</span><br><span class="line">go get golang.org/x/mobile/bind</span><br><span class="line"><span class="built_in">mkdir</span> -p build</span><br><span class="line"><span class="comment">#  也可以使用一些go build 参数</span></span><br><span class="line">gomobile <span class="built_in">bind</span> -ldflags=<span class="string">&quot;-s -w&quot;</span> -trimpath -o build/tun2socks.aar -target android github.com/xjasonlyu/tun2socks/v2/engine</span><br><span class="line">$ <span class="built_in">ls</span> -l build/</span><br><span class="line">total 30580</span><br><span class="line">-rw-r--r-- 1 root root 31304576 Apr 27 11:50 tun2socks.aar</span><br><span class="line">-rw-r--r-- 1 root root     6927 Apr 27 11:50 tun2socks-sources.jar</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/xjasonlyu/tun2socks</span><br><span class="line"><span class="built_in">cd</span> tun2socks</span><br><span class="line"><span class="comment"># 不要在低配置机器上编译，会卡死机器</span></span><br><span class="line">docker run --<span class="built_in">rm</span> -ti \</span><br><span class="line"> -e GOPROXY=<span class="string">&#x27;https://goproxy.cn,https://mirrors.aliyun.com/goproxy/,https://goproxy.io,https://proxy.golang.com.cn,direct&#x27;</span> \</span><br><span class="line">  --entrypoint bash -v <span class="variable">$PWD</span>:/w -w /w registry.aliyuncs.com/zhangguanzhang/gomobile</span><br><span class="line">go get golang.org/x/mobile/bind</span><br><span class="line"><span class="built_in">mkdir</span> -p build</span><br><span class="line"><span class="comment">#  也可以使用一些go build 参数 这里我指定-androidapi 24最低兼容安卓7，默认值是16，但是较新的 NDK 上无法编译， 23.1.7779620 可以编译</span></span><br><span class="line">gomobile <span class="built_in">bind</span> -ldflags=<span class="string">&quot;-s -w&quot;</span> -trimpath -o build/tun2socks.aar \</span><br><span class="line">	-target android \</span><br><span class="line">	-androidapi 24 \</span><br><span class="line">	github.com/xjasonlyu/tun2socks/v2/engine</span><br><span class="line">$ <span class="built_in">ls</span> -l build/</span><br><span class="line">total 30580</span><br><span class="line">-rw-r--r-- 1 root root 31304576 Apr 27 11:50 tun2socks.aar</span><br><span class="line">-rw-r--r-- 1 root root     6927 Apr 27 11:50 tun2socks-sources.jar</span><br></pre></td></tr></table></figure>
 
 <p>issue 里基本都是 java 开发的，我这里是 kotlin 和最新版本的 <code>Android Studio</code>，最新的版本里，都是用 kotlin 的 DSL gradle 了，按照 issue 里的添加后在 <code>Android Studio</code> 里一直报红，然后搜索后下面的才行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># app 下的 buid.grade.kts 的 依赖下添加</span><br><span class="line">implementation(files(&quot;libs/tun2socks.aar&quot;))</span><br></pre></td></tr></table></figure>
@@ -622,6 +622,11 @@
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2025/06/02/kubernetes-cert/" title="小白向的 kubernetes 证书讲解">
+                    <div class="nextTitle">小白向的 kubernetes 证书讲解</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -1765,51 +1770,12 @@
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4140,7 +4106,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 192
+        Total : 193
         </div>
         <!-- search  -->
         
@@ -4158,6 +4124,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2025/06/02/kubernetes-cert/">小白向的 kubernetes 证书讲解</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>

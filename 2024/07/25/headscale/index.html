@@ -651,7 +651,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logread tailscaled</span><br></pre></td></tr></table></figure>
 
 <p>主路由不设置路由下，转发放行+ snat：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I ts-forward -i br-lan -o tailscale0 -j MARK --set-xmark 0x40000/0xff0000</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 例如 n1 取消桥接就是 -i eth0 了</span><br><span class="line">iptables -I ts-forward -i br-lan -o tailscale0 -j MARK --set-xmark 0x40000/0xff0000</span><br></pre></td></tr></table></figure>
 
 <h3 id="tailscale-client-使用"><a href="#tailscale-client-使用" class="headerlink" title="tailscale client 使用"></a>tailscale client 使用</h3><p>每个 tailscale 端都可以执行命令来查看和排查一些信息。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># debug 命令隐藏在 --help 了，可以 tailscale debug --help 自行查看</span></span><br><span class="line"><span class="comment"># 打印 derp-map 信息</span></span><br><span class="line">tailscale debug derp-map</span><br></pre></td></tr></table></figure>
@@ -1872,51 +1872,12 @@
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4247,7 +4208,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 192
+        Total : 193
         </div>
         <!-- search  -->
         
@@ -4265,6 +4226,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2025/06/02/kubernetes-cert/">小白向的 kubernetes 证书讲解</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
