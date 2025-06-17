@@ -457,6 +457,45 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/03/24/python-list-kubernetes-permission/">
+                
+                <span class="abstract-title-text">python kubernetes client list permission</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天内部有个功能就是看 kubernetes client 的权限有哪些
+过程kubeconfig 生成先制作一个非 admin 的 kubeconfig，记得以前有个项目是部署后可以生成 kubeconfig 的，询问了一番后，其他群友提示下想起来是 permission-manager，部署后结果发现生成的 kubeconfig 压根不能用，报错未知机构签署的，结果还是按照以前 生成kubeconfig常规的两种方法 生成了一个简单的。
+尝试过程其实一开始打算自己写逻辑，增删改查需要的资源便利来检查，然后突然想起来 kubectl (忘了哪个版本开始)有个 auth 子命令的 ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/03/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -1006,42 +1045,6 @@ buildx 使用见文章 buildx 使用
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="fio">fio</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/09/01/ubuntu18-and-cfq/">
-                
-                <span class="abstract-title-text">ubuntu18下io调度算法是cfq导致mysql非常慢</span>
-            </a>
-            <div class="abstract-content">
-                <p>记录线上一次 io 调度算法导致的 mysql 读写慢问题</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/09/01">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/01</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ubuntu18">ubuntu18</a>
     
 </div>
 
@@ -2303,7 +2306,24 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4634,7 +4654,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 193
+        Total : 194
         </div>
         <!-- search  -->
         
@@ -4652,6 +4672,12 @@ buildx 使用见文章 buildx 使用
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2025/06/17/golang-gitlab-subgroup/">golang gitlab subgroup 构建问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/02</span>
@@ -6770,6 +6796,16 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="tun2sock2">
                 <span class="iconfont-archer">&#xe606;</span>
                 tun2sock2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gitlab">
+                <span class="iconfont-archer">&#xe606;</span>
+                gitlab
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="subgroup">
+                <span class="iconfont-archer">&#xe606;</span>
+                subgroup
             </span>
         
     </div>

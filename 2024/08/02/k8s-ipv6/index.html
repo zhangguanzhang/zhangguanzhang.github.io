@@ -352,7 +352,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">6.8k</span>阅读时长: <span class="post-count reading-time">34 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">7.3k</span>阅读时长: <span class="post-count reading-time">37 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -559,6 +559,19 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">TYPE=Ethernet</span><br><span class="line">PROXY_METHOD=none</span><br><span class="line">BROWSER_ONLY=no</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">#IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">NAME=ens160</span><br><span class="line">UUID=8813b773-201c-4fe1-80b3-5ab62586xxxx</span><br><span class="line">DEVICE=ens160</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPV6_PRIVACY=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=no</span><br><span class="line">IPV6ADDR=2002:db8:0:1::101/64</span><br><span class="line">IPV6_DEFAULTGW=2002:db8:0:1::1</span><br></pre></td></tr></table></figure>
 
 <p>centos7 记得删掉 <code>IPV6_ADDR_GEN_MODE=stable-privacy</code>，不然我发现 IP 不生效，windows 记得开 <code>文件和打印机共享(回显请求)</code> 的 ipv4 ipv6 。</p>
+<h3 id="网关路由相关"><a href="#网关路由相关" class="headerlink" title="网关路由相关"></a>网关路由相关</h3><p>发现一些机器默认路由或者二层路由在开机和重启后会没有添加，影响测试部署啥的，下面是一些 os 上添加网关和路由方式：</p>
+<h4 id="netplan"><a href="#netplan" class="headerlink" title="netplan"></a>netplan</h4><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">network:</span></span><br><span class="line">  <span class="attr">version:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">renderer:</span> <span class="string">networkd</span></span><br><span class="line">  <span class="attr">ethernets:</span></span><br><span class="line">    <span class="attr">ens160:</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">no</span></span><br><span class="line">      <span class="attr">dhcp6:</span> <span class="literal">no</span></span><br><span class="line">      <span class="attr">addresses:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">10.</span><span class="string">xx.xx.94/24</span></span><br><span class="line">      <span class="attr">gateway4:</span> <span class="number">10.</span><span class="string">xx.xx.1</span></span><br><span class="line">      <span class="attr">nameservers:</span></span><br><span class="line">        <span class="attr">addresses:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="number">10.</span><span class="string">xx.xx.1</span></span><br><span class="line">    <span class="attr">ens192:</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">no</span></span><br><span class="line">      <span class="attr">dhcp6:</span> <span class="literal">no</span></span><br><span class="line">      <span class="attr">addresses:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">2408</span><span class="string">:8656:22df:ff01::14:fe02/119</span></span><br><span class="line">      <span class="attr">gateway6:</span> <span class="number">2408</span><span class="string">:8656:22df:ff01::14:fe01</span> <span class="comment"># 双站机器上的假网关</span></span><br></pre></td></tr></table></figure>
+
+<p>其他 ipv6 单栈机器添加路由可以：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">...</span></span><br><span class="line"><span class="string">...</span></span><br><span class="line">      <span class="attr">routes:</span>    <span class="comment"># 设置默认路由转发, 当然也可以写多个的</span></span><br><span class="line">       <span class="bullet">-</span> <span class="attr">to:</span> <span class="string">&quot;::/0&quot;</span></span><br><span class="line">         <span class="attr">via:</span> <span class="string">&quot;2408:8656:22df:ff01::14:fe02&quot;</span>    <span class="comment"># 双栈机器ipv6地址</span></span><br><span class="line">         <span class="attr">on-link:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="x2F-etc-x2F-network-x2F-interfaces"><a href="#x2F-etc-x2F-network-x2F-interfaces" class="headerlink" title="&#x2F;etc&#x2F;network&#x2F;interfaces"></a>&#x2F;etc&#x2F;network&#x2F;interfaces</h4><p>ubuntu <code>/etc/network/interfaces</code> 添加默认路由和二层路由参考（网关自己查找正确的）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">auto eth0</span><br><span class="line">allow-hotplug eth0</span><br><span class="line">iface eth0 inet dhcp</span><br><span class="line">up ip -6 route add default via fe80::ecff:ffff:feff:ffff dev eth0</span><br><span class="line">up ip -6 route add 2401:xxxx:xxx:xxxx::/64 dev eth0</span><br></pre></td></tr></table></figure>
+
+<h4 id="yum-系列网关路由配置"><a href="#yum-系列网关路由配置" class="headerlink" title="yum 系列网关路由配置"></a>yum 系列网关路由配置</h4><p><a target="_blank" rel="noopener" href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/configuring_and_managing_networking/configuring-static-routes_configuring-and-managing-networking">configuring-static-routes</a> 内写得比较详细，nmcli 和配置文件 <code>/etc/sysconfig/network-scripts/route6-enp1s0</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2001:db8:2::/64 via 2001:db8:1::10 dev enp1s0</span><br></pre></td></tr></table></figure>
+
+<p>配置文件的格式和 <code>ip -6 route add</code> 一样</p>
 <h3 id="一些知识"><a href="#一些知识" class="headerlink" title="一些知识"></a>一些知识</h3><p>IPv6 地址总长度为 128 比特，通常分为 8 组，每组为 4 个十六进制数的形式，每组十六进制数间用冒号分隔。 例如：</p>
 <ul>
 <li><code>FC00:0000:130F:0000:0000:09C0:876A:130B</code></li>
@@ -586,6 +599,13 @@
 <li>Cluster CIDR 设置为 <code>2001:cafe:42::/56</code>，如果选择更大的掩码段，需要设置 kube-controller-manager 的 <code>--node-cidr-mask-size-ipv6=</code></li>
 </ul>
 <p>两个网段来源于参考 <a target="_blank" rel="noopener" href="https://docs.k3s.io/zh/networking/basic-network-options#dual-stack-ipv4--ipv6-networking">k3s 的 dual-stack-ipv4–ipv6-networking</a></p>
+<p>使用双栈机器只部署单栈 IPv6 K8S 的话，如果 <code>kube-apiserver</code> 缺少 <code>--advertise-address=&lt;ipv6&gt;</code> 会报错下面：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">err=&quot;error creating bootstrap controller: service IP family \&quot;2001:cafe:43::/112\&quot; must match public address family \&quot;10.x.x.x\&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>原因是我根据源码里搜 <code>must match public address family</code> 找到如下逻辑：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cmd/kube-apiserver/app/options/validation.go</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">validatePublicIPServiceClusterIPRangeIPFamilies</span><span class="params">(extra Extra, generic genericoptions.ServerRunOptions)</span></span> []<span class="type">error</span> &#123;</span><br><span class="line">	<span class="comment">// The &quot;kubernetes.default&quot; Service is SingleStack based on the configured ServiceIPRange.</span></span><br><span class="line">	<span class="comment">// If the bootstrap controller reconcile the kubernetes.default Service and Endpoints, it must</span></span><br><span class="line">	<span class="comment">// guarantee that the Service ClusterIPRepairConfig and the associated Endpoints have the same IP family, or</span></span><br><span class="line">	<span class="comment">// it will not work for clients because of the IP family mismatch.</span></span><br><span class="line">	<span class="comment">// <span class="doctag">TODO:</span> revisit for dual-stack https://github.com/kubernetes/enhancements/issues/2438</span></span><br><span class="line">	<span class="keyword">if</span> reconcilers.Type(extra.EndpointReconcilerType) != reconcilers.NoneEndpointReconcilerType &#123;</span><br><span class="line">		serviceIPRange, _, err := controlplaneapiserver.ServiceIPRange(extra.PrimaryServiceClusterIPRange)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> []<span class="type">error</span>&#123;fmt.Errorf(<span class="string">&quot;error determining service IP ranges: %w&quot;</span>, err)&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> netutils.IsIPv4CIDR(&amp;serviceIPRange) != netutils.IsIPv4(generic.AdvertiseAddress) &#123;</span><br><span class="line">			<span class="keyword">return</span> []<span class="type">error</span>&#123;fmt.Errorf(<span class="string">&quot;service IP family %q must match public address family %q&quot;</span>, extra.PrimaryServiceClusterIPRange.String(), generic.AdvertiseAddress.String())&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 <h3 id="flannel"><a href="#flannel" class="headerlink" title="flannel"></a>flannel</h3><p>最终部署完发现 flannel 报错：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vxlan_network.go:265] failed to add v6 vxlanRoute (2002:db8:42:2::/64 -&gt; 2002:db8:42:2::): All attempts fail:</span><br><span class="line">#1: no route to host</span><br><span class="line">#2: no route to host</span><br><span class="line"></span><br><span class="line">retry.go:29] #0: no route to host</span><br><span class="line">retry.go:29] #1: no route to host</span><br><span class="line">retry.go:29] #2: no route to host</span><br><span class="line"></span><br><span class="line"># 路由信息</span><br><span class="line"># ip -6 r s | grep flannel</span><br><span class="line">2001:cafe:42:: dev flannel-v6.1 proto kernel metric 256 pref medium</span><br><span class="line">fe80::/64 dev flannel-v6.1 proto kernel metric 256 pref medium</span><br></pre></td></tr></table></figure>
 
@@ -934,7 +954,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86"><span class="toc-number">2.2.</span> <span class="toc-text">一些知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S"><span class="toc-number">2.3.</span> <span class="toc-text">K8S</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flannel"><span class="toc-number">2.4.</span> <span class="toc-text">flannel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodelocaldns-%E5%92%8C-link-local-%E9%97%AE%E9%A2%98"><span class="toc-number">2.5.</span> <span class="toc-text">nodelocaldns 和 link local 问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%B1%82%E9%9D%A2"><span class="toc-number">2.6.</span> <span class="toc-text">中间件层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#elasticsearch"><span class="toc-number">2.6.1.</span> <span class="toc-text">elasticsearch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rabbitmq"><span class="toc-number">2.6.2.</span> <span class="toc-text">rabbitmq</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E9%9D%A2"><span class="toc-number">2.7.</span> <span class="toc-text">应用层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#redis"><span class="toc-number">2.7.1.</span> <span class="toc-text">redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql"><span class="toc-number">2.7.2.</span> <span class="toc-text">mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%BE%E6%A2%A6"><span class="toc-number">2.7.3.</span> <span class="toc-text">达梦</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%BD%91%E6%B5%8B%E8%AF%95"><span class="toc-number">2.8.</span> <span class="toc-text">组网测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2024-x2F-10-%E5%90%8E%E7%BB%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E5%92%8C%E5%8F%91%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">2024&#x2F;10 后续的一些问题和发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E8%B7%AF%E7%94%B1%E7%9B%B8%E5%85%B3"><span class="toc-number">2.2.</span> <span class="toc-text">网关路由相关</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#netplan"><span class="toc-number">2.2.1.</span> <span class="toc-text">netplan</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#x2F-etc-x2F-network-x2F-interfaces"><span class="toc-number">2.2.2.</span> <span class="toc-text">&#x2F;etc&#x2F;network&#x2F;interfaces</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#yum-%E7%B3%BB%E5%88%97%E7%BD%91%E5%85%B3%E8%B7%AF%E7%94%B1%E9%85%8D%E7%BD%AE"><span class="toc-number">2.2.3.</span> <span class="toc-text">yum 系列网关路由配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86"><span class="toc-number">2.3.</span> <span class="toc-text">一些知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S"><span class="toc-number">2.4.</span> <span class="toc-text">K8S</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flannel"><span class="toc-number">2.5.</span> <span class="toc-text">flannel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodelocaldns-%E5%92%8C-link-local-%E9%97%AE%E9%A2%98"><span class="toc-number">2.6.</span> <span class="toc-text">nodelocaldns 和 link local 问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%B1%82%E9%9D%A2"><span class="toc-number">2.7.</span> <span class="toc-text">中间件层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#elasticsearch"><span class="toc-number">2.7.1.</span> <span class="toc-text">elasticsearch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rabbitmq"><span class="toc-number">2.7.2.</span> <span class="toc-text">rabbitmq</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E9%9D%A2"><span class="toc-number">2.8.</span> <span class="toc-text">应用层面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#redis"><span class="toc-number">2.8.1.</span> <span class="toc-text">redis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql"><span class="toc-number">2.8.2.</span> <span class="toc-text">mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%BE%E6%A2%A6"><span class="toc-number">2.8.3.</span> <span class="toc-text">达梦</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%BD%91%E6%B5%8B%E8%AF%95"><span class="toc-number">2.9.</span> <span class="toc-text">组网测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2024-x2F-10-%E5%90%8E%E7%BB%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E5%92%8C%E5%8F%91%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">2024&#x2F;10 后续的一些问题和发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1913,7 +1933,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4244,7 +4281,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 193
+        Total : 194
         </div>
         <!-- search  -->
         
@@ -4262,6 +4299,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2025/06/17/golang-gitlab-subgroup/">golang gitlab subgroup 构建问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/02</span>
@@ -6380,6 +6423,16 @@
             <span class="sidebar-tag-name" data-tags="tun2sock2">
                 <span class="iconfont-archer">&#xe606;</span>
                 tun2sock2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="gitlab">
+                <span class="iconfont-archer">&#xe606;</span>
+                gitlab
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="subgroup">
+                <span class="iconfont-archer">&#xe606;</span>
+                subgroup
             </span>
         
     </div>
