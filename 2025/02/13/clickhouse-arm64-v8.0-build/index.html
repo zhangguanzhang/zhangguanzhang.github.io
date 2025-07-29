@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">6.3k</span>阅读时长: <span class="post-count reading-time">34 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">6.7k</span>阅读时长: <span class="post-count reading-time">36 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -525,6 +525,9 @@
 <li><a target="_blank" rel="noopener" href="https://github.com/ClickHouse/ClickHouse/issues/47642">https://github.com/ClickHouse/ClickHouse/issues/47642</a></li>
 <li><a target="_blank" rel="noopener" href="https://github.com/ClickHouse/ClickHouse/issues/40215">https://github.com/ClickHouse/ClickHouse/issues/40215</a></li>
 </ul>
+<p>后续也发现了部分国产 cpu 上无法启动，使用本文编译的后才可以启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker logs xxxxx</span></span><br><span class="line">Merging configuration file &#x27;/etc/clickhouse-server/config.d/docker_related_config.xml&#x27;.</span><br><span class="line">Including configuration file &#x27;/etc/metrika.xml&#x27;.</span><br><span class="line">2025.06.25 14:40:21.352040 [ 1 ] &#123;&#125; &lt;Information&gt; : Starting ClickHouse 22.8.5.29 with revision 54465, build id: 30D2CCC2A2FE0DE0, PID 1</span><br><span class="line">2025.06.25 14:40:21.352181 [ 1 ] &#123;&#125; &lt;Information&gt; Application: starting up</span><br><span class="line">2025.06.25 14:40:21.352201 [ 1 ] &#123;&#125; &lt;Information&gt; Application: OS name: Linux, version: 4.19.90-24.4.v2101.ky10.aarch64, architecture: aarch64</span><br><span class="line">2025.06.25 14:40:21.385220 [ 40 ] &#123;&#125; &lt;Fatal&gt; BaseDaemon: ########################################</span><br><span class="line">2025.06.25 14:40:21.385298 [ 40 ] &#123;&#125; &lt;Fatal&gt; BaseDaemon: (version 22.8.5.29 (official build), build id: 30D2CCC2A2FE0DE0) (from thread 1) (no query) Received signal Illegal instruction (4)</span><br><span class="line">2025.06.25 14:40:21.385327 [ 40 ] &#123;&#125; &lt;Fatal&gt; BaseDaemon: Illegal opcode.</span><br><span class="line">2025.06.25 14:40:21.385358 [ 40 ] &#123;&#125; &lt;Fatal&gt; BaseDaemon: Stack trace: 0xaaabccb2b12c 0xfffc5cb307c0</span><br><span class="line">2025.06.25 14:40:21.385459 [ 40 ] &#123;&#125; &lt;Fatal&gt; BaseDaemon: 0. ? @ 0x8fdb12c in /usr/bin/clickhouse</span><br><span class="line">2025.06.25 14:40:21.385562 [ 40 ] &#123;&#125; &lt;Fatal&gt; BaseDaemon: 1. ? @ 0xfffc5cb307c0 in ?</span><br><span class="line">2025.06.25 14:40:21.554513 [ 40 ] &#123;&#125; &lt;Fatal&gt; BaseDaemon: Integrity check of the executable skipped because the reference checksum could not be read. (calculated checksum: 05AC43DEA3E119694BFE830A4D95</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lscpu</span></span><br><span class="line">架构：                           aarch64</span><br><span class="line">CPU 运行模式：                   64-bit</span><br><span class="line">字节序：                         Little Endian</span><br><span class="line">CPU:                             16</span><br><span class="line">在线 CPU 列表：                  0-15</span><br><span class="line">每个核的线程数：                 1</span><br><span class="line">每个座的核数：                   1</span><br><span class="line">座：                             16</span><br><span class="line">NUMA 节点：                      1</span><br><span class="line">厂商 ID：                        Phytium</span><br><span class="line">型号：                           2</span><br><span class="line">型号名称：                       FT-2000+/64</span><br><span class="line">步进：                           0x1</span><br><span class="line">BogoMIPS：                       100.00</span><br><span class="line">L1d 缓存：                       1 MiB</span><br><span class="line">L1i 缓存：                       1 MiB</span><br><span class="line">L2 缓存：                        8 MiB</span><br><span class="line">L3 缓存：                        512 MiB</span><br><span class="line">NUMA 节点0 CPU：                 0-15</span><br><span class="line">Vulnerability Itlb multihit:     Not affected</span><br><span class="line">Vulnerability L1tf:              Not affected</span><br><span class="line">Vulnerability Mds:               Not affected</span><br><span class="line">Vulnerability Meltdown:          Not affected</span><br><span class="line">Vulnerability Spec store bypass: Not affected</span><br><span class="line">Vulnerability Spectre v1:        Mitigation; __user pointer sanitization</span><br><span class="line">Vulnerability Spectre v2:        Not affected</span><br><span class="line">Vulnerability Srbds:             Not affected</span><br><span class="line">Vulnerability Tsx async abort:   Not affected</span><br><span class="line">标记：                           fp asimd evtstrm crc32 cpuid</span><br></pre></td></tr></table></figure>
+
 <h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><h3 id="arm64-运行环境"><a href="#arm64-运行环境" class="headerlink" title="arm64 运行环境"></a>arm64 运行环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">$ lscpu</span><br><span class="line">架构：                           aarch64</span><br><span class="line">CPU 运行模式：                   64-bit</span><br><span class="line">字节序：                         Little Endian</span><br><span class="line">CPU:                             16</span><br><span class="line">在线 CPU 列表：                  0-15</span><br><span class="line">每个核的线程数：                 1</span><br><span class="line">每个座的核数：                   1</span><br><span class="line">座：                             16</span><br><span class="line">NUMA 节点：                      1</span><br><span class="line">厂商 ID：                        Phytium</span><br><span class="line">型号：                           3</span><br><span class="line">型号名称：                       ARMv8 CPU</span><br><span class="line">步进：                           0x1</span><br><span class="line">CPU 最大 MHz：                   2100.0000</span><br><span class="line">CPU 最小 MHz：                   2100.0000</span><br><span class="line">BogoMIPS：                       100.00</span><br><span class="line">L1d 缓存：                       1 MiB</span><br><span class="line">L1i 缓存：                       1 MiB</span><br><span class="line">L2 缓存：                        8 MiB</span><br><span class="line">L3 缓存：                        512 MiB</span><br><span class="line">NUMA 节点0 CPU：                 0-15</span><br><span class="line">Vulnerability Itlb multihit:     Not affected</span><br><span class="line">Vulnerability L1tf:              Not affected</span><br><span class="line">Vulnerability Mds:               Not affected</span><br><span class="line">Vulnerability Meltdown:          Not affected</span><br><span class="line">Vulnerability Mmio stale data:   Not affected</span><br><span class="line">Vulnerability Spec store bypass: Not affected</span><br><span class="line">Vulnerability Spectre v1:        Mitigation; __user pointer sanitization</span><br><span class="line">Vulnerability Spectre v2:        Not affected</span><br><span class="line">Vulnerability Srbds:             Not affected</span><br><span class="line">Vulnerability Tsx async abort:   Not affected</span><br><span class="line">标记：                           fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid</span><br></pre></td></tr></table></figure>
 
 <h3 id="升级后起不来"><a href="#升级后起不来" class="headerlink" title="升级后起不来"></a>升级后起不来</h3><p>根据 ck <a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/operations/update">官方 update 文档</a> 里可知官方努力保持一年兼容期，两个版本之前差异小于一年或者 LTS 版本少于两个可以升级。而 23 的 LTS 版本是 <code>v23.8.16.40-lts</code> 。然后换了镜像后运行不起来：</p>
@@ -676,7 +679,7 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2025/02/13/clickhouse-arm64-v8.0-build/">http://zhangguanzhang.github.io/2025/02/13/clickhouse-arm64-v8.0-build/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/02/13/clickhouse-arm64-v8.0-build/">February 13th 2025, 12:10:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/02/13/clickhouse-arm64-v8.0-build/">二月 13日 2025, 12:10:30 中午</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2025/02/13/clickhouse-arm64-v8.0-build/">February 13th 2025, 12:10:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -1842,7 +1845,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4185,7 +4205,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 194
+        Total : 195
         </div>
         <!-- search  -->
         
@@ -4203,6 +4223,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2025/07/29/python-grpc-first-long/">python grpc 使用域名第一次耗时长问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6337,6 +6363,11 @@
             <span class="sidebar-tag-name" data-tags="subgroup">
                 <span class="iconfont-archer">&#xe606;</span>
                 subgroup
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="grpc">
+                <span class="iconfont-archer">&#xe606;</span>
+                grpc
             </span>
         
     </div>

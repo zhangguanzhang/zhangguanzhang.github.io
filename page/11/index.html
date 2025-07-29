@@ -459,6 +459,49 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/06/25/etcd-error/">
+                
+                <span class="abstract-title-text">记录一次线上k8s节点故障</span>
+            </a>
+            <div class="abstract-content">
+                
+
+邮件收到zabbix的告警,业务的网页登陆状态不是200,后面又自愈了
+
+
+说明服务挂掉过一次,登陆到机器上发现集群有台节点状态是nodelost状态上去看到相关服务都挂掉了然后排查到根分区占满了,排查到是k8s日志堆满了&#x2F;var&#x2F;log&#x2F;
+12345678910111213141516[root@cloudos02 ~]# df -hFilesystem               Size  Used Avail Use% Mounted on/dev/mapper/centos-root  219G  216G     0 100% /devtmp...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/06/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/25</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="etcd">etcd</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/06/03/kubernetes-s-job/">
                 
                 <span class="abstract-title-text">kubernetes&#39;s Job总结和实战以及坑</span>
@@ -958,36 +1001,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2017/07/15">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/15</span>
-                </div>
-                <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/07/06/windows/">
-                
-                <span class="abstract-title-text">windows 笔记</span>
-            </a>
-            <div class="abstract-content">
-                激活相关win server
-123https://docs.microsoft.com/zh-cn/windows-server/get-started/kms-client-activation-keyshttp://www.kaixinit.com/info/os/1128.html
-
-
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/07/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/06</span>
                 </div>
                 <!-- tags -->
                 
@@ -2253,7 +2266,24 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4596,7 +4626,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 194
+        Total : 195
         </div>
         <!-- search  -->
         
@@ -4614,6 +4644,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2025/07/29/python-grpc-first-long/">python grpc 使用域名第一次耗时长问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6748,6 +6784,11 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <span class="sidebar-tag-name" data-tags="subgroup">
                 <span class="iconfont-archer">&#xe606;</span>
                 subgroup
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="grpc">
+                <span class="iconfont-archer">&#xe606;</span>
+                grpc
             </span>
         
     </div>

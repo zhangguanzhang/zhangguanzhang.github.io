@@ -442,6 +442,48 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/09/02/fio/">
+                
+                <span class="abstract-title-text">fio 静态编译和基础使用</span>
+            </a>
+            <div class="abstract-content">
+                由来amd64,arm64 的静态编译和基础使用
+buildx 使用见文章 buildx 使用
+编译buildx Dockerfile 构建:
+123456789101112131415161718FROM ubuntu as buildWORKDIR /optARG VER=fio-3.29#ARG DEBIAN_FRONTEND=noninteractiveRUN if [  -e /etc/apt/sources.list ];then sed -ri &#x27;s/[a-zA-Z0-9.]+(debian.org|ubuntu.com)/mirrors.aliyun.com/g...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/02">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/02</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="fio">fio</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -759,44 +801,6 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/07/06">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="systemd">systemd</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/07/05/systemctl-start-docker-canceled/">
-                
-                <span class="abstract-title-text">Job for docker.service canceled</span>
-            </a>
-            <div class="abstract-content">
-                故障现象内部安装 docker 的脚本报错 docker 安装失败。然后启动发现下面奇怪的问题:
-1234567$ systemctl status docker● docker.service - Docker Application Container Engine   Loaded: loaded (/etc/systemd/system/docker.service; enabled; vendor preset: enabled)   Active: inactive (dead)     Docs: http://docs.docker.io$ systemctl start...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/07/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/05</span>
                 </div>
                 <!-- tags -->
                 
@@ -1899,7 +1903,24 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4242,7 +4263,7 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 194
+        Total : 195
         </div>
         <!-- search  -->
         
@@ -4260,6 +4281,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2025/07/29/python-grpc-first-long/">python grpc 使用域名第一次耗时长问题</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">06/17</span>
@@ -6394,6 +6421,11 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <span class="sidebar-tag-name" data-tags="subgroup">
                 <span class="iconfont-archer">&#xe606;</span>
                 subgroup
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="grpc">
+                <span class="iconfont-archer">&#xe606;</span>
+                grpc
             </span>
         
     </div>
