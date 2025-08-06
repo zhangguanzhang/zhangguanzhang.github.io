@@ -459,6 +459,47 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/04/08/kubelet-runc-disable-kmem/">
+                
+                <span class="abstract-title-text">kubelet 和 runc 编译关闭 kmem</span>
+            </a>
+            <div class="abstract-content">
+                前提详情在 3.x 的内核上，cgroup 的 kmem account 特性有内存泄露问题。kubelet 和 runc 都需要修复。
+网上有言论说升级 Linux 内核至 kernel-3.10.0-1075.el7 及以上就可以修复这个问题，详细可见 slab leak causing a crash when using kmem control group。但是我测试了下面的都不行：
+
+CentOS7.4
+CentOS7.6
+CentOS7.7的 3.10.0-1062.el7.x86_64 
+CentOS Linux release 7.8.2003 (Core) - 3.1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/04/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/03/23/iptables-docker-no-chain/">
                 
                 <span class="abstract-title-text">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</span>
@@ -962,48 +1003,10 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/08/27/skopeo-static-build/">
-                
-                <span class="abstract-title-text">skopeo 静态编译</span>
-            </a>
-            <div class="abstract-content">
-                <p>skopeo 静态编译步骤</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/08/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/08/27</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="skopeo">skopeo</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/page/5/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/7/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/page/5/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/7/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -2263,7 +2266,82 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4618,7 +4696,7 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 195
+        Total : 196
         </div>
         <!-- search  -->
         
@@ -4636,6 +4714,12 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2025/08/06/centos7-podman/">私有化下(CentOS 7)Podman调研</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/29</span>
@@ -6781,6 +6865,16 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
             <span class="sidebar-tag-name" data-tags="grpc">
                 <span class="iconfont-archer">&#xe606;</span>
                 grpc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="podman">
+                <span class="iconfont-archer">&#xe606;</span>
+                podman
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="centos">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos
             </span>
         
     </div>

@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/04/28/k8s-java-start-time-not-same/">
+                
+                <span class="abstract-title-text">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</span>
+            </a>
+            <div class="abstract-content">
+                线上用的k8s版本是1.6.7非常老，而且HA有问题，上个月研发想把里面的一些服务迁出来到一个新集群里，新集群的搭建是我负责的。上周开始陆陆续续的迁移过来了，但是同等limit下部分pod在测试环境上(测试环境和老环境部署是一样的,下文的老环境和测试环境可以理解为一样)启动非常快，在我搭建的新k8s环境上启动非常慢，研发他们应用都是java+springboot，这里不谈jvm无法识别cgroup，已经加选项识别到了还有那个随机熵的选项肯定也是加了的。因为之前一次有个用户反映他们本地虚机启动springboot应用20s，我们云上启动就三分钟，后面漠然大佬教我加java的启动参数输出lo...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/04/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/28</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="java">java</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="springboot">springboot</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/03/22/k8s-controller-error/">
                 
                 <span class="abstract-title-text">一次kube-controller-manager的bug导致的线上无法调度处理过程</span>
@@ -765,57 +804,6 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
         <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="exporter">exporter</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/11/24/how-to-use-kubeadm/">
-                
-                <span class="abstract-title-text">对于初入k8s和kubeadm的一些建议</span>
-            </a>
-            <div class="abstract-content">
-                主要还是简单说下kubeadm
-说说一些现象无论docker还是K8s群看见过太多人盲目了有些是赶鸭子上来的,有的是跟风盲目进来乱学的.其中较多的分类为:
-
-
-不学docker直接学k8s的跟风狗
-没有熟悉Linux操作和一些基础知识的开发
-Docker学得不怎么样就迫不及待来学的跟风狗
-
-
-入门最具有争议的问题就是如何开始,k8s各个组件对于小白来说搭建方式和配置文件对于入门的人来说太庞大了,对于环境来学习一般分为下面两种
-
-
-按照别人博客或者文章去手动搭建一个环境后学习
-找个简易部署的方案来部署环境来学(kubeadm或者ansible之类的懒人搭建)
-
-
-  看过无数小白也怼过不少...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/11/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
 </div>
 
@@ -1914,7 +1902,82 @@ Docker学得不怎么样就迫不及待来学的跟风狗
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4269,7 +4332,7 @@ Docker学得不怎么样就迫不及待来学的跟风狗
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 195
+        Total : 196
         </div>
         <!-- search  -->
         
@@ -4287,6 +4350,12 @@ Docker学得不怎么样就迫不及待来学的跟风狗
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2025/08/06/centos7-podman/">私有化下(CentOS 7)Podman调研</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/29</span>
@@ -6432,6 +6501,16 @@ Docker学得不怎么样就迫不及待来学的跟风狗
             <span class="sidebar-tag-name" data-tags="grpc">
                 <span class="iconfont-archer">&#xe606;</span>
                 grpc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="podman">
+                <span class="iconfont-archer">&#xe606;</span>
+                podman
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="centos">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos
             </span>
         
     </div>

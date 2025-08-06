@@ -444,6 +444,57 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/11/24/how-to-use-kubeadm/">
+                
+                <span class="abstract-title-text">对于初入k8s和kubeadm的一些建议</span>
+            </a>
+            <div class="abstract-content">
+                主要还是简单说下kubeadm
+说说一些现象无论docker还是K8s群看见过太多人盲目了有些是赶鸭子上来的,有的是跟风盲目进来乱学的.其中较多的分类为:
+
+
+不学docker直接学k8s的跟风狗
+没有熟悉Linux操作和一些基础知识的开发
+Docker学得不怎么样就迫不及待来学的跟风狗
+
+
+入门最具有争议的问题就是如何开始,k8s各个组件对于小白来说搭建方式和配置文件对于入门的人来说太庞大了,对于环境来学习一般分为下面两种
+
+
+按照别人博客或者文章去手动搭建一个环境后学习
+找个简易部署的方案来部署环境来学(kubeadm或者ansible之类的懒人搭建)
+
+
+  看过无数小白也怼过不少...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/11/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/24</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/11/06/onlyoffice/">
                 
                 <span class="abstract-title-text">一次docker镜像的解耦--onlyoffice</span>
@@ -797,45 +848,6 @@ Clust...
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="keepavlied">keepavlied</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/07/08/travis-sync-gcr-io/">
-                
-                <span class="abstract-title-text">利用travis同步gcr.io镜像到dockerhub</span>
-            </a>
-            <div class="abstract-content">
-                项目地址https://github.com/zhangguanzhang/gcr.io/tree/master
-利用gcloud sdk去查看谷歌镜像站的镜像,获取每一个镜像的tag后改名推送到自己的dockerhub上面全部是shell思路,脚本一旦写完就需要不断的执行去同步了,所以借用travis去构建两个分支,一个master分支和一个构建分支travis触发构建后拉取仓库后,切换到构建分支,pull构建分支,然后同步镜像
-脚本我写了两种https://github.com/zhangguanzhang/bash/tree/master/google_containers_syn...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/07/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/08</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="dockerhub">dockerhub</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="gcr.io">gcr.io</a>
     
 </div>
 
@@ -1934,7 +1946,82 @@ Clust...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4289,7 +4376,7 @@ Clust...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 195
+        Total : 196
         </div>
         <!-- search  -->
         
@@ -4307,6 +4394,12 @@ Clust...
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2025/08/06/centos7-podman/">私有化下(CentOS 7)Podman调研</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/29</span>
@@ -6452,6 +6545,16 @@ Clust...
             <span class="sidebar-tag-name" data-tags="grpc">
                 <span class="iconfont-archer">&#xe606;</span>
                 grpc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="podman">
+                <span class="iconfont-archer">&#xe606;</span>
+                podman
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="centos">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos
             </span>
         
     </div>

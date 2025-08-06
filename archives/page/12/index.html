@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/01/08/docker-panic-invalid-page-type/">
+                
+                <span class="abstract-title-text">docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理</span>
+            </a>
+            <div class="abstract-content">
+                凌晨 pod 状态异常且没有恢复，上线查看后 docker ps -a 命令无响应，kubelet 日志也刷和 docker 的 rpc 通信context deadline cancel重启了 docker 后 docker 无法启动，前台运行开 debug log level刚开始刷了个 /var/lib/docker/tmp 是个文件，对比了下其他机器上这个路径应该是个目录，然后改名后创建个权限和正常 docker 下权限一样的 tmp 文件夹再起
+1234567891011121314151617181920212223242526272829303132333435363738...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/01/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/08</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/12/05/suse-fix-data-but-device-busy/">
                 
                 <span class="abstract-title-text">opensuse的一次救援</span>
@@ -797,44 +835,6 @@ nodeName
         <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="timezone">timezone</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/08/24/gobot-build/">
-                
-                <span class="abstract-title-text">gobot控制esp8266</span>
-            </a>
-            <div class="abstract-content">
-                材料gobot官网是Arduino的demo，官网上看了下支持esp8266，整好之前整wifi攻击器的时候有就玩了下。我是在windows编译的，没有8266的话自己去淘宝上一块儿node-mcu+数据线(本质上就是个带串口和排针的esp8266-12，买驱动是CH340G的，就是usb口旁边有个长条形ic，方的是cp2102不稳定会导致windows蓝屏)
-环境搭建用goland写代码，不推荐vscode写golang，自行安装golang(记得设置好环境变量)和goland，现在golang最新版本是12.9整个demo分为两部分，客户端gobot去设置和控制esp8266，826...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/08/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/08/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="gobot">gobot</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="esp8266">esp8266</a>
     
 </div>
 
@@ -1933,7 +1933,82 @@ nodeName
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4288,7 +4363,7 @@ nodeName
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 195
+        Total : 196
         </div>
         <!-- search  -->
         
@@ -4306,6 +4381,12 @@ nodeName
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2025/08/06/centos7-podman/">私有化下(CentOS 7)Podman调研</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">07/29</span>
@@ -6451,6 +6532,16 @@ nodeName
             <span class="sidebar-tag-name" data-tags="grpc">
                 <span class="iconfont-archer">&#xe606;</span>
                 grpc
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="podman">
+                <span class="iconfont-archer">&#xe606;</span>
+                podman
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="centos">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos
             </span>
         
     </div>
