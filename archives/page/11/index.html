@@ -444,6 +444,55 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/05/13/x86-router-flash/">
+                
+                <span class="abstract-title-text">proxmox x86软路由笔记</span>
+            </a>
+            <div class="abstract-content">
+                由来pve已经安装好系统(如果你还没安装且打算安装，安装完后可以看看我这个文章安装完proxmox的一些设置)，pve 的机器只有一个口子的情况下，就只能作为旁路由使用。
+前置工作虚机准备先去恩山论坛x86版块下一个固件pve上开台机器
+
+一般-高级-开机自启动勾上，有必要的话手动设置下vmID，后面有用
+操作系统不适用任何介质
+系统默认，下一步
+硬盘随便设置，后面会删除
+cpu按照实际，我给2核，内存我给的2g
+网络，模型选VirtIO(半虚拟化)，防火墙的勾去掉
+完成
+选中虚机，硬件-选中硬盘，点击分离，删除
+
+导入img把固件上传到 pve 的机器上，一般是 gz，解压成 img ...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/05/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/13</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="x86">x86</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/05/12/dns-formerr/">
                 
                 <span class="abstract-title-text">adguardhome dns FORMERR 错误</span>
@@ -767,37 +816,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/01/15/kill-ctr-with-grace-period/">
-                
-                <span class="abstract-title-text">Killing container &#34;docker://xxx with 30 second grace period</span>
-            </a>
-            <div class="abstract-content">
-                由来开发反应他们环境上有个 pod 不正常。他们先操作然后卡住后来找我的。
-12345$ kubectl -n xxx get pod -o wide | grep 0/1xstorage-6d959cd8c8-rdscv      0/1     Init:0/1    0       15m     xxxx$ kubectl -n xxx delete po xstorage-6d959cd8c8-rdscvpod &quot;xstorage-6d959cd8c8-rdscv&quot; deleted      ^[[A^[[A^[[A^[[A
-
-处理过程查看日志：
-1234$...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/01/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/15</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -1898,91 +1916,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4323,7 +4262,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 196
+        Total : 197
         </div>
         <!-- search  -->
         
@@ -4341,6 +4280,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span>
+            <a class="archive-post-title" href="/2025/09/03/flannel-mode-chaos/">flannel 路由错乱</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">08/06</span>
