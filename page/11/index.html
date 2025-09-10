@@ -459,6 +459,59 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/08/03/Kubernetes_install_1.11.1/">
+                
+                <span class="abstract-title-text">Kubernetes v1.11.x HA全手动苦工安装教学</span>
+            </a>
+            <div class="abstract-content">
+                
+多master高可用 或者 单master的ansible部署方案
+
+管理组件采用staticPod或者daemonSet形式跑的,宿主机os能跑docker应该本篇教程能大多适用安装完成仅供学习和实验
+本次安裝的版本：
+
+
+Kubernetes v1.11.1
+CNI v0.7.1
+Etcd v3.3.9
+Flannel v0.10.0 或者 Calico v3.1.3
+Docker CE latest version(18.06)
+
+
+** 不建议用docker 18.05 , docker CE 18.05有bind mount的bug **
+本次部署的网络信息：
+
+
+Clust...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/08/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/03</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/07/18/ecs-vip/">
                 
                 <span class="abstract-title-text">基于openstack的ecs上使用VIP</span>
@@ -976,44 +1029,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/08/03/iptables-whitelist/">
-                
-                <span class="abstract-title-text">Linux 上 iptables ipset 白名单</span>
-            </a>
-            <div class="abstract-content">
-                关于Linux 上 ipset 和 iptables 配合做 ip 白名单
-安装123456789# rpm 系列 osyum install ipset ipset-service -ysed -ri &#x27;/^IPSET_SAVE_ON_STOP=/s#no#yes#&#x27; /etc/sysconfig/ipset-configsystemctl enable --now ipset# apt 系列 osapt update &amp;&amp; apt install -y ipset-persistent iptables-persistent
-
-配置123# 黑白名...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/08/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/03</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ipset">ipset</a>
     
 </div>
 
@@ -2295,7 +2310,24 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4636,7 +4668,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 197
+        Total : 198
         </div>
         <!-- search  -->
         
@@ -4654,6 +4686,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span>
+            <a class="archive-post-title" href="/2025/09/10/kylin-4.19.90-52.49-udp-drop/">麒麟内核4.19.90-52.49导致的flannel vxlan跨节点不通</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/03</span>

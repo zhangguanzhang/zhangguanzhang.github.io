@@ -459,6 +459,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/09/28/ipvs-svc/">
+                
+                <span class="abstract-title-text">在非容器环境上实现散装的 IPVS SVC</span>
+            </a>
+            <div class="abstract-content">
+                前言内部有非 K8S 环境上需要类似 SVC 的负载实现，一开始是用 NGINX 做的，所有 SVC 域名都解析成一个 dummy IP ，然后 NGINX 根据 server_name 去 proxy 不同的 upstream 。 开始还是能用的，结果后面很多服务依赖 host 这个 header ，报错签名错误，而且毕竟这样是在用户态，效率不如内核态高。于是打算搞下之前的打算：把 IPVS 的 ClusterIP 的 SVC 扣到非 K8S 环境上使用。
+kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT 会被 dnat 成 end...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/28</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="lvs">lvs</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ipvsadm">ipvsadm</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kube-proxy">kube-proxy</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/16/read-containerd-con-reset/">
                 
                 <span class="abstract-title-text">解决 docker 的 read unix @-&gt;/run/containerd/s/xxx read: connection reset by peer: unknown</span>
@@ -983,46 +1023,6 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         <a class="post-tag" href="javascript:void(0);" data-tags="openshift">openshift</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="ocp">ocp</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">
-                
-                <span class="abstract-title-text">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</span>
-            </a>
-            <div class="abstract-content">
-                这个问题和之前的docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理差不多，不过 db 文件不同。客户停止 docker 后起不来了，查看日志：
-1journalctl -xe -u docker
-
-12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879805月 26 18:42:17 xxx...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/05/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/05/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
     
 </div>
 
@@ -2304,7 +2304,24 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4645,7 +4662,7 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 197
+        Total : 198
         </div>
         <!-- search  -->
         
@@ -4663,6 +4680,12 @@ clone12git clone https://github.com/hashicorp/consul.gitcd consul
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span>
+            <a class="archive-post-title" href="/2025/09/10/kylin-4.19.90-52.49-udp-drop/">麒麟内核4.19.90-52.49导致的flannel vxlan跨节点不通</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/03</span>

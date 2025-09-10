@@ -459,6 +459,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">
+                
+                <span class="abstract-title-text">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                由来同事在客户那边部署的集群问题频繁，先给他解决了个问题后又反映说业务 POD 由于 DNS 无法解析而启动失败，排查完发现这样的情况从没遇到过，挺有意思的，这里记录下。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角度写下排查过程。
+环境信息集群信息:
+12345678910111213141516171819202122232425$ kubectl version -o json&#123;  &quot;clientVersion&quot;: &#123;    &quot;major&quot;: &quot;1&quot;,    &quot;mi...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/10/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/20</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/09/18/ocp-4.5-install/">
                 
                 <span class="abstract-title-text">openshift 4.5.9 离线安装</span>
@@ -996,35 +1033,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/04/03/kubernetes-admission-controllers/">
-                
-                <span class="abstract-title-text">编写一个动态准入控制</span>
-            </a>
-            <div class="abstract-content">
-                12345678apiVersion: v1kind: Podmetadata:  name: testspec:  containers:  - name: test    image: nginx:alpine
-
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354&#123;   &quot;kind&quot;:&quot;Pod&quot;,   &quot;apiVersion&quot;:&quot;v1&quot;,   &qu...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/04/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/03</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -2303,7 +2311,24 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4644,7 +4669,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 197
+        Total : 198
         </div>
         <!-- search  -->
         
@@ -4662,6 +4687,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span>
+            <a class="archive-post-title" href="/2025/09/10/kylin-4.19.90-52.49-udp-drop/">麒麟内核4.19.90-52.49导致的flannel vxlan跨节点不通</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/03</span>

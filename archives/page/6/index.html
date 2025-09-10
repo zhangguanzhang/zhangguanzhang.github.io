@@ -442,6 +442,44 @@
         
         
             
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/03/17/woff2/">
+                
+                <span class="abstract-title-text">ttf转woff工具谷歌woff2的静态编译</span>
+            </a>
+            <div class="abstract-content">
+                <p>ttf 转 woff 的工具太少了，离线安装的方案基本没有，所以找了个工具静态编译</p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/03/17">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/17</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ttf">ttf</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="woff">woff</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
         
         <article class="index-post">
             <a class="abstract-title" href="/2022/03/16/cannot-assign-requested-address/">
@@ -790,46 +828,6 @@ parted
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/09/28/ipvs-svc/">
-                
-                <span class="abstract-title-text">在非容器环境上实现散装的 IPVS SVC</span>
-            </a>
-            <div class="abstract-content">
-                前言内部有非 K8S 环境上需要类似 SVC 的负载实现，一开始是用 NGINX 做的，所有 SVC 域名都解析成一个 dummy IP ，然后 NGINX 根据 server_name 去 proxy 不同的 upstream 。 开始还是能用的，结果后面很多服务依赖 host 这个 header ，报错签名错误，而且毕竟这样是在用户态，效率不如内核态高。于是打算搞下之前的打算：把 IPVS 的 ClusterIP 的 SVC 扣到非 K8S 环境上使用。
-kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT 会被 dnat 成 end...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/09/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="lvs">lvs</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ipvsadm">ipvsadm</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kube-proxy">kube-proxy</a>
     
 </div>
 
@@ -1938,7 +1936,24 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4279,7 +4294,7 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 197
+        Total : 198
         </div>
         <!-- search  -->
         
@@ -4297,6 +4312,12 @@ kube-proxy 的 SVC 简单讲就是 node 上任何进程访问 SVC IP:SVC PORT �
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span>
+            <a class="archive-post-title" href="/2025/09/10/kylin-4.19.90-52.49-udp-drop/">麒麟内核4.19.90-52.49导致的flannel vxlan跨节点不通</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/03</span>
