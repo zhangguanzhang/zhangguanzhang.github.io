@@ -556,7 +556,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">grep kernel /var/log/dnf*</span></span><br><span class="line">...</span><br><span class="line">/var/log/dnf.rpm.log:2025-08-07T01:34:25Z SUBDEBUG InstaLLed:kernel-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">/var/log/dnf.rpm.log:2025-08-67T01:34:26Z SUBDEBUG Upgrade:kernel-tools-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">/var/log/dnf.rpm.log:2025-08-07T01:34:29Z SUBDEBUG Upgraded:kernel-tools-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">/var/log/dnf.rpm.log:2025-08-67T01:34:30Z SUBDEBUG Upgraded:kernel-headers-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">/var/log/dnf.rpm.log:2025-08-07T01:34:34Z SUBDEBUG Upgraded:kernel-tools-libs-4.19.90-52.45.v2207.ky10.x86_64</span><br></pre></td></tr></table></figure>
 
 <p>果然升级了，看下老版本在不在：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">rpm -qaIgrep kernel</span></span><br><span class="line">kernel-modules-extra-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-moduLes-extra-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kernel-modules-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-core-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kerne1-t001s-11bs-4.19.90-52.49.V2207.ky10.x86_64</span><br><span class="line">kernel-modules-extra-4.19.96-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kernel-t00L5-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-core-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-modules-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-modules-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kernel-headers-4.19.96-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.49.v2207.ky10.x86_64</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">rpm -qa | grep kernel</span></span><br><span class="line">kernel-modules-extra-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-moduLes-extra-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kernel-modules-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-core-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kerne1-t001s-11bs-4.19.90-52.49.V2207.ky10.x86_64</span><br><span class="line">kernel-modules-extra-4.19.96-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kernel-t00L5-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-core-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-modules-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.45.v2207.ky10.x86_64</span><br><span class="line">kernel-modules-4.19.90-52.22.v2207.ky10.x86_64</span><br><span class="line">kernel-headers-4.19.96-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.49.v2207.ky10.x86_64</span><br><span class="line">kernel-4.19.90-52.49.v2207.ky10.x86_64</span><br></pre></td></tr></table></figure>
 
 <p>查看下 grub 里顺序：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">awk -F\<span class="string">&#x27; &#x27;</span><span class="variable">$1</span>==<span class="string">&quot;menuentry &quot;</span> &#123;<span class="built_in">print</span> i++ <span class="string">&quot; : &quot;</span> <span class="variable">$2</span>&#125;<span class="string">&#x27; /etc/grub2.cfg</span></span></span><br><span class="line">0 : Kylin Linux Advanced Server (4.19.90-52.49.v2207.ky10.x86_64) V10 (Lance)</span><br><span class="line">1 : Kylin Linux Advanced Server (4.19.90-52.45.v2207.ky10.x86_64) V10 (Lance)</span><br><span class="line">2 : Kylin Linux Advanced Server (4.19.90-52.22.v2207.ky10.x86_64) V10 (Lance)</span><br><span class="line">3 : Kylin Linux Advanced Server (0-rescue-de06076a688a45bf9d1acd0bf45bb93e) V10 (Lance)</span><br></pre></td></tr></table></figure>
@@ -583,6 +583,11 @@
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2025/09/12/salt-run-hang/" title="salt-run很久才返回">
+                    <div class="nextTitle">salt-run很久才返回</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -1756,7 +1761,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4109,7 +4131,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 198
+        Total : 199
         </div>
         <!-- search  -->
         
@@ -4127,6 +4149,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2025/09/12/salt-run-hang/">salt-run很久才返回</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/10</span>
@@ -6300,6 +6328,21 @@
             <span class="sidebar-tag-name" data-tags="centos">
                 <span class="iconfont-archer">&#xe606;</span>
                 centos
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="salt">
+                <span class="iconfont-archer">&#xe606;</span>
+                salt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="salt-run">
+                <span class="iconfont-archer">&#xe606;</span>
+                salt-run
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipv6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipv6
             </span>
         
     </div>

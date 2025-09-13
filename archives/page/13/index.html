@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/11/ansible-count-Idempotency/">
+                
+                <span class="abstract-title-text">ansible数量限制上的幂等性</span>
+            </a>
+            <div class="abstract-content">
+                由来准备写上一篇文章的consul成ansible，在证书方面，cli和ca需要执行一次生成，而server和agent证书需要多次执行产生。另外我们也要考虑，dc1-server-consul-0*.pem需要拷贝到机器1，1拷贝到机器2.如何在生成证书的时候中断后再次运行也会达到目标的数量来实现幂等性，而不是证书生成多了另外证书还得按照index去拷贝到指定机器，也就是类似下面的
+123scp 001.pem ip1:/etc/xxxscp 002.pem ip2:/etc/xxxscp 003.pem ip3:/etc/xxx
+场景1 – tls的幂等性规划这里我是三台server...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/11">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/11</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ansible">ansible</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/09/27/consul-tls/">
                 
                 <span class="abstract-title-text">高可用的SSL consul cluster实践</span>
@@ -786,43 +825,6 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         <a class="post-tag" href="javascript:void(0);" data-tags="initrd">initrd</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="raid">raid</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/06/12/CLP/">
-                
-                <span class="abstract-title-text">SMASH CLP的一些笔记</span>
-            </a>
-            <div class="abstract-content">
-                https://support.hpe.com/hpsc/doc/public/display?docId=c03334058https://www.golinuxhub.com/2018/02/hp-ilo4--cli-guide-cheatsheet-example.htmlhttps://h50146.www5.hpe.com/lib/products/software/oe/linux/mainstream/support/doc/general/mgmt/hponcfg/lights-out1.70guide.pdfhttps://server-recycling.nl/ima...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/06/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ipmi">ipmi</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="CLP">CLP</a>
     
 </div>
 
@@ -1936,7 +1938,24 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4289,7 +4308,7 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 198
+        Total : 199
         </div>
         <!-- search  -->
         
@@ -4307,6 +4326,12 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2025/09/12/salt-run-hang/">salt-run很久才返回</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/10</span>
@@ -6480,6 +6505,21 @@ ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/
             <span class="sidebar-tag-name" data-tags="centos">
                 <span class="iconfont-archer">&#xe606;</span>
                 centos
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="salt">
+                <span class="iconfont-archer">&#xe606;</span>
+                salt
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="salt-run">
+                <span class="iconfont-archer">&#xe606;</span>
+                salt-run
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="ipv6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipv6
             </span>
         
     </div>
