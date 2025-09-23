@@ -349,7 +349,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.1k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -523,7 +523,9 @@
 <h3 id="adb-shell"><a href="#adb-shell" class="headerlink" title="adb shell"></a>adb shell</h3><p>一些 adb shell 命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ adb shell dumpsys battery</span><br><span class="line">Current Battery Service state:</span><br><span class="line">  AC powered: <span class="literal">true</span>  &lt;-- 接入充电器</span><br><span class="line">  USB powered: <span class="literal">false</span></span><br><span class="line">  Wireless powered: <span class="literal">false</span></span><br><span class="line">  Max charging current: 0</span><br><span class="line">  Max charging voltage: 0</span><br><span class="line">  Charge counter: 2946000</span><br><span class="line">  status: 5</span><br><span class="line">  health: 2</span><br><span class="line">  present: <span class="literal">true</span></span><br><span class="line">  level: 100    &lt;--- 当前电量百分比</span><br><span class="line">  scale: 100</span><br><span class="line">  voltage: 4262  &lt;-- 电压</span><br><span class="line">  temperature: 426 &lt;-- 温度 42.6 ℃</span><br><span class="line">  technology: Li-poly</span><br><span class="line"><span class="comment"># 开启屏幕分析指针</span></span><br><span class="line">adb shell settings put system pointer_location 1</span><br><span class="line"><span class="comment"># 坐标是坐上0,0 左到右是 X 上到下是 Y，下面是横屏点屏幕上一个按钮的坐标</span></span><br><span class="line">adb shell input tap 1580 930</span><br><span class="line"><span class="comment"># 获取事件，sendevent 模拟比较麻烦</span></span><br><span class="line">adb shell getevent -l</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://adbinstaller.com/commands">https://adbinstaller.com/commands</a></p>
+<p>更多查看 <a target="_blank" rel="noopener" href="https://adbinstaller.com/commands%EF%BC%8C%E5%8F%A6%E5%A4%96">https://adbinstaller.com/commands，另外</a> git bash 里拉取推送文件路径拼接符号不一样，可以 env 下面这样：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSYS_NO_PATHCONV=1 adb -s xxx pull /storage/emulated/0/Android/data/xxx .</span><br></pre></td></tr></table></figure>
+
 <h3 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h3><p>打算把 adb 启动在 Linux 上，发现它 daemon 监听端口不是 bind 0.0.0.0：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ss -nlpt | grep adb</span><br><span class="line">LISTEN 0      4          127.0.0.1:5037       0.0.0.0:*    <span class="built_in">users</span>:((<span class="string">&quot;adb&quot;</span>,pid=25471,fd=6))</span><br><span class="line"><span class="comment"># https://stackoverflow.com/questions/56130335/adb-port-forwarding-to-listen-on-all-interfaces</span></span><br><span class="line">$ adb -a nodaemon server start</span><br></pre></td></tr></table></figure>
 
@@ -533,7 +535,9 @@
 <h3 id="Waydroid"><a href="#Waydroid" class="headerlink" title="Waydroid"></a>Waydroid</h3><p>anbox 后继 <a target="_blank" rel="noopener" href="https://waydro.id/">Waydroid</a> 还没试过，是容器起的模拟器。</p>
 <h3 id="budtmo-x2F-docker-android"><a href="#budtmo-x2F-docker-android" class="headerlink" title="budtmo&#x2F;docker-android"></a>budtmo&#x2F;docker-android</h3><p><a target="_blank" rel="noopener" href="https://github.com/budtmo/docker-android">https://github.com/budtmo/docker-android</a> 感觉太重了，而且没 arm64 架构镜像。</p>
 <h3 id="remote-android-x2F-redroid-doc"><a href="#remote-android-x2F-redroid-doc" class="headerlink" title="remote-android&#x2F;redroid-doc"></a>remote-android&#x2F;redroid-doc</h3><p><a target="_blank" rel="noopener" href="https://github.com/remote-android/redroid-doc">https://github.com/remote-android/redroid-doc</a> 尝试运行 arm64 的 apk 成功了，chrome 的浏览器不行，需要有些依赖才可以运行，uc 浏览器也不行，最后用的  arm64 firefox 浏览器。另外发现有些 apk 安装后打开黑屏，最后从 proxmox 虚拟机切到宿主机上 docker 起才解决，也看到有人 arm64 M1 mac 上起安卓容器。</p>
-<h2 id="一些软件"><a href="#一些软件" class="headerlink" title="一些软件"></a>一些软件</h2><h3 id="scrcpy"><a href="#scrcpy" class="headerlink" title="scrcpy"></a>scrcpy</h3><p><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a> 牛逼的项目，不用多说，配合 adb 使用：</p>
+<h2 id="一些软件"><a href="#一些软件" class="headerlink" title="一些软件"></a>一些软件</h2><p>一些软件相关</p>
+<h3 id="备份恢复"><a href="#备份恢复" class="headerlink" title="备份恢复"></a>备份恢复</h3><h4 id="谷歌身份验证器"><a href="#谷歌身份验证器" class="headerlink" title="谷歌身份验证器"></a>谷歌身份验证器</h4><p><code>/data/data/com.google.android.apps.authenticator2/databases/databases</code> 备份导入到新手机上覆盖</p>
+<h3 id="scrcpy"><a href="#scrcpy" class="headerlink" title="scrcpy"></a>scrcpy</h3><p><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a> 牛逼的项目，不用多说，配合 adb 使用：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scrcpy</span><br><span class="line"> -S, --turn-screen-off # 远程时候，关闭设备的屏幕</span><br><span class="line">#  --max-size 1024 --video-bit-rate=2M --max-fps=15 低画质</span><br></pre></td></tr></table></figure>
 
 <p>关闭屏幕这个，lcd 的触发后，如果关闭 scrcpy 后面屏幕还会亮，而 oled 的则不会，单独想 adb 实现它的关闭屏幕显示而不休眠，可以参考</p>
@@ -584,14 +588,33 @@
 <h3 id="辅助逆向"><a href="#辅助逆向" class="headerlink" title="辅助逆向"></a>辅助逆向</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_56039202/article/details/126980383">某直装外挂卡密校验逆向分析</a></li>
 </ul>
+<h2 id="刷机和-ROOT"><a href="#刷机和-ROOT" class="headerlink" title="刷机和 ROOT"></a>刷机和 ROOT</h2><h3 id="一加13T"><a href="#一加13T" class="headerlink" title="一加13T"></a>一加13T</h3><p>参考<a target="_blank" rel="noopener" href="https://blog.isteed.cc/post/oneplus-13-root-guide/">一加 13 解锁并获得 root 权限</a>，使用 kernel SU 举例，从 <a target="_blank" rel="noopener" href="https://developer.android.google.cn/studio/run/win-usb?hl=zh-cn">Android 开发者（国内）</a> 下载 USB 驱动 <code>android_winusb.inf</code>，但很搞笑的是，Android 开发者（国内）的下载链接 404，应该是谷歌哪边没传上去。</p>
+<h4 id="解锁"><a href="#解锁" class="headerlink" title="解锁"></a>解锁</h4><ol>
+<li>手机在 <code>设置</code> - <code>关于本机</code> - <code>版本信息</code> 中狂点 版本号 7 次，直到进入开发者模式，同时记下 内核版本，保存到手机以外的地方。</li>
+<li>手机在 <code>设置</code> - <code>系统与更新</code> - <code>开发者选项</code> 中开启 <code>OEM 解锁</code> 与 <code>USB 调试</code>，使用优质线连电脑，否则后面步骤不成功啥的</li>
+<li><code>adb reboot bootloader</code>，手机授权电脑，重启进 bootloader </li>
+<li><code>fastboot flashing unlock</code>，若一直卡在 waiting for device 可尝试手动指定设备驱动，指定上面下载的 <code>android_winusb.inf</code></li>
+<li>根据提示按下音量减选择 <code>UNLOCK THE BOOTLOADER</code>，再按电源键确认解锁，此刻会重启并类似恢复出厂设置一样清掉数据。</li>
+</ol>
+<h4 id="kernel-SU"><a href="#kernel-SU" class="headerlink" title="kernel SU"></a>kernel SU</h4><p>kernel SU 分为 LKM 和 GKI 模式，由于一加13T 内核开源且一加手机安卓版本号高，以及酷安有人编译内核，所以可以使用 GKI 模式。kernel SU 和面具 root 优点类似，使用 kernel SU 的管机器 app 修补 boot&#x2F;init_boot 后安装，再刷入 GKI 内核。</p>
+<p>kernel SU 的管理器 APP 我使用的是 <a target="_blank" rel="noopener" href="https://github.com/SukiSU-Ultra/SukiSU-Ultra/releases">SukiSU-Ultra</a>，下载安装到手机上。</p>
+<h4 id="修补和刷入-init-boot"><a href="#修补和刷入-init-boot" class="headerlink" title="修补和刷入 init_boot"></a>修补和刷入 init_boot</h4><p>安卓 13+ 后是修补 init_boot 不再是 boot 了，从之前记录的内核版本下载手机系统对应的 ROM，我这里是微信公众号 <code>one+更新</code> 获取，下载后使用 <code>FastbootEnhance</code> 的 <code>Payload.bin 解包</code>从 ROM 提取 <code>init_boot.img</code>。提取后传到手机的 <code>Download</code> 内，打开 <code>SukiSU-Ultra</code> 上面内核版本上面可以点击，进去后 <code>LKM 修补/安装</code> 修补 <code>Download</code> 内的 <code>init_boot.img</code>，会在 Download 内生成 <code>kernelsu_patched_20250901_155148.img</code> 类似文件。该文件传到电脑上，手机连电脑：</p>
+<p>手机开机同时按爪 电源键+音量减键进入 <code>fastboot</code> 模式后刷入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastboot flash init_boot kernelsu_patched_20250901_155148.img</span><br></pre></td></tr></table></figure>
 
+<p>刷入手机后如果重启不了一般是下错 ROM 了，或者像我一样使用老的 <code>fastboot flash boot</code> 方式刷入了 init_boot 造成（后面 flash boot 和 flash init_boot 俩都刷才好）。</p>
+<h4 id="ak3"><a href="#ak3" class="headerlink" title="ak3"></a>ak3</h4><p>上面修补 init_boot 刷入后是 LKM 模式，要刷入 GKI 的 anykernel3 才是 GKI 模式，我是使用酷安的古晨，可以 <a target="_blank" rel="noopener" href="https://github.com/schqiushui/oplus-kernel-zip-files/releases">他 github 下载</a>，下载后打开 <code>SukiSU-Ultra</code> 上 <code>刷写 AnyKernel3</code> 选择下载的，刷入完成后重启。打开 <code>SukiSU-Ultra</code> 上面的菜单 - 基本设置 - 下拉 开启 开机自启动。</p>
+<h4 id="模块相关"><a href="#模块相关" class="headerlink" title="模块相关"></a>模块相关</h4><p><a target="_blank" rel="noopener" href="https://github.com/Dr-TSNG/ZygiskNext">https://github.com/Dr-TSNG/ZygiskNext</a><br><a target="_blank" rel="noopener" href="https://github.com/JingMatrix/LSPosed">https://github.com/JingMatrix/LSPosed</a> 安装后重启，点击它下面的启动后 momo 检测里显示的 bootloader 未锁定无了<br>TEE 损坏 <a target="_blank" rel="noopener" href="https://github.com/5ec1cff/TrickyStore%EF%BC%8C%E5%85%B6%E4%BB%96%E5%87%A0%E4%B8%AA%E5%BC%80%E6%BA%90%E7%9A%84%E8%B2%8C%E4%BC%BC%E4%B8%8D%E7%A8%B3%E5%AE%9A%EF%BC%8C%E5%A6%82%E6%9E%9C%E4%B8%8D%E6%89%93%E6%B8%B8%E6%88%8F%E5%8F%AF%E4%BB%A5%E5%B0%9D%E8%AF%95%E4%B8%8B">https://github.com/5ec1cff/TrickyStore，其他几个开源的貌似不稳定，如果不打游戏可以尝试下</a> <a target="_blank" rel="noopener" href="https://github.com/KOWX712/Tricky-Addon-Update-Target-List/releases">https://github.com/KOWX712/Tricky-Addon-Update-Target-List/releases</a> <a target="_blank" rel="noopener" href="https://github.com/beakthoven/TrickyStoreOSS">https://github.com/beakthoven/TrickyStoreOSS</a></p>
+<p>TEE key 查看 <code>*#899#</code> - <code>手动测试</code> - <code>工程模式</code> - <code>其他 key</code></p>
+<h4 id="广告关闭和禁用内置-app"><a href="#广告关闭和禁用内置-app" class="headerlink" title="广告关闭和禁用内置 app"></a>广告关闭和禁用内置 app</h4><p>很多界面进去关闭，参照视频 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1fw7tziE1M/">https://www.bilibili.com/video/BV1fw7tziE1M/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">儿童模式</span></span><br><span class="line">pm uninstall --user 0 com.coloros.childrenspace</span><br><span class="line"></span><br><span class="line">pm uninstall --user 0 com.coloros.familyguard</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">数字健康与家人守护</span></span><br><span class="line">pm uninstall --user 0 com.coloros.digitalwellbeing</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">音乐</span></span><br><span class="line">pm uninstall --user 0 com.heytap.music</span><br><span class="line"></span><br><span class="line">adb shell pm disable-user com.oplus.sau</span><br><span class="line">adb shell pm disable-user com.oplus.ota</span><br></pre></td></tr></table></figure>
     </article>
     <!-- license -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/07/21/Linux-android/">http://zhangguanzhang.github.io/2024/07/21/Linux-android/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/07/21/Linux-android/">July 21st 2024, 8:10:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/07/21/Linux-android/">七月 21日 2024, 8:10:30 晚上</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/07/21/Linux-android/">July 21st 2024, 8:10:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
@@ -773,7 +796,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb"><span class="toc-number">2.</span> <span class="toc-text">adb</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#adb-shell"><span class="toc-number">2.3.</span> <span class="toc-text">adb shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-number">2.4.</span> <span class="toc-text">一些问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%8D%93%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">安卓虚拟化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bliss-OS"><span class="toc-number">3.1.</span> <span class="toc-text">Bliss OS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Waydroid"><span class="toc-number">3.2.</span> <span class="toc-text">Waydroid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#budtmo-x2F-docker-android"><span class="toc-number">3.3.</span> <span class="toc-text">budtmo&#x2F;docker-android</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#remote-android-x2F-redroid-doc"><span class="toc-number">3.4.</span> <span class="toc-text">remote-android&#x2F;redroid-doc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%BD%AF%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">一些软件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#scrcpy"><span class="toc-number">4.1.</span> <span class="toc-text">scrcpy</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb-%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">adb 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#golang"><span class="toc-number">5.1.</span> <span class="toc-text">golang</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91"><span class="toc-number">6.</span> <span class="toc-text">逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text">教程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%80%86%E5%90%91"><span class="toc-number">6.2.</span> <span class="toc-text">常见逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#frida"><span class="toc-number">6.3.</span> <span class="toc-text">frida</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unit-%E6%B8%B8%E6%88%8F%E9%80%86%E5%90%91"><span class="toc-number">6.4.</span> <span class="toc-text">unit 游戏逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E9%80%86%E5%90%91"><span class="toc-number">6.5.</span> <span class="toc-text">辅助逆向</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb"><span class="toc-number">2.</span> <span class="toc-text">adb</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#adb-shell"><span class="toc-number">2.3.</span> <span class="toc-text">adb shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-number">2.4.</span> <span class="toc-text">一些问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%8D%93%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">安卓虚拟化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bliss-OS"><span class="toc-number">3.1.</span> <span class="toc-text">Bliss OS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Waydroid"><span class="toc-number">3.2.</span> <span class="toc-text">Waydroid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#budtmo-x2F-docker-android"><span class="toc-number">3.3.</span> <span class="toc-text">budtmo&#x2F;docker-android</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#remote-android-x2F-redroid-doc"><span class="toc-number">3.4.</span> <span class="toc-text">remote-android&#x2F;redroid-doc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%BD%AF%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">一些软件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D"><span class="toc-number">4.1.</span> <span class="toc-text">备份恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%B7%E6%AD%8C%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E5%99%A8"><span class="toc-number">4.1.1.</span> <span class="toc-text">谷歌身份验证器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scrcpy"><span class="toc-number">4.2.</span> <span class="toc-text">scrcpy</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#adb-%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">adb 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#golang"><span class="toc-number">5.1.</span> <span class="toc-text">golang</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%86%E5%90%91"><span class="toc-number">6.</span> <span class="toc-text">逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text">教程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%80%86%E5%90%91"><span class="toc-number">6.2.</span> <span class="toc-text">常见逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#frida"><span class="toc-number">6.3.</span> <span class="toc-text">frida</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unit-%E6%B8%B8%E6%88%8F%E9%80%86%E5%90%91"><span class="toc-number">6.4.</span> <span class="toc-text">unit 游戏逆向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E9%80%86%E5%90%91"><span class="toc-number">6.5.</span> <span class="toc-text">辅助逆向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E6%9C%BA%E5%92%8C-ROOT"><span class="toc-number">7.</span> <span class="toc-text">刷机和 ROOT</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%8A%A013T"><span class="toc-number">7.1.</span> <span class="toc-text">一加13T</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E9%94%81"><span class="toc-number">7.1.1.</span> <span class="toc-text">解锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kernel-SU"><span class="toc-number">7.1.2.</span> <span class="toc-text">kernel SU</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E8%A1%A5%E5%92%8C%E5%88%B7%E5%85%A5-init-boot"><span class="toc-number">7.1.3.</span> <span class="toc-text">修补和刷入 init_boot</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ak3"><span class="toc-number">7.1.4.</span> <span class="toc-text">ak3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E7%9B%B8%E5%85%B3"><span class="toc-number">7.1.5.</span> <span class="toc-text">模块相关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%BF%E5%91%8A%E5%85%B3%E9%97%AD%E5%92%8C%E7%A6%81%E7%94%A8%E5%86%85%E7%BD%AE-app"><span class="toc-number">7.1.6.</span> <span class="toc-text">广告关闭和禁用内置 app</span></a></li></ol></li></ol></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1782,7 +1805,78 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4147,7 +4241,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 199
+        Total : 200
         </div>
         <!-- search  -->
         
@@ -4165,6 +4259,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2025/09/23/flannel.1-cannot-ping/">个别节点上 flannel.1 的 IP 无法 ping</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/12</span>

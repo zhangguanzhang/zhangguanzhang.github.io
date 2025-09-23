@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/03/23/iptables-docker-no-chain/">
+                
+                <span class="abstract-title-text">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</span>
+            </a>
+            <div class="abstract-content">
+                由来我们内部有套部署的工具， 我们部署的流程是先在部署机器（部署机器可能也是node1 ）上用脚本安装好 docker，然后进容器里去起我们部署平台，有个很久的 bug 就是，部署机器上端口映射起容器会有如下报错
+1iptables --wait -t nat -A DOCKER -p tcp -d 0/8 --dport 8089 -j DNAT --to-destination 172.25.0.2:80 ! -i docker0: iptables NO chain/target/match by that name
+
+排查也很简单，缺少链，添加上即可:
+123sudo iptab...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/03/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">
                 
                 <span class="abstract-title-text">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</span>
@@ -751,42 +790,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="swap">swap</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">
-                
-                <span class="abstract-title-text">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</span>
-            </a>
-            <div class="abstract-content">
-                由来2025&#x2F;03&#x2F;27 又遇到了，设置的 MACAddress= 才让生成的 flannel.1 地址不固定
-12345678910111213141516171819rootgdggphis281527:~H cat /etc/os-releasePRETTY NAME=&quot;Ubuntu 22.04.4 LTS&quot;NaME=&quot;Ubuntu&quot;VERSION_ID=&quot;22.04&quot;VERSION=&quot;22.04.4 LTs (Jammy Jellyfish)&quot;VERSION_CODENAME-Ja...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/11/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
     
 </div>
 
@@ -1905,7 +1908,78 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4270,7 +4344,7 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 199
+        Total : 200
         </div>
         <!-- search  -->
         
@@ -4288,6 +4362,12 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2025/09/23/flannel.1-cannot-ping/">个别节点上 flannel.1 的 IP 无法 ping</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/12</span>

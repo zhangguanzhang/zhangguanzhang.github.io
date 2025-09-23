@@ -353,7 +353,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -520,7 +520,7 @@
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>所有 salt-run 命令耗时都很久</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ time salt-run jobs.active</span><br><span class="line">[INFO    ] Runner completed: 20250912111420062465_14113</span><br><span class="line"></span><br><span class="line">real	0m23.432s</span><br><span class="line">user	0m2.716s</span><br><span class="line">sys	0m0.320s</span><br></pre></td></tr></table></figure>
 
-<h2 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h2><p>salt-master 是容器里运行的，改容器没 ptrace 权限，怕重启容器后故障无了。就容器内执行卡住后看下宿主机进程 salt-run 是唯一的，宿主机上有 strace 命令，strace 看看：</p>
+<h2 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h2><p>salt-master 是容器里运行的，该容器没 ptrace 权限，怕重启容器后故障无了。就容器内执行卡住后看下宿主机进程 salt-run 是唯一的，宿主机上有 strace 命令，strace 看看：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">strace -p `ps -ef | grep -E <span class="string">&#x27;salt-ru[n]&#x27;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> `</span></span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">openat(AT_FDCWD, &quot;/etc/hosts&quot;, O_RDONLY|O_CLOEXEC) = 11</span><br><span class="line">fstat(11, &#123;st_mode=S_IFREG|0644, st_size=898, ...&#125;) = 0</span><br><span class="line">lseek(11, 0, SEEK_SET)                  = 0</span><br><span class="line">read(11, &quot;#\n# hosts         This file desc&quot;..., 4096) = 898</span><br><span class="line">read(11, &quot;&quot;, 4096)                      = 0</span><br><span class="line">close(11)                               = 0</span><br><span class="line">newfstatat(AT_FDCWD, &quot;/etc/nsswitch.conf&quot;, &#123;st_mode=S_IFREG|0644, st_size=1516, ...&#125;, 0) = 0</span><br><span class="line">newfstatat(AT_FDCWD, &quot;/etc/resolv.conf&quot;, &#123;st_mode=S_IFREG|0644, st_size=211, ...&#125;, 0) = 0</span><br><span class="line">openat(AT_FDCWD, &quot;/etc/hosts&quot;, O_RDONLY|O_CLOEXEC) = 11</span><br><span class="line">fstat(11, &#123;st_mode=S_IFREG|0644, st_size=898, ...&#125;) = 0</span><br><span class="line">lseek(11, 0, SEEK_SET)                  = 0</span><br><span class="line">read(11, &quot;#\n# hosts         This file desc&quot;..., 4096) = 898</span><br><span class="line">read(11, &quot;&quot;, 4096)                      = 0</span><br><span class="line">close(11)                               = 0</span><br><span class="line">socket(PF_INET, SOCK_DGRAM|SOCK_CLOEXEC|SOCK_NONBLOCK, IPPROTO_IP) = 11</span><br><span class="line">setsockopt(11, SOL_IP, IP_RECVERR, [1], 4) = 0</span><br><span class="line">connect(11, &#123;sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr(&quot;10.xx.xx.1&quot;)&#125;, 16) = 0</span><br><span class="line">poll([&#123;fd=11, events=POLLOUT&#125;], 1, 0)   = 1 ([&#123;fd=11, revents=POLLOUT&#125;])</span><br><span class="line">sendto(11, &quot;e\366\1\0\0\1\0\0\0\0\0\0\7kubexxx\0\0\34\0\1&quot;, 25, MSG_NOSIGNAL, NULL, 0) = 25</span><br><span class="line">poll([&#123;fd=11, events=POLLIN&#125;], 1, 5000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 <p>左边窗口执行，右边赶紧 strace，发现有输出后卡主，赶紧按回车分开，最后往上翻找空行附近就是卡住的信息。从上面看就是 glibc 的 DNS 解析行为：</p>
@@ -533,9 +533,9 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ss -anuop | grep :53</span></span><br><span class="line">ESTAB      0      0      10.xx.xx.215:36250              10.xx.xx.1:53                  users:((&quot;salt-run&quot;,pid=13752,fd=4))</span><br></pre></td></tr></table></figure>
 
 <p>然后抓包看了下请求：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">往右侧翻</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tcpdump -nn -i any port 53 -vvv</span></span><br><span class="line">tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes</span><br><span class="line">19:34:24.952563 IP (tos 0x0, ttl 64, id 50084, offset 0, flags [DF], proto UDP (17), length 53)</span><br><span class="line">    10.xx.xx.215.63760 &gt; 10.xx.xx.1.53: [bad udp cksum 0xc324 -&gt; 0xd5d2!] 64743+ AAAA? kubexxx. (25)</span><br><span class="line">19:34:26.613645 IP (tos 0x0, ttl 64, id 50437, offset 0, flags [DF], proto UDP (17), length 53)</span><br><span class="line">    10.xx.xx.215.35564 &gt; 10.xx.xx.1.53: [bad udp cksum 0xc324 -&gt; 0x3614!] 2763+ AAAA? kubexxx. (25)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">手机阅读的话，请往右侧翻</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tcpdump -nn -i any port 53 -vvv</span></span><br><span class="line">tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes</span><br><span class="line">19:34:24.952563 IP (tos 0x0, ttl 64, id 50084, offset 0, flags [DF], proto UDP (17), length 53)</span><br><span class="line">    10.xx.xx.215.63760 &gt; 10.xx.xx.1.53: [bad udp cksum 0xc324 -&gt; 0xd5d2!] 64743+ AAAA? kubexxx. (25)</span><br><span class="line">19:34:26.613645 IP (tos 0x0, ttl 64, id 50437, offset 0, flags [DF], proto UDP (17), length 53)</span><br><span class="line">    10.xx.xx.215.35564 &gt; 10.xx.xx.1.53: [bad udp cksum 0xc324 -&gt; 0x3614!] 2763+ AAAA? kubexxx. (25)</span><br></pre></td></tr></table></figure>
 
-<p>发现是请求 hostname的 IPv6 DNS 解析记录，然后加了下 hosts 就好了。</p>
+<p>看上面的 <code>AAAA? kubexxx</code>，可以确认是请求 hostname kubexxx 的 IPv6 DNS 解析记录，然后加了下 hosts 就好了。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"> <span class="built_in">echo</span> <span class="string">&quot;::1 <span class="variable">$HOSTNAME</span>&quot;</span> &gt;&gt; /etc/hosts</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">time salt-run jobs.active</span></span><br><span class="line">[INFO    ] Runner completed: 20250912113512377461_16938</span><br><span class="line"></span><br><span class="line">real	0m3.265s</span><br><span class="line">user	0m2.714s</span><br><span class="line">sys	0m0.254s</span><br></pre></td></tr></table></figure>
 
 <h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>搜了下关键字 <code>salt-run dns ipv6</code> 看看有没有其他人遇到，结果找到类似问题：</p>
@@ -564,6 +564,11 @@
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2025/09/23/flannel.1-cannot-ping/" title="个别节点上 flannel.1 的 IP 无法 ping">
+                    <div class="nextTitle">个别节点上 flannel.1 的 IP 无法 ping</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -1742,7 +1747,78 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4107,7 +4183,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 199
+        Total : 200
         </div>
         <!-- search  -->
         
@@ -4125,6 +4201,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2025/09/23/flannel.1-cannot-ping/">个别节点上 flannel.1 的 IP 无法 ping</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/12</span>
