@@ -459,6 +459,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
+                
+                <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
+            </a>
+            <div class="abstract-content">
+                由来该issue见 https://github.com/kubernetes/kubernetes/issues/76956, apiserver和controller-manager每次start的时候会刷下面信息。不影响使用，但是有强迫症可以按照本文思路手动修改。当然本文也是自己编译k8s的教程
+123456E0423 17:35:58.491576       1 prometheus.go:138] failed to register depth metric admission_quota_controller: duplicate metrics collector re...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/10/21">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/21</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/10/12/boot-grub-rescue/">
                 
                 <span class="abstract-title-text">/boot目录被清空下物理机无法开机的一次救援</span>
@@ -998,45 +1036,6 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/04/28/k8s-java-start-time-not-same/">
-                
-                <span class="abstract-title-text">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</span>
-            </a>
-            <div class="abstract-content">
-                线上用的k8s版本是1.6.7非常老，而且HA有问题，上个月研发想把里面的一些服务迁出来到一个新集群里，新集群的搭建是我负责的。上周开始陆陆续续的迁移过来了，但是同等limit下部分pod在测试环境上(测试环境和老环境部署是一样的,下文的老环境和测试环境可以理解为一样)启动非常快，在我搭建的新k8s环境上启动非常慢，研发他们应用都是java+springboot，这里不谈jvm无法识别cgroup，已经加选项识别到了还有那个随机熵的选项肯定也是加了的。因为之前一次有个用户反映他们本地虚机启动springboot应用20s，我们云上启动就三分钟，后面漠然大佬教我加java的启动参数输出lo...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/04/28">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="java">java</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="springboot">springboot</a>
     
 </div>
 
@@ -2333,53 +2332,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4764,7 +4722,7 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 200
+        Total : 201
         </div>
         <!-- search  -->
         
@@ -4782,6 +4740,12 @@ Cobra介绍是一个golang的库，其提供简单的接口来创建强大现代
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2025/10/13/k8s-hostNetwork-hostname/">hostNetwork下hostname的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>

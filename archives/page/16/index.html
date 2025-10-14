@@ -444,6 +444,53 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/10/06/IngressController/">
+                
+                <span class="abstract-title-text">IngressController使用和它的高可用落地</span>
+            </a>
+            <div class="abstract-content">
+                从之前对ingress controller到现在了解架构和一些经验总结下,顺带给人科普少走弯路需要看懂本文要具备一下知识点
+
+svc实现原理和会应用
+知道反向代理原理,了解nginx和apache的vhost概念
+了解svc的几种类型(Nodeport,clusterip,LB)
+四层和七层区别(不明白就这样去理解,七层最常见就是应用层的http,也就是url,四层是传输层,为tcp&#x2F;udp端口)
+域名解析,&#x2F;etc&#x2F;hosts等基础知识
+知道pod互斥或者ds的使用
+
+Ingress Controller介绍与部署本文档不具备时效性，请各位看概念就行了
+...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/10/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ingress">ingress</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/09/24/k8s-some-vpc-cluster/">
                 
                 <span class="abstract-title-text">跨VPC或者跨云供应商搭建K8S集群正确姿势</span>
@@ -811,55 +858,10 @@ An example of a pod that uses pod affinity:
         </article>
         <div class="index-post-divider"></div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/04/29/kubernetes-configMap-mount/">
-                
-                <span class="abstract-title-text">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</span>
-            </a>
-            <div class="abstract-content">
-                看到configMap这个资源对象,突发奇想
-
-
-如何让一个configMap里文件挂载到容器的不同路径
-
-
-书上和网上都找不到对应例子
-最终github上搜索到了有个subPath选项除了支持路径还不会覆盖容器内部的整个目录参考链接https://github.com/dshulyak/kubernetes.github.io/commit/d58ba7b075bb4848349a2c920caaa08ff3773d70这里记录下
-123456789101112131415161718192021222324252627282930313233343536373839404142434...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/04/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/29</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ConfigMap">ConfigMap</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
     <!-- paginator  -->
     
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/archives/page/15/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/14/">14</a><a class="page-number" href="/archives/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/archives/page/17/">17</a><a class="page-number" href="/archives/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/20/">20</a><a class="extend next" rel="next" href="/archives/page/17/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/archives/page/15/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/14/">14</a><a class="page-number" href="/archives/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/archives/page/17/">17</a><a class="page-number" href="/archives/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/21/">21</a><a class="extend next" rel="next" href="/archives/page/17/">NEXT &gt;</a>
         </nav>
     
 </main>
@@ -1971,53 +1973,12 @@ An example of a pod that uses pod affinity:
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4402,7 +4363,7 @@ An example of a pod that uses pod affinity:
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 200
+        Total : 201
         </div>
         <!-- search  -->
         
@@ -4420,6 +4381,12 @@ An example of a pod that uses pod affinity:
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2025/10/13/k8s-hostNetwork-hostname/">hostNetwork下hostname的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>

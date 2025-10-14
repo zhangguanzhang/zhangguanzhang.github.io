@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/04/28/k8s-java-start-time-not-same/">
+                
+                <span class="abstract-title-text">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</span>
+            </a>
+            <div class="abstract-content">
+                线上用的k8s版本是1.6.7非常老，而且HA有问题，上个月研发想把里面的一些服务迁出来到一个新集群里，新集群的搭建是我负责的。上周开始陆陆续续的迁移过来了，但是同等limit下部分pod在测试环境上(测试环境和老环境部署是一样的,下文的老环境和测试环境可以理解为一样)启动非常快，在我搭建的新k8s环境上启动非常慢，研发他们应用都是java+springboot，这里不谈jvm无法识别cgroup，已经加选项识别到了还有那个随机熵的选项肯定也是加了的。因为之前一次有个用户反映他们本地虚机启动springboot应用20s，我们云上启动就三分钟，后面漠然大佬教我加java的启动参数输出lo...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/04/28">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/28</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="java">java</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="springboot">springboot</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/03/22/k8s-controller-error/">
                 
                 <span class="abstract-title-text">一次kube-controller-manager的bug导致的线上无法调度处理过程</span>
@@ -981,53 +1020,6 @@ CA (Certif...
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/10/06/IngressController/">
-                
-                <span class="abstract-title-text">IngressController使用和它的高可用落地</span>
-            </a>
-            <div class="abstract-content">
-                从之前对ingress controller到现在了解架构和一些经验总结下,顺带给人科普少走弯路需要看懂本文要具备一下知识点
-
-svc实现原理和会应用
-知道反向代理原理,了解nginx和apache的vhost概念
-了解svc的几种类型(Nodeport,clusterip,LB)
-四层和七层区别(不明白就这样去理解,七层最常见就是应用层的http,也就是url,四层是传输层,为tcp&#x2F;udp端口)
-域名解析,&#x2F;etc&#x2F;hosts等基础知识
-知道pod互斥或者ds的使用
-
-Ingress Controller介绍与部署本文档不具备时效性，请各位看概念就行了
-...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/10/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/06</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ingress">ingress</a>
     
 </div>
 
@@ -2324,53 +2316,12 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4755,7 +4706,7 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 200
+        Total : 201
         </div>
         <!-- search  -->
         
@@ -4773,6 +4724,12 @@ Ingress Controller介绍与部署本文档不具备时效性，请各位看概�
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2025/10/13/k8s-hostNetwork-hostname/">hostNetwork下hostname的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>

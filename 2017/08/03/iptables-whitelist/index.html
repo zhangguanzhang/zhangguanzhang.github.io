@@ -347,7 +347,7 @@
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">512</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">685</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -509,7 +509,7 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>Linux 上 ipset 和 iptables 配合做 ip 白名单</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># rpm 系列 os</span><br><span class="line">yum install ipset ipset-service -y</span><br><span class="line">sed -ri &#x27;/^IPSET_SAVE_ON_STOP=/s#no#yes#&#x27; /etc/sysconfig/ipset-config</span><br><span class="line">systemctl enable --now ipset</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># apt 系列 os</span><br><span class="line">apt update &amp;&amp; apt install -y ipset-persistent iptables-persistent</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># rpm 系列 os</span><br><span class="line">yum install ipset ipset-service -y</span><br><span class="line">sed -ri &#x27;/^IPSET_SAVE_ON_STOP=/s#no#yes#&#x27; /etc/sysconfig/ipset-config</span><br><span class="line">systemctl enable --now ipset</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># apt 系列 os</span><br><span class="line">apt update &amp;&amp; apt install -y ipset-persistent iptables-persistent</span><br><span class="line">systemctl enable netfilter-persistent</span><br></pre></td></tr></table></figure>
 
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 黑白名单</span><br><span class="line">ipset create blackiplist hash:net maxelem 1000000 </span><br><span class="line">ipset create whiteiplist hash:net maxelem 1000000</span><br></pre></td></tr></table></figure>
 
@@ -526,8 +526,17 @@
 <h4 id="添加白名单规则："><a href="#添加白名单规则：" class="headerlink" title="添加白名单规则："></a>添加白名单规则：</h4><p>注意下面链的默认规则和接口，自行更改成实际情况</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /etc/iptables/rules.v4 &lt;&lt; &#x27;EOF&#x27;</span><br><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD DROP [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">:BASE-RULE - [0:0]</span><br><span class="line">-A INPUT -p icmp -j ACCEPT</span><br><span class="line">-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">-A INPUT -j BASE-RULE</span><br><span class="line">-A BASE-RULE -i vmbr0 -m set ! --match-set whiteiplist src -j DROP</span><br><span class="line">-A BASE-RULE -j RETURN</span><br><span class="line">COMMIT</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 
+<p>表范围内是 <code>*表名 COMMIT</code>，例如下面：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*nat</span><br><span class="line">-A PREROUTING -p tcp -m tcp --dport 53 -j DNAT --to-destination 192.168.1.1:53</span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure>
+
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># rpm</span><br><span class="line">systemctl enable iptables</span><br><span class="line"># apt</span><br><span class="line">systemctl enable netfilter-persistent.service</span><br><span class="line"></span><br><span class="line"># 测试添加</span><br><span class="line">ipset add whiteiplist xxx</span><br><span class="line"></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
 
+
+<h2 id="nat-白名单"><a href="#nat-白名单" class="headerlink" title="nat 白名单"></a>nat 白名单</h2><p>假如本机有 DNAT：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -I PREROUTING -p tcp -m tcp --dport 24 -j DNAT --to-destination 192.168.2.112:1080</span><br></pre></td></tr></table></figure>
+
+<p>因为 nat 先走 <code>PREROUTING</code> ，DNAT 后就会走 <code>FORWARD</code>，此刻目标端口不是 24 ，可以在 nat 表的 <code>PREROUTING</code> 链里匹配目标端口打 mark，再在 <code>FORWARD</code> 里 mark 匹配做白名单 IP 。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ipset create sports bitmap:port range 1-65535</span><br><span class="line">ipset add sports 24</span><br><span class="line"></span><br><span class="line">iptables -t nat -I PREROUTING -p tcp -m set --match-set sports dst -j MARK  --set-xmark 0x1000/0x1000</span><br><span class="line"></span><br><span class="line">iptables -I FORWARD -m mark  --mark 0x1000/0x1000 -m set ! --match-set whiteiplist src -j DROP</span><br><span class="line"></span><br><span class="line">iptables -I INPUT -m mark  --mark 0x1000/0x1000 -m set ! --match-set whiteiplist src -j DROP</span><br></pre></td></tr></table></figure>
 
 
     </article>
@@ -718,7 +727,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E"><span class="toc-number">1.</span> <span class="toc-text">关于</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rpm-%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.1.</span> <span class="toc-text">rpm 系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#apt-%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.2.</span> <span class="toc-text">apt 系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">3.2.1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%99%BD%E5%90%8D%E5%8D%95%E8%A7%84%E5%88%99%EF%BC%9A"><span class="toc-number">3.2.2.</span> <span class="toc-text">添加白名单规则：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">4.</span> <span class="toc-text">测试</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E"><span class="toc-number">1.</span> <span class="toc-text">关于</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rpm-%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.1.</span> <span class="toc-text">rpm 系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#apt-%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.2.</span> <span class="toc-text">apt 系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">3.2.1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%99%BD%E5%90%8D%E5%8D%95%E8%A7%84%E5%88%99%EF%BC%9A"><span class="toc-number">3.2.2.</span> <span class="toc-text">添加白名单规则：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">4.</span> <span class="toc-text">测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nat-%E7%99%BD%E5%90%8D%E5%8D%95"><span class="toc-number">5.</span> <span class="toc-text">nat 白名单</span></a></li></ol>
             </div>
         
         <!-- sidebar -->
@@ -1732,53 +1741,12 @@
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4163,7 +4131,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 200
+        Total : 201
         </div>
         <!-- search  -->
         
@@ -4181,6 +4149,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2025/10/13/k8s-hostNetwork-hostname/">hostNetwork下hostname的坑</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">09/23</span>
