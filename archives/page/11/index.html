@@ -444,6 +444,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/07/05/linux-auditd/">
+                
+                <span class="abstract-title-text">Linux audit 审计</span>
+            </a>
+            <div class="abstract-content">
+                什么是audit？linux audit子系统是一个用于收集记录系统、内核、用户进程发生的行为事件的一种安全审计系统。该系统可以可靠地收集有关上任何与安全相关（或与安全无关）事件的信息，它可以帮助跟踪在系统上执行过的一些操作。
+使用安装好像高版本 os 都自带了，没有就 yum install -y audit
+1systemctl status auditd.service
+
+例如追踪一个内核参数被谁修改要注意的是 auditctl 只能临时生效，要想永久生效使用文件 audit.rules
+基本信息查看12345678910111213# 查看状态$ auditctl -senabl...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/07/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/05</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="audit">audit</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/06/25/kubernetes-pprof/">
                 
                 <span class="abstract-title-text">k8s pprof 分析 cpu 和内存</span>
@@ -780,44 +820,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/03</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/26/KubeXXXMismatch/">
-                
-                <span class="abstract-title-text">一次deploy,rs,sts Mismatch 的处理</span>
-            </a>
-            <div class="abstract-content">
-                  这次文章是远程帮群友解决故障后的总结，以时间线描述  群友一开始是apiserver响应慢，使用角度上就是kubectl请求慢，如
-123E0326 07:49:37.586690       1 available_controller.go:416] v1beta1.metrics.k8s.io failed with: failing or missing response  from https://10.99.174.208:443/apis/metrics.k8s.io/v1beta1: Get https://10.99.174.208:443/apis/metrics...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Mismatch">Mismatch</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1943,7 +1945,24 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4328,7 +4347,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 201
+        Total : 202
         </div>
         <!-- search  -->
         
@@ -4346,6 +4365,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/13</span>
@@ -6552,6 +6577,11 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="ipv6">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
             </span>
         
     </div>

@@ -459,6 +459,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/10/12/prometheus-operator/">
+                
+                    <span class="iconfont-archer stick-top">&#xe63d;</span>
+                
+                <span class="abstract-title-text">全手动部署prometheus-operator监控K8S集群以及一些坑</span>
+            </a>
+            <div class="abstract-content">
+                写这篇文章原因所有的监控的agent底层最终都是查询的&#x2F;proc和&#x2F;sys里的信息推送(如果错了轻喷),因为收集宿主机信息方面也想用pod跑,会面临到问题常见的zabbix_agent默认读取fs的&#x2F;proc和&#x2F;sys,容器跑agent会导致读取的不是宿主机的&#x2F;proc和&#x2F;sys而prometheus的node-exporter有选项--path.procfs和--path.sysfs来指定从这俩选项的值的proc和sys读取,容器跑node-exporter只需要挂载宿主机的&#x2F;proc和&#x2F;sys到容器fs的...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/10/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/12</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/10/06/IngressController/">
                 
                 <span class="abstract-title-text">IngressController使用和它的高可用落地</span>
@@ -1014,43 +1053,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">
-                
-                <span class="abstract-title-text">慎用docker的--rm选项!!!</span>
-            </a>
-            <div class="abstract-content">
-                Dockerfile里的VOLUME和docker run -v /path的时候挂载容器的挂载点效果是一致的会在宿主机/var/lib/docker/volumes目录生成随机目录发现--rm不单单是删除掉容器，还会删掉挂载点的数据
-首先不使用--rm下看看效果
-1234567891011[root@guan_tx ]#  docker run  -tid --name busybox -v /guan busyboxbe59bd455fbde8a8d195220d96c6676ad8fa6f26e1ebac6533020c83dacbf907[root@guan_tx ]# dock...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/01/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/20</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Dockerfile">Dockerfile</a>
     
 </div>
 
@@ -2352,7 +2354,24 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4737,7 +4756,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 201
+        Total : 202
         </div>
         <!-- search  -->
         
@@ -4755,6 +4774,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/13</span>
@@ -6961,6 +6986,11 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <span class="sidebar-tag-name" data-tags="ipv6">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
             </span>
         
     </div>

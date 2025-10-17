@@ -442,6 +442,50 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">
+                
+                <span class="abstract-title-text">keepalived Locking pid file error 22 - Invalid argument</span>
+            </a>
+            <div class="abstract-content">
+                由来现场部署业务后发现访问有问题，排查后发现业务网关访问 etcd 的 keepalived IPVS svc 不通
+排查基础排查12$ curl 169.254.20.4:12379curl: (7) Failed to connect to 169.254.20.4 port 12379: Connection refused
+
+这个是我们 etcd 的 svc 的，curl real server 正常：
+1$ curl &lt;本机IP&gt;:12379
+
+然后看了下 iptables -t filter -S 无额外规则，怕客户安全加固啥的前面 insert 了规则影响。
+1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2025/10/17">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2025/10/17</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="keepalived">keepalived</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="fnctl">fnctl</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -781,44 +825,6 @@
         <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="ssl">ssl</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2025/04/27/android-tun2sock/">
-                
-                <span class="abstract-title-text">开发一个让指定应用走代理的安卓 app 过程</span>
-            </a>
-            <div class="abstract-content">
-                <p>最近开发一个让指定 app 走 http 代理的经过…..</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2025/04/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2025/04/27</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="android">android</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="tun2sock2">tun2sock2</a>
     
 </div>
 
@@ -1947,7 +1953,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4332,7 +4355,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 201
+        Total : 202
         </div>
         <!-- search  -->
         
@@ -4350,6 +4373,12 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/13</span>
@@ -6556,6 +6585,11 @@
             <span class="sidebar-tag-name" data-tags="ipv6">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
             </span>
         
     </div>

@@ -459,6 +459,42 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/11/23/ansible-hang-in-docker/">
+                
+                <span class="abstract-title-text">ansible hang in docker container</span>
+            </a>
+            <div class="abstract-content">
+                由来这几天同事发现在 docker 容器里运行 ansible 命令很卡，发来了个命令叫我试试 ansible localhost -m setup -a &#39;filter=ansible_default_ipv4&#39; 2&gt;/dev/null |grep &#39;\&quot;address\&quot;&#39; |awk -F&#39;\&quot;&#39; &#39;&#123;print $4&#125;&#39;
+环境信息12345678910111213141516171819202122232425262728293031323334353637383...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/11/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/11/20/disable-swap/">
                 
                 <span class="abstract-title-text">永久关闭swap的正确姿势</span>
@@ -982,55 +1018,6 @@ pod cidr
         <a class="post-tag" href="javascript:void(0);" data-tags="63s">63s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="timeout">timeout</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/13/x86-router-flash/">
-                
-                <span class="abstract-title-text">proxmox x86软路由笔记</span>
-            </a>
-            <div class="abstract-content">
-                由来pve已经安装好系统(如果你还没安装且打算安装，安装完后可以看看我这个文章安装完proxmox的一些设置)，pve 的机器只有一个口子的情况下，就只能作为旁路由使用。
-前置工作虚机准备先去恩山论坛x86版块下一个固件pve上开台机器
-
-一般-高级-开机自启动勾上，有必要的话手动设置下vmID，后面有用
-操作系统不适用任何介质
-系统默认，下一步
-硬盘随便设置，后面会删除
-cpu按照实际，我给2核，内存我给的2g
-网络，模型选VirtIO(半虚拟化)，防火墙的勾去掉
-完成
-选中虚机，硬件-选中硬盘，点击分离，删除
-
-导入img把固件上传到 pve 的机器上，一般是 gz，解压成 img ...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/05/13">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/13</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="x86">x86</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
     
 </div>
 
@@ -2332,7 +2319,24 @@ cpu按照实际，我给2核，内存我给的2g
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4717,7 +4721,7 @@ cpu按照实际，我给2核，内存我给的2g
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 201
+        Total : 202
         </div>
         <!-- search  -->
         
@@ -4735,6 +4739,12 @@ cpu按照实际，我给2核，内存我给的2g
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/13</span>
@@ -6941,6 +6951,11 @@ cpu按照实际，我给2核，内存我给的2g
             <span class="sidebar-tag-name" data-tags="ipv6">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
             </span>
         
     </div>

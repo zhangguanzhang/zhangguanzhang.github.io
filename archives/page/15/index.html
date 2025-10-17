@@ -444,6 +444,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/03/03/kubernetes-1-13-4/">
+                
+                <span class="abstract-title-text">二进制部署Kubernetes v1.13.12 HA可选</span>
+            </a>
+            <div class="abstract-content">
+                本次采用二进制文件方式部署,本文过程写成了更详细更多可选方案的ansible部署方案 https://github.com/zhangguanzhang/Kubernetes-ansible和之前的步骤差不多都是和kubeadm步骤一样,不过这次所有kubelet全部走bootstrap不会像之前master上的kubelet生成证书,另外证书换成openssl生成
+不建议使用secureCRT这个ssh软件复制本篇博客内容的命令,因为它的部分版本对包含多条命令的处理结果并不完美,可能很多命令不是预期结果
+本文命令里有些是输出,不要乱粘贴输入(虽然也没影响)
+本文命令全部是在k8s-m1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/03/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/03</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/02/19/jira-confluence/">
                 
                 <span class="abstract-title-text">docker部署jira(8.0.0)和confluence(6.14.1)</span>
@@ -784,45 +824,6 @@ CA (Certif...
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="kubeconfig">kubeconfig</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/10/12/prometheus-operator/">
-                
-                    <span class="iconfont-archer stick-top">&#xe63d;</span>
-                
-                <span class="abstract-title-text">全手动部署prometheus-operator监控K8S集群以及一些坑</span>
-            </a>
-            <div class="abstract-content">
-                写这篇文章原因所有的监控的agent底层最终都是查询的&#x2F;proc和&#x2F;sys里的信息推送(如果错了轻喷),因为收集宿主机信息方面也想用pod跑,会面临到问题常见的zabbix_agent默认读取fs的&#x2F;proc和&#x2F;sys,容器跑agent会导致读取的不是宿主机的&#x2F;proc和&#x2F;sys而prometheus的node-exporter有选项--path.procfs和--path.sysfs来指定从这俩选项的值的proc和sys读取,容器跑node-exporter只需要挂载宿主机的&#x2F;proc和&#x2F;sys到容器fs的...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/10/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/12</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
     
 </div>
 
@@ -1951,7 +1952,24 @@ CA (Certif...
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4336,7 +4354,7 @@ CA (Certif...
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 201
+        Total : 202
         </div>
         <!-- search  -->
         
@@ -4354,6 +4372,12 @@ CA (Certif...
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/13</span>
@@ -6560,6 +6584,11 @@ CA (Certif...
             <span class="sidebar-tag-name" data-tags="ipv6">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
             </span>
         
     </div>

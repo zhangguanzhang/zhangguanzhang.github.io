@@ -444,6 +444,44 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/01/22/EmuELEC/">
+                
+                <span class="abstract-title-text">EmuELEC 笔记</span>
+            </a>
+            <div class="abstract-content">
+                EmuELEC 笔记后续关于 EmuELEC 的笔记和知识点都会在这里更新，假定看到这篇文章的人都具备一些 Linux 基础，命令，path，分区，挂载之类的知识。
+EmuELEC 介绍EmuELEC 是专为 Amlogic（晶晨）S905&#x2F;S912 方案的盒子开发的游戏系统，它基于 CoreELEC 系统，在 CoreELEC 的基础上移植了 RetroArch 和众多的独立模拟器。EmuELEC 前身为 Sx05RE。Sx05RE 整合了 Lakka、KODI、EmulationStation，常被人简称为三合一。它实际上也是一个 Linux 系统，最新版本开始只支持 ar...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/01/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/01/22</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="EmuELEC">EmuELEC</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/12/19/openwrt-update/">
                 
                 <span class="abstract-title-text">openwrt 的在线升级固件和扩容的研究</span>
@@ -782,45 +820,6 @@ buildx 使用见文章 buildx 使用
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
                 </div>
                 <!-- tags -->
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/08/25/flannel-a-host-net-tmout/">
-                
-                <span class="abstract-title-text">flannel下集群有个节点网络不通的一次排查</span>
-            </a>
-            <div class="abstract-content">
-                故障问题和版本没关系，客户的 node 信息啥的后面排错里有。有个节点通信有问题，其余节点都没问题。
-排查惯例信息先看下 flannel 的 vxlan 的 vtep 信息，客户是双网卡的，但是默认路由是这个网卡，不用管另外的网卡了。下面信息看了下 VtepMAC 和 public-ip 都正常。
-123456789101112131415161718192021222324252627282930313233343536$ kubectl get node -o yaml | grep -B4 public    annotations:      flannel.alpha.core...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/08/25">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/25</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="flannel">flannel</a>
-    
-</div>
-
                 
             </div>
         </article>
@@ -1946,7 +1945,24 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4331,7 +4347,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 201
+        Total : 202
         </div>
         <!-- search  -->
         
@@ -4349,6 +4365,12 @@ buildx 使用见文章 buildx 使用
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/13</span>
@@ -6555,6 +6577,11 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="ipv6">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
             </span>
         
     </div>
