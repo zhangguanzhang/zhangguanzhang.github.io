@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2021/08/25/flannel-a-host-net-tmout/">
+                
+                <span class="abstract-title-text">flannel下集群有个节点网络不通的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                故障问题和版本没关系，客户的 node 信息啥的后面排错里有。有个节点通信有问题，其余节点都没问题。
+排查惯例信息先看下 flannel 的 vxlan 的 vtep 信息，客户是双网卡的，但是默认路由是这个网卡，不用管另外的网卡了。下面信息看了下 VtepMAC 和 public-ip 都正常。
+123456789101112131415161718192021222324252627282930313233343536$ kubectl get node -o yaml | grep -B4 public    annotations:      flannel.alpha.core...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/08/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/25</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="flannel">flannel</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2021/08/24/cni-plugins-bridge-err/">
                 
                 <span class="abstract-title-text">一次 cni-plugins 导致集群 dns 无法解析的排错</span>
@@ -1600,7 +1639,24 @@
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -3997,7 +4053,7 @@
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 202
+        Total : 203
         </div>
         <!-- search  -->
         
@@ -4019,6 +4075,12 @@
         <li class="archive-post-item">
             <span class="archive-post-date">10/17</span>
             <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2025/10/15/k8s-NodePort-filter/">从自己造轮子NodePort白名单到参考 calico 规则</a>
         </li>
     
         

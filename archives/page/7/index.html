@@ -444,6 +444,50 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2022/01/26/nginx-static-build/">
+                
+                <span class="abstract-title-text">利用 docker buildx 静态编译 nginx</span>
+            </a>
+            <div class="abstract-content">
+                由来内部有需求需要静态编译 nginx，尝试了下，搞出来了。先是按照官方 nginx Dockerfile 的逻辑走不通，后面下载 nginx 官方源码编译才行。
+buildx 使用见文章 buildx 使用
+nginx Dockerfile先说下官方的失败尝试。先 clone 项目：
+12git clone https://github.com/nginxinc/docker-nginx.gitcd docker-nginx
+
+分为 stable 和 mainline。大概研究了下，发现 case &quot;$apkArch&quot; in x86_64|aarch64) 的情况是...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/01/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/01/26</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="nginx">nginx</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2022/01/22/EmuELEC/">
                 
                 <span class="abstract-title-text">EmuELEC 笔记</span>
@@ -792,34 +836,6 @@ buildx 使用见文章 buildx 使用
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/08/27/k8s-runxtables.lock/">
-                
-                <span class="abstract-title-text">干掉烦人的 open /run/xtables.lock: is a directory</span>
-            </a>
-            <div class="abstract-content">
-                环境信息suse 这辣鸡系统，使用官方文档 docker-static 的二进制安装的话会无法起来，所以我们在 suse 上用的是很久之前的 rpm 安装的 docker。
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162$ cat /etc/os-release NAME=&quot;SLES&quot;VERSION=&quot;12-SP5&quot;VERSION_ID=&quot;12.5&quot...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/08/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -1950,7 +1966,24 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4347,7 +4380,7 @@ buildx 使用见文章 buildx 使用
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 202
+        Total : 203
         </div>
         <!-- search  -->
         
@@ -4369,6 +4402,12 @@ buildx 使用见文章 buildx 使用
         <li class="archive-post-item">
             <span class="archive-post-date">10/17</span>
             <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2025/10/15/k8s-NodePort-filter/">从自己造轮子NodePort白名单到参考 calico 规则</a>
         </li>
     
         

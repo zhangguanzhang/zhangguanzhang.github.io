@@ -444,6 +444,45 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/06/02/kubernetes-nodeSelector/">
+                
+                <span class="abstract-title-text">kubernetes的PodAffinity的不解</span>
+            </a>
+            <div class="abstract-content">
+                官方文档来看是下面的说法,摘自官方文档https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+
+An example of a pod that uses pod affinity:
+
+1234567891011121314151617181920212223242526272829apiVersion: v1kind: Podmetadata:  name: with-pod-affinityspec:  affinity:    podAffinity:      requiredDuringSchedul...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/06/02">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/02</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="PodAffinity">PodAffinity</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/05/05/Kubernetes_install/">
                 
                 <span class="abstract-title-text">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</span>
@@ -766,42 +805,6 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/08/03/iptables-whitelist/">
-                
-                <span class="abstract-title-text">Linux 上 iptables ipset 白名单</span>
-            </a>
-            <div class="abstract-content">
-                关于Linux 上 ipset 和 iptables 配合做 ip 白名单
-安装123456789# rpm 系列 osyum install ipset ipset-service -ysed -ri &#x27;/^IPSET_SAVE_ON_STOP=/s#no#yes#&#x27; /etc/sysconfig/ipset-configsystemctl enable --now ipset# apt 系列 osapt update &amp;&amp; apt install -y ipset-persistent iptables-persistentsystemctl en...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/08/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/03</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ipset">ipset</a>
     
 </div>
 
@@ -1935,7 +1938,24 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4332,7 +4352,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 202
+        Total : 203
         </div>
         <!-- search  -->
         
@@ -4354,6 +4374,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         <li class="archive-post-item">
             <span class="archive-post-date">10/17</span>
             <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2025/10/15/k8s-NodePort-filter/">从自己造轮子NodePort白名单到参考 calico 规则</a>
         </li>
     
         
