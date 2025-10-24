@@ -444,6 +444,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2020/07/30/prometheus-rate-and-irate/">
+                
+                <span class="abstract-title-text">prometheus的rate与irate内部是如何计算的</span>
+            </a>
+            <div class="abstract-content">
+                由来市面上的翻译误导人，压根不是啥平均增长率，看了下源码和实际算下来让大家好理解
+rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/promql/functions.go 的extrapolatedRate 和 funcRate，funcRate为
+123func funcRate(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper) Vector &#123;  return extrapolatedRate(vals, args...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/07/30">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/30</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Prometheus">Prometheus</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2020/07/23/fs-error-fix-k8s-master/">
                 
                 <span class="abstract-title-text">k8s master机器文件系统故障的一次恢复过程</span>
@@ -791,42 +828,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="N1">N1</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/04/27/go-version-ifno/">
-                
-                <span class="abstract-title-text">git工作流下golang项目的version信息该如何处理</span>
-            </a>
-            <div class="abstract-content">
-                <p>来探讨下git工作流下golang项目的version信息该如何处理比较符合标准</p>
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/04/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/27</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="go">go</a>
     
 </div>
 
@@ -1965,7 +1966,80 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4374,7 +4448,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 203
+        Total : 204
         </div>
         <!-- search  -->
         
@@ -4392,6 +4466,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span>
+            <a class="archive-post-title" href="/2025/10/23/docker-bin-containerd/">离线安装docker和包管理安装docker下containerd的启动相关</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/17</span>

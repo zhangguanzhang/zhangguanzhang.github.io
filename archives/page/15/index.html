@@ -444,6 +444,43 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2019/03/15/flannel-bin/">
+                
+                <span class="abstract-title-text">不走etcd v2 api下二进制跑flannel的总结</span>
+            </a>
+            <div class="abstract-content">
+                前言这几天给线上搭建 k8s 集群，文件和 systemd 参数大多是从 kubeadm 的 staticPod 的 yml 里扣出来的，起初是除了 flanneld 全部是 systemd 管理二进制。脚本问题导致 kube-proxy 的 kubeocnfig 少执行了 use-context 所以显示的是匿名用户无法 list node 信息，kube-proxy 是在运行但是无法维持 svc 的网络，flanneld 因为是 pod 要 watch 节点是通过 kubernetes 这个 svc 走的连接导致不通，然后 pod 状态变成退出，而 kubelet 在不手动清理掉退出...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/03/15">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/15</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="flannel">flannel</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2019/03/11/k8s-ha/">
                 
                 <span class="abstract-title-text">k8s高可用涉及到ip填写的相关配置和一些坑</span>
@@ -784,38 +821,6 @@ Docker学得不怎么样就迫不及待来学的跟风狗
     
 </div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/11/05/10chars/">
-                
-                <span class="abstract-title-text">记录一次十字符病毒清理过程</span>
-            </a>
-            <div class="abstract-content">
-                周五网络组同事告知几个租户的session过大,建议我把租户这几台机器关机了我进去后把网卡down了后开始看稍微看了下是好几个十个字符的进程一直杀不完,叫存储同事把快照挂载了准备周一恢复
-结果今天挂载上去后开机发现还是有,好吧,手动查杀结合猜想和状态输出想了下逻辑是如下思路
-
-
-crontab加计划(&#x2F;var&#x2F;spool&#x2F;cron&#x2F;用户名文件,&#x2F;etc&#x2F;crontab里,&#x2F;etc&#x2F;cron.hourly&#x2F;x.sh)
-进程互相守护,杀掉一个生成一个新的在&#x2F;usr&#x2F;bin&#x2F;...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/11/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/05</span>
-                </div>
-                <!-- tags -->
                 
             </div>
         </article>
@@ -1951,7 +1956,80 @@ crontab加计划(&#x2F;var&#x2F;spool&#x2F;cron&#x2F;用户名文件,&#x2F;etc&#
         
         
         
+        
+        
+        
+        
+        
     
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -4360,7 +4438,7 @@ crontab加计划(&#x2F;var&#x2F;spool&#x2F;cron&#x2F;用户名文件,&#x2F;etc&#
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 203
+        Total : 204
         </div>
         <!-- search  -->
         
@@ -4378,6 +4456,12 @@ crontab加计划(&#x2F;var&#x2F;spool&#x2F;cron&#x2F;用户名文件,&#x2F;etc&#
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span>
+            <a class="archive-post-title" href="/2025/10/23/docker-bin-containerd/">离线安装docker和包管理安装docker下containerd的启动相关</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/17</span>
