@@ -560,22 +560,30 @@
 </ul>
 </blockquote>
 <h2 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h2><ul>
-<li><p><code>所有机器</code>彼此网路互通,并且<code>k8s-m1</code>SSH登入其他节点为passwdless(如果不互信可以后面的操作)。</p>
-</li>
-<li><p>所有防火墙与SELinux 已关闭。如CentOS：<br>否则后续 K8S 挂载目录时可能报错 Permission denied</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> --now firewalld NetworkManager</span><br><span class="line">setenforce 0</span><br><span class="line">sed -ri <span class="string">&#x27;/^[^#]*SELINUX=/s#=.+$#=disabled#&#x27;</span> /etc/selinux/config</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>关闭 dnsmasq (可选)<br>linux 系统开启了 dnsmasq 后(如 GUI 环境)，将系统 DNS Server 设置为 127.0.0.1，这会导致 docker 容器无法解析域名，需要关闭它</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> --now dnsmasq</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Kubernetes v1.8+要求关闭系统Swap,若不关闭则需要修改kubelet设定参数( –fail-swap-on 设置为 false 来忽略 swap on),在<code>所有机器</code>使用以下指令关闭swap并注释掉<code>/etc/fstab</code>中swap的行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a &amp;&amp; sysctl -w vm.swappiness=0</span><br><span class="line">sed -ri <span class="string">&#x27;/^[^#]*swap/s@^@#@&#x27;</span> /etc/fstab</span><br></pre></td></tr></table></figure></li>
-<li><p>如果是centos的话不想升级后面的最新内核可以此时升级到保守内核去掉update的exclude即可</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release -y</span><br><span class="line">yum install wget git  jq psmisc socat -y</span><br><span class="line">yum update -y --exclude=kernel*</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如果上面<code>yum update</code>没有加<code>--exclude=kernel*</code>就重启下加载保守内核</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure></li>
+<li><code>所有机器</code>彼此网路互通,并且<code>k8s-m1</code>SSH登入其他节点为passwdless(如果不互信可以后面的操作)。</li>
+<li>所有防火墙与SELinux 已关闭。如CentOS：<br>否则后续 K8S 挂载目录时可能报错 Permission denied</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> --now firewalld NetworkManager</span><br><span class="line">setenforce 0</span><br><span class="line">sed -ri <span class="string">&#x27;/^[^#]*SELINUX=/s#=.+$#=disabled#&#x27;</span> /etc/selinux/config</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>关闭 dnsmasq (可选)<br>linux 系统开启了 dnsmasq 后(如 GUI 环境)，将系统 DNS Server 设置为 127.0.0.1，这会导致 docker 容器无法解析域名，需要关闭它</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> --now dnsmasq</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Kubernetes v1.8+要求关闭系统Swap,若不关闭则需要修改kubelet设定参数( –fail-swap-on 设置为 false 来忽略 swap on),在<code>所有机器</code>使用以下指令关闭swap并注释掉<code>/etc/fstab</code>中swap的行：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a &amp;&amp; sysctl -w vm.swappiness=0</span><br><span class="line">sed -ri <span class="string">&#x27;/^[^#]*swap/s@^@#@&#x27;</span> /etc/fstab</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果是centos的话不想升级后面的最新内核可以此时升级到保守内核去掉update的exclude即可</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release -y</span><br><span class="line">yum install wget git  jq psmisc socat -y</span><br><span class="line">yum update -y --exclude=kernel*</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果上面<code>yum update</code>没有加<code>--exclude=kernel*</code>就重启下加载保守内核</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
 <p>因为目前市面上包管理下内核版本会很低,安装docker后无论centos还是ubuntu会有如下bug,4.15的内核依然存在</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kernel:unregister_netdevice: waiting <span class="keyword">for</span> lo to become free. Usage count = 1</span><br></pre></td></tr></table></figure>
 
@@ -584,18 +592,19 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ ! -f /usr/bin/perl ] &amp;&amp; yum install perl -y</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p>升级内核需要使用 elrepo 的yum 源,首先我们导入 elrepo 的 key并安装 elrepo 源</p>
+<li>升级内核需要使用 elrepo 的yum 源,首先我们导入 elrepo 的 key并安装 elrepo 源</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</span><br><span class="line">rpm -Uvh https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看可用的内核</p>
+
+<ul>
+<li>查看可用的内核</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum --disablerepo=<span class="string">&quot;*&quot;</span> --enablerepo=<span class="string">&quot;elrepo-kernel&quot;</span> list available  --showduplicates</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li>在yum的ELRepo源中,mainline 为最新版本的内核,安装kernel</li>
 </ul>
 </blockquote>
-</li>
-</ul>
 <p>ipvs依赖于<code>nf_conntrack_ipv4</code>内核模块,<code>4.19</code>包括之后内核里改名为<code>nf_conntrack</code>,1.13.1之前的kube-proxy的代码里没有加判断一直用的<code>nf_conntrack_ipv4</code>,好像是1.13.1后的kube-proxy代码里增加了判断,我测试了是会去load <code>nf_conntrack</code>使用ipvs正常</p>
 <p>下面链接可以下载到其他归档版本的</p>
 <ul>
@@ -604,35 +613,51 @@
 </ul>
 <p>下面是ml的内核和上面归档内核版本任选其一的安装方法</p>
 <ol>
-<li>自选版本内核安装方法<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> Kernel_Version=4.18.9-1</span><br><span class="line">wget  http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS/kernel-ml&#123;,-devel&#125;-<span class="variable">$&#123;Kernel_Version&#125;</span>.el7.elrepo.x86_64.rpm</span><br><span class="line">yum localinstall -y kernel-ml*</span><br></pre></td></tr></table></figure></li>
-<li>最新内核安装(现阶段没啥大必要升级内核，这里仅仅写下步骤))<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum --disablerepo=<span class="string">&quot;*&quot;</span> --enablerepo=<span class="string">&quot;elrepo-kernel&quot;</span> list available  --showduplicates | grep -Po <span class="string">&#x27;^kernel-ml.x86_64\s+\K\S+(?=.el7)&#x27;</span></span><br><span class="line">yum --enablerepo=elrepo-kernel install kernel-ml kernel-ml-devel</span><br></pre></td></tr></table></figure></li>
+<li>自选版本内核安装方法</li>
 </ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> Kernel_Version=4.18.9-1</span><br><span class="line">wget  http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS/kernel-ml&#123;,-devel&#125;-<span class="variable">$&#123;Kernel_Version&#125;</span>.el7.elrepo.x86_64.rpm</span><br><span class="line">yum localinstall -y kernel-ml*</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>最新内核安装(现阶段没啥大必要升级内核，这里仅仅写下步骤))</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum --disablerepo=<span class="string">&quot;*&quot;</span> --enablerepo=<span class="string">&quot;elrepo-kernel&quot;</span> list available  --showduplicates | grep -Po <span class="string">&#x27;^kernel-ml.x86_64\s+\K\S+(?=.el7)&#x27;</span></span><br><span class="line">yum --enablerepo=elrepo-kernel install kernel-ml kernel-ml-devel</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li><p>修改内核启动顺序,默认启动的顺序应该为1,升级以后内核是往前面插入,为0（如果每次启动时需要手动选择哪个内核,该步骤可以省略）</p>
+<li>修改内核启动顺序,默认启动的顺序应该为1,升级以后内核是往前面插入,为0（如果每次启动时需要手动选择哪个内核,该步骤可以省略）</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub2-set-default  0 &amp;&amp; grub2-mkconfig -o /etc/grub2.cfg</span><br></pre></td></tr></table></figure>
 <p>使用下面命令看看确认下是否启动默认内核指向上面安装的内核</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grubby --default-kernel</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>docker官方的内核检查脚本建议<code>(RHEL7/CentOS7: User namespaces disabled; add &#39;user_namespace.enable=1&#39; to boot command line)</code>,使用下面命令开启</p>
+
+<ul>
+<li>docker官方的内核检查脚本建议<code>(RHEL7/CentOS7: User namespaces disabled; add &#39;user_namespace.enable=1&#39; to boot command line)</code>,使用下面命令开启</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grubby --args=<span class="string">&quot;user_namespace.enable=1&quot;</span> --update-kernel=<span class="string">&quot;<span class="subst">$(grubby --default-kernel)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启加载新内核</p>
+
+<ul>
+<li>重启加载新内核</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
 
-</li>
-<li><p><code>所有机器</code>安装ipvs(ipvs性能甩iptables几条街并且排错更直观)<br>在每台机器上安装依赖包：<br>CentOS:</p>
+
+<ul>
+<li><code>所有机器</code>安装ipvs(ipvs性能甩iptables几条街并且排错更直观)<br>在每台机器上安装依赖包：<br>CentOS:</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install ipvsadm ipset sysstat conntrack libseccomp -y</span><br></pre></td></tr></table></figure>
 <p>Ubuntu:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y wget git conntrack ipvsadm ipset jq sysstat curl iptables libseccomp</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install -y wget git conntrack ipvsadm ipset jq sysstat curl iptables libseccomp</span><br></pre></td></tr></table></figure>
 
-</li>
-<li><p><code>所有机器</code>选择需要开机加载的内核模块,以下是 ipvs 模式需要加载的模块并设置开机自动加载</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">:&gt; /etc/modules-load.d/ipvs.conf</span><br><span class="line">module=(</span><br><span class="line">ip_vs</span><br><span class="line">ip_vs_rr</span><br><span class="line">ip_vs_wrr</span><br><span class="line">ip_vs_sh</span><br><span class="line">nf_conntrack</span><br><span class="line">br_netfilter</span><br><span class="line">  )</span><br><span class="line"><span class="keyword">for</span> kernel_module <span class="keyword">in</span> <span class="variable">$&#123;module[@]&#125;</span>;<span class="keyword">do</span></span><br><span class="line">    /sbin/modinfo -F filename <span class="variable">$kernel_module</span> |&amp; grep -qv ERROR &amp;&amp; <span class="built_in">echo</span> <span class="variable">$kernel_module</span> &gt;&gt; /etc/modules-load.d/ipvs.conf || :</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">systemctl <span class="built_in">enable</span> --now systemd-modules-load.service</span><br></pre></td></tr></table></figure></li>
+
+<ul>
+<li><code>所有机器</code>选择需要开机加载的内核模块,以下是 ipvs 模式需要加载的模块并设置开机自动加载</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">:&gt; /etc/modules-load.d/ipvs.conf</span><br><span class="line">module=(</span><br><span class="line">ip_vs</span><br><span class="line">ip_vs_rr</span><br><span class="line">ip_vs_wrr</span><br><span class="line">ip_vs_sh</span><br><span class="line">nf_conntrack</span><br><span class="line">br_netfilter</span><br><span class="line">  )</span><br><span class="line"><span class="keyword">for</span> kernel_module <span class="keyword">in</span> <span class="variable">$&#123;module[@]&#125;</span>;<span class="keyword">do</span></span><br><span class="line">    /sbin/modinfo -F filename <span class="variable">$kernel_module</span> |&amp; grep -qv ERROR &amp;&amp; <span class="built_in">echo</span> <span class="variable">$kernel_module</span> &gt;&gt; /etc/modules-load.d/ipvs.conf || :</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">systemctl <span class="built_in">enable</span> --now systemd-modules-load.service</span><br></pre></td></tr></table></figure>
+
 <p>上面如果<code>systemctl enable</code>命令报错可以<code>systemctl status -l systemd-modules-load.service</code>看看哪个内核模块加载不了,在<code>/etc/modules-load.d/ipvs.conf</code>里注释掉它再enable试试</p>
 <ul>
-<li><code>所有机器</code>需要设定<code>/etc/sysctl.d/k8s.conf</code>的系统参数。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF &gt; /etc/sysctl.d/k8s.conf</span></span><br><span class="line"><span class="string"># https://github.com/moby/moby/issues/31208 </span></span><br><span class="line"><span class="string"># ipvsadm -l --timout</span></span><br><span class="line"><span class="string"># 修复ipvs模式下长连接timeout问题 小于900即可</span></span><br><span class="line"><span class="string">net.ipv4.tcp_keepalive_time = 600</span></span><br><span class="line"><span class="string">net.ipv4.tcp_keepalive_intvl = 30</span></span><br><span class="line"><span class="string">net.ipv4.tcp_keepalive_probes = 10</span></span><br><span class="line"><span class="string">net.ipv6.conf.all.disable_ipv6 = 1</span></span><br><span class="line"><span class="string">net.ipv6.conf.default.disable_ipv6 = 1</span></span><br><span class="line"><span class="string">net.ipv6.conf.lo.disable_ipv6 = 1</span></span><br><span class="line"><span class="string">net.ipv4.neigh.default.gc_stale_time = 120</span></span><br><span class="line"><span class="string">net.ipv4.conf.all.rp_filter = 0</span></span><br><span class="line"><span class="string">net.ipv4.conf.default.rp_filter = 0</span></span><br><span class="line"><span class="string">net.ipv4.conf.default.arp_announce = 2</span></span><br><span class="line"><span class="string">net.ipv4.conf.lo.arp_announce = 2</span></span><br><span class="line"><span class="string">net.ipv4.conf.all.arp_announce = 2</span></span><br><span class="line"><span class="string">net.ipv4.ip_forward = 1</span></span><br><span class="line"><span class="string">net.ipv4.tcp_max_tw_buckets = 5000</span></span><br><span class="line"><span class="string">net.ipv4.tcp_syncookies = 1</span></span><br><span class="line"><span class="string">net.ipv4.tcp_max_syn_backlog = 1024</span></span><br><span class="line"><span class="string">net.ipv4.tcp_synack_retries = 2</span></span><br><span class="line"><span class="string"># 要求iptables不对bridge的数据进行处理</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-ip6tables = 1</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-iptables = 1</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-arptables = 1</span></span><br><span class="line"><span class="string">net.netfilter.nf_conntrack_max = 2310720</span></span><br><span class="line"><span class="string">fs.inotify.max_user_watches=89100</span></span><br><span class="line"><span class="string">fs.may_detach_mounts = 1</span></span><br><span class="line"><span class="string">fs.file-max = 52706963</span></span><br><span class="line"><span class="string">fs.nr_open = 52706963</span></span><br><span class="line"><span class="string">vm.swappiness = 0</span></span><br><span class="line"><span class="string">vm.overcommit_memory=1</span></span><br><span class="line"><span class="string">vm.panic_on_oom=0</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure></li>
+<li><code>所有机器</code>需要设定<code>/etc/sysctl.d/k8s.conf</code>的系统参数。</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF &gt; /etc/sysctl.d/k8s.conf</span></span><br><span class="line"><span class="string"># https://github.com/moby/moby/issues/31208 </span></span><br><span class="line"><span class="string"># ipvsadm -l --timout</span></span><br><span class="line"><span class="string"># 修复ipvs模式下长连接timeout问题 小于900即可</span></span><br><span class="line"><span class="string">net.ipv4.tcp_keepalive_time = 600</span></span><br><span class="line"><span class="string">net.ipv4.tcp_keepalive_intvl = 30</span></span><br><span class="line"><span class="string">net.ipv4.tcp_keepalive_probes = 10</span></span><br><span class="line"><span class="string">net.ipv6.conf.all.disable_ipv6 = 1</span></span><br><span class="line"><span class="string">net.ipv6.conf.default.disable_ipv6 = 1</span></span><br><span class="line"><span class="string">net.ipv6.conf.lo.disable_ipv6 = 1</span></span><br><span class="line"><span class="string">net.ipv4.neigh.default.gc_stale_time = 120</span></span><br><span class="line"><span class="string">net.ipv4.conf.all.rp_filter = 0</span></span><br><span class="line"><span class="string">net.ipv4.conf.default.rp_filter = 0</span></span><br><span class="line"><span class="string">net.ipv4.conf.default.arp_announce = 2</span></span><br><span class="line"><span class="string">net.ipv4.conf.lo.arp_announce = 2</span></span><br><span class="line"><span class="string">net.ipv4.conf.all.arp_announce = 2</span></span><br><span class="line"><span class="string">net.ipv4.ip_forward = 1</span></span><br><span class="line"><span class="string">net.ipv4.tcp_max_tw_buckets = 5000</span></span><br><span class="line"><span class="string">net.ipv4.tcp_syncookies = 1</span></span><br><span class="line"><span class="string">net.ipv4.tcp_max_syn_backlog = 1024</span></span><br><span class="line"><span class="string">net.ipv4.tcp_synack_retries = 2</span></span><br><span class="line"><span class="string"># 要求iptables不对bridge的数据进行处理</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-ip6tables = 1</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-iptables = 1</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-arptables = 1</span></span><br><span class="line"><span class="string">net.netfilter.nf_conntrack_max = 2310720</span></span><br><span class="line"><span class="string">fs.inotify.max_user_watches=89100</span></span><br><span class="line"><span class="string">fs.may_detach_mounts = 1</span></span><br><span class="line"><span class="string">fs.file-max = 52706963</span></span><br><span class="line"><span class="string">fs.nr_open = 52706963</span></span><br><span class="line"><span class="string">vm.swappiness = 0</span></span><br><span class="line"><span class="string">vm.overcommit_memory=1</span></span><br><span class="line"><span class="string">vm.panic_on_oom=0</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <ul>
 <li>检查系统内核和模块是否适合运行 docker (仅适用于 linux 系统)</li>
@@ -644,9 +669,14 @@
 <ul>
 <li><code>所有机器</code>需要安装Docker CE 版本的容器引擎,推荐使用年份命名版本的docker ce：</li>
 <li>在官方查看K8s支持的docker版本 <a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes">https://github.com/kubernetes/kubernetes</a> 里进对应版本的changelog里搜<code>The list of validated docker versions remain</code></li>
-<li>这里利用docker的官方安装脚本来安装,可以使用<code>yum list --showduplicates docker-ce</code>查询可用的docker版本,选择你要安装的k8s版本支持的docker版本即可,这里我使用的是<code>18.06.03</code><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> VERSION=18.06</span><br><span class="line">curl -fsSL <span class="string">&quot;https://get.docker.com/&quot;</span> | bash -s -- --mirror Aliyun</span><br></pre></td></tr></table></figure></li>
-<li><code>所有机器</code>配置加速源并配置docker的启动参数使用systemd,使用systemd是官方的建议,详见 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/setup/cri/">https://kubernetes.io/docs/setup/cri/</a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /etc/docker/</span><br><span class="line"><span class="built_in">cat</span>&gt;/etc/docker/daemon.json&lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],</span></span><br><span class="line"><span class="string">  &quot;registry-mirrors&quot;: [&quot;https://fz5yth0r.mirror.aliyuncs.com&quot;],</span></span><br><span class="line"><span class="string">  &quot;storage-driver&quot;: &quot;overlay2&quot;,</span></span><br><span class="line"><span class="string">  &quot;storage-opts&quot;: [</span></span><br><span class="line"><span class="string">    &quot;overlay2.override_kernel_check=true&quot;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;log-driver&quot;: &quot;json-file&quot;,</span></span><br><span class="line"><span class="string">  &quot;log-opts&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;max-size&quot;: &quot;100m&quot;,</span></span><br><span class="line"><span class="string">    &quot;max-file&quot;: &quot;3&quot;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+<li>这里利用docker的官方安装脚本来安装,可以使用<code>yum list --showduplicates docker-ce</code>查询可用的docker版本,选择你要安装的k8s版本支持的docker版本即可,这里我使用的是<code>18.06.03</code></li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> VERSION=18.06</span><br><span class="line">curl -fsSL <span class="string">&quot;https://get.docker.com/&quot;</span> | bash -s -- --mirror Aliyun</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>所有机器</code>配置加速源并配置docker的启动参数使用systemd,使用systemd是官方的建议,详见 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/setup/cri/">https://kubernetes.io/docs/setup/cri/</a></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /etc/docker/</span><br><span class="line"><span class="built_in">cat</span>&gt;/etc/docker/daemon.json&lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],</span></span><br><span class="line"><span class="string">  &quot;registry-mirrors&quot;: [&quot;https://fz5yth0r.mirror.aliyuncs.com&quot;],</span></span><br><span class="line"><span class="string">  &quot;storage-driver&quot;: &quot;overlay2&quot;,</span></span><br><span class="line"><span class="string">  &quot;storage-opts&quot;: [</span></span><br><span class="line"><span class="string">    &quot;overlay2.override_kernel_check=true&quot;</span></span><br><span class="line"><span class="string">  ],</span></span><br><span class="line"><span class="string">  &quot;log-driver&quot;: &quot;json-file&quot;,</span></span><br><span class="line"><span class="string">  &quot;log-opts&quot;: &#123;</span></span><br><span class="line"><span class="string">    &quot;max-size&quot;: &quot;100m&quot;,</span></span><br><span class="line"><span class="string">    &quot;max-file&quot;: &quot;3&quot;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <ul>
 <li>设置docker开机启动,CentOS安装完成后docker需要手动设置docker命令补全：</li>
@@ -663,9 +693,9 @@
 <br>
 
 <ul>
-<li>在<code>k8s-m1</code>上声明集群信息<h3 id="使用环境变量声明集群信息"><a href="#使用环境变量声明集群信息" class="headerlink" title="使用环境变量声明集群信息"></a><span style="color: red">使用环境变量声明集群信息</span></h3></li>
+<li>在<code>k8s-m1</code>上声明集群信息</li>
 </ul>
-<p>根据自己环境声明用到的变量,后续操作依赖于环境变量,所以断开了ssh后要重新声明下(主要是ip和一些信息,路径最好别改)</p>
+<h3 id="使用环境变量声明集群信息"><a href="#使用环境变量声明集群信息" class="headerlink" title="使用环境变量声明集群信息"></a><span style="color: red">使用环境变量声明集群信息</span></h3><p>根据自己环境声明用到的变量,后续操作依赖于环境变量,所以断开了ssh后要重新声明下(主要是ip和一些信息,路径最好别改)</p>
 <p>下面键是主机的<code>hostname</code>,而的值是主机的IP。默认Kubelet向集群注册是带hostname上去的,或者选项<code>--hostname-override</code>去设置注册的名字。后面没有用<code>--hostname-override</code>,我是偷懒直接使用hostname,生产里建议用<code>--hostname-override</code>固定。所有机器同理 </p>
 <p>如果不会自己使用<code>--hostname-override</code>，hostname必须满足正则<code>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*</code>，不支持下划线，而且hostname不支持点，所以建议还是用<code>--hostname-override</code>自己去写</p>
 <p>haproxy每台上占据<code>8443</code>端口去负载到每台master上的<code>api-server</code>的<code>6443</code>端口<br>然后<code>keepalived</code>会保证<code>vip</code>飘在可用的<code>master</code>上<br>所有<code>管理组件</code>和<code>kubelet</code>都会去访问<code>vip:8443</code>确保了即使down掉一台master也能访问到<code>apiserver</code><br>云上的话选择熟练的LB来代替掉haproxy和keepalived即可<br><code>VIP</code>选同一个局域网的没用过IP来使用即可</p>
@@ -676,8 +706,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install sshpass -y</span><br><span class="line"><span class="built_in">alias</span> ssh=<span class="string">&#x27;sshpass -p zhangguanzhang ssh -o StrictHostKeyChecking=no&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> scp=<span class="string">&#x27;sshpass -p zhangguanzhang scp -o StrictHostKeyChecking=no&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>设置所有机器的<code>hostname</code>,有些人喜欢用<code>master1</code>就自己改,我的是下面的<code>k8s-m1</code>,所有机器都要设置<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> <span class="variable">$&#123;!AllNode[@]&#125;</span>;<span class="keyword">do</span> </span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;--- <span class="variable">$name</span> <span class="variable">$&#123;AllNode[$name]&#125;</span> ---&quot;</span></span><br><span class="line">  ssh <span class="variable">$&#123;AllNode[$name]&#125;</span> <span class="string">&quot;hostnamectl set-hostname <span class="variable">$name</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></li>
+<li>设置所有机器的<code>hostname</code>,有些人喜欢用<code>master1</code>就自己改,我的是下面的<code>k8s-m1</code>,所有机器都要设置</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> <span class="variable">$&#123;!AllNode[@]&#125;</span>;<span class="keyword">do</span> </span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;--- <span class="variable">$name</span> <span class="variable">$&#123;AllNode[$name]&#125;</span> ---&quot;</span></span><br><span class="line">  ssh <span class="variable">$&#123;AllNode[$name]&#125;</span> <span class="string">&quot;hostnamectl set-hostname <span class="variable">$name</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
 <p>首先在<code>k8s-m1</code>通过git获取部署要用到的二进制配置文件和yml，这里是<code>v1.13.4</code>分支，自己找文件别找到master分支了</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zhangguanzhang/k8s-manual-files.git ~/k8s-manual-files -b v1.13.4</span><br><span class="line"><span class="built_in">cd</span> ~/k8s-manual-files/</span><br></pre></td></tr></table></figure>
 
@@ -690,11 +722,12 @@
 
 <p>无越墙工具的,我已把所有二进制文件上传到dockerhub了,详情见 <a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/k8s_bin-docker_cp/tree/master">k8s_bin-docker_cp</a> </p>
 <ol>
-<li><p>使用下面命令可以不越墙下载</p>
+<li>使用下面命令可以不越墙下载</li>
+</ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/k8s-manual-files/</span><br><span class="line">docker pull zhangguanzhang/k8s_bin:<span class="variable">$KUBE_VERSION</span>-full</span><br><span class="line">docker run --<span class="built_in">rm</span> -d --name temp zhangguanzhang/k8s_bin:<span class="variable">$KUBE_VERSION</span>-full <span class="built_in">sleep</span> 10</span><br><span class="line">docker <span class="built_in">cp</span> temp:/kubernetes-server-linux-amd64.tar.gz .</span><br><span class="line">tar -zxvf kubernetes-server-linux-amd64.tar.gz  --strip-components=3 -C /usr/local/bin kubernetes/server/bin/kube&#123;<span class="built_in">let</span>,ctl,-apiserver,-controller-manager,-scheduler,-proxy&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>有越墙工具的,官网下载地址使用下面命令</p>
-</li>
+
+<ol start="2">
+<li>有越墙工具的,官网下载地址使用下面命令</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl  https://storage.googleapis.com/kubernetes-release/release/<span class="variable">$&#123;KUBE_VERSION&#125;</span>/kubernetes-server-linux-amd64.tar.gz &gt; kubernetes-server-linux-amd64.tar.gz</span><br><span class="line">tar -zxvf kubernetes-server-linux-amd64.tar.gz  --strip-components=3 -C /usr/local/bin kubernetes/server/bin/kube&#123;<span class="built_in">let</span>,ctl,-apiserver,-controller-manager,-scheduler,-proxy&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1386,8 +1419,10 @@
 拆解不同流程步驟如下：
 
 <ol>
-<li>使用者建立一个带有 annotations 的 Service 或是 Ingress。<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">external-dns.alpha.kubernetes.io/hostname:</span> <span class="string">nginx.k8s.local</span> <span class="comment"># 将被自动注册 domain name.</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-ingress</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">host:</span> <span class="string">nginx.k8s.local</span> <span class="comment"># 将被自动注册的 domain name.</span></span><br><span class="line">    <span class="attr">http:</span></span><br><span class="line">      <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">backend:</span></span><br><span class="line">          <span class="attr">serviceName:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">servicePort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure></li>
+<li>使用者建立一个带有 annotations 的 Service 或是 Ingress。</li>
 </ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">external-dns.alpha.kubernetes.io/hostname:</span> <span class="string">nginx.k8s.local</span> <span class="comment"># 将被自动注册 domain name.</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-ingress</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">host:</span> <span class="string">nginx.k8s.local</span> <span class="comment"># 将被自动注册的 domain name.</span></span><br><span class="line">    <span class="attr">http:</span></span><br><span class="line">      <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">backend:</span></span><br><span class="line">          <span class="attr">serviceName:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">servicePort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <ul>
 <li>该示例中,若使用 Ingress 的话则不需要在 Service 塞入<code>external-dns.alpha.kubernetes.io/hostname</code>,且不需要使用 NodePort 与 LoadBalancer。</li>
@@ -1409,15 +1444,15 @@
 </ul>
 </blockquote>
 <p>完成后,通过 dig 工具来检查 DNS 是否正常：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ dig @<span class="variable">$&#123;INGRESS_VIP&#125;</span> SOA nginx.k8s.local +noall +answer +time=2 +tries=1</span><br><span class="line">...</span><br><span class="line">; (1 server found)</span><br><span class="line">;; global options: +cmd</span><br><span class="line">k8s.local.        300    IN    SOA    ns.dns.k8s.local. hostmaster.k8s.local. 1531299150 7200 1800 86400 30</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ dig @<span class="variable">$&#123;INGRESS_VIP&#125;</span> SOA nginx.k8s.local +noall +answer +<span class="keyword">time</span>=2 +tries=1</span><br><span class="line">...</span><br><span class="line">; (1 server found)</span><br><span class="line">;; global options: +cmd</span><br><span class="line">k8s.local.        300    IN    SOA    ns.dns.k8s.local. hostmaster.k8s.local. 1531299150 7200 1800 86400 30</span><br></pre></td></tr></table></figure>
 
 <p>接着部署 ExternalDNS 来与 CoreDNS 同步资源记录：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f ExtraAddons/external-dns/external-dns/</span><br><span class="line">kubectl -n external-dns get po -l k8s-app=external-dns</span><br><span class="line">NAME                            READY     STATUS    RESTARTS   AGE</span><br><span class="line">external-dns-86f67f6df8-ljnhj   1/1       Running   0          1m</span><br></pre></td></tr></table></figure>
 <p>完成后,通过 dig 与 nslookup 工具检查前面测试 Ingress 的 nginx 服务：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ dig @<span class="variable">$&#123;INGRESS_VIP&#125;</span> A nginx.k8s.local +noall +answer +time=2 +tries=1</span><br><span class="line">...</span><br><span class="line">; (1 server found)</span><br><span class="line">;; global options: +cmd</span><br><span class="line">nginx.k8s.local.    300    IN    A    10.0.6.170</span><br><span class="line"></span><br><span class="line">$ nslookup nginx.k8s.local</span><br><span class="line">Server:        10.0.6.170</span><br><span class="line">Address:    10.0.6.170<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">** server can<span class="string">&#x27;t find nginx.k8s.local: NXDOMAIN</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ dig @<span class="variable">$&#123;INGRESS_VIP&#125;</span> A nginx.k8s.local +noall +answer +<span class="keyword">time</span>=2 +tries=1</span><br><span class="line">...</span><br><span class="line">; (1 server found)</span><br><span class="line">;; global options: +cmd</span><br><span class="line">nginx.k8s.local.    300    IN    A    10.0.6.170</span><br><span class="line"></span><br><span class="line">$ nslookup nginx.k8s.local</span><br><span class="line">Server:        10.0.6.170</span><br><span class="line">Address:    10.0.6.170#53</span><br><span class="line"></span><br><span class="line">** server can<span class="string">&#x27;t find nginx.k8s.local: NXDOMAIN</span></span><br></pre></td></tr></table></figure>
 <p>这时会无法通过 nslookup 解析域名,这是因为测试机器并没有使用这个 DNS 服务器,可以通过修改<code>/etc/resolv.conf</code>来加入(不同 OS 有差异,不过都可以设置)。</p>
 <p>设置后再次通过 nslookup 检查,会发现可以解析了,这时也就能通过 curl 来测试结果：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ nslookup nginx.k8s.local</span><br><span class="line">Server:        10.0.6.170</span><br><span class="line">Address:    10.0.6.170<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Name:    nginx.k8s.local</span><br><span class="line">Address: 10.0.6.170</span><br><span class="line"></span><br><span class="line">$ nslookup www.baidu.com</span><br><span class="line">Server:   10.0.6.170</span><br><span class="line">Address:  10.0.6.170<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">www.baidu.com canonical name = www.a.shifen.com.</span><br><span class="line">Name: www.a.shifen.com</span><br><span class="line">Address: 61.135.169.125</span><br><span class="line">Name: www.a.shifen.com</span><br><span class="line">Address: 61.135.169.121</span><br><span class="line"></span><br><span class="line">$ curl nginx.k8s.local</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;<span class="built_in">head</span>&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ nslookup nginx.k8s.local</span><br><span class="line">Server:        10.0.6.170</span><br><span class="line">Address:    10.0.6.170#53</span><br><span class="line"></span><br><span class="line">Name:    nginx.k8s.local</span><br><span class="line">Address: 10.0.6.170</span><br><span class="line"></span><br><span class="line">$ nslookup www.baidu.com</span><br><span class="line">Server:   10.0.6.170</span><br><span class="line">Address:  10.0.6.170#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">www.baidu.com canonical name = www.a.shifen.com.</span><br><span class="line">Name: www.a.shifen.com</span><br><span class="line">Address: 61.135.169.125</span><br><span class="line">Name: www.a.shifen.com</span><br><span class="line">Address: 61.135.169.121</span><br><span class="line"></span><br><span class="line">$ curl nginx.k8s.local</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;<span class="built_in">head</span>&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 
 <h3 id="Prometheus-Operator"><a href="#Prometheus-Operator" class="headerlink" title="Prometheus Operator"></a>Prometheus Operator</h3><p><a href="https://zhangguanzhang.github.io/2018/10/12/prometheus-operator/">点我跳转部署过程</a></p>
@@ -1435,10 +1470,10 @@
 <p>完成后访问<code>scope.weave.k8s.local</code><br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/k8s/JI470BWWU%7D7(PF%5D~LL8%5B%246F.png" alt="weave"></p>
 <h3 id="Helm-Tiller-Server"><a href="#Helm-Tiller-Server" class="headerlink" title="Helm Tiller Server"></a>Helm Tiller Server</h3><p><a href="https://github.com/kubernetes/helm" target="_blank" rel="noopener">Helm</a>是Kubernetes Chart的管理工具,Kubernetes Chart是一套预先组态的Kubernetes资源套件。其中<code>Tiller Server</code>主要负责接收来至Client的指令,并通过kube-apiserver与Kubernetes集群做沟通,根据Chart定义的内容,来产生与管理各种对应API物件的Kubernetes部署文件(又称为<code>Release</code>)。</p>
 <p>首先在<code>k8s-m1</code>安装Helm tool：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ wget -qO- https://kubernetes-helm.storage.googleapis.com/helm-v2.9.1-linux-amd64.tar.gz | tar -zx</span><br><span class="line">$ sudo <span class="built_in">mv</span> linux-amd64/helm /usr/local/bin/</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ wget -qO- https://kubernetes-helm.storage.googleapis.com/helm-v2.9.1-linux-amd64.tar.gz | tar -zx</span><br><span class="line">$ <span class="built_in">sudo</span> <span class="built_in">mv</span> linux-amd64/helm /usr/local/bin/</span><br></pre></td></tr></table></figure>
 <p>另外在所有<code>node</code>机器安裝 socat(用于端口转发)：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y socat</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install -y socat</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> apt-get install -y socat</span><br></pre></td></tr></table></figure>
 <p>接着初始化 Helm(这边会安装 Tiller Server)：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system create sa tiller</span><br><span class="line">$ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller</span><br><span class="line">$ helm init --service-account tiller</span><br><span class="line">...</span><br><span class="line">Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.</span><br><span class="line">Happy Helming!</span><br></pre></td></tr></table></figure>
 <p>这边默认helm的部署的镜像是<code>gcr.io/kubernetes-helm/tiller:v2.9.1</code>,如果拉取不了可以使用命令修改成国内能拉取到的镜像</p>
@@ -1458,7 +1493,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ helm <span class="built_in">ls</span></span><br><span class="line">NAME    REVISION    UPDATED                     STATUS      CHART             NAMESPACE</span><br><span class="line">demo    1           Tue Apr 10 07:29:51 2018    DEPLOYED    jenkins-0.14.4    default</span><br><span class="line"></span><br><span class="line">$ helm delete demo --purge</span><br><span class="line">release <span class="string">&quot;demo&quot;</span> deleted</span><br></pre></td></tr></table></figure>
 <p>更多Helm Apps可以到<a href="https://hub.kubeapps.com/" target="_blank" rel="noopener">Kubeapps Hub</a>寻找。</p>
 <h2 id="测试集群高可用"><a href="#测试集群高可用" class="headerlink" title="测试集群高可用"></a>测试集群高可用</h2><p>SSH进入<code>k8s-m1</code>节点,然后关闭该节点：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo poweroff</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> poweroff</span><br></pre></td></tr></table></figure>
 <p>接着进入到<code>k8s-m2</code>节点,通过kubectl来检查集群是否能够正常执行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 先检查 etcd 状态,可以发现 etcd-0 因為关机而中断</span><br><span class="line">$ kubectl get cs</span><br><span class="line">NAME                 STATUS      MESSAGE                                                                                                                                          ERROR</span><br><span class="line">scheduler            Healthy     ok</span><br><span class="line">controller-manager   Healthy     ok</span><br><span class="line">etcd-1               Healthy     &#123;&quot;health&quot;: &quot;true&quot;&#125;</span><br><span class="line">etcd-2               Healthy     &#123;&quot;health&quot;: &quot;true&quot;&#125;</span><br><span class="line">etcd-0               Unhealthy   Get https://10.0.6.166:2379/health: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -2638,14 +2673,6 @@
 
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
-            <span class="sidebar-tag-name" data-tags="linux">
-                <span class="iconfont-archer">&#xe606;</span>
-                linux
-            </span>
-            <span class="sidebar-tag-name" data-tags="微信">
-                <span class="iconfont-archer">&#xe606;</span>
-                微信
-            </span>
             <span class="sidebar-tag-name" data-tags="diy">
                 <span class="iconfont-archer">&#xe606;</span>
                 diy
@@ -2666,6 +2693,14 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 CLP
             </span>
+            <span class="sidebar-tag-name" data-tags="EmuELEC">
+                <span class="iconfont-archer">&#xe606;</span>
+                EmuELEC
+            </span>
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
             <span class="sidebar-tag-name" data-tags="k8s">
                 <span class="iconfont-archer">&#xe606;</span>
                 k8s
@@ -2674,9 +2709,41 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 Mismatch
             </span>
+            <span class="sidebar-tag-name" data-tags="ingress">
+                <span class="iconfont-archer">&#xe606;</span>
+                ingress
+            </span>
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
+            </span>
             <span class="sidebar-tag-name" data-tags="Altium Designer">
                 <span class="iconfont-archer">&#xe606;</span>
                 Altium Designer
+            </span>
+            <span class="sidebar-tag-name" data-tags="N1">
+                <span class="iconfont-archer">&#xe606;</span>
+                N1
+            </span>
+            <span class="sidebar-tag-name" data-tags="openwrt">
+                <span class="iconfont-archer">&#xe606;</span>
+                openwrt
+            </span>
+            <span class="sidebar-tag-name" data-tags="etcd">
+                <span class="iconfont-archer">&#xe606;</span>
+                etcd
+            </span>
+            <span class="sidebar-tag-name" data-tags="ssl">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssl
+            </span>
+            <span class="sidebar-tag-name" data-tags="aliyun">
+                <span class="iconfont-archer">&#xe606;</span>
+                aliyun
+            </span>
+            <span class="sidebar-tag-name" data-tags="tun2sock2">
+                <span class="iconfont-archer">&#xe606;</span>
+                tun2sock2
             </span>
             <span class="sidebar-tag-name" data-tags="ansible">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2698,6 +2765,18 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 安卓
             </span>
+            <span class="sidebar-tag-name" data-tags="initrd">
+                <span class="iconfont-archer">&#xe606;</span>
+                initrd
+            </span>
+            <span class="sidebar-tag-name" data-tags="grub">
+                <span class="iconfont-archer">&#xe606;</span>
+                grub
+            </span>
+            <span class="sidebar-tag-name" data-tags="raid">
+                <span class="iconfont-archer">&#xe606;</span>
+                raid
+            </span>
             <span class="sidebar-tag-name" data-tags="Linux">
                 <span class="iconfont-archer">&#xe606;</span>
                 Linux
@@ -2718,14 +2797,6 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 boot
             </span>
-            <span class="sidebar-tag-name" data-tags="grub">
-                <span class="iconfont-archer">&#xe606;</span>
-                grub
-            </span>
-            <span class="sidebar-tag-name" data-tags="cad">
-                <span class="iconfont-archer">&#xe606;</span>
-                cad
-            </span>
             <span class="sidebar-tag-name" data-tags="tcp">
                 <span class="iconfont-archer">&#xe606;</span>
                 tcp
@@ -2734,9 +2805,21 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 golang
             </span>
+            <span class="sidebar-tag-name" data-tags="cad">
+                <span class="iconfont-archer">&#xe606;</span>
+                cad
+            </span>
             <span class="sidebar-tag-name" data-tags="centos6">
                 <span class="iconfont-archer">&#xe606;</span>
                 centos6
+            </span>
+            <span class="sidebar-tag-name" data-tags="podman">
+                <span class="iconfont-archer">&#xe606;</span>
+                podman
+            </span>
+            <span class="sidebar-tag-name" data-tags="centos">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos
             </span>
             <span class="sidebar-tag-name" data-tags="chromedp">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2745,6 +2828,10 @@
             <span class="sidebar-tag-name" data-tags="chrony">
                 <span class="iconfont-archer">&#xe606;</span>
                 chrony
+            </span>
+            <span class="sidebar-tag-name" data-tags="cobra">
+                <span class="iconfont-archer">&#xe606;</span>
+                cobra
             </span>
             <span class="sidebar-tag-name" data-tags="kubernetes">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2758,17 +2845,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 mips64le
             </span>
+            <span class="sidebar-tag-name" data-tags="clickhouse">
+                <span class="iconfont-archer">&#xe606;</span>
+                clickhouse
+            </span>
+            <span class="sidebar-tag-name" data-tags="arm64">
+                <span class="iconfont-archer">&#xe606;</span>
+                arm64
+            </span>
+            <span class="sidebar-tag-name" data-tags="kernal">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernal
+            </span>
             <span class="sidebar-tag-name" data-tags="kubeconfig">
                 <span class="iconfont-archer">&#xe606;</span>
                 kubeconfig
             </span>
+            <span class="sidebar-tag-name" data-tags="cri-dockerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                cri-dockerd
+            </span>
             <span class="sidebar-tag-name" data-tags="swap">
                 <span class="iconfont-archer">&#xe606;</span>
                 swap
-            </span>
-            <span class="sidebar-tag-name" data-tags="dlv">
-                <span class="iconfont-archer">&#xe606;</span>
-                dlv
             </span>
             <span class="sidebar-tag-name" data-tags="adguardhome">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2778,9 +2877,37 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 dns
             </span>
+            <span class="sidebar-tag-name" data-tags="dlv">
+                <span class="iconfont-archer">&#xe606;</span>
+                dlv
+            </span>
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
+            </span>
+            <span class="sidebar-tag-name" data-tags="containerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                containerd
+            </span>
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
+            </span>
+            <span class="sidebar-tag-name" data-tags="net">
+                <span class="iconfont-archer">&#xe606;</span>
+                net
+            </span>
             <span class="sidebar-tag-name" data-tags="Dockerfile">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dockerfile
+            </span>
+            <span class="sidebar-tag-name" data-tags="veth">
+                <span class="iconfont-archer">&#xe606;</span>
+                veth
+            </span>
+            <span class="sidebar-tag-name" data-tags="hang">
+                <span class="iconfont-archer">&#xe606;</span>
+                hang
             </span>
             <span class="sidebar-tag-name" data-tags="e2fsck">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2802,21 +2929,25 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 xmrig
             </span>
-            <span class="sidebar-tag-name" data-tags="etcd">
+            <span class="sidebar-tag-name" data-tags="flannel">
                 <span class="iconfont-archer">&#xe606;</span>
-                etcd
+                flannel
             </span>
             <span class="sidebar-tag-name" data-tags="fio">
                 <span class="iconfont-archer">&#xe606;</span>
                 fio
             </span>
-            <span class="sidebar-tag-name" data-tags="flannel">
+            <span class="sidebar-tag-name" data-tags="vxlan">
                 <span class="iconfont-archer">&#xe606;</span>
-                flannel
+                vxlan
             </span>
             <span class="sidebar-tag-name" data-tags="ftp">
                 <span class="iconfont-archer">&#xe606;</span>
                 ftp
+            </span>
+            <span class="sidebar-tag-name" data-tags="cifs">
+                <span class="iconfont-archer">&#xe606;</span>
+                cifs
             </span>
             <span class="sidebar-tag-name" data-tags="go mod">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2834,13 +2965,53 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 esp8266
             </span>
+            <span class="sidebar-tag-name" data-tags="http">
+                <span class="iconfont-archer">&#xe606;</span>
+                http
+            </span>
+            <span class="sidebar-tag-name" data-tags="gitlab">
+                <span class="iconfont-archer">&#xe606;</span>
+                gitlab
+            </span>
+            <span class="sidebar-tag-name" data-tags="subgroup">
+                <span class="iconfont-archer">&#xe606;</span>
+                subgroup
+            </span>
             <span class="sidebar-tag-name" data-tags="hello world">
                 <span class="iconfont-archer">&#xe606;</span>
                 hello world
             </span>
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
+            </span>
             <span class="sidebar-tag-name" data-tags="host-gw">
                 <span class="iconfont-archer">&#xe606;</span>
                 host-gw
+            </span>
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
+            </span>
+            <span class="sidebar-tag-name" data-tags="iptables">
+                <span class="iconfont-archer">&#xe606;</span>
+                iptables
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipset">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipset
+            </span>
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
             <span class="sidebar-tag-name" data-tags="mqtt">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2858,9 +3029,41 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 confluence
             </span>
+            <span class="sidebar-tag-name" data-tags="lvs">
+                <span class="iconfont-archer">&#xe606;</span>
+                lvs
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipvsadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipvsadm
+            </span>
+            <span class="sidebar-tag-name" data-tags="kube-proxy">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-proxy
+            </span>
+            <span class="sidebar-tag-name" data-tags="nodeport">
+                <span class="iconfont-archer">&#xe606;</span>
+                nodeport
+            </span>
             <span class="sidebar-tag-name" data-tags="kube-controller-manager">
                 <span class="iconfont-archer">&#xe606;</span>
                 kube-controller-manager
+            </span>
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+            <span class="sidebar-tag-name" data-tags="hostname">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostname
+            </span>
+            <span class="sidebar-tag-name" data-tags="ttf">
+                <span class="iconfont-archer">&#xe606;</span>
+                ttf
+            </span>
+            <span class="sidebar-tag-name" data-tags="woff">
+                <span class="iconfont-archer">&#xe606;</span>
+                woff
             </span>
             <span class="sidebar-tag-name" data-tags="java">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2870,6 +3073,14 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 springboot
             </span>
+            <span class="sidebar-tag-name" data-tags="63s">
+                <span class="iconfont-archer">&#xe606;</span>
+                63s
+            </span>
+            <span class="sidebar-tag-name" data-tags="timeout">
+                <span class="iconfont-archer">&#xe606;</span>
+                timeout
+            </span>
             <span class="sidebar-tag-name" data-tags="vip">
                 <span class="iconfont-archer">&#xe606;</span>
                 vip
@@ -2877,6 +3088,30 @@
             <span class="sidebar-tag-name" data-tags="keepalived">
                 <span class="iconfont-archer">&#xe606;</span>
                 keepalived
+            </span>
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
+            </span>
+            <span class="sidebar-tag-name" data-tags="kube-log-runner">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-log-runner
+            </span>
+            <span class="sidebar-tag-name" data-tags="logrotate">
+                <span class="iconfont-archer">&#xe606;</span>
+                logrotate
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubelet">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubelet
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubeadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeadm
+            </span>
+            <span class="sidebar-tag-name" data-tags="operator">
+                <span class="iconfont-archer">&#xe606;</span>
+                operator
             </span>
             <span class="sidebar-tag-name" data-tags="ConfigMap">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2886,17 +3121,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 PodAffinity
             </span>
+            <span class="sidebar-tag-name" data-tags="nfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfs
+            </span>
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
+            </span>
             <span class="sidebar-tag-name" data-tags="kylin">
                 <span class="iconfont-archer">&#xe606;</span>
                 kylin
             </span>
-            <span class="sidebar-tag-name" data-tags="arm64">
+            <span class="sidebar-tag-name" data-tags="systemd">
                 <span class="iconfont-archer">&#xe606;</span>
-                arm64
+                systemd
             </span>
             <span class="sidebar-tag-name" data-tags="Kylin">
                 <span class="iconfont-archer">&#xe606;</span>
                 Kylin
+            </span>
+            <span class="sidebar-tag-name" data-tags="lamp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lamp
             </span>
             <span class="sidebar-tag-name" data-tags="audit">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2922,178 +3169,6 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 onedrive
             </span>
-            <span class="sidebar-tag-name" data-tags="nodeport">
-                <span class="iconfont-archer">&#xe606;</span>
-                nodeport
-            </span>
-            <span class="sidebar-tag-name" data-tags="usb-net">
-                <span class="iconfont-archer">&#xe606;</span>
-                usb-net
-            </span>
-            <span class="sidebar-tag-name" data-tags="overlay">
-                <span class="iconfont-archer">&#xe606;</span>
-                overlay
-            </span>
-            <span class="sidebar-tag-name" data-tags="kernal">
-                <span class="iconfont-archer">&#xe606;</span>
-                kernal
-            </span>
-            <span class="sidebar-tag-name" data-tags="preseed">
-                <span class="iconfont-archer">&#xe606;</span>
-                preseed
-            </span>
-            <span class="sidebar-tag-name" data-tags="Prometheus">
-                <span class="iconfont-archer">&#xe606;</span>
-                Prometheus
-            </span>
-            <span class="sidebar-tag-name" data-tags="openstack">
-                <span class="iconfont-archer">&#xe606;</span>
-                openstack
-            </span>
-            <span class="sidebar-tag-name" data-tags="cloud-init">
-                <span class="iconfont-archer">&#xe606;</span>
-                cloud-init
-            </span>
-            <span class="sidebar-tag-name" data-tags="python">
-                <span class="iconfont-archer">&#xe606;</span>
-                python
-            </span>
-            <span class="sidebar-tag-name" data-tags="containerd">
-                <span class="iconfont-archer">&#xe606;</span>
-                containerd
-            </span>
-            <span class="sidebar-tag-name" data-tags="keepalive">
-                <span class="iconfont-archer">&#xe606;</span>
-                keepalive
-            </span>
-            <span class="sidebar-tag-name" data-tags="shell">
-                <span class="iconfont-archer">&#xe606;</span>
-                shell
-            </span>
-            <span class="sidebar-tag-name" data-tags="bash">
-                <span class="iconfont-archer">&#xe606;</span>
-                bash
-            </span>
-            <span class="sidebar-tag-name" data-tags="skopeo">
-                <span class="iconfont-archer">&#xe606;</span>
-                skopeo
-            </span>
-            <span class="sidebar-tag-name" data-tags="ssh">
-                <span class="iconfont-archer">&#xe606;</span>
-                ssh
-            </span>
-            <span class="sidebar-tag-name" data-tags="kubelet">
-                <span class="iconfont-archer">&#xe606;</span>
-                kubelet
-            </span>
-            <span class="sidebar-tag-name" data-tags="systemd">
-                <span class="iconfont-archer">&#xe606;</span>
-                systemd
-            </span>
-            <span class="sidebar-tag-name" data-tags="dockerhub">
-                <span class="iconfont-archer">&#xe606;</span>
-                dockerhub
-            </span>
-            <span class="sidebar-tag-name" data-tags="gcr.io">
-                <span class="iconfont-archer">&#xe606;</span>
-                gcr.io
-            </span>
-            <span class="sidebar-tag-name" data-tags="api">
-                <span class="iconfont-archer">&#xe606;</span>
-                api
-            </span>
-            <span class="sidebar-tag-name" data-tags="ubuntu18">
-                <span class="iconfont-archer">&#xe606;</span>
-                ubuntu18
-            </span>
-            <span class="sidebar-tag-name" data-tags="initrd">
-                <span class="iconfont-archer">&#xe606;</span>
-                initrd
-            </span>
-            <span class="sidebar-tag-name" data-tags="tftp">
-                <span class="iconfont-archer">&#xe606;</span>
-                tftp
-            </span>
-            <span class="sidebar-tag-name" data-tags="uos">
-                <span class="iconfont-archer">&#xe606;</span>
-                uos
-            </span>
-            <span class="sidebar-tag-name" data-tags="x86">
-                <span class="iconfont-archer">&#xe606;</span>
-                x86
-            </span>
-            <span class="sidebar-tag-name" data-tags="openwrt">
-                <span class="iconfont-archer">&#xe606;</span>
-                openwrt
-            </span>
-            <span class="sidebar-tag-name" data-tags="zabbix">
-                <span class="iconfont-archer">&#xe606;</span>
-                zabbix
-            </span>
-            <span class="sidebar-tag-name" data-tags="zombie">
-                <span class="iconfont-archer">&#xe606;</span>
-                zombie
-            </span>
-            <span class="sidebar-tag-name" data-tags="正则">
-                <span class="iconfont-archer">&#xe606;</span>
-                正则
-            </span>
-            <span class="sidebar-tag-name" data-tags="awk">
-                <span class="iconfont-archer">&#xe606;</span>
-                awk
-            </span>
-            <span class="sidebar-tag-name" data-tags="EmuELEC">
-                <span class="iconfont-archer">&#xe606;</span>
-                EmuELEC
-            </span>
-            <span class="sidebar-tag-name" data-tags="ingress">
-                <span class="iconfont-archer">&#xe606;</span>
-                ingress
-            </span>
-            <span class="sidebar-tag-name" data-tags="N1">
-                <span class="iconfont-archer">&#xe606;</span>
-                N1
-            </span>
-            <span class="sidebar-tag-name" data-tags="cobra">
-                <span class="iconfont-archer">&#xe606;</span>
-                cobra
-            </span>
-            <span class="sidebar-tag-name" data-tags="hang">
-                <span class="iconfont-archer">&#xe606;</span>
-                hang
-            </span>
-            <span class="sidebar-tag-name" data-tags="cifs">
-                <span class="iconfont-archer">&#xe606;</span>
-                cifs
-            </span>
-            <span class="sidebar-tag-name" data-tags="http">
-                <span class="iconfont-archer">&#xe606;</span>
-                http
-            </span>
-            <span class="sidebar-tag-name" data-tags="lvs">
-                <span class="iconfont-archer">&#xe606;</span>
-                lvs
-            </span>
-            <span class="sidebar-tag-name" data-tags="ipvsadm">
-                <span class="iconfont-archer">&#xe606;</span>
-                ipvsadm
-            </span>
-            <span class="sidebar-tag-name" data-tags="kube-proxy">
-                <span class="iconfont-archer">&#xe606;</span>
-                kube-proxy
-            </span>
-            <span class="sidebar-tag-name" data-tags="63s">
-                <span class="iconfont-archer">&#xe606;</span>
-                63s
-            </span>
-            <span class="sidebar-tag-name" data-tags="timeout">
-                <span class="iconfont-archer">&#xe606;</span>
-                timeout
-            </span>
-            <span class="sidebar-tag-name" data-tags="lamp">
-                <span class="iconfont-archer">&#xe606;</span>
-                lamp
-            </span>
             <span class="sidebar-tag-name" data-tags="nfc">
                 <span class="iconfont-archer">&#xe606;</span>
                 nfc
@@ -3102,9 +3177,25 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 pm3
             </span>
+            <span class="sidebar-tag-name" data-tags="non-root">
+                <span class="iconfont-archer">&#xe606;</span>
+                non-root
+            </span>
+            <span class="sidebar-tag-name" data-tags="containers">
+                <span class="iconfont-archer">&#xe606;</span>
+                containers
+            </span>
             <span class="sidebar-tag-name" data-tags="coredns">
                 <span class="iconfont-archer">&#xe606;</span>
                 coredns
+            </span>
+            <span class="sidebar-tag-name" data-tags="gpu">
+                <span class="iconfont-archer">&#xe606;</span>
+                gpu
+            </span>
+            <span class="sidebar-tag-name" data-tags="nvidia">
+                <span class="iconfont-archer">&#xe606;</span>
+                nvidia
             </span>
             <span class="sidebar-tag-name" data-tags="openshift">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -3114,65 +3205,41 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 ocp
             </span>
+            <span class="sidebar-tag-name" data-tags="openstack">
+                <span class="iconfont-archer">&#xe606;</span>
+                openstack
+            </span>
             <span class="sidebar-tag-name" data-tags="squashfs">
                 <span class="iconfont-archer">&#xe606;</span>
                 squashfs
+            </span>
+            <span class="sidebar-tag-name" data-tags="usb-net">
+                <span class="iconfont-archer">&#xe606;</span>
+                usb-net
+            </span>
+            <span class="sidebar-tag-name" data-tags="overlay">
+                <span class="iconfont-archer">&#xe606;</span>
+                overlay
+            </span>
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
+            </span>
+            <span class="sidebar-tag-name" data-tags="pprof">
+                <span class="iconfont-archer">&#xe606;</span>
+                pprof
             </span>
             <span class="sidebar-tag-name" data-tags="timezone">
                 <span class="iconfont-archer">&#xe606;</span>
                 timezone
             </span>
-            <span class="sidebar-tag-name" data-tags="rpm">
+            <span class="sidebar-tag-name" data-tags="Prometheus">
                 <span class="iconfont-archer">&#xe606;</span>
-                rpm
+                Prometheus
             </span>
-            <span class="sidebar-tag-name" data-tags="rpmbuild">
+            <span class="sidebar-tag-name" data-tags="cloud-init">
                 <span class="iconfont-archer">&#xe606;</span>
-                rpmbuild
-            </span>
-            <span class="sidebar-tag-name" data-tags="segfault">
-                <span class="iconfont-archer">&#xe606;</span>
-                segfault
-            </span>
-            <span class="sidebar-tag-name" data-tags="suse">
-                <span class="iconfont-archer">&#xe606;</span>
-                suse
-            </span>
-            <span class="sidebar-tag-name" data-tags="wireguard">
-                <span class="iconfont-archer">&#xe606;</span>
-                wireguard
-            </span>
-            <span class="sidebar-tag-name" data-tags="raid">
-                <span class="iconfont-archer">&#xe606;</span>
-                raid
-            </span>
-            <span class="sidebar-tag-name" data-tags="kubeadm">
-                <span class="iconfont-archer">&#xe606;</span>
-                kubeadm
-            </span>
-            <span class="sidebar-tag-name" data-tags="operator">
-                <span class="iconfont-archer">&#xe606;</span>
-                operator
-            </span>
-            <span class="sidebar-tag-name" data-tags="exsi">
-                <span class="iconfont-archer">&#xe606;</span>
-                exsi
-            </span>
-            <span class="sidebar-tag-name" data-tags="redhat8.4">
-                <span class="iconfont-archer">&#xe606;</span>
-                redhat8.4
-            </span>
-            <span class="sidebar-tag-name" data-tags="vxlan">
-                <span class="iconfont-archer">&#xe606;</span>
-                vxlan
-            </span>
-            <span class="sidebar-tag-name" data-tags="veth">
-                <span class="iconfont-archer">&#xe606;</span>
-                veth
-            </span>
-            <span class="sidebar-tag-name" data-tags="panic">
-                <span class="iconfont-archer">&#xe606;</span>
-                panic
+                cloud-init
             </span>
             <span class="sidebar-tag-name" data-tags="supervisor">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -3182,17 +3249,21 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 pyinstaller
             </span>
-            <span class="sidebar-tag-name" data-tags="ttf">
+            <span class="sidebar-tag-name" data-tags="python">
                 <span class="iconfont-archer">&#xe606;</span>
-                ttf
+                python
             </span>
-            <span class="sidebar-tag-name" data-tags="woff">
+            <span class="sidebar-tag-name" data-tags="preseed">
                 <span class="iconfont-archer">&#xe606;</span>
-                woff
+                preseed
             </span>
-            <span class="sidebar-tag-name" data-tags="hostname">
+            <span class="sidebar-tag-name" data-tags="proxmox">
                 <span class="iconfont-archer">&#xe606;</span>
-                hostname
+                proxmox
+            </span>
+            <span class="sidebar-tag-name" data-tags="grpc">
+                <span class="iconfont-archer">&#xe606;</span>
+                grpc
             </span>
             <span class="sidebar-tag-name" data-tags="qemu">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -3206,157 +3277,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
             </span>
-            <span class="sidebar-tag-name" data-tags="externalIP">
-                <span class="iconfont-archer">&#xe606;</span>
-                externalIP
-            </span>
             <span class="sidebar-tag-name" data-tags="cgo">
                 <span class="iconfont-archer">&#xe606;</span>
                 cgo
-            </span>
-            <span class="sidebar-tag-name" data-tags="nfs">
-                <span class="iconfont-archer">&#xe606;</span>
-                nfs
-            </span>
-            <span class="sidebar-tag-name" data-tags="ipset">
-                <span class="iconfont-archer">&#xe606;</span>
-                ipset
-            </span>
-            <span class="sidebar-tag-name" data-tags="proxmox">
-                <span class="iconfont-archer">&#xe606;</span>
-                proxmox
-            </span>
-            <span class="sidebar-tag-name" data-tags="non-root">
-                <span class="iconfont-archer">&#xe606;</span>
-                non-root
-            </span>
-            <span class="sidebar-tag-name" data-tags="containers">
-                <span class="iconfont-archer">&#xe606;</span>
-                containers
-            </span>
-            <span class="sidebar-tag-name" data-tags="vmware">
-                <span class="iconfont-archer">&#xe606;</span>
-                vmware
-            </span>
-            <span class="sidebar-tag-name" data-tags="hung">
-                <span class="iconfont-archer">&#xe606;</span>
-                hung
-            </span>
-            <span class="sidebar-tag-name" data-tags="apparmor">
-                <span class="iconfont-archer">&#xe606;</span>
-                apparmor
-            </span>
-            <span class="sidebar-tag-name" data-tags="serviceAccountToken">
-                <span class="iconfont-archer">&#xe606;</span>
-                serviceAccountToken
-            </span>
-            <span class="sidebar-tag-name" data-tags="gpu">
-                <span class="iconfont-archer">&#xe606;</span>
-                gpu
-            </span>
-            <span class="sidebar-tag-name" data-tags="nvidia">
-                <span class="iconfont-archer">&#xe606;</span>
-                nvidia
-            </span>
-            <span class="sidebar-tag-name" data-tags="cri-dockerd">
-                <span class="iconfont-archer">&#xe606;</span>
-                cri-dockerd
-            </span>
-            <span class="sidebar-tag-name" data-tags="pprof">
-                <span class="iconfont-archer">&#xe606;</span>
-                pprof
-            </span>
-            <span class="sidebar-tag-name" data-tags="trivy">
-                <span class="iconfont-archer">&#xe606;</span>
-                trivy
             </span>
             <span class="sidebar-tag-name" data-tags="redis">
                 <span class="iconfont-archer">&#xe606;</span>
                 redis
             </span>
-            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+            <span class="sidebar-tag-name" data-tags="exsi">
                 <span class="iconfont-archer">&#xe606;</span>
-                /etc/resolv.conf
+                exsi
             </span>
-            <span class="sidebar-tag-name" data-tags="hostPort">
+            <span class="sidebar-tag-name" data-tags="redhat8.4">
                 <span class="iconfont-archer">&#xe606;</span>
-                hostPort
+                redhat8.4
             </span>
-            <span class="sidebar-tag-name" data-tags="hotplug">
+            <span class="sidebar-tag-name" data-tags="rpm">
                 <span class="iconfont-archer">&#xe606;</span>
-                hotplug
+                rpm
             </span>
-            <span class="sidebar-tag-name" data-tags="android">
+            <span class="sidebar-tag-name" data-tags="rpmbuild">
                 <span class="iconfont-archer">&#xe606;</span>
-                android
-            </span>
-            <span class="sidebar-tag-name" data-tags="headscale">
-                <span class="iconfont-archer">&#xe606;</span>
-                headscale
-            </span>
-            <span class="sidebar-tag-name" data-tags="derper">
-                <span class="iconfont-archer">&#xe606;</span>
-                derper
-            </span>
-            <span class="sidebar-tag-name" data-tags="iptables">
-                <span class="iconfont-archer">&#xe606;</span>
-                iptables
-            </span>
-            <span class="sidebar-tag-name" data-tags="inotifywait">
-                <span class="iconfont-archer">&#xe606;</span>
-                inotifywait
-            </span>
-            <span class="sidebar-tag-name" data-tags="confd">
-                <span class="iconfont-archer">&#xe606;</span>
-                confd
-            </span>
-            <span class="sidebar-tag-name" data-tags="net">
-                <span class="iconfont-archer">&#xe606;</span>
-                net
-            </span>
-            <span class="sidebar-tag-name" data-tags="clickhouse">
-                <span class="iconfont-archer">&#xe606;</span>
-                clickhouse
-            </span>
-            <span class="sidebar-tag-name" data-tags="ssl">
-                <span class="iconfont-archer">&#xe606;</span>
-                ssl
-            </span>
-            <span class="sidebar-tag-name" data-tags="aliyun">
-                <span class="iconfont-archer">&#xe606;</span>
-                aliyun
-            </span>
-            <span class="sidebar-tag-name" data-tags="kube-log-runner">
-                <span class="iconfont-archer">&#xe606;</span>
-                kube-log-runner
-            </span>
-            <span class="sidebar-tag-name" data-tags="logrotate">
-                <span class="iconfont-archer">&#xe606;</span>
-                logrotate
-            </span>
-            <span class="sidebar-tag-name" data-tags="tun2sock2">
-                <span class="iconfont-archer">&#xe606;</span>
-                tun2sock2
-            </span>
-            <span class="sidebar-tag-name" data-tags="gitlab">
-                <span class="iconfont-archer">&#xe606;</span>
-                gitlab
-            </span>
-            <span class="sidebar-tag-name" data-tags="subgroup">
-                <span class="iconfont-archer">&#xe606;</span>
-                subgroup
-            </span>
-            <span class="sidebar-tag-name" data-tags="grpc">
-                <span class="iconfont-archer">&#xe606;</span>
-                grpc
-            </span>
-            <span class="sidebar-tag-name" data-tags="podman">
-                <span class="iconfont-archer">&#xe606;</span>
-                podman
-            </span>
-            <span class="sidebar-tag-name" data-tags="centos">
-                <span class="iconfont-archer">&#xe606;</span>
-                centos
+                rpmbuild
             </span>
             <span class="sidebar-tag-name" data-tags="salt">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -3370,13 +3313,105 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
             </span>
-            <span class="sidebar-tag-name" data-tags="fnctl">
+            <span class="sidebar-tag-name" data-tags="vmware">
                 <span class="iconfont-archer">&#xe606;</span>
-                fnctl
+                vmware
+            </span>
+            <span class="sidebar-tag-name" data-tags="hung">
+                <span class="iconfont-archer">&#xe606;</span>
+                hung
+            </span>
+            <span class="sidebar-tag-name" data-tags="keepalive">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalive
+            </span>
+            <span class="sidebar-tag-name" data-tags="serviceAccountToken">
+                <span class="iconfont-archer">&#xe606;</span>
+                serviceAccountToken
+            </span>
+            <span class="sidebar-tag-name" data-tags="bash">
+                <span class="iconfont-archer">&#xe606;</span>
+                bash
+            </span>
+            <span class="sidebar-tag-name" data-tags="shell">
+                <span class="iconfont-archer">&#xe606;</span>
+                shell
+            </span>
+            <span class="sidebar-tag-name" data-tags="segfault">
+                <span class="iconfont-archer">&#xe606;</span>
+                segfault
+            </span>
+            <span class="sidebar-tag-name" data-tags="skopeo">
+                <span class="iconfont-archer">&#xe606;</span>
+                skopeo
             </span>
             <span class="sidebar-tag-name" data-tags="boltdb">
                 <span class="iconfont-archer">&#xe606;</span>
                 boltdb
+            </span>
+            <span class="sidebar-tag-name" data-tags="ssh">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssh
+            </span>
+            <span class="sidebar-tag-name" data-tags="suse">
+                <span class="iconfont-archer">&#xe606;</span>
+                suse
+            </span>
+            <span class="sidebar-tag-name" data-tags="dockerhub">
+                <span class="iconfont-archer">&#xe606;</span>
+                dockerhub
+            </span>
+            <span class="sidebar-tag-name" data-tags="gcr.io">
+                <span class="iconfont-archer">&#xe606;</span>
+                gcr.io
+            </span>
+            <span class="sidebar-tag-name" data-tags="微信">
+                <span class="iconfont-archer">&#xe606;</span>
+                微信
+            </span>
+            <span class="sidebar-tag-name" data-tags="api">
+                <span class="iconfont-archer">&#xe606;</span>
+                api
+            </span>
+            <span class="sidebar-tag-name" data-tags="ubuntu18">
+                <span class="iconfont-archer">&#xe606;</span>
+                ubuntu18
+            </span>
+            <span class="sidebar-tag-name" data-tags="tftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tftp
+            </span>
+            <span class="sidebar-tag-name" data-tags="trivy">
+                <span class="iconfont-archer">&#xe606;</span>
+                trivy
+            </span>
+            <span class="sidebar-tag-name" data-tags="uos">
+                <span class="iconfont-archer">&#xe606;</span>
+                uos
+            </span>
+            <span class="sidebar-tag-name" data-tags="wireguard">
+                <span class="iconfont-archer">&#xe606;</span>
+                wireguard
+            </span>
+            <span class="sidebar-tag-name" data-tags="x86">
+                <span class="iconfont-archer">&#xe606;</span>
+                x86
+            </span>
+            <span class="sidebar-tag-name" data-tags="zombie">
+                <span class="iconfont-archer">&#xe606;</span>
+                zombie
+            </span>
+            <span class="sidebar-tag-name" data-tags="zabbix">
+                <span class="iconfont-archer">&#xe606;</span>
+                zabbix
+            </span>
+            <span class="sidebar-tag-name" data-tags="正则">
+                <span class="iconfont-archer">&#xe606;</span>
+                正则
+            </span>
+            <span class="sidebar-tag-name" data-tags="awk">
+                <span class="iconfont-archer">&#xe606;</span>
+                awk
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -3392,37 +3427,37 @@
             <span class="iconfont-archer">&#xe60a;</span>
             日志
         </span>
-        <span class="sidebar-category-name" data-categories="心得">
+        <span class="sidebar-category-name" data-categories="ipmi">
             <span class="iconfont-archer">&#xe60a;</span>
-            心得
+            ipmi
         </span>
         <span class="sidebar-category-name" data-categories="闲搞">
             <span class="iconfont-archer">&#xe60a;</span>
             闲搞
         </span>
-        <span class="sidebar-category-name" data-categories="ipmi">
-            <span class="iconfont-archer">&#xe60a;</span>
-            ipmi
-        </span>
         <span class="sidebar-category-name" data-categories="kubernetes">
             <span class="iconfont-archer">&#xe60a;</span>
             kubernetes
         </span>
-        <span class="sidebar-category-name" data-categories="ansible">
+        <span class="sidebar-category-name" data-categories="心得">
             <span class="iconfont-archer">&#xe60a;</span>
-            ansible
+            心得
         </span>
         <span class="sidebar-category-name" data-categories="kubelet">
             <span class="iconfont-archer">&#xe60a;</span>
             kubelet
         </span>
+        <span class="sidebar-category-name" data-categories="ansible">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ansible
+        </span>
+        <span class="sidebar-category-name" data-categories="pxe">
+            <span class="iconfont-archer">&#xe60a;</span>
+            pxe
+        </span>
         <span class="sidebar-category-name" data-categories="Linux">
             <span class="iconfont-archer">&#xe60a;</span>
             Linux
-        </span>
-        <span class="sidebar-category-name" data-categories="心得">
-            <span class="iconfont-archer">&#xe60a;</span>
-            心得
         </span>
         <span class="sidebar-category-name" data-categories="prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -3436,13 +3471,25 @@
             <span class="iconfont-archer">&#xe60a;</span>
             Auto cad
         </span>
-        <span class="sidebar-category-name" data-categories="boot">
+        <span class="sidebar-category-name" data-categories="心得">
             <span class="iconfont-archer">&#xe60a;</span>
-            boot
+            心得
         </span>
         <span class="sidebar-category-name" data-categories="golang">
             <span class="iconfont-archer">&#xe60a;</span>
             golang
+        </span>
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+        <span class="sidebar-category-name" data-categories="consul">
+            <span class="iconfont-archer">&#xe60a;</span>
+            consul
         </span>
         <span class="sidebar-category-name" data-categories="kubeconfig">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -3463,6 +3510,10 @@
         <span class="sidebar-category-name" data-categories="容器">
             <span class="iconfont-archer">&#xe60a;</span>
             容器
+        </span>
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
         </span>
         <span class="sidebar-category-name" data-categories="docker">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -3488,6 +3539,14 @@
             <span class="iconfont-archer">&#xe60a;</span>
             vsftp
         </span>
+        <span class="sidebar-category-name" data-categories="fstab">
+            <span class="iconfont-archer">&#xe60a;</span>
+            fstab
+        </span>
+        <span class="sidebar-category-name" data-categories="panic">
+            <span class="iconfont-archer">&#xe60a;</span>
+            panic
+        </span>
         <span class="sidebar-category-name" data-categories="go">
             <span class="iconfont-archer">&#xe60a;</span>
             go
@@ -3496,13 +3555,13 @@
             <span class="iconfont-archer">&#xe60a;</span>
             version
         </span>
-        <span class="sidebar-category-name" data-categories="panic">
-            <span class="iconfont-archer">&#xe60a;</span>
-            panic
-        </span>
         <span class="sidebar-category-name" data-categories="gobot">
             <span class="iconfont-archer">&#xe60a;</span>
             gobot
+        </span>
+        <span class="sidebar-category-name" data-categories="http">
+            <span class="iconfont-archer">&#xe60a;</span>
+            http
         </span>
         <span class="sidebar-category-name" data-categories="闲聊">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -3520,125 +3579,69 @@
             <span class="iconfont-archer">&#xe60a;</span>
             kube-controller-manager
         </span>
-        <span class="sidebar-category-name" data-categories="keepalived">
+        <span class="sidebar-category-name" data-categories="Prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
-            keepalived
+            Prometheus
         </span>
         <span class="sidebar-category-name" data-categories="k8s">
             <span class="iconfont-archer">&#xe60a;</span>
             k8s
         </span>
-        <span class="sidebar-category-name" data-categories="Prometheus">
+        <span class="sidebar-category-name" data-categories="keepalived">
             <span class="iconfont-archer">&#xe60a;</span>
-            Prometheus
+            keepalived
+        </span>
+        <span class="sidebar-category-name" data-categories="kubeadm">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeadm
+        </span>
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
         </span>
         <span class="sidebar-category-name" data-categories="Job">
             <span class="iconfont-archer">&#xe60a;</span>
             Job
         </span>
-        <span class="sidebar-category-name" data-categories="k8s">
+        <span class="sidebar-category-name" data-categories="vxlan">
             <span class="iconfont-archer">&#xe60a;</span>
-            k8s
-        </span>
-        <span class="sidebar-category-name" data-categories="lua">
-            <span class="iconfont-archer">&#xe60a;</span>
-            lua
-        </span>
-        <span class="sidebar-category-name" data-categories="microsoft">
-            <span class="iconfont-archer">&#xe60a;</span>
-            microsoft
-        </span>
-        <span class="sidebar-category-name" data-categories="openwrt">
-            <span class="iconfont-archer">&#xe60a;</span>
-            openwrt
-        </span>
-        <span class="sidebar-category-name" data-categories="preseed">
-            <span class="iconfont-archer">&#xe60a;</span>
-            preseed
-        </span>
-        <span class="sidebar-category-name" data-categories="Prometheus">
-            <span class="iconfont-archer">&#xe60a;</span>
-            Prometheus
-        </span>
-        <span class="sidebar-category-name" data-categories="proxmox">
-            <span class="iconfont-archer">&#xe60a;</span>
-            proxmox
-        </span>
-        <span class="sidebar-category-name" data-categories="总结">
-            <span class="iconfont-archer">&#xe60a;</span>
-            总结
-        </span>
-        <span class="sidebar-category-name" data-categories="CI">
-            <span class="iconfont-archer">&#xe60a;</span>
-            CI
+            vxlan
         </span>
         <span class="sidebar-category-name" data-categories="Kylin">
             <span class="iconfont-archer">&#xe60a;</span>
             Kylin
         </span>
-        <span class="sidebar-category-name" data-categories="ubuntu18">
+        <span class="sidebar-category-name" data-categories="kmem">
             <span class="iconfont-archer">&#xe60a;</span>
-            ubuntu18
+            kmem
         </span>
-        <span class="sidebar-category-name" data-categories="pxe">
+        <span class="sidebar-category-name" data-categories="lua">
             <span class="iconfont-archer">&#xe60a;</span>
-            pxe
+            lua
         </span>
-        <span class="sidebar-category-name" data-categories="uos">
+        <span class="sidebar-category-name" data-categories="LVM">
             <span class="iconfont-archer">&#xe60a;</span>
-            uos
+            LVM
         </span>
-        <span class="sidebar-category-name" data-categories="graph">
+        <span class="sidebar-category-name" data-categories="microsoft">
             <span class="iconfont-archer">&#xe60a;</span>
-            graph
-        </span>
-        <span class="sidebar-category-name" data-categories="运维">
-            <span class="iconfont-archer">&#xe60a;</span>
-            运维
-        </span>
-        <span class="sidebar-category-name" data-categories="zombie">
-            <span class="iconfont-archer">&#xe60a;</span>
-            zombie
-        </span>
-        <span class="sidebar-category-name" data-categories="技巧">
-            <span class="iconfont-archer">&#xe60a;</span>
-            技巧
-        </span>
-        <span class="sidebar-category-name" data-categories="travis">
-            <span class="iconfont-archer">&#xe60a;</span>
-            travis
-        </span>
-        <span class="sidebar-category-name" data-categories="docker">
-            <span class="iconfont-archer">&#xe60a;</span>
-            docker
-        </span>
-        <span class="sidebar-category-name" data-categories="onedrive">
-            <span class="iconfont-archer">&#xe60a;</span>
-            onedrive
-        </span>
-        <span class="sidebar-category-name" data-categories="kickstart">
-            <span class="iconfont-archer">&#xe60a;</span>
-            kickstart
-        </span>
-        <span class="sidebar-category-name" data-categories="consul">
-            <span class="iconfont-archer">&#xe60a;</span>
-            consul
-        </span>
-        <span class="sidebar-category-name" data-categories="fstab">
-            <span class="iconfont-archer">&#xe60a;</span>
-            fstab
-        </span>
-        <span class="sidebar-category-name" data-categories="http">
-            <span class="iconfont-archer">&#xe60a;</span>
-            http
-        </span>
-        <span class="sidebar-category-name" data-categories="vxlan">
-            <span class="iconfont-archer">&#xe60a;</span>
-            vxlan
+            microsoft
         </span>
         <span class="sidebar-category-name" data-categories="coredns">
             <span class="iconfont-archer">&#xe60a;</span>
             coredns
+        </span>
+        <span class="sidebar-category-name" data-categories="openwrt">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openwrt
+        </span>
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+        <span class="sidebar-category-name" data-categories="graph">
+            <span class="iconfont-archer">&#xe60a;</span>
+            graph
         </span>
         <span class="sidebar-category-name" data-categories="node-cache">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -3648,41 +3651,73 @@
             <span class="iconfont-archer">&#xe60a;</span>
             golang
         </span>
-        <span class="sidebar-category-name" data-categories="kmem">
+        <span class="sidebar-category-name" data-categories="Prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
-            kmem
-        </span>
-        <span class="sidebar-category-name" data-categories="suse">
-            <span class="iconfont-archer">&#xe60a;</span>
-            suse
-        </span>
-        <span class="sidebar-category-name" data-categories="wireguard">
-            <span class="iconfont-archer">&#xe60a;</span>
-            wireguard
-        </span>
-        <span class="sidebar-category-name" data-categories="raid">
-            <span class="iconfont-archer">&#xe60a;</span>
-            raid
-        </span>
-        <span class="sidebar-category-name" data-categories="kubeadm">
-            <span class="iconfont-archer">&#xe60a;</span>
-            kubeadm
-        </span>
-        <span class="sidebar-category-name" data-categories="LVM">
-            <span class="iconfont-archer">&#xe60a;</span>
-            LVM
-        </span>
-        <span class="sidebar-category-name" data-categories="kickstart">
-            <span class="iconfont-archer">&#xe60a;</span>
-            kickstart
+            Prometheus
         </span>
         <span class="sidebar-category-name" data-categories="prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
             prometheus
         </span>
-        <span class="sidebar-category-name" data-categories="raid">
+        <span class="sidebar-category-name" data-categories="proxmox">
             <span class="iconfont-archer">&#xe60a;</span>
-            raid
+            proxmox
+        </span>
+        <span class="sidebar-category-name" data-categories="preseed">
+            <span class="iconfont-archer">&#xe60a;</span>
+            preseed
+        </span>
+        <span class="sidebar-category-name" data-categories="onedrive">
+            <span class="iconfont-archer">&#xe60a;</span>
+            onedrive
+        </span>
+        <span class="sidebar-category-name" data-categories="总结">
+            <span class="iconfont-archer">&#xe60a;</span>
+            总结
+        </span>
+        <span class="sidebar-category-name" data-categories="suse">
+            <span class="iconfont-archer">&#xe60a;</span>
+            suse
+        </span>
+        <span class="sidebar-category-name" data-categories="CI">
+            <span class="iconfont-archer">&#xe60a;</span>
+            CI
+        </span>
+        <span class="sidebar-category-name" data-categories="ubuntu18">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ubuntu18
+        </span>
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+        <span class="sidebar-category-name" data-categories="travis">
+            <span class="iconfont-archer">&#xe60a;</span>
+            travis
+        </span>
+        <span class="sidebar-category-name" data-categories="uos">
+            <span class="iconfont-archer">&#xe60a;</span>
+            uos
+        </span>
+        <span class="sidebar-category-name" data-categories="wireguard">
+            <span class="iconfont-archer">&#xe60a;</span>
+            wireguard
+        </span>
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+        <span class="sidebar-category-name" data-categories="zombie">
+            <span class="iconfont-archer">&#xe60a;</span>
+            zombie
+        </span>
+        <span class="sidebar-category-name" data-categories="运维">
+            <span class="iconfont-archer">&#xe60a;</span>
+            运维
+        </span>
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
         </span>
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

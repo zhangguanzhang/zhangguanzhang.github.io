@@ -525,7 +525,7 @@
 <p>为啥那个-ti centos &#x2F;bin&#x2F;bash这么常见，很多人因为不懂在它的执行结果上把容器当作虚拟机了<br>先通过非&#x2F;bin&#x2F;bash的cmd的效果来讲解</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@guan ~]# docker run -d centos ls</span><br><span class="line">24b2195731fef5b3e52898bcb7e2c6cebdb9afb8cfc929c1e69ed7126e967699</span><br><span class="line">[root@guan ~]# docker run -d centos sleep 10</span><br><span class="line">8c0a7cba4af9a847e0092e1855426149cf093ef90fd4b91b1cbf452001176a38</span><br><span class="line">[root@guan ~]# docker ps -a</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS                                      NAMES</span><br><span class="line">8c0a7cba4af9        centos              &quot;sleep 10&quot;               4 seconds ago       Up 3 seconds                                                     cocky_visvesvaraya</span><br><span class="line">24b2195731fe        centos              &quot;ls&quot;                     10 seconds ago      Exited (0) 9 seconds ago                                         friendly_mirzakhani</span><br><span class="line">[root@guan ~]# docker ps -a</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                          PORTS                                      NAMES</span><br><span class="line">8c0a7cba4af9        centos              &quot;sleep 10&quot;               About a minute ago   Exited (0) 15 seconds ago                                       cocky_visvesvaraya</span><br><span class="line">24b2195731fe        centos              &quot;ls&quot;                     About a minute ago   Exited (0) 29 seconds ago                                       friendly_mirzakhani</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>上面用centos镜像(-d选项是把容器后台运行，毕竟容器执行命令，你不后台你就要等带容器前台输出并且执行完命令)来执行了两个命令<br>一个cmd是ls，一个是sleep 10<br>然后全部后台后用docker ps -a查看所有容器状态信息可以看到ls那个容器已经退出，sleep 10这个没退出,但是10秒过后这个容器也退出了<br>形象的说明了容器是需要主进程一直执行的<br>另外可以看到容器里你的主进程pid是1</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@guan ~]<span class="comment"># docker run -d busybox sh -c &#x27;yes &gt;/dev/null&#x27;</span></span><br><span class="line">14b791dbc9bdd9921df666c1ae4163714d7dc38a1f61803d459c6bcdbeb346ea</span><br><span class="line">[root@guan ~]<span class="comment"># docker exec 14b ps</span></span><br><span class="line">PID   USER     TIME  COMMAND</span><br><span class="line">    1 root      0:07 <span class="built_in">yes</span></span><br><span class="line">    5 root      0:00 ps</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@guan ~]# docker run -d busybox sh -c <span class="string">&#x27;yes &gt;/dev/null&#x27;</span></span><br><span class="line">14b791dbc9bdd9921df666c1ae4163714d7dc38a1f61803d459c6bcdbeb346ea</span><br><span class="line">[root@guan ~]# docker <span class="built_in">exec</span> 14b ps</span><br><span class="line">PID   USER     TIME  COMMAND</span><br><span class="line">    1 root      0:07 <span class="built_in">yes</span></span><br><span class="line">    5 root      0:00 ps</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <ul>
@@ -539,7 +539,7 @@
 </ul>
 </blockquote>
 <p>可能另外有人说容器先跑个业务进程然后主进程是个死循环命令，不也可以吗<br>参照下面的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@guan <span class="built_in">test</span>]<span class="comment"># cat entrypoint.sh  </span></span><br><span class="line"><span class="comment">#!/bin/sh</span></span><br><span class="line"><span class="built_in">yes</span> &gt;/dev/null</span><br><span class="line"><span class="built_in">tail</span> -f /dev/null</span><br><span class="line">[root@guan <span class="built_in">test</span>]<span class="comment"># cat Dockerfile </span></span><br><span class="line">FROM busybox</span><br><span class="line">COPY entrypoint.sh /usr/bin/</span><br><span class="line">CMD entrypoint.sh</span><br><span class="line">[root@guan <span class="built_in">test</span>]<span class="comment"># docker build -t test:v1 .</span></span><br><span class="line">Sending build context to Docker daemon  3.072kB</span><br><span class="line">Step 1/3 : FROM busybox</span><br><span class="line"> ---&gt; f6e427c148a7</span><br><span class="line">Step 2/3 : COPY entrypoint.sh /usr/bin/</span><br><span class="line"> ---&gt; e422de461443</span><br><span class="line">Step 3/3 : CMD entrypoint.sh</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 2fc9efe10d35</span><br><span class="line">Removing intermediate container 2fc9efe10d35</span><br><span class="line"> ---&gt; 8cf73dc98e6a</span><br><span class="line">Successfully built 8cf73dc98e6a</span><br><span class="line">Successfully tagged <span class="built_in">test</span>:v1</span><br><span class="line">[root@guan <span class="built_in">test</span>]<span class="comment"># docker run -d --rm test:v1</span></span><br><span class="line">16519a06bb5d6826913d2c572282771371227c12fa8a9ad757f2ae9feddd02f6</span><br><span class="line">[root@guan <span class="built_in">test</span>]<span class="comment"># docker exec 1651 ps</span></span><br><span class="line">PID   USER     TIME  COMMAND</span><br><span class="line">    1 root      0:00 &#123;entrypoint.sh&#125; /bin/sh /usr/bin/entrypoint.sh</span><br><span class="line">    5 root      0:12 <span class="built_in">yes</span></span><br><span class="line">    6 root      0:00 ps</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@guan <span class="built_in">test</span>]# <span class="built_in">cat</span> entrypoint.sh  </span><br><span class="line"><span class="comment">#!/bin/sh</span></span><br><span class="line"><span class="built_in">yes</span> &gt;/dev/null</span><br><span class="line"><span class="built_in">tail</span> -f /dev/null</span><br><span class="line">[root@guan <span class="built_in">test</span>]# <span class="built_in">cat</span> Dockerfile </span><br><span class="line">FROM busybox</span><br><span class="line">COPY entrypoint.sh /usr/bin/</span><br><span class="line">CMD entrypoint.sh</span><br><span class="line">[root@guan <span class="built_in">test</span>]# docker build -t <span class="built_in">test</span>:v1 .</span><br><span class="line">Sending build context to Docker daemon  3.072kB</span><br><span class="line">Step 1/3 : FROM busybox</span><br><span class="line"> ---&gt; f6e427c148a7</span><br><span class="line">Step 2/3 : COPY entrypoint.sh /usr/bin/</span><br><span class="line"> ---&gt; e422de461443</span><br><span class="line">Step 3/3 : CMD entrypoint.sh</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 2fc9efe10d35</span><br><span class="line">Removing intermediate container 2fc9efe10d35</span><br><span class="line"> ---&gt; 8cf73dc98e6a</span><br><span class="line">Successfully built 8cf73dc98e6a</span><br><span class="line">Successfully tagged <span class="built_in">test</span>:v1</span><br><span class="line">[root@guan <span class="built_in">test</span>]# docker run -d --<span class="built_in">rm</span> <span class="built_in">test</span>:v1</span><br><span class="line">16519a06bb5d6826913d2c572282771371227c12fa8a9ad757f2ae9feddd02f6</span><br><span class="line">[root@guan <span class="built_in">test</span>]# docker <span class="built_in">exec</span> 1651 ps</span><br><span class="line">PID   USER     TIME  COMMAND</span><br><span class="line">    1 root      0:00 &#123;entrypoint.sh&#125; /bin/sh /usr/bin/entrypoint.sh</span><br><span class="line">    5 root      0:12 <span class="built_in">yes</span></span><br><span class="line">    6 root      0:00 ps</span><br></pre></td></tr></table></figure>
 
 <p>这里的pid为1的是一个shell,结尾部分会引用这里</p>
 <p>这样可以是可以的，但是违背了容器的设计理念</p>
@@ -582,8 +582,10 @@
 <li>XXXX [“part1”,”part2”]</li>
 <li>XXXX part1 part2</li>
 <li>前者不支持变量解析,后者支持变量</li>
-<li>前者是exec格式,后者是sh -c形式<br>看下面例子<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@guan_tx test]# docker build -t guan:1 .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/3 : FROM busybox</span><br><span class="line">latest: Pulling from library/busybox</span><br><span class="line">d070b8ef96fc: Pull complete </span><br><span class="line">Digest: sha256:c7b0a24019b0e6eda714ec0fa137ad42bc44a754d9cea17d14fba3a80ccc1ee4</span><br><span class="line">Status: Downloaded newer image for busybox:latest</span><br><span class="line"> ---&gt; f6e427c148a7</span><br><span class="line">Step 2/3 : ENV guan=zhang</span><br><span class="line"> ---&gt; Running in ea3956d0b8c0</span><br><span class="line">Removing intermediate container ea3956d0b8c0</span><br><span class="line"> ---&gt; 6376a491fd35</span><br><span class="line">Step 3/3 : CMD echo $guan</span><br><span class="line"> ---&gt; Running in 8a845904a6d1</span><br><span class="line">Removing intermediate container 8a845904a6d1</span><br><span class="line"> ---&gt; f9eab63f79b5</span><br><span class="line">Successfully built f9eab63f79b5</span><br><span class="line">Successfully tagged guan:1</span><br><span class="line">[root@guan_tx test]# cat Dockerfile </span><br><span class="line">FROM busybox</span><br><span class="line">ENV guan=zhang</span><br><span class="line">CMD echo $guan</span><br><span class="line">[root@guan_tx test]# docker run guan:1</span><br><span class="line">zhang</span><br><span class="line">[root@guan_tx test]# vim Dockerfile </span><br><span class="line">[root@guan_tx test]# cat Dockerfile </span><br><span class="line">FROM busybox</span><br><span class="line">ENV guan=zhang</span><br><span class="line">CMD [&quot;echo&quot;,&quot;$guan&quot;]</span><br><span class="line">[root@guan_tx test]# docker build -t guan:2 .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/3 : FROM busybox</span><br><span class="line"> ---&gt; f6e427c148a7</span><br><span class="line">Step 2/3 : ENV guan=zhang</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 6376a491fd35</span><br><span class="line">Step 3/3 : CMD [&quot;echo&quot;,&quot;$guan&quot;]</span><br><span class="line"> ---&gt; Running in d2d6cd04d57e</span><br><span class="line">Removing intermediate container d2d6cd04d57e</span><br><span class="line"> ---&gt; 653be28a996b</span><br><span class="line">Successfully built 653be28a996b</span><br><span class="line">Successfully tagged guan:2</span><br><span class="line">[root@guan_tx test]# docker run guan:2</span><br><span class="line">$guan</span><br></pre></td></tr></table></figure></li>
+<li>前者是exec格式,后者是sh -c形式<br>看下面例子</li>
 </ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@guan_tx test]# docker build -t guan:1 .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/3 : FROM busybox</span><br><span class="line">latest: Pulling from library/busybox</span><br><span class="line">d070b8ef96fc: Pull complete </span><br><span class="line">Digest: sha256:c7b0a24019b0e6eda714ec0fa137ad42bc44a754d9cea17d14fba3a80ccc1ee4</span><br><span class="line">Status: Downloaded newer image for busybox:latest</span><br><span class="line"> ---&gt; f6e427c148a7</span><br><span class="line">Step 2/3 : ENV guan=zhang</span><br><span class="line"> ---&gt; Running in ea3956d0b8c0</span><br><span class="line">Removing intermediate container ea3956d0b8c0</span><br><span class="line"> ---&gt; 6376a491fd35</span><br><span class="line">Step 3/3 : CMD echo $guan</span><br><span class="line"> ---&gt; Running in 8a845904a6d1</span><br><span class="line">Removing intermediate container 8a845904a6d1</span><br><span class="line"> ---&gt; f9eab63f79b5</span><br><span class="line">Successfully built f9eab63f79b5</span><br><span class="line">Successfully tagged guan:1</span><br><span class="line">[root@guan_tx test]# cat Dockerfile </span><br><span class="line">FROM busybox</span><br><span class="line">ENV guan=zhang</span><br><span class="line">CMD echo $guan</span><br><span class="line">[root@guan_tx test]# docker run guan:1</span><br><span class="line">zhang</span><br><span class="line">[root@guan_tx test]# vim Dockerfile </span><br><span class="line">[root@guan_tx test]# cat Dockerfile </span><br><span class="line">FROM busybox</span><br><span class="line">ENV guan=zhang</span><br><span class="line">CMD [&quot;echo&quot;,&quot;$guan&quot;]</span><br><span class="line">[root@guan_tx test]# docker build -t guan:2 .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/3 : FROM busybox</span><br><span class="line"> ---&gt; f6e427c148a7</span><br><span class="line">Step 2/3 : ENV guan=zhang</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 6376a491fd35</span><br><span class="line">Step 3/3 : CMD [&quot;echo&quot;,&quot;$guan&quot;]</span><br><span class="line"> ---&gt; Running in d2d6cd04d57e</span><br><span class="line">Removing intermediate container d2d6cd04d57e</span><br><span class="line"> ---&gt; 653be28a996b</span><br><span class="line">Successfully built 653be28a996b</span><br><span class="line">Successfully tagged guan:2</span><br><span class="line">[root@guan_tx test]# docker run guan:2</span><br><span class="line">$guan</span><br></pre></td></tr></table></figure>
+
 <p>对比exec和sh -c格式</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-m1 temp]# cat Dockerfile </span><br><span class="line">FROM ubuntu:14.04</span><br><span class="line">RUN apt-get update &amp;&amp; apt-get -y install redis-server &amp;&amp; rm -rf /var/lib/apt/lists/*</span><br><span class="line">CMD /usr/bin/redis-server</span><br><span class="line">[root@k8s-m1 temp]# docker build -t test .</span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/2 : FROM centos</span><br><span class="line"> ---&gt; 5182e96772bf</span><br><span class="line">Step 2/2 : CMD yes</span><br><span class="line"> ---&gt; Running in bc1b8371634c</span><br><span class="line">Removing intermediate container bc1b8371634c</span><br><span class="line"> ---&gt; 9c7cb95d6a3b</span><br><span class="line">Successfully built 9c7cb95d6a3b</span><br><span class="line">Successfully tagged test:latest</span><br><span class="line">[root@k8s-m1 temp]# docker run -d --rm --name test test</span><br><span class="line">01ae2ba971607270b65bcd377f66dd89dead86491fd9851f3ffe95fd3753ec6b</span><br><span class="line">[root@k8s-m1 temp]# docker ps -a -f name=test</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                   CREATED              STATUS              PORTS               NAMES</span><br><span class="line">01ae2ba97160        test                &quot;/bin/sh -c \&quot;/usr/bi…&quot;   About a minute ago   Up About a minute   6379/tcp            test</span><br><span class="line">[root@k8s-m1 temp]# docker exec test ps -ef</span><br><span class="line">UID        PID  PPID  C STIME TTY          TIME CMD</span><br><span class="line">root         1     0  0 10:48 ?        00:00:00 /bin/sh -c &quot;/usr/bin/redis-server&quot;</span><br><span class="line">root         6     1  0 10:48 ?        00:00:00 /usr/bin/redis-server *:6379</span><br><span class="line">root         9     0  0 10:48 ?        00:00:00 ps -ef</span><br></pre></td></tr></table></figure>
 <p>如上面所示,pid为1的是一个sh的进程</p>
@@ -1780,14 +1782,6 @@
 
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
-            <span class="sidebar-tag-name" data-tags="linux">
-                <span class="iconfont-archer">&#xe606;</span>
-                linux
-            </span>
-            <span class="sidebar-tag-name" data-tags="微信">
-                <span class="iconfont-archer">&#xe606;</span>
-                微信
-            </span>
             <span class="sidebar-tag-name" data-tags="diy">
                 <span class="iconfont-archer">&#xe606;</span>
                 diy
@@ -1808,6 +1802,14 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 CLP
             </span>
+            <span class="sidebar-tag-name" data-tags="EmuELEC">
+                <span class="iconfont-archer">&#xe606;</span>
+                EmuELEC
+            </span>
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
             <span class="sidebar-tag-name" data-tags="k8s">
                 <span class="iconfont-archer">&#xe606;</span>
                 k8s
@@ -1816,9 +1818,41 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 Mismatch
             </span>
+            <span class="sidebar-tag-name" data-tags="ingress">
+                <span class="iconfont-archer">&#xe606;</span>
+                ingress
+            </span>
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
+            </span>
             <span class="sidebar-tag-name" data-tags="Altium Designer">
                 <span class="iconfont-archer">&#xe606;</span>
                 Altium Designer
+            </span>
+            <span class="sidebar-tag-name" data-tags="N1">
+                <span class="iconfont-archer">&#xe606;</span>
+                N1
+            </span>
+            <span class="sidebar-tag-name" data-tags="openwrt">
+                <span class="iconfont-archer">&#xe606;</span>
+                openwrt
+            </span>
+            <span class="sidebar-tag-name" data-tags="etcd">
+                <span class="iconfont-archer">&#xe606;</span>
+                etcd
+            </span>
+            <span class="sidebar-tag-name" data-tags="ssl">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssl
+            </span>
+            <span class="sidebar-tag-name" data-tags="aliyun">
+                <span class="iconfont-archer">&#xe606;</span>
+                aliyun
+            </span>
+            <span class="sidebar-tag-name" data-tags="tun2sock2">
+                <span class="iconfont-archer">&#xe606;</span>
+                tun2sock2
             </span>
             <span class="sidebar-tag-name" data-tags="ansible">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -1840,6 +1874,18 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 安卓
             </span>
+            <span class="sidebar-tag-name" data-tags="initrd">
+                <span class="iconfont-archer">&#xe606;</span>
+                initrd
+            </span>
+            <span class="sidebar-tag-name" data-tags="grub">
+                <span class="iconfont-archer">&#xe606;</span>
+                grub
+            </span>
+            <span class="sidebar-tag-name" data-tags="raid">
+                <span class="iconfont-archer">&#xe606;</span>
+                raid
+            </span>
             <span class="sidebar-tag-name" data-tags="Linux">
                 <span class="iconfont-archer">&#xe606;</span>
                 Linux
@@ -1860,14 +1906,6 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 boot
             </span>
-            <span class="sidebar-tag-name" data-tags="grub">
-                <span class="iconfont-archer">&#xe606;</span>
-                grub
-            </span>
-            <span class="sidebar-tag-name" data-tags="cad">
-                <span class="iconfont-archer">&#xe606;</span>
-                cad
-            </span>
             <span class="sidebar-tag-name" data-tags="tcp">
                 <span class="iconfont-archer">&#xe606;</span>
                 tcp
@@ -1876,9 +1914,21 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 golang
             </span>
+            <span class="sidebar-tag-name" data-tags="cad">
+                <span class="iconfont-archer">&#xe606;</span>
+                cad
+            </span>
             <span class="sidebar-tag-name" data-tags="centos6">
                 <span class="iconfont-archer">&#xe606;</span>
                 centos6
+            </span>
+            <span class="sidebar-tag-name" data-tags="podman">
+                <span class="iconfont-archer">&#xe606;</span>
+                podman
+            </span>
+            <span class="sidebar-tag-name" data-tags="centos">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos
             </span>
             <span class="sidebar-tag-name" data-tags="chromedp">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -1887,6 +1937,10 @@
             <span class="sidebar-tag-name" data-tags="chrony">
                 <span class="iconfont-archer">&#xe606;</span>
                 chrony
+            </span>
+            <span class="sidebar-tag-name" data-tags="cobra">
+                <span class="iconfont-archer">&#xe606;</span>
+                cobra
             </span>
             <span class="sidebar-tag-name" data-tags="kubernetes">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -1900,17 +1954,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 mips64le
             </span>
+            <span class="sidebar-tag-name" data-tags="clickhouse">
+                <span class="iconfont-archer">&#xe606;</span>
+                clickhouse
+            </span>
+            <span class="sidebar-tag-name" data-tags="arm64">
+                <span class="iconfont-archer">&#xe606;</span>
+                arm64
+            </span>
+            <span class="sidebar-tag-name" data-tags="kernal">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernal
+            </span>
             <span class="sidebar-tag-name" data-tags="kubeconfig">
                 <span class="iconfont-archer">&#xe606;</span>
                 kubeconfig
             </span>
+            <span class="sidebar-tag-name" data-tags="cri-dockerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                cri-dockerd
+            </span>
             <span class="sidebar-tag-name" data-tags="swap">
                 <span class="iconfont-archer">&#xe606;</span>
                 swap
-            </span>
-            <span class="sidebar-tag-name" data-tags="dlv">
-                <span class="iconfont-archer">&#xe606;</span>
-                dlv
             </span>
             <span class="sidebar-tag-name" data-tags="adguardhome">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -1920,9 +1986,37 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 dns
             </span>
+            <span class="sidebar-tag-name" data-tags="dlv">
+                <span class="iconfont-archer">&#xe606;</span>
+                dlv
+            </span>
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
+            </span>
+            <span class="sidebar-tag-name" data-tags="containerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                containerd
+            </span>
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
+            </span>
+            <span class="sidebar-tag-name" data-tags="net">
+                <span class="iconfont-archer">&#xe606;</span>
+                net
+            </span>
             <span class="sidebar-tag-name" data-tags="Dockerfile">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dockerfile
+            </span>
+            <span class="sidebar-tag-name" data-tags="veth">
+                <span class="iconfont-archer">&#xe606;</span>
+                veth
+            </span>
+            <span class="sidebar-tag-name" data-tags="hang">
+                <span class="iconfont-archer">&#xe606;</span>
+                hang
             </span>
             <span class="sidebar-tag-name" data-tags="e2fsck">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -1944,21 +2038,25 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 xmrig
             </span>
-            <span class="sidebar-tag-name" data-tags="etcd">
+            <span class="sidebar-tag-name" data-tags="flannel">
                 <span class="iconfont-archer">&#xe606;</span>
-                etcd
+                flannel
             </span>
             <span class="sidebar-tag-name" data-tags="fio">
                 <span class="iconfont-archer">&#xe606;</span>
                 fio
             </span>
-            <span class="sidebar-tag-name" data-tags="flannel">
+            <span class="sidebar-tag-name" data-tags="vxlan">
                 <span class="iconfont-archer">&#xe606;</span>
-                flannel
+                vxlan
             </span>
             <span class="sidebar-tag-name" data-tags="ftp">
                 <span class="iconfont-archer">&#xe606;</span>
                 ftp
+            </span>
+            <span class="sidebar-tag-name" data-tags="cifs">
+                <span class="iconfont-archer">&#xe606;</span>
+                cifs
             </span>
             <span class="sidebar-tag-name" data-tags="go mod">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -1976,13 +2074,53 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 esp8266
             </span>
+            <span class="sidebar-tag-name" data-tags="http">
+                <span class="iconfont-archer">&#xe606;</span>
+                http
+            </span>
+            <span class="sidebar-tag-name" data-tags="gitlab">
+                <span class="iconfont-archer">&#xe606;</span>
+                gitlab
+            </span>
+            <span class="sidebar-tag-name" data-tags="subgroup">
+                <span class="iconfont-archer">&#xe606;</span>
+                subgroup
+            </span>
             <span class="sidebar-tag-name" data-tags="hello world">
                 <span class="iconfont-archer">&#xe606;</span>
                 hello world
             </span>
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
+            </span>
             <span class="sidebar-tag-name" data-tags="host-gw">
                 <span class="iconfont-archer">&#xe606;</span>
                 host-gw
+            </span>
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
+            </span>
+            <span class="sidebar-tag-name" data-tags="iptables">
+                <span class="iconfont-archer">&#xe606;</span>
+                iptables
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipset">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipset
+            </span>
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
             </span>
             <span class="sidebar-tag-name" data-tags="mqtt">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2000,9 +2138,41 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 confluence
             </span>
+            <span class="sidebar-tag-name" data-tags="lvs">
+                <span class="iconfont-archer">&#xe606;</span>
+                lvs
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipvsadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipvsadm
+            </span>
+            <span class="sidebar-tag-name" data-tags="kube-proxy">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-proxy
+            </span>
+            <span class="sidebar-tag-name" data-tags="nodeport">
+                <span class="iconfont-archer">&#xe606;</span>
+                nodeport
+            </span>
             <span class="sidebar-tag-name" data-tags="kube-controller-manager">
                 <span class="iconfont-archer">&#xe606;</span>
                 kube-controller-manager
+            </span>
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+            <span class="sidebar-tag-name" data-tags="hostname">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostname
+            </span>
+            <span class="sidebar-tag-name" data-tags="ttf">
+                <span class="iconfont-archer">&#xe606;</span>
+                ttf
+            </span>
+            <span class="sidebar-tag-name" data-tags="woff">
+                <span class="iconfont-archer">&#xe606;</span>
+                woff
             </span>
             <span class="sidebar-tag-name" data-tags="java">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2012,6 +2182,14 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 springboot
             </span>
+            <span class="sidebar-tag-name" data-tags="63s">
+                <span class="iconfont-archer">&#xe606;</span>
+                63s
+            </span>
+            <span class="sidebar-tag-name" data-tags="timeout">
+                <span class="iconfont-archer">&#xe606;</span>
+                timeout
+            </span>
             <span class="sidebar-tag-name" data-tags="vip">
                 <span class="iconfont-archer">&#xe606;</span>
                 vip
@@ -2019,6 +2197,30 @@
             <span class="sidebar-tag-name" data-tags="keepalived">
                 <span class="iconfont-archer">&#xe606;</span>
                 keepalived
+            </span>
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
+            </span>
+            <span class="sidebar-tag-name" data-tags="kube-log-runner">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-log-runner
+            </span>
+            <span class="sidebar-tag-name" data-tags="logrotate">
+                <span class="iconfont-archer">&#xe606;</span>
+                logrotate
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubelet">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubelet
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubeadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeadm
+            </span>
+            <span class="sidebar-tag-name" data-tags="operator">
+                <span class="iconfont-archer">&#xe606;</span>
+                operator
             </span>
             <span class="sidebar-tag-name" data-tags="ConfigMap">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2028,17 +2230,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 PodAffinity
             </span>
+            <span class="sidebar-tag-name" data-tags="nfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfs
+            </span>
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
+            </span>
             <span class="sidebar-tag-name" data-tags="kylin">
                 <span class="iconfont-archer">&#xe606;</span>
                 kylin
             </span>
-            <span class="sidebar-tag-name" data-tags="arm64">
+            <span class="sidebar-tag-name" data-tags="systemd">
                 <span class="iconfont-archer">&#xe606;</span>
-                arm64
+                systemd
             </span>
             <span class="sidebar-tag-name" data-tags="Kylin">
                 <span class="iconfont-archer">&#xe606;</span>
                 Kylin
+            </span>
+            <span class="sidebar-tag-name" data-tags="lamp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lamp
             </span>
             <span class="sidebar-tag-name" data-tags="audit">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2064,178 +2278,6 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 onedrive
             </span>
-            <span class="sidebar-tag-name" data-tags="nodeport">
-                <span class="iconfont-archer">&#xe606;</span>
-                nodeport
-            </span>
-            <span class="sidebar-tag-name" data-tags="usb-net">
-                <span class="iconfont-archer">&#xe606;</span>
-                usb-net
-            </span>
-            <span class="sidebar-tag-name" data-tags="overlay">
-                <span class="iconfont-archer">&#xe606;</span>
-                overlay
-            </span>
-            <span class="sidebar-tag-name" data-tags="kernal">
-                <span class="iconfont-archer">&#xe606;</span>
-                kernal
-            </span>
-            <span class="sidebar-tag-name" data-tags="preseed">
-                <span class="iconfont-archer">&#xe606;</span>
-                preseed
-            </span>
-            <span class="sidebar-tag-name" data-tags="Prometheus">
-                <span class="iconfont-archer">&#xe606;</span>
-                Prometheus
-            </span>
-            <span class="sidebar-tag-name" data-tags="openstack">
-                <span class="iconfont-archer">&#xe606;</span>
-                openstack
-            </span>
-            <span class="sidebar-tag-name" data-tags="cloud-init">
-                <span class="iconfont-archer">&#xe606;</span>
-                cloud-init
-            </span>
-            <span class="sidebar-tag-name" data-tags="python">
-                <span class="iconfont-archer">&#xe606;</span>
-                python
-            </span>
-            <span class="sidebar-tag-name" data-tags="containerd">
-                <span class="iconfont-archer">&#xe606;</span>
-                containerd
-            </span>
-            <span class="sidebar-tag-name" data-tags="keepalive">
-                <span class="iconfont-archer">&#xe606;</span>
-                keepalive
-            </span>
-            <span class="sidebar-tag-name" data-tags="shell">
-                <span class="iconfont-archer">&#xe606;</span>
-                shell
-            </span>
-            <span class="sidebar-tag-name" data-tags="bash">
-                <span class="iconfont-archer">&#xe606;</span>
-                bash
-            </span>
-            <span class="sidebar-tag-name" data-tags="skopeo">
-                <span class="iconfont-archer">&#xe606;</span>
-                skopeo
-            </span>
-            <span class="sidebar-tag-name" data-tags="ssh">
-                <span class="iconfont-archer">&#xe606;</span>
-                ssh
-            </span>
-            <span class="sidebar-tag-name" data-tags="kubelet">
-                <span class="iconfont-archer">&#xe606;</span>
-                kubelet
-            </span>
-            <span class="sidebar-tag-name" data-tags="systemd">
-                <span class="iconfont-archer">&#xe606;</span>
-                systemd
-            </span>
-            <span class="sidebar-tag-name" data-tags="dockerhub">
-                <span class="iconfont-archer">&#xe606;</span>
-                dockerhub
-            </span>
-            <span class="sidebar-tag-name" data-tags="gcr.io">
-                <span class="iconfont-archer">&#xe606;</span>
-                gcr.io
-            </span>
-            <span class="sidebar-tag-name" data-tags="api">
-                <span class="iconfont-archer">&#xe606;</span>
-                api
-            </span>
-            <span class="sidebar-tag-name" data-tags="ubuntu18">
-                <span class="iconfont-archer">&#xe606;</span>
-                ubuntu18
-            </span>
-            <span class="sidebar-tag-name" data-tags="initrd">
-                <span class="iconfont-archer">&#xe606;</span>
-                initrd
-            </span>
-            <span class="sidebar-tag-name" data-tags="tftp">
-                <span class="iconfont-archer">&#xe606;</span>
-                tftp
-            </span>
-            <span class="sidebar-tag-name" data-tags="uos">
-                <span class="iconfont-archer">&#xe606;</span>
-                uos
-            </span>
-            <span class="sidebar-tag-name" data-tags="x86">
-                <span class="iconfont-archer">&#xe606;</span>
-                x86
-            </span>
-            <span class="sidebar-tag-name" data-tags="openwrt">
-                <span class="iconfont-archer">&#xe606;</span>
-                openwrt
-            </span>
-            <span class="sidebar-tag-name" data-tags="zabbix">
-                <span class="iconfont-archer">&#xe606;</span>
-                zabbix
-            </span>
-            <span class="sidebar-tag-name" data-tags="zombie">
-                <span class="iconfont-archer">&#xe606;</span>
-                zombie
-            </span>
-            <span class="sidebar-tag-name" data-tags="正则">
-                <span class="iconfont-archer">&#xe606;</span>
-                正则
-            </span>
-            <span class="sidebar-tag-name" data-tags="awk">
-                <span class="iconfont-archer">&#xe606;</span>
-                awk
-            </span>
-            <span class="sidebar-tag-name" data-tags="EmuELEC">
-                <span class="iconfont-archer">&#xe606;</span>
-                EmuELEC
-            </span>
-            <span class="sidebar-tag-name" data-tags="ingress">
-                <span class="iconfont-archer">&#xe606;</span>
-                ingress
-            </span>
-            <span class="sidebar-tag-name" data-tags="N1">
-                <span class="iconfont-archer">&#xe606;</span>
-                N1
-            </span>
-            <span class="sidebar-tag-name" data-tags="cobra">
-                <span class="iconfont-archer">&#xe606;</span>
-                cobra
-            </span>
-            <span class="sidebar-tag-name" data-tags="hang">
-                <span class="iconfont-archer">&#xe606;</span>
-                hang
-            </span>
-            <span class="sidebar-tag-name" data-tags="cifs">
-                <span class="iconfont-archer">&#xe606;</span>
-                cifs
-            </span>
-            <span class="sidebar-tag-name" data-tags="http">
-                <span class="iconfont-archer">&#xe606;</span>
-                http
-            </span>
-            <span class="sidebar-tag-name" data-tags="lvs">
-                <span class="iconfont-archer">&#xe606;</span>
-                lvs
-            </span>
-            <span class="sidebar-tag-name" data-tags="ipvsadm">
-                <span class="iconfont-archer">&#xe606;</span>
-                ipvsadm
-            </span>
-            <span class="sidebar-tag-name" data-tags="kube-proxy">
-                <span class="iconfont-archer">&#xe606;</span>
-                kube-proxy
-            </span>
-            <span class="sidebar-tag-name" data-tags="63s">
-                <span class="iconfont-archer">&#xe606;</span>
-                63s
-            </span>
-            <span class="sidebar-tag-name" data-tags="timeout">
-                <span class="iconfont-archer">&#xe606;</span>
-                timeout
-            </span>
-            <span class="sidebar-tag-name" data-tags="lamp">
-                <span class="iconfont-archer">&#xe606;</span>
-                lamp
-            </span>
             <span class="sidebar-tag-name" data-tags="nfc">
                 <span class="iconfont-archer">&#xe606;</span>
                 nfc
@@ -2244,9 +2286,25 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 pm3
             </span>
+            <span class="sidebar-tag-name" data-tags="non-root">
+                <span class="iconfont-archer">&#xe606;</span>
+                non-root
+            </span>
+            <span class="sidebar-tag-name" data-tags="containers">
+                <span class="iconfont-archer">&#xe606;</span>
+                containers
+            </span>
             <span class="sidebar-tag-name" data-tags="coredns">
                 <span class="iconfont-archer">&#xe606;</span>
                 coredns
+            </span>
+            <span class="sidebar-tag-name" data-tags="gpu">
+                <span class="iconfont-archer">&#xe606;</span>
+                gpu
+            </span>
+            <span class="sidebar-tag-name" data-tags="nvidia">
+                <span class="iconfont-archer">&#xe606;</span>
+                nvidia
             </span>
             <span class="sidebar-tag-name" data-tags="openshift">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2256,65 +2314,41 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 ocp
             </span>
+            <span class="sidebar-tag-name" data-tags="openstack">
+                <span class="iconfont-archer">&#xe606;</span>
+                openstack
+            </span>
             <span class="sidebar-tag-name" data-tags="squashfs">
                 <span class="iconfont-archer">&#xe606;</span>
                 squashfs
+            </span>
+            <span class="sidebar-tag-name" data-tags="usb-net">
+                <span class="iconfont-archer">&#xe606;</span>
+                usb-net
+            </span>
+            <span class="sidebar-tag-name" data-tags="overlay">
+                <span class="iconfont-archer">&#xe606;</span>
+                overlay
+            </span>
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
+            </span>
+            <span class="sidebar-tag-name" data-tags="pprof">
+                <span class="iconfont-archer">&#xe606;</span>
+                pprof
             </span>
             <span class="sidebar-tag-name" data-tags="timezone">
                 <span class="iconfont-archer">&#xe606;</span>
                 timezone
             </span>
-            <span class="sidebar-tag-name" data-tags="rpm">
+            <span class="sidebar-tag-name" data-tags="Prometheus">
                 <span class="iconfont-archer">&#xe606;</span>
-                rpm
+                Prometheus
             </span>
-            <span class="sidebar-tag-name" data-tags="rpmbuild">
+            <span class="sidebar-tag-name" data-tags="cloud-init">
                 <span class="iconfont-archer">&#xe606;</span>
-                rpmbuild
-            </span>
-            <span class="sidebar-tag-name" data-tags="segfault">
-                <span class="iconfont-archer">&#xe606;</span>
-                segfault
-            </span>
-            <span class="sidebar-tag-name" data-tags="suse">
-                <span class="iconfont-archer">&#xe606;</span>
-                suse
-            </span>
-            <span class="sidebar-tag-name" data-tags="wireguard">
-                <span class="iconfont-archer">&#xe606;</span>
-                wireguard
-            </span>
-            <span class="sidebar-tag-name" data-tags="raid">
-                <span class="iconfont-archer">&#xe606;</span>
-                raid
-            </span>
-            <span class="sidebar-tag-name" data-tags="kubeadm">
-                <span class="iconfont-archer">&#xe606;</span>
-                kubeadm
-            </span>
-            <span class="sidebar-tag-name" data-tags="operator">
-                <span class="iconfont-archer">&#xe606;</span>
-                operator
-            </span>
-            <span class="sidebar-tag-name" data-tags="exsi">
-                <span class="iconfont-archer">&#xe606;</span>
-                exsi
-            </span>
-            <span class="sidebar-tag-name" data-tags="redhat8.4">
-                <span class="iconfont-archer">&#xe606;</span>
-                redhat8.4
-            </span>
-            <span class="sidebar-tag-name" data-tags="vxlan">
-                <span class="iconfont-archer">&#xe606;</span>
-                vxlan
-            </span>
-            <span class="sidebar-tag-name" data-tags="veth">
-                <span class="iconfont-archer">&#xe606;</span>
-                veth
-            </span>
-            <span class="sidebar-tag-name" data-tags="panic">
-                <span class="iconfont-archer">&#xe606;</span>
-                panic
+                cloud-init
             </span>
             <span class="sidebar-tag-name" data-tags="supervisor">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2324,17 +2358,21 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 pyinstaller
             </span>
-            <span class="sidebar-tag-name" data-tags="ttf">
+            <span class="sidebar-tag-name" data-tags="python">
                 <span class="iconfont-archer">&#xe606;</span>
-                ttf
+                python
             </span>
-            <span class="sidebar-tag-name" data-tags="woff">
+            <span class="sidebar-tag-name" data-tags="preseed">
                 <span class="iconfont-archer">&#xe606;</span>
-                woff
+                preseed
             </span>
-            <span class="sidebar-tag-name" data-tags="hostname">
+            <span class="sidebar-tag-name" data-tags="proxmox">
                 <span class="iconfont-archer">&#xe606;</span>
-                hostname
+                proxmox
+            </span>
+            <span class="sidebar-tag-name" data-tags="grpc">
+                <span class="iconfont-archer">&#xe606;</span>
+                grpc
             </span>
             <span class="sidebar-tag-name" data-tags="qemu">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2348,157 +2386,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 loongarch64
             </span>
-            <span class="sidebar-tag-name" data-tags="externalIP">
-                <span class="iconfont-archer">&#xe606;</span>
-                externalIP
-            </span>
             <span class="sidebar-tag-name" data-tags="cgo">
                 <span class="iconfont-archer">&#xe606;</span>
                 cgo
-            </span>
-            <span class="sidebar-tag-name" data-tags="nfs">
-                <span class="iconfont-archer">&#xe606;</span>
-                nfs
-            </span>
-            <span class="sidebar-tag-name" data-tags="ipset">
-                <span class="iconfont-archer">&#xe606;</span>
-                ipset
-            </span>
-            <span class="sidebar-tag-name" data-tags="proxmox">
-                <span class="iconfont-archer">&#xe606;</span>
-                proxmox
-            </span>
-            <span class="sidebar-tag-name" data-tags="non-root">
-                <span class="iconfont-archer">&#xe606;</span>
-                non-root
-            </span>
-            <span class="sidebar-tag-name" data-tags="containers">
-                <span class="iconfont-archer">&#xe606;</span>
-                containers
-            </span>
-            <span class="sidebar-tag-name" data-tags="vmware">
-                <span class="iconfont-archer">&#xe606;</span>
-                vmware
-            </span>
-            <span class="sidebar-tag-name" data-tags="hung">
-                <span class="iconfont-archer">&#xe606;</span>
-                hung
-            </span>
-            <span class="sidebar-tag-name" data-tags="apparmor">
-                <span class="iconfont-archer">&#xe606;</span>
-                apparmor
-            </span>
-            <span class="sidebar-tag-name" data-tags="serviceAccountToken">
-                <span class="iconfont-archer">&#xe606;</span>
-                serviceAccountToken
-            </span>
-            <span class="sidebar-tag-name" data-tags="gpu">
-                <span class="iconfont-archer">&#xe606;</span>
-                gpu
-            </span>
-            <span class="sidebar-tag-name" data-tags="nvidia">
-                <span class="iconfont-archer">&#xe606;</span>
-                nvidia
-            </span>
-            <span class="sidebar-tag-name" data-tags="cri-dockerd">
-                <span class="iconfont-archer">&#xe606;</span>
-                cri-dockerd
-            </span>
-            <span class="sidebar-tag-name" data-tags="pprof">
-                <span class="iconfont-archer">&#xe606;</span>
-                pprof
-            </span>
-            <span class="sidebar-tag-name" data-tags="trivy">
-                <span class="iconfont-archer">&#xe606;</span>
-                trivy
             </span>
             <span class="sidebar-tag-name" data-tags="redis">
                 <span class="iconfont-archer">&#xe606;</span>
                 redis
             </span>
-            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+            <span class="sidebar-tag-name" data-tags="exsi">
                 <span class="iconfont-archer">&#xe606;</span>
-                /etc/resolv.conf
+                exsi
             </span>
-            <span class="sidebar-tag-name" data-tags="hostPort">
+            <span class="sidebar-tag-name" data-tags="redhat8.4">
                 <span class="iconfont-archer">&#xe606;</span>
-                hostPort
+                redhat8.4
             </span>
-            <span class="sidebar-tag-name" data-tags="hotplug">
+            <span class="sidebar-tag-name" data-tags="rpm">
                 <span class="iconfont-archer">&#xe606;</span>
-                hotplug
+                rpm
             </span>
-            <span class="sidebar-tag-name" data-tags="android">
+            <span class="sidebar-tag-name" data-tags="rpmbuild">
                 <span class="iconfont-archer">&#xe606;</span>
-                android
-            </span>
-            <span class="sidebar-tag-name" data-tags="headscale">
-                <span class="iconfont-archer">&#xe606;</span>
-                headscale
-            </span>
-            <span class="sidebar-tag-name" data-tags="derper">
-                <span class="iconfont-archer">&#xe606;</span>
-                derper
-            </span>
-            <span class="sidebar-tag-name" data-tags="iptables">
-                <span class="iconfont-archer">&#xe606;</span>
-                iptables
-            </span>
-            <span class="sidebar-tag-name" data-tags="inotifywait">
-                <span class="iconfont-archer">&#xe606;</span>
-                inotifywait
-            </span>
-            <span class="sidebar-tag-name" data-tags="confd">
-                <span class="iconfont-archer">&#xe606;</span>
-                confd
-            </span>
-            <span class="sidebar-tag-name" data-tags="net">
-                <span class="iconfont-archer">&#xe606;</span>
-                net
-            </span>
-            <span class="sidebar-tag-name" data-tags="clickhouse">
-                <span class="iconfont-archer">&#xe606;</span>
-                clickhouse
-            </span>
-            <span class="sidebar-tag-name" data-tags="ssl">
-                <span class="iconfont-archer">&#xe606;</span>
-                ssl
-            </span>
-            <span class="sidebar-tag-name" data-tags="aliyun">
-                <span class="iconfont-archer">&#xe606;</span>
-                aliyun
-            </span>
-            <span class="sidebar-tag-name" data-tags="kube-log-runner">
-                <span class="iconfont-archer">&#xe606;</span>
-                kube-log-runner
-            </span>
-            <span class="sidebar-tag-name" data-tags="logrotate">
-                <span class="iconfont-archer">&#xe606;</span>
-                logrotate
-            </span>
-            <span class="sidebar-tag-name" data-tags="tun2sock2">
-                <span class="iconfont-archer">&#xe606;</span>
-                tun2sock2
-            </span>
-            <span class="sidebar-tag-name" data-tags="gitlab">
-                <span class="iconfont-archer">&#xe606;</span>
-                gitlab
-            </span>
-            <span class="sidebar-tag-name" data-tags="subgroup">
-                <span class="iconfont-archer">&#xe606;</span>
-                subgroup
-            </span>
-            <span class="sidebar-tag-name" data-tags="grpc">
-                <span class="iconfont-archer">&#xe606;</span>
-                grpc
-            </span>
-            <span class="sidebar-tag-name" data-tags="podman">
-                <span class="iconfont-archer">&#xe606;</span>
-                podman
-            </span>
-            <span class="sidebar-tag-name" data-tags="centos">
-                <span class="iconfont-archer">&#xe606;</span>
-                centos
+                rpmbuild
             </span>
             <span class="sidebar-tag-name" data-tags="salt">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -2512,13 +2422,105 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 ipv6
             </span>
-            <span class="sidebar-tag-name" data-tags="fnctl">
+            <span class="sidebar-tag-name" data-tags="vmware">
                 <span class="iconfont-archer">&#xe606;</span>
-                fnctl
+                vmware
+            </span>
+            <span class="sidebar-tag-name" data-tags="hung">
+                <span class="iconfont-archer">&#xe606;</span>
+                hung
+            </span>
+            <span class="sidebar-tag-name" data-tags="keepalive">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalive
+            </span>
+            <span class="sidebar-tag-name" data-tags="serviceAccountToken">
+                <span class="iconfont-archer">&#xe606;</span>
+                serviceAccountToken
+            </span>
+            <span class="sidebar-tag-name" data-tags="bash">
+                <span class="iconfont-archer">&#xe606;</span>
+                bash
+            </span>
+            <span class="sidebar-tag-name" data-tags="shell">
+                <span class="iconfont-archer">&#xe606;</span>
+                shell
+            </span>
+            <span class="sidebar-tag-name" data-tags="segfault">
+                <span class="iconfont-archer">&#xe606;</span>
+                segfault
+            </span>
+            <span class="sidebar-tag-name" data-tags="skopeo">
+                <span class="iconfont-archer">&#xe606;</span>
+                skopeo
             </span>
             <span class="sidebar-tag-name" data-tags="boltdb">
                 <span class="iconfont-archer">&#xe606;</span>
                 boltdb
+            </span>
+            <span class="sidebar-tag-name" data-tags="ssh">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssh
+            </span>
+            <span class="sidebar-tag-name" data-tags="suse">
+                <span class="iconfont-archer">&#xe606;</span>
+                suse
+            </span>
+            <span class="sidebar-tag-name" data-tags="dockerhub">
+                <span class="iconfont-archer">&#xe606;</span>
+                dockerhub
+            </span>
+            <span class="sidebar-tag-name" data-tags="gcr.io">
+                <span class="iconfont-archer">&#xe606;</span>
+                gcr.io
+            </span>
+            <span class="sidebar-tag-name" data-tags="微信">
+                <span class="iconfont-archer">&#xe606;</span>
+                微信
+            </span>
+            <span class="sidebar-tag-name" data-tags="api">
+                <span class="iconfont-archer">&#xe606;</span>
+                api
+            </span>
+            <span class="sidebar-tag-name" data-tags="ubuntu18">
+                <span class="iconfont-archer">&#xe606;</span>
+                ubuntu18
+            </span>
+            <span class="sidebar-tag-name" data-tags="tftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tftp
+            </span>
+            <span class="sidebar-tag-name" data-tags="trivy">
+                <span class="iconfont-archer">&#xe606;</span>
+                trivy
+            </span>
+            <span class="sidebar-tag-name" data-tags="uos">
+                <span class="iconfont-archer">&#xe606;</span>
+                uos
+            </span>
+            <span class="sidebar-tag-name" data-tags="wireguard">
+                <span class="iconfont-archer">&#xe606;</span>
+                wireguard
+            </span>
+            <span class="sidebar-tag-name" data-tags="x86">
+                <span class="iconfont-archer">&#xe606;</span>
+                x86
+            </span>
+            <span class="sidebar-tag-name" data-tags="zombie">
+                <span class="iconfont-archer">&#xe606;</span>
+                zombie
+            </span>
+            <span class="sidebar-tag-name" data-tags="zabbix">
+                <span class="iconfont-archer">&#xe606;</span>
+                zabbix
+            </span>
+            <span class="sidebar-tag-name" data-tags="正则">
+                <span class="iconfont-archer">&#xe606;</span>
+                正则
+            </span>
+            <span class="sidebar-tag-name" data-tags="awk">
+                <span class="iconfont-archer">&#xe606;</span>
+                awk
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -2534,37 +2536,37 @@
             <span class="iconfont-archer">&#xe60a;</span>
             日志
         </span>
-        <span class="sidebar-category-name" data-categories="心得">
+        <span class="sidebar-category-name" data-categories="ipmi">
             <span class="iconfont-archer">&#xe60a;</span>
-            心得
+            ipmi
         </span>
         <span class="sidebar-category-name" data-categories="闲搞">
             <span class="iconfont-archer">&#xe60a;</span>
             闲搞
         </span>
-        <span class="sidebar-category-name" data-categories="ipmi">
-            <span class="iconfont-archer">&#xe60a;</span>
-            ipmi
-        </span>
         <span class="sidebar-category-name" data-categories="kubernetes">
             <span class="iconfont-archer">&#xe60a;</span>
             kubernetes
         </span>
-        <span class="sidebar-category-name" data-categories="ansible">
+        <span class="sidebar-category-name" data-categories="心得">
             <span class="iconfont-archer">&#xe60a;</span>
-            ansible
+            心得
         </span>
         <span class="sidebar-category-name" data-categories="kubelet">
             <span class="iconfont-archer">&#xe60a;</span>
             kubelet
         </span>
+        <span class="sidebar-category-name" data-categories="ansible">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ansible
+        </span>
+        <span class="sidebar-category-name" data-categories="pxe">
+            <span class="iconfont-archer">&#xe60a;</span>
+            pxe
+        </span>
         <span class="sidebar-category-name" data-categories="Linux">
             <span class="iconfont-archer">&#xe60a;</span>
             Linux
-        </span>
-        <span class="sidebar-category-name" data-categories="心得">
-            <span class="iconfont-archer">&#xe60a;</span>
-            心得
         </span>
         <span class="sidebar-category-name" data-categories="prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -2578,13 +2580,25 @@
             <span class="iconfont-archer">&#xe60a;</span>
             Auto cad
         </span>
-        <span class="sidebar-category-name" data-categories="boot">
+        <span class="sidebar-category-name" data-categories="心得">
             <span class="iconfont-archer">&#xe60a;</span>
-            boot
+            心得
         </span>
         <span class="sidebar-category-name" data-categories="golang">
             <span class="iconfont-archer">&#xe60a;</span>
             golang
+        </span>
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+        <span class="sidebar-category-name" data-categories="consul">
+            <span class="iconfont-archer">&#xe60a;</span>
+            consul
         </span>
         <span class="sidebar-category-name" data-categories="kubeconfig">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -2605,6 +2619,10 @@
         <span class="sidebar-category-name" data-categories="容器">
             <span class="iconfont-archer">&#xe60a;</span>
             容器
+        </span>
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
         </span>
         <span class="sidebar-category-name" data-categories="docker">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -2630,6 +2648,14 @@
             <span class="iconfont-archer">&#xe60a;</span>
             vsftp
         </span>
+        <span class="sidebar-category-name" data-categories="fstab">
+            <span class="iconfont-archer">&#xe60a;</span>
+            fstab
+        </span>
+        <span class="sidebar-category-name" data-categories="panic">
+            <span class="iconfont-archer">&#xe60a;</span>
+            panic
+        </span>
         <span class="sidebar-category-name" data-categories="go">
             <span class="iconfont-archer">&#xe60a;</span>
             go
@@ -2638,13 +2664,13 @@
             <span class="iconfont-archer">&#xe60a;</span>
             version
         </span>
-        <span class="sidebar-category-name" data-categories="panic">
-            <span class="iconfont-archer">&#xe60a;</span>
-            panic
-        </span>
         <span class="sidebar-category-name" data-categories="gobot">
             <span class="iconfont-archer">&#xe60a;</span>
             gobot
+        </span>
+        <span class="sidebar-category-name" data-categories="http">
+            <span class="iconfont-archer">&#xe60a;</span>
+            http
         </span>
         <span class="sidebar-category-name" data-categories="闲聊">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -2662,125 +2688,69 @@
             <span class="iconfont-archer">&#xe60a;</span>
             kube-controller-manager
         </span>
-        <span class="sidebar-category-name" data-categories="keepalived">
+        <span class="sidebar-category-name" data-categories="Prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
-            keepalived
+            Prometheus
         </span>
         <span class="sidebar-category-name" data-categories="k8s">
             <span class="iconfont-archer">&#xe60a;</span>
             k8s
         </span>
-        <span class="sidebar-category-name" data-categories="Prometheus">
+        <span class="sidebar-category-name" data-categories="keepalived">
             <span class="iconfont-archer">&#xe60a;</span>
-            Prometheus
+            keepalived
+        </span>
+        <span class="sidebar-category-name" data-categories="kubeadm">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeadm
+        </span>
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
         </span>
         <span class="sidebar-category-name" data-categories="Job">
             <span class="iconfont-archer">&#xe60a;</span>
             Job
         </span>
-        <span class="sidebar-category-name" data-categories="k8s">
+        <span class="sidebar-category-name" data-categories="vxlan">
             <span class="iconfont-archer">&#xe60a;</span>
-            k8s
-        </span>
-        <span class="sidebar-category-name" data-categories="lua">
-            <span class="iconfont-archer">&#xe60a;</span>
-            lua
-        </span>
-        <span class="sidebar-category-name" data-categories="microsoft">
-            <span class="iconfont-archer">&#xe60a;</span>
-            microsoft
-        </span>
-        <span class="sidebar-category-name" data-categories="openwrt">
-            <span class="iconfont-archer">&#xe60a;</span>
-            openwrt
-        </span>
-        <span class="sidebar-category-name" data-categories="preseed">
-            <span class="iconfont-archer">&#xe60a;</span>
-            preseed
-        </span>
-        <span class="sidebar-category-name" data-categories="Prometheus">
-            <span class="iconfont-archer">&#xe60a;</span>
-            Prometheus
-        </span>
-        <span class="sidebar-category-name" data-categories="proxmox">
-            <span class="iconfont-archer">&#xe60a;</span>
-            proxmox
-        </span>
-        <span class="sidebar-category-name" data-categories="总结">
-            <span class="iconfont-archer">&#xe60a;</span>
-            总结
-        </span>
-        <span class="sidebar-category-name" data-categories="CI">
-            <span class="iconfont-archer">&#xe60a;</span>
-            CI
+            vxlan
         </span>
         <span class="sidebar-category-name" data-categories="Kylin">
             <span class="iconfont-archer">&#xe60a;</span>
             Kylin
         </span>
-        <span class="sidebar-category-name" data-categories="ubuntu18">
+        <span class="sidebar-category-name" data-categories="kmem">
             <span class="iconfont-archer">&#xe60a;</span>
-            ubuntu18
+            kmem
         </span>
-        <span class="sidebar-category-name" data-categories="pxe">
+        <span class="sidebar-category-name" data-categories="lua">
             <span class="iconfont-archer">&#xe60a;</span>
-            pxe
+            lua
         </span>
-        <span class="sidebar-category-name" data-categories="uos">
+        <span class="sidebar-category-name" data-categories="LVM">
             <span class="iconfont-archer">&#xe60a;</span>
-            uos
+            LVM
         </span>
-        <span class="sidebar-category-name" data-categories="graph">
+        <span class="sidebar-category-name" data-categories="microsoft">
             <span class="iconfont-archer">&#xe60a;</span>
-            graph
-        </span>
-        <span class="sidebar-category-name" data-categories="运维">
-            <span class="iconfont-archer">&#xe60a;</span>
-            运维
-        </span>
-        <span class="sidebar-category-name" data-categories="zombie">
-            <span class="iconfont-archer">&#xe60a;</span>
-            zombie
-        </span>
-        <span class="sidebar-category-name" data-categories="技巧">
-            <span class="iconfont-archer">&#xe60a;</span>
-            技巧
-        </span>
-        <span class="sidebar-category-name" data-categories="travis">
-            <span class="iconfont-archer">&#xe60a;</span>
-            travis
-        </span>
-        <span class="sidebar-category-name" data-categories="docker">
-            <span class="iconfont-archer">&#xe60a;</span>
-            docker
-        </span>
-        <span class="sidebar-category-name" data-categories="onedrive">
-            <span class="iconfont-archer">&#xe60a;</span>
-            onedrive
-        </span>
-        <span class="sidebar-category-name" data-categories="kickstart">
-            <span class="iconfont-archer">&#xe60a;</span>
-            kickstart
-        </span>
-        <span class="sidebar-category-name" data-categories="consul">
-            <span class="iconfont-archer">&#xe60a;</span>
-            consul
-        </span>
-        <span class="sidebar-category-name" data-categories="fstab">
-            <span class="iconfont-archer">&#xe60a;</span>
-            fstab
-        </span>
-        <span class="sidebar-category-name" data-categories="http">
-            <span class="iconfont-archer">&#xe60a;</span>
-            http
-        </span>
-        <span class="sidebar-category-name" data-categories="vxlan">
-            <span class="iconfont-archer">&#xe60a;</span>
-            vxlan
+            microsoft
         </span>
         <span class="sidebar-category-name" data-categories="coredns">
             <span class="iconfont-archer">&#xe60a;</span>
             coredns
+        </span>
+        <span class="sidebar-category-name" data-categories="openwrt">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openwrt
+        </span>
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+        <span class="sidebar-category-name" data-categories="graph">
+            <span class="iconfont-archer">&#xe60a;</span>
+            graph
         </span>
         <span class="sidebar-category-name" data-categories="node-cache">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -2790,41 +2760,73 @@
             <span class="iconfont-archer">&#xe60a;</span>
             golang
         </span>
-        <span class="sidebar-category-name" data-categories="kmem">
+        <span class="sidebar-category-name" data-categories="Prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
-            kmem
-        </span>
-        <span class="sidebar-category-name" data-categories="suse">
-            <span class="iconfont-archer">&#xe60a;</span>
-            suse
-        </span>
-        <span class="sidebar-category-name" data-categories="wireguard">
-            <span class="iconfont-archer">&#xe60a;</span>
-            wireguard
-        </span>
-        <span class="sidebar-category-name" data-categories="raid">
-            <span class="iconfont-archer">&#xe60a;</span>
-            raid
-        </span>
-        <span class="sidebar-category-name" data-categories="kubeadm">
-            <span class="iconfont-archer">&#xe60a;</span>
-            kubeadm
-        </span>
-        <span class="sidebar-category-name" data-categories="LVM">
-            <span class="iconfont-archer">&#xe60a;</span>
-            LVM
-        </span>
-        <span class="sidebar-category-name" data-categories="kickstart">
-            <span class="iconfont-archer">&#xe60a;</span>
-            kickstart
+            Prometheus
         </span>
         <span class="sidebar-category-name" data-categories="prometheus">
             <span class="iconfont-archer">&#xe60a;</span>
             prometheus
         </span>
-        <span class="sidebar-category-name" data-categories="raid">
+        <span class="sidebar-category-name" data-categories="proxmox">
             <span class="iconfont-archer">&#xe60a;</span>
-            raid
+            proxmox
+        </span>
+        <span class="sidebar-category-name" data-categories="preseed">
+            <span class="iconfont-archer">&#xe60a;</span>
+            preseed
+        </span>
+        <span class="sidebar-category-name" data-categories="onedrive">
+            <span class="iconfont-archer">&#xe60a;</span>
+            onedrive
+        </span>
+        <span class="sidebar-category-name" data-categories="总结">
+            <span class="iconfont-archer">&#xe60a;</span>
+            总结
+        </span>
+        <span class="sidebar-category-name" data-categories="suse">
+            <span class="iconfont-archer">&#xe60a;</span>
+            suse
+        </span>
+        <span class="sidebar-category-name" data-categories="CI">
+            <span class="iconfont-archer">&#xe60a;</span>
+            CI
+        </span>
+        <span class="sidebar-category-name" data-categories="ubuntu18">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ubuntu18
+        </span>
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+        <span class="sidebar-category-name" data-categories="travis">
+            <span class="iconfont-archer">&#xe60a;</span>
+            travis
+        </span>
+        <span class="sidebar-category-name" data-categories="uos">
+            <span class="iconfont-archer">&#xe60a;</span>
+            uos
+        </span>
+        <span class="sidebar-category-name" data-categories="wireguard">
+            <span class="iconfont-archer">&#xe60a;</span>
+            wireguard
+        </span>
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+        <span class="sidebar-category-name" data-categories="zombie">
+            <span class="iconfont-archer">&#xe60a;</span>
+            zombie
+        </span>
+        <span class="sidebar-category-name" data-categories="运维">
+            <span class="iconfont-archer">&#xe60a;</span>
+            运维
+        </span>
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
         </span>
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
