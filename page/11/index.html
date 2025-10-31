@@ -459,6 +459,46 @@
             
         
         <article class="index-post">
+            <a class="abstract-title" href="/2018/11/06/onlyoffice/">
+                
+                <span class="abstract-title-text">一次docker镜像的解耦--onlyoffice</span>
+            </a>
+            <div class="abstract-content">
+                年初的时候就考虑过搭建个在线编辑excel的,之前试过很多owncloud，seafile,nextcloud,kodexplorer基本都是纯网盘或者不免费
+这几天又有需求多人同时在线编辑office文件,同事找了个onlyoffice的用docker跑起来了. dockerhub上看了下镜像挺大的而且没有跳转到github上Dockerfile的超链接
+稍微用docker history看了下发现里面一堆各种数据库都放同一个镜像里,根本没有解耦
+于是便有了解耦这个镜像的冲动
+先找官方的例子跑跑看
+地址：https://api.onlyoffice.com/editors/demopr...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/11/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/06</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
             <a class="abstract-title" href="/2018/11/05/10chars/">
                 
                 <span class="abstract-title-text">记录一次十字符病毒清理过程</span>
@@ -1020,43 +1060,6 @@ An example of a pod that uses pod affinity:
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="ConfigMap">ConfigMap</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">
-                
-                <span class="abstract-title-text">使用管理网当作业务网keepalived VIP的心跳线</span>
-            </a>
-            <div class="abstract-content">
-                客户的业务情况如下，我们连的 vpn2 上去部署的业务，一开始三台机器，上面只有 NC1 这一个网卡，客户给了个 vip 让我们配置上，说 vip 两个 vpn 都能访问到。后面实际配置完发现不通，沟通了一番了解清楚网络后，使用了如下方案。
-NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 172.18.27.99/25 via 172.18.27.1，两个网卡不同的 vlan，172.18.27.0/25 的网络里没有多少 IP 了，所以拿来做 VIP 的话得用 NC1 做心跳线。
-123456789101112131415...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/03/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/18</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="vip">vip</a>
     
 </div>
 
@@ -2373,45 +2376,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4850,7 +4820,7 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 204
+        Total : 205
         </div>
         <!-- search  -->
         
@@ -4868,6 +4838,12 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span>
+            <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/23</span>
@@ -7097,6 +7073,11 @@ NC1 的网络是 172.18.27.252/25 via 172.18.27.129 是默认路由，NC2 是 17
             <span class="sidebar-tag-name" data-tags="fnctl">
                 <span class="iconfont-archer">&#xe606;</span>
                 fnctl
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="boltdb">
+                <span class="iconfont-archer">&#xe606;</span>
+                boltdb
             </span>
         
     </div>

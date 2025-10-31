@@ -457,6 +457,57 @@
         
         
             
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/06/23/host-gw-in-aliyun/">
+                
+                <span class="abstract-title-text">阿里云上使用flannel host-gw跨节点pod不通的解决</span>
+            </a>
+            <div class="abstract-content">
+                挺多人问的，写下解决办法
+前言首先主机得在同一个专有vpc下，跨vpc或者经典vpc就扯淡了。还有flannel别把网络信息存储在etcd里，目前flannel只支持v2的etcd api。但是现在k8s都是使用v3 etcd存储了。如果v2和v3共存会导致无法恢复etcd的备份
+所以网上那些etcdctl set flannel的cidr的文章别看了，都没做过备份恢复实验就到处发k8s搭建教程。flannel v3的话看我过往文章
+环境信息先来说下host-gw的包走向，假设两台机器
+
+
+
+IP
+pod cidr
+
+
+
+10.0.6.166
+10.200.1.0&#x2F;24
+
+
+1...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/06/23">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/23</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="host-gw">host-gw</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
             
         
         <article class="index-post">
@@ -972,46 +1023,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/12/05/suse-fix-data-but-device-busy/">
-                
-                <span class="abstract-title-text">opensuse的一次救援</span>
-            </a>
-            <div class="abstract-content">
-                昨晚吃完晚饭回到办公室，右边同事在控制台看着一个suse起不来一直启动的时候卡在suse的蜥蜴logo背景图那。见我来了叫我看下，他们已经尝试过恢复快照，但是还不行，应该是很久之前损坏的，只不过因为没重启没发现，我叫他重启下看看卡在哪，重启后进入内核后显示背景图那按下esc然后看卡在&#x2F;sysroot挂载那。目测分区损坏了，经历了ubuntu的安装iso的rescue mode就是渣渣后，我还是信任centos的iso。
-处理先备份和准备工作关闭虚机，后台拷贝下系统盘的卷先备份下。然后给虚机的IDE光驱挂载了个centos 7.5 DVD的iso，修改虚机启动顺序到ISO，进Tr...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/12/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/12/05</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="suse">suse</a>
     
 </div>
 
@@ -2328,45 +2339,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
+        
+        
+        
+        
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -4805,7 +4783,7 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 204
+        Total : 205
         </div>
         <!-- search  -->
         
@@ -4823,6 +4801,12 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
             
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span>
+            <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
+        </li>
+    
         
         <li class="archive-post-item">
             <span class="archive-post-date">10/23</span>
@@ -7052,6 +7036,11 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="fnctl">
                 <span class="iconfont-archer">&#xe606;</span>
                 fnctl
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="boltdb">
+                <span class="iconfont-archer">&#xe606;</span>
+                boltdb
             </span>
         
     </div>
