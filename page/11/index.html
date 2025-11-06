@@ -421,6 +421,44 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2018/11/24/how-to-use-kubeadm/">
+                <span class="abstract-title-text">对于初入k8s和kubeadm的一些建议</span>
+            </a>
+            <div class="abstract-content">
+                主要还是简单说下kubeadm
+说说一些现象无论docker还是K8s群看见过太多人盲目了有些是赶鸭子上来的,有的是跟风盲目进来乱学的.其中较多的分类为:
+
+
+不学docker直接学k8s的跟风狗
+没有熟悉Linux操作和一些基础知识的开发
+Docker学得不怎么样就迫不及待来学的跟风狗
+
+
+入门最具有争议的问题就是如何开始,k8s各个组件对于小白来说搭建方式和配置文件对于入门的人来说太庞大了,对于环境来学习一般分为下面两种
+
+
+按照别人博客或者文章去手动搭建一个环境后学习
+找个简易部署的方案来部署环境来学(kubeadm或者ansible之类的懒人搭建)
+
+
+  看过无数小白也怼过不少...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/11/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/24</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2018/11/06/onlyoffice/">
                 <span class="abstract-title-text">一次docker镜像的解耦--onlyoffice</span>
             </a>
@@ -806,37 +844,6 @@ An example of a pod that uses pod affinity:
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/04/29/kubernetes-configMap-mount/">
-                <span class="abstract-title-text">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</span>
-            </a>
-            <div class="abstract-content">
-                看到configMap这个资源对象,突发奇想
-
-
-如何让一个configMap里文件挂载到容器的不同路径
-
-
-书上和网上都找不到对应例子
-最终github上搜索到了有个subPath选项除了支持路径还不会覆盖容器内部的整个目录参考链接https://github.com/dshulyak/kubernetes.github.io/commit/d58ba7b075bb4848349a2c920caaa08ff3773d70这里记录下
-123456789101112131415161718192021222324252627282930313233343536373839404142434...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/04/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/29</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="ConfigMap">ConfigMap</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/10/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/12/">NEXT &gt;</a>
@@ -1149,9 +1156,10 @@ An example of a pod that uses pod affinity:
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 205
+        Total : 206
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1161,6 +1169,10 @@ An example of a pod that uses pod affinity:
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">10/31</span>
             <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
@@ -2753,6 +2765,10 @@ An example of a pod that uses pod affinity:
             <span class="sidebar-tag-name" data-tags="awk">
                 <span class="iconfont-archer">&#xe606;</span>
                 awk
+            </span>
+            <span class="sidebar-tag-name" data-tags="GetImageBlob">
+                <span class="iconfont-archer">&#xe606;</span>
+                GetImageBlob
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -412,6 +412,28 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/08/27/skopeo-static-build/">
+                <span class="abstract-title-text">skopeo 静态编译</span>
+            </a>
+            <div class="abstract-content">
+                <p>skopeo 静态编译步骤</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/08/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/08/27</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="skopeo">skopeo</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
             
         <article class="index-post">
             <a class="abstract-title" href="/2020/08/05/wireguard-for-personal/">
@@ -648,31 +670,6 @@ cpu按照实际，我给2核，内存我给的2g
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="openwrt">openwrt</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="x86">x86</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/12/dns-formerr/">
-                <span class="abstract-title-text">adguardhome dns FORMERR 错误</span>
-            </a>
-            <div class="abstract-content">
-                由来这几天发现某个 zone 上游时不时地址无法解析，dnsmasq -&gt; adguardhome 的 /xxx.com/10.x.x.x。
-排查先用 dig 排查，发现是上游的问题，加上 noedns 就能解析了
-12345678910111213141516171819202122232425262728293031323334353637383940root@OpenWrt:~# dig @10.x.x.x  xxx.xxxxx.net ; &lt;&lt;&gt;&gt; DiG 9.17.13 &lt;&lt;&gt;&gt; @10.x.x.x xxx.xxxxx.ne...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/05/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/12</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="adguardhome">adguardhome</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="dns">dns</a>
 </div>
 
             </div>
@@ -926,9 +923,10 @@ cpu按照实际，我给2核，内存我给的2g
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 205
+        Total : 206
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -938,6 +936,10 @@ cpu按照实际，我给2核，内存我给的2g
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">10/31</span>
             <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
@@ -2530,6 +2532,10 @@ cpu按照实际，我给2核，内存我给的2g
             <span class="sidebar-tag-name" data-tags="awk">
                 <span class="iconfont-archer">&#xe606;</span>
                 awk
+            </span>
+            <span class="sidebar-tag-name" data-tags="GetImageBlob">
+                <span class="iconfont-archer">&#xe606;</span>
+                GetImageBlob
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -419,6 +419,30 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/02/24/keepalived-static-build/">
+                <span class="abstract-title-text">keepalived static link build</span>
+            </a>
+            <div class="abstract-content">
+                由来之前那篇 ipvs svc 的文章，内部已经上生产了，客户的环境可能完全内网，包管理安装 keepalived 不现实，所以 keepalived 是部署容器里的。在容灾测试的时候，例如 3 台机器部署好业务，然后跑压测脚本模拟用户使用，发现关台机器的时候故障时间很短，但是这个机器开机的期间，还是很大概率故障时间很长，体现在接口的错误数量很多。大概看了下，是 keepalived 启动慢，先试启动 docker daemon，然后容器启动是顺序不固定，可能 keepalived 很后起来，于是就想着看看能不能 keepalived 拿出来，也就是静态编译。
+buildx 使用见文章 ...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/02/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/02/24</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="keepalived">keepalived</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
         <article class="index-post">
             <a class="abstract-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">
                 <span class="abstract-title-text">proxmox 开机 error: disk &#39;lvmid/[vg uuid]/[lv uuid]&#39; not found</span>
@@ -770,30 +794,6 @@ buildx 使用见文章 buildx 使用
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/08/24/cni-plugins-bridge-err/">
-                <span class="abstract-title-text">一次 cni-plugins 导致集群 dns 无法解析的排错</span>
-            </a>
-            <div class="abstract-content">
-                问题环境是 1.15.5 的 x86_64 的 k8s 。命令输出被我查看日志给冲掉了，大致描述下。中间件 kafka 无法连上 zookeeper ，看了下日志报错域名无法解析。看了下 coredns 都挂了：
-12345$ kubectl -n kube-system get po -o wide -l k8s-app=kube-dnsNAME                       READY   STATUS             RESTARTS   AGE     IP           NODE         NOMINATED NODE   READINESS ...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/08/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/24</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="cni-plugins">cni-plugins</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/4/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/">NEXT &gt;</a>
@@ -1106,9 +1106,10 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 205
+        Total : 206
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1118,6 +1119,10 @@ buildx 使用见文章 buildx 使用
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">10/31</span>
             <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
@@ -2710,6 +2715,10 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="awk">
                 <span class="iconfont-archer">&#xe606;</span>
                 awk
+            </span>
+            <span class="sidebar-tag-name" data-tags="GetImageBlob">
+                <span class="iconfont-archer">&#xe606;</span>
+                GetImageBlob
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

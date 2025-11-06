@@ -414,6 +414,25 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2022/07/12/pod-no-ip-addr/">
+                <span class="abstract-title-text">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</span>
+            </a>
+            <div class="abstract-content">
+                由来有事回到工位上，还没坐下同事就过来喊我，让我帮忙看个客户的生产环境问题，大致就是客户为了搞安全，开了 ipset，然后发现业务受影响了。
+过程123456$ kubectl get pod -o wide | grep -v RunnNAME                                                  READY   STATUS             RESTARTS   AGE     IP            NODE         NOMINATED NODE   READINESS GATESxxxx-privilege-r97z...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/07/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/12</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2022/06/03/container-not-forward/">
                 <span class="abstract-title-text">docker info无warning，iptables规则正常，宿主机就是不转发</span>
             </a>
@@ -622,30 +641,6 @@ ansible报错如下：
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/02/24/keepalived-static-build/">
-                <span class="abstract-title-text">keepalived static link build</span>
-            </a>
-            <div class="abstract-content">
-                由来之前那篇 ipvs svc 的文章，内部已经上生产了，客户的环境可能完全内网，包管理安装 keepalived 不现实，所以 keepalived 是部署容器里的。在容灾测试的时候，例如 3 台机器部署好业务，然后跑压测脚本模拟用户使用，发现关台机器的时候故障时间很短，但是这个机器开机的期间，还是很大概率故障时间很长，体现在接口的错误数量很多。大概看了下，是 keepalived 启动慢，先试启动 docker daemon，然后容器启动是顺序不固定，可能 keepalived 很后起来，于是就想着看看能不能 keepalived 拿出来，也就是静态编译。
-buildx 使用见文章 ...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/02/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/02/24</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="keepalived">keepalived</a>
 </div>
 
             </div>
@@ -899,9 +894,10 @@ buildx 使用见文章 ...
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 205
+        Total : 206
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -911,6 +907,10 @@ buildx 使用见文章 ...
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">10/31</span>
             <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
@@ -2503,6 +2503,10 @@ buildx 使用见文章 ...
             <span class="sidebar-tag-name" data-tags="awk">
                 <span class="iconfont-archer">&#xe606;</span>
                 awk
+            </span>
+            <span class="sidebar-tag-name" data-tags="GetImageBlob">
+                <span class="iconfont-archer">&#xe606;</span>
+                GetImageBlob
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -413,6 +413,30 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2023/03/07/qemu-binfmt_misc/">
+                <span class="abstract-title-text">利用 qemu user 模式和 binfmt_misc 构建其他架构的 docker 镜像</span>
+            </a>
+            <div class="abstract-content">
+                <p>docker 的 buildx 需要内核支持，不升级内核的情况下，实际上可以利用 qemu 和 binfmt_misc 在 x86_64 上构建其他架构容器，之前这块也是没大概看组合原理，这次龙芯 loongarch64 适配的时候正好理解</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/03/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/03/07</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="qemu">qemu</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="binfmt_misc">binfmt_misc</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="loongarch64">loongarch64</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2022/10/09/docker-containerd-panic/">
                 <span class="abstract-title-text">磁盘问题宕机后 docker 的 containerd 无法启动</span>
             </a>
@@ -631,33 +655,9 @@ buildx 使用见文章 buildx 使用
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/07/05/systemctl-start-docker-canceled/">
-                <span class="abstract-title-text">Job for docker.service canceled</span>
-            </a>
-            <div class="abstract-content">
-                故障现象内部安装 docker 的脚本报错 docker 安装失败。然后启动发现下面奇怪的问题:
-1234567$ systemctl status docker● docker.service - Docker Application Container Engine   Loaded: loaded (/etc/systemd/system/docker.service; enabled; vendor preset: enabled)   Active: inactive (dead)     Docs: http://docs.docker.io$ systemctl start...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/07/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/05</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="systemd">systemd</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/tags/docker/">&lt; PREV</a><a class="page-number" href="/tags/docker/">1</a><span class="page-number current">2</span><a class="page-number" href="/tags/docker/page/3/">3</a><a class="extend next" rel="next" href="/tags/docker/page/3/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/tags/docker/">&lt; PREV</a><a class="page-number" href="/tags/docker/">1</a><span class="page-number current">2</span><a class="page-number" href="/tags/docker/page/3/">3</a><a class="page-number" href="/tags/docker/page/4/">4</a><a class="extend next" rel="next" href="/tags/docker/page/3/">NEXT &gt;</a>
         </nav>
 </main>
 
@@ -903,9 +903,10 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 205
+        Total : 206
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -915,6 +916,10 @@ buildx 使用见文章 buildx 使用
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">10/31</span>
             <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
@@ -2507,6 +2512,10 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="awk">
                 <span class="iconfont-archer">&#xe606;</span>
                 awk
+            </span>
+            <span class="sidebar-tag-name" data-tags="GetImageBlob">
+                <span class="iconfont-archer">&#xe606;</span>
+                GetImageBlob
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
