@@ -421,6 +421,31 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2021/08/25/flannel-a-host-net-tmout/">
+                <span class="abstract-title-text">flannel下集群有个节点网络不通的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                故障问题和版本没关系，客户的 node 信息啥的后面排错里有。有个节点通信有问题，其余节点都没问题。
+排查惯例信息先看下 flannel 的 vxlan 的 vtep 信息，客户是双网卡的，但是默认路由是这个网卡，不用管另外的网卡了。下面信息看了下 VtepMAC 和 public-ip 都正常。
+123456789101112131415161718192021222324252627282930313233343536$ kubectl get node -o yaml | grep -B4 public    annotations:      flannel.alpha.core...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/08/25">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/25</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="flannel">flannel</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2021/08/24/cni-plugins-bridge-err/">
                 <span class="abstract-title-text">一次 cni-plugins 导致集群 dns 无法解析的排错</span>
             </a>
@@ -767,29 +792,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/02/02/node-shutdown-dns-unavailable/">
-                <span class="abstract-title-text">集群节点关机导致dns在eviction pod之前几率不可用</span>
-            </a>
-            <div class="abstract-content">
-                由来这几天我们内部在做新项目的容灾测试，业务都是在 K8S 上的。容灾里就是随便选节点 shutdown -h now。关机后同事便发现了（页面有错误，最终问题是）集群内 DNS 解析会有几率无法解析（导致的）。
-根据 SVC 的流程，node 关机后，由于 kubelet 没有 update 自己。node 和 pod 在 apiserver get 的时候显示还是正常的。在 kube-controller-manager 的 --node-monitor-grace-period 时间后再过 --pod-eviction-timeout 时间开始 eviction pod，大概流程是...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/02/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/02/02</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="coredns">coredns</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/5/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/7/">NEXT &gt;</a>
@@ -1103,9 +1105,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1115,6 +1118,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2715,6 +2722,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

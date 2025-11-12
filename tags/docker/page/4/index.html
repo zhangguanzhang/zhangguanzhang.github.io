@@ -414,6 +414,29 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2017/12/24/docker%E5%AE%B9%E5%99%A8%E8%AE%BF%E9%97%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA/">
+                <span class="abstract-title-text">docker容器访问宿主机</span>
+            </a>
+            <div class="abstract-content">
+                有时候使用docker容器的时候经常有需要访问宿主机ip的需求,虽然可以用宿主机网卡的ip访问,但是有时候有些人的宿主机ip是dhcp方式通用方法就是给宿主机加个不可达的回环地址,然后容器的host指向这个回环地址(容器host这步是可选的)(PS:1.1.1.1这个地址在2018&#x2F;04初成为了公共DNS所以能ping通了,不过思路还是一样的)环境如下
+123456[root@guanvps ~]# cat /etc/redhat-release CentOS Linux release 7.4.1708 (Core) [root@guanvps ~]# uname -aLin...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/12/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/24</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">
                 <span class="abstract-title-text">docker容器网络互联</span>
             </a>
@@ -683,9 +706,10 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -695,6 +719,10 @@
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2295,6 +2323,10 @@
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -414,6 +414,28 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2020/01/15/kill-ctr-with-grace-period/">
+                <span class="abstract-title-text">Killing container &#34;docker://xxx with 30 second grace period</span>
+            </a>
+            <div class="abstract-content">
+                由来开发反应他们环境上有个 pod 不正常。他们先操作然后卡住后来找我的。
+12345$ kubectl -n xxx get pod -o wide | grep 0/1xstorage-6d959cd8c8-rdscv      0/1     Init:0/1    0       15m     xxxx$ kubectl -n xxx delete po xstorage-6d959cd8c8-rdscvpod &quot;xstorage-6d959cd8c8-rdscv&quot; deleted      ^[[A^[[A^[[A^[[A
+
+处理过程查看日志：
+1234$...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/01/15">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/15</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2020/01/08/docker-panic-invalid-page-type/">
                 <span class="abstract-title-text">docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理</span>
             </a>
@@ -649,31 +671,6 @@ nodeName
                 <!-- tags -->
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/09/05/prometheus-change-timezone/">
-                <span class="abstract-title-text">修改源码更改prometheus的时区问题</span>
-            </a>
-            <div class="abstract-content">
-                先说明一点，时区UTC不影响prometheus和grafana，这篇文章只是提供一个修改的思路和步骤
-日志时区修改代码分析先起最新的prometheus挂载时区文件
-1234567docker run --net host -v /etc/localtime:/etc/localtime prom/prometheuslevel=info ts=2019-09-05T09:44:40.409Z caller=main.go:293 msg=&quot;no time or size retention was set so using the default time retentio...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/09/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/05</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="timezone">timezone</a>
 </div>
 
             </div>
@@ -928,9 +925,10 @@ nodeName
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -940,6 +938,10 @@ nodeName
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2540,6 +2542,10 @@ nodeName
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

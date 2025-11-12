@@ -420,6 +420,28 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2023/02/14/openstack-vm-rabbitmqctl/">
+                <span class="abstract-title-text">openstack 虚机上 rabbitmqctl 超时</span>
+            </a>
+            <div class="abstract-content">
+                <p>记录一下今天遇到的 openstack 上 rabbitmqctl 一直超时的问题</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/02/14">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/02/14</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="hostname">hostname</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="openstack">openstack</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2022/12/30/k8s-java-request-cpu/">
                 <span class="abstract-title-text">k8s java 容器未设置 requests.cpu 导致性能问题</span>
             </a>
@@ -738,34 +760,6 @@ ansible报错如下：
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/03/16/cannot-assign-requested-address/">
-                <span class="abstract-title-text">server 端的 cannot assign requested address</span>
-            </a>
-            <div class="abstract-content">
-                由来今天碰到了这个问题，但是最终结果出乎意料
-过程项目相关部分客户的 OA 对接我们的应用，使用过程中会调用我们的接口，我们的接口再回调客户的回调地址。调用流是：
-1客户 OA 后端 ----&gt; 我们应用 A 的后端 -----&gt; 我们应用 B 后端  -----&gt; 客户写的回调地址
-
-然后我们接口 A 返回 B 访问回调的报错：
-1&quot;Get http://10.192.xxx.xxx/xxxxinfo?...: dial tcp 10.192.xxx.xxx:80: connect: cannot assign requested address&quot;...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/03/16">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/16</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/3/">&lt; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/5/">NEXT &gt;</a>
@@ -1079,9 +1073,10 @@ ansible报错如下：
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1091,6 +1086,10 @@ ansible报错如下：
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2691,6 +2690,10 @@ ansible报错如下：
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

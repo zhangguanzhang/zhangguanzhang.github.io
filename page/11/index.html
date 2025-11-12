@@ -421,6 +421,30 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2018/12/04/black-box-exporter/">
+                <span class="abstract-title-text">prometheus的黑盒监控</span>
+            </a>
+            <div class="abstract-content">
+                常规的各种 exporter 都是和需要监控的机器一起安装的，如果需要监控一些 tcp 端口和七层应用层的状态呢，这个时候就需要黑盒监控了，不需要安装在目标机器上即可从外部去监控。
+9115 是它的 http 默认监听端口，blackbox.yml 它的配置文件里以基础的 http、dns、tcp、icmp 等 prober 定制配置出各种监测模块(module)，在 prometheus server 的配置文件里声明用哪个模块去探测哪个 targets，下面以 docker-compose 启动一组实例，docker 的网络自带 dns，所以里面全部用名字替代 ipdocker-co...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2018/12/04">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/04</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="prometheus">prometheus</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="exporter">exporter</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2018/11/24/how-to-use-kubeadm/">
                 <span class="abstract-title-text">对于初入k8s和kubeadm的一些建议</span>
             </a>
@@ -813,37 +837,6 @@ An example of a pod that uses pod affinity:
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/05/05/Kubernetes_install/">
-                <span class="abstract-title-text">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</span>
-            </a>
-            <div class="abstract-content">
-                转载自https://kairen.github.io/2018/04/05/kubernetes/deploy/manual-v1.10/作者文章的安装步骤文字是复制作者的1.8的安装步骤然后改的,安装过程变了部分,但是文字没有改正过来。
-此过程我写了ansible安装部署方案,地址(一些文件下载不了的话可以去下面的github里找对应的文件)
-
-多master高可用版
-单master版
-
-本文内容所有url都没改过，以下的添加的内容是我的建议和安装的经验
-本文里如果有些范围不知道在哪台主机上执行请看前后命令都可以判断出,不清楚的请下面评论我会更新
-以下我转载过来并修改+上我的提醒
-管...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/05/05">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/05</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/10/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/12/">NEXT &gt;</a>
@@ -1157,9 +1150,10 @@ An example of a pod that uses pod affinity:
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1169,6 +1163,10 @@ An example of a pod that uses pod affinity:
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2769,6 +2767,10 @@ An example of a pod that uses pod affinity:
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

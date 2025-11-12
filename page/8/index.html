@@ -421,6 +421,33 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2020/07/05/linux-auditd/">
+                <span class="abstract-title-text">Linux audit 审计</span>
+            </a>
+            <div class="abstract-content">
+                什么是audit？linux audit子系统是一个用于收集记录系统、内核、用户进程发生的行为事件的一种安全审计系统。该系统可以可靠地收集有关上任何与安全相关（或与安全无关）事件的信息，它可以帮助跟踪在系统上执行过的一些操作。
+使用安装好像高版本 os 都自带了，没有就 yum install -y audit
+1systemctl status auditd.service
+
+例如追踪一个内核参数被谁修改要注意的是 auditctl 只能临时生效，要想永久生效使用文件 audit.rules
+基本信息查看12345678910111213# 查看状态$ auditctl -senabl...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/07/05">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/05</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="audit">audit</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2020/06/25/kubernetes-pprof/">
                 <span class="abstract-title-text">k8s pprof 分析 cpu 和内存</span>
             </a>
@@ -772,28 +799,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/01/15/kill-ctr-with-grace-period/">
-                <span class="abstract-title-text">Killing container &#34;docker://xxx with 30 second grace period</span>
-            </a>
-            <div class="abstract-content">
-                由来开发反应他们环境上有个 pod 不正常。他们先操作然后卡住后来找我的。
-12345$ kubectl -n xxx get pod -o wide | grep 0/1xstorage-6d959cd8c8-rdscv      0/1     Init:0/1    0       15m     xxxx$ kubectl -n xxx delete po xstorage-6d959cd8c8-rdscvpod &quot;xstorage-6d959cd8c8-rdscv&quot; deleted      ^[[A^[[A^[[A^[[A
-
-处理过程查看日志：
-1234$...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/01/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/15</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/7/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/9/">NEXT &gt;</a>
@@ -1107,9 +1112,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1119,6 +1125,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2719,6 +2729,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

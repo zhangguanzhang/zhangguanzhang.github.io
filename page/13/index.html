@@ -419,6 +419,34 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/06/03/bash-complete/">
+                <span class="abstract-title-text">bash自定义补全</span>
+            </a>
+            <div class="abstract-content">
+                总结下bash的补全
+终端下按两次tab就是补全
+补全常见的分为下面几种场景:
+
+第一部分的命令补全
+命令补全后补全路径到文件
+变量补全
+类似systemctl命令的选项补全
+
+当然bash支持自定义补全,也就是让我们实现和systemctl命令那样补全
+假设我们要systemctl disable --now firewalldsystemctl空格后按tab键会显示systemctl的第二个部分的所有支持的选项此时继续输入di按tab键会补全成systemctl disable,输入--now(相似的太多了,所以基本输入完)补全,当然最后的服务名此时补全不了,因为systemctl的...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/06/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/03</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
         <article class="index-post">
             <a class="abstract-title" href="/2017/05/25/shell-opts/">
                 <span class="abstract-title-text">shell脚本的选项和参数处理</span>
@@ -724,24 +752,6 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         <a class="post-tag" href="javascript:void(0);" data-tags="安卓">安卓</a>
 </div>
 
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/04/03/bond/">
-                <span class="abstract-title-text">centos配置bond</span>
-            </a>
-            <div class="abstract-content">
-                1234567891011121314151617181920212223242526272829[root@APP-SRV-001 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0TYPE=EthernetBOOTPROTO=noneDEVICE=eth0NAME=eth0ONBOOT=yesMASTER=bond4SLAVE=yes[root@APP-SRV-001 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth1TYPE=EthernetBOOTPROTO=noneDEVICE=et...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/04/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/03</span>
-                </div>
-                <!-- tags -->
             </div>
         </article>
         <div class="index-post-divider"></div>
@@ -1058,9 +1068,10 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1070,6 +1081,10 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2670,6 +2685,10 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

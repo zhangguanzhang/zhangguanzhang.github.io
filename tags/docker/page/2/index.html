@@ -413,6 +413,27 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2023/04/12/docker-pull-hang/">
+                <span class="abstract-title-text">国产系统上解决docker pull卡住的问题</span>
+            </a>
+            <div class="abstract-content">
+                <p>今天客户 arm64 机器上 docker pull 大镜像卡住的一次解决过程</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/12">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/04/12</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2023/03/07/qemu-binfmt_misc/">
                 <span class="abstract-title-text">利用 qemu user 模式和 binfmt_misc 构建其他架构的 docker 镜像</span>
             </a>
@@ -626,30 +647,6 @@ buildx 使用见文章 buildx 使用
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="fio">fio</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">
-                <span class="abstract-title-text">机器重启后 kube-apiserver 无法启动，etcd刷(error &#34;EOF&#34;, ServerName &#34;&#34;)</span>
-            </a>
-            <div class="abstract-content">
-                环境信息三个 master （etcd 也在 master 上，master上也有 kubelet）和 n 个 node。master 上组件(kube-controller-manager,kube-scheduler,kubelet)的 apiserver 的ip 都是 127.0.0.1:6443。kube-apiserver的 etcd 地址写了三个 etcd 的。k8s 版本为 v1.15.5
-故障现象93 这台 master 机器重启后，发现 93 节点 NotReady，上去看了下 kubelet 无法连上本机的 kube-apiserver。kube-apiserver ...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/07/06">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/06</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="systemd">systemd</a>
 </div>
 
             </div>
@@ -904,9 +901,10 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 206
+        Total : 207
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -916,6 +914,10 @@ buildx 使用见文章 buildx 使用
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 下，重启 pod sandbox 造成 dns 异常的梳理</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/06</span>
             <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
@@ -2516,6 +2518,10 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="GetImageBlob">
                 <span class="iconfont-archer">&#xe606;</span>
                 GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
