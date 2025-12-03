@@ -617,7 +617,9 @@
 <p>切换其他版本的时候要处理下子模块，相关命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git submodule update --recursive --checkout</span><br><span class="line"></span><br><span class="line">git submodule foreach --recursive git reset --hard</span><br><span class="line">git submodule update  --recursive</span><br></pre></td></tr></table></figure>
 
-<p>切版本还要记得清理 <code>build_docker</code> 目录</p>
+<p>切版本还要记得清理 <code>build_docker</code> 目录，成品镜像已经推送到阿里云镜像仓库上：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">registry.aliyuncs.com/zhangguanzhang/clickhouse-server:23.8.16.40</span><br></pre></td></tr></table></figure>
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>其实也没参考多少，就是这些是能搜到的 arm64 编译相关</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://clickhouse.com/docs/en/development/build#building-in-docker">https://clickhouse.com/docs/en/development/build#building-in-docker</a></li>
