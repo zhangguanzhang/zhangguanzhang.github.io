@@ -413,6 +413,28 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2022/09/07/docker-veth-not-clean/">
+                <span class="abstract-title-text">低版本docker veth没清理造成容器网络问题</span>
+            </a>
+            <div class="abstract-content">
+                <p>帮助同事看一个 gitlab-runner 的问题，最终发现是 docker 低版本的 bug，没清理掉 veth 导致的</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/09/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/09/07</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="veth">veth</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2022/07/28/redhat84-vxlan-esxi/">
                 <span class="abstract-title-text">exsi 使用 redhat8.4 搭建k8s集群，flannel vxlan 模式的不正常排错</span>
             </a>
@@ -614,28 +636,6 @@ ansible报错如下：
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/03/17/woff2/">
-                <span class="abstract-title-text">ttf转woff工具谷歌woff2的静态编译</span>
-            </a>
-            <div class="abstract-content">
-                <p>ttf 转 woff 的工具太少了，离线安装的方案基本没有，所以找了个工具静态编译</p>
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/03/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/17</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="ttf">ttf</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="woff">woff</a>
 </div>
 
             </div>
@@ -891,9 +891,10 @@ ansible报错如下：
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 207
+        Total : 208
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -903,6 +904,10 @@ ansible报错如下：
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2025/12/18/replacing-shell-commands-with-library-calls/">[持续更新] - 为什么不应该为了实现需求而调用命令</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/12</span>
             <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 重启非 host 网络容器造成 dns 异常的梳理和pr修复</a>

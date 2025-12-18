@@ -421,6 +421,29 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2019/01/22/proxmox-cloud-init/">
+                <span class="abstract-title-text">proxmox里使用cloud-init和一些笔记</span>
+            </a>
+            <div class="abstract-content">
+                cloud-init的镜像模板制作centos7 模板制作记录下proxmox制作带有 cloud-init 的虚机模板过程因为刚开始制作虚机模板的硬盘是固定大小,后面通过克隆后调整硬盘大小就会自动 growpart ,需要安装 cloud-utils-growpart。好像只能往大的扩,我个人也倾向于最小 20G,所以这里我开的是20G硬盘的虚机另外查了下和实际试了下 cloud-utils-growpart 好像只支持 ext3 和 ext4 不支持 lvm 自动扩,其他的文件系统可以考虑试试 lvm 自己写个脚本去开机启动自动扩。这里我分区不带 swap,标准分区+ext4安装完后...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/01/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/22</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="openstack">openstack</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="cloud-init">cloud-init</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2018/12/04/black-box-exporter/">
                 <span class="abstract-title-text">prometheus的黑盒监控</span>
             </a>
@@ -811,32 +834,6 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/06/02/kubernetes-nodeSelector/">
-                <span class="abstract-title-text">kubernetes的PodAffinity的不解</span>
-            </a>
-            <div class="abstract-content">
-                官方文档来看是下面的说法,摘自官方文档https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-
-An example of a pod that uses pod affinity:
-
-1234567891011121314151617181920212223242526272829apiVersion: v1kind: Podmetadata:  name: with-pod-affinityspec:  affinity:    podAffinity:      requiredDuringSchedul...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/06/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/02</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="PodAffinity">PodAffinity</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/10/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/12/">NEXT &gt;</a>
@@ -1151,9 +1148,10 @@ An example of a pod that uses pod affinity:
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 207
+        Total : 208
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1163,6 +1161,10 @@ An example of a pod that uses pod affinity:
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2025/12/18/replacing-shell-commands-with-library-calls/">[持续更新] - 为什么不应该为了实现需求而调用命令</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/12</span>
             <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 重启非 host 网络容器造成 dns 异常的梳理和pr修复</a>

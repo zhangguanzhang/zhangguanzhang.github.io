@@ -421,6 +421,25 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/k8s-runxtables.lock/">
+                <span class="abstract-title-text">干掉烦人的 open /run/xtables.lock: is a directory</span>
+            </a>
+            <div class="abstract-content">
+                环境信息suse 这辣鸡系统，使用官方文档 docker-static 的二进制安装的话会无法起来，所以我们在 suse 上用的是很久之前的 rpm 安装的 docker。
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162$ cat /etc/os-release NAME=&quot;SLES&quot;VERSION=&quot;12-SP5&quot;VERSION_ID=&quot;12.5&quot...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/08/27">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2021/08/25/flannel-a-host-net-tmout/">
                 <span class="abstract-title-text">flannel下集群有个节点网络不通的一次排查</span>
             </a>
@@ -773,25 +792,6 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/03/12/build-arm64-docker-compose-action/">
-                <span class="abstract-title-text">使用github action 配合 docker buildx 编译 arm64 docker-compose</span>
-            </a>
-            <div class="abstract-content">
-                说明git 上搜索了很多 docker-compose 的 arm64 的编译基本都是使用 qemu-user-static 之类的设置下后编译的，也看到过用特权容器启动 qemu-user-static 或者 binfmt 之类的，但是我自己机器上试了无效，貌似是因为我操作系统是低版本内核的 centos ，github 上搜了下，其他很多人的编译感觉太啰嗦了。就在 action 上整了下，测试是可用的，而且非常简单。
-docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里安装 docker，创建 build...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/03/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/12</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/5/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/7/">NEXT &gt;</a>
@@ -1106,9 +1106,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 207
+        Total : 208
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1118,6 +1119,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2025/12/18/replacing-shell-commands-with-library-calls/">[持续更新] - 为什么不应该为了实现需求而调用命令</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/12</span>
             <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 重启非 host 网络容器造成 dns 异常的梳理和pr修复</a>

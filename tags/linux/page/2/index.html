@@ -412,6 +412,30 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/02/24/keepalived-static-build/">
+                <span class="abstract-title-text">keepalived static link build</span>
+            </a>
+            <div class="abstract-content">
+                由来之前那篇 ipvs svc 的文章，内部已经上生产了，客户的环境可能完全内网，包管理安装 keepalived 不现实，所以 keepalived 是部署容器里的。在容灾测试的时候，例如 3 台机器部署好业务，然后跑压测脚本模拟用户使用，发现关台机器的时候故障时间很短，但是这个机器开机的期间，还是很大概率故障时间很长，体现在接口的错误数量很多。大概看了下，是 keepalived 启动慢，先试启动 docker daemon，然后容器启动是顺序不固定，可能 keepalived 很后起来，于是就想着看看能不能 keepalived 拿出来，也就是静态编译。
+buildx 使用见文章 ...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/02/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/02/24</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="keepalived">keepalived</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
         <article class="index-post">
             <a class="abstract-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">
                 <span class="abstract-title-text">proxmox 开机 error: disk &#39;lvmid/[vg uuid]/[lv uuid]&#39; not found</span>
@@ -624,31 +648,6 @@ buildx 使用见文章 buildx 使用
                 <!-- tags -->
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/04/20/linux-partition-grow/">
-                <span class="abstract-title-text">虚拟化扩容硬盘大小</span>
-            </a>
-            <div class="abstract-content">
-                写于 2021/08/27 ，为了避免排到前面，所以日期修了下。
-about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所在分区的硬盘大小） 和非 lvm 纯分区的。无论是哪种，都得先扩容挂载路径所在的分区。推荐使用 parted 命令扩，且推荐使用最新版的 parted。新增硬盘扩到 lvm 里就不讲了，简单得不行。要先确保现场安装好新版本的 parted ，老版本的 parted 没有 resizepart 的命令，有条件的话把 gdisk 也可以安装上。
-早期的 Linux 为了兼容 windows 的磁盘，只支持 MBR ，后面支持了 GPT。传统的老牌的分区工具是 ...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/04/20">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/20</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="fs">fs</a>
 </div>
 
             </div>
@@ -904,9 +903,10 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 207
+        Total : 208
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -916,6 +916,10 @@ about讲解下扩分区的步骤。扩容只有两种情况，lvm（改 pv 所�
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2025/12/18/replacing-shell-commands-with-library-calls/">[持续更新] - 为什么不应该为了实现需求而调用命令</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/12</span>
             <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 重启非 host 网络容器造成 dns 异常的梳理和pr修复</a>
