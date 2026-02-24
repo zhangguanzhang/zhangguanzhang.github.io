@@ -302,7 +302,7 @@
 
                 <!-- 文章字数统计 -->
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
                     </div>
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
@@ -470,7 +470,7 @@
 <li><strong>非 hack 方式</strong>：例如中间人攻击。</li>
 </ul>
 <p>eBPF 需要较高内核版本且有对应内核模块支持。网上很多人用 root、KSU 等，却很少去编译内核增加 ebpf 的支持，所以这种方式很难普及， frida 的话要写注入逻辑，一般要电脑配合且要懂点编程和逆向基础。而中间人攻击的原理是：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">客户端                    攻击者            服务器(https://example.com)</span><br><span class="line">  │                        │                         │</span><br><span class="line">  │──── ClientHello ─────▶│                         │</span><br><span class="line">  │                        │──── ClientHello ─────▶│</span><br><span class="line">  │                        │◀── Server Certificate ─│</span><br><span class="line">  │◀ Fake Certificate ────│                         │</span><br><span class="line">  │                        │                         │</span><br><span class="line">  │==== 加密通信 ====     │==== 加密通信 ====      │</span><br><span class="line">  │   (被攻击者解密)      │   (正常HTTPS)         │</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">客户端                    攻击者            服务器(https://example.com)</span><br><span class="line">  │                        │                         │</span><br><span class="line">  │──── ClientHello ─────▶│                         │</span><br><span class="line">  │                        │──── ClientHello ─────▶ │</span><br><span class="line">  │                        │◀── Server Certificate ─│</span><br><span class="line">  │◀ Fake Certificate ────│                         │</span><br><span class="line">  │                        │                         │</span><br><span class="line">  │==== 加密通信 ====      │  ==== 加密通信 ====      │</span><br><span class="line">  │   (被攻击者解密)        │   (正常HTTPS)           │</span><br></pre></td></tr></table></figure>
 
 <ol>
 <li>客户端向服务器发起 HTTPS 请求，中间人伪装成服务器完成 TLS 握手，拦截并解析数据；中间人再以客户端身份与真实服务器通信，在服务器看来就是普通的一个客户端在访问自己。</li>
@@ -489,7 +489,7 @@
 <h2 id="安卓原理和工具选项"><a href="#安卓原理和工具选项" class="headerlink" title="安卓原理和工具选项"></a>安卓原理和工具选项</h2><p>模拟器和安卓上开虚机抓包不讨论，如果你看懂了原理又嫌弃 root 麻烦，可以自行查看相关文章。</p>
 <h3 id="指定-app-抓包原理"><a href="#指定-app-抓包原理" class="headerlink" title="指定 app 抓包原理"></a>指定 app 抓包原理</h3><p>安卓上「指定 app 走代理」的实现原理可以看我之前的文章 <a href="https://zhangguanzhang.github.io/2025/04/27/android-tun2sock/">开发一个让指定应用走代理的安卓 app 过程</a>。安卓的 VPNService 本身支持让指定 app 走类似 Linux <code>/dev/tun</code> 的通道，应用开发者只需实现相应逻辑即可。</p>
 <h3 id="工具选型"><a href="#工具选型" class="headerlink" title="工具选型"></a>工具选型</h3><p>有人会把 Fiddler 的 CA 导入手机，电脑跑 Fiddler，手机 WiFi 代理指向电脑的 Fiddler 端口。但不少 apk 会检测 WiFi 是否设置了代理，一旦发现就不走代理，导致抓不到该 app 的 HTTPS，所以更稳妥的方式还是：在安卓上装抓包&#x2F;代理软件，用 VPNService 指定 app，再做中间人拦截。</p>
-<p>微信小程序的鉴权里，<code>code</code> 不能重复使用（QQ 的似乎可以），所以常需要抓包拿到请求里的 code 再复用。我调研了一下，<strong>以下是搜到的对比</strong>：</p>
+<p>微信小程序的鉴权里，<code>code</code> 不能重复使用（QQ 的似乎可以），所以常需要抓包拦截住请求不让它发出去，然用请求里的 code 在代码里去使用。我调研了一下，<strong>以下是搜到的对比</strong>：</p>
 <table>
 <thead>
 <tr>
@@ -502,8 +502,8 @@
 <tbody><tr>
 <td><a target="_blank" rel="noopener" href="https://reqable.com/">Reqable</a></td>
 <td>未开源，前身是 HttpCanary</td>
-<td>UI 现代，请求查看体验较好，需 VIP 解锁全部功能（官网有价格说明）</td>
-<td>安装后 CA 随机生成这点不错，并且支持生成 magisk 模块；PC 端 USB 装证书到手机疑似通过 adb root 完成，无手动步骤，有人会担心被注入</td>
+<td>UI 现代，请求查看体验较好。需 VIP 解锁全部功能（只有价格说明没具体有哪些功能）</td>
+<td>安装后 CA 随机生成这点不错，并且支持生成 magisk 模块；PC 端 USB 装证书到手机疑似通过 adb root 完成，无手动步骤，比较担心被注入不好的东西</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/wanghongenpin/proxypin">proxypin</a></td>
@@ -520,14 +520,14 @@
 <li>SOCKS5 收到流量后做中间人解密，并在 Web 端展示。既利用了安卓的指定 app 走代理，又可以专心开发服务端，不需要过多关注安卓方面。</li>
 </ol>
 <p>这里举例是想表明工具只存在功能细节上的差异，不存在某个工具可以做到某个工具不可以的说法。</p>
-<h3 id="一些题外话"><a href="#一些题外话" class="headerlink" title="一些题外话"></a>一些题外话</h3><p>这些模块可能会在 <code>/data/local/tmp</code> 下创建目录并注入 CA。若 apk 检测这些路径或系统凭据里是否出现这类 CA 名称，可能被用来做 root&#x2F;环境检测。所以不抓包时记得把相关模块关掉。</p>
+<h3 id="一些题外话"><a href="#一些题外话" class="headerlink" title="一些题外话"></a>一些题外话</h3><p>这些模块可能会在 <code>/data/local/tmp</code> 下创建目录用来注入 CA。若 apk 检测这些路径或系统凭据里是否出现这类 CA 名称，可能被用来做 root&#x2F;环境检测。所以不抓包时记得把相关模块关掉。</p>
 
     </article>
     <!-- license -->
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2025/02/23/android-https-capture/">http://zhangguanzhang.github.io/2025/02/23/android-https-capture/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/02/23/android-https-capture/">二月 23日 2025, 8:10:30 晚上</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/02/23/android-https-capture/">February 23rd 2025, 8:10:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2025/02/23/android-https-capture/">February 23rd 2025, 8:10:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
