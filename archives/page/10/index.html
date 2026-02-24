@@ -414,6 +414,28 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">
+                <span class="abstract-title-text">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</span>
+            </a>
+            <div class="abstract-content">
+                由来今天在折腾 admission webhook 注入一些属性的时候遇到了 Error from server (InternalError): error when creating &quot;xxx.yml&quot;: Internal error occurred: jsonpatch add operation does not apply: doc is missing path: &quot;/spec/template/spec/dnsConfig/options&quot;。折腾半天才发现在代码里使用 jsonPatch 的话不能直接绕过结构体实例去 patch。 ...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/03/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/22</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2021/03/12/build-arm64-docker-compose-action/">
                 <span class="abstract-title-text">使用github action 配合 docker buildx 编译 arm64 docker-compose</span>
             </a>
@@ -610,30 +632,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
                 <!-- tags -->
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/10/30/uos20-nftables/">
-                <span class="abstract-title-text">统信USO 20 hostPort 无法访问</span>
-            </a>
-            <div class="abstract-content">
-                由来这些天陆续发现很多客户是统信的系统，部署我们业务后无法访问
-环境信息我自己环境和客户的环境都遇到了无法访问，我自己测试的机器信息是:
-1234567891011$ cat /etc/os-releasePRETTY_NAME=&quot;Uniontech OS Server 20 Enterprise&quot;NAME=&quot;Uniontech OS Server 20 Enterprise&quot;VERSION_ID=&quot;20&quot;VERSION=&quot;20&quot;ID=UOSHOME_URL=&quot;https://www.chinauo...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/10/30">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/30</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="uos">uos</a>
 </div>
 
             </div>
@@ -890,9 +888,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -973,6 +972,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2514,6 +2517,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

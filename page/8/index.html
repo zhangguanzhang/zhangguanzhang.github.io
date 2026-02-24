@@ -421,6 +421,30 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2020/07/30/prometheus-rate-and-irate/">
+                <span class="abstract-title-text">prometheus的rate与irate内部是如何计算的</span>
+            </a>
+            <div class="abstract-content">
+                由来市面上的翻译误导人，压根不是啥平均增长率，看了下源码和实际算下来让大家好理解
+rate主要代码是在 https://github.com/prometheus/prometheus/blob/master/promql/functions.go 的extrapolatedRate 和 funcRate，funcRate为
+123func funcRate(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper) Vector &#123;  return extrapolatedRate(vals, args...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/07/30">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/07/30</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Prometheus">Prometheus</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2020/07/23/fs-error-fix-k8s-master/">
                 <span class="abstract-title-text">k8s master机器文件系统故障的一次恢复过程</span>
             </a>
@@ -775,31 +799,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/02/binfmt-0000/">
-                <span class="abstract-title-text">记录一次request_module: runaway loop modeprobe binfmt-0000</span>
-            </a>
-            <div class="abstract-content">
-                昨天一台 gpu 的主机的阵列卡突然坏了，最终整起来后上面的几台虚机恢复后有一台虚机无法正常开机，开机进 emergency mode，同事看上面的报错以为是挂载了啥 iscsi，当然无法开机应该找到最开始的错误，进到 emergency mode 这个视角的时候已经是雪崩的最后的错误了，多半是没有意义的。输入 root 密码后执行journalctl -xb翻看最开始的错误
-
-按照关键字request_module: runaway loop modeprobe binfmt-0000搜到的都是裁剪内核出现的binfmt-484c啥的或者2.6内核的出错，尝试了换内核和挂载iso进re...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/02</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="kernel">kernel</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/7/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/9/">NEXT &gt;</a>
@@ -1115,9 +1114,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1198,6 +1198,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2739,6 +2743,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

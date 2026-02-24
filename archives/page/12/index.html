@@ -412,6 +412,27 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+        <article class="index-post">
+            <a class="abstract-title" href="/2020/06/19/go-prom-exporter/">
+                <span class="abstract-title-text">[未写完]使用go开发一个Prometheus的exporter</span>
+            </a>
+            <div class="abstract-content">
+                <p>市面上的例子太多都太简单了，这里详细写下我知道的</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/06/19">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/19</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="exporter">exporter</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
             
         <article class="index-post">
             <a class="abstract-title" href="/2020/05/23/k8s-vxlan-63-timeout/">
@@ -630,31 +651,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="centos6">centos6</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/03/02/binfmt-0000/">
-                <span class="abstract-title-text">记录一次request_module: runaway loop modeprobe binfmt-0000</span>
-            </a>
-            <div class="abstract-content">
-                昨天一台 gpu 的主机的阵列卡突然坏了，最终整起来后上面的几台虚机恢复后有一台虚机无法正常开机，开机进 emergency mode，同事看上面的报错以为是挂载了啥 iscsi，当然无法开机应该找到最开始的错误，进到 emergency mode 这个视角的时候已经是雪崩的最后的错误了，多半是没有意义的。输入 root 密码后执行journalctl -xb翻看最开始的错误
-
-按照关键字request_module: runaway loop modeprobe binfmt-0000搜到的都是裁剪内核出现的binfmt-484c啥的或者2.6内核的出错，尝试了换内核和挂载iso进re...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/03/02">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/02</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="kernel">kernel</a>
 </div>
 
             </div>
@@ -911,9 +907,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -994,6 +991,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2535,6 +2536,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -421,6 +421,30 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2019/01/30/fstab/">
+                <span class="abstract-title-text">fstab与systemd.mount自动挂载的一点研究和见解</span>
+            </a>
+            <div class="abstract-content">
+                每次挂nfs,iscsi，cifs改fstab都心惊胆颤，怕改错了开机hang在那影响业务。每次都是改之前去搜第四列列的所有选项值。写下今天趁线上挂了cifs的一台机器可能重启之前在我自己虚机上做了测试和一些问题搜到的见解虚机桥接网络，宿主机共享一个目录，折腾了半天autofs都没配置起来，而且网上普遍的samba的fstab为下面这样
+1//10.0.23.85/test  /mnt  cifs  username=zhangguanzhang@xxxxx.com,password=xxxxxxxxx,iocharset=utf8   0       0
+但是我在宿主机把445端口屏蔽...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/01/30">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/30</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="cifs">cifs</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2019/01/22/proxmox-cloud-init/">
                 <span class="abstract-title-text">proxmox里使用cloud-init和一些笔记</span>
             </a>
@@ -809,31 +833,6 @@ Clust...
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/06/03/kubernetes-s-job/">
-                <span class="abstract-title-text">kubernetes&#39;s Job总结和实战以及坑</span>
-            </a>
-            <div class="abstract-content">
-                Job有三种主要类型的 Job：
-Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时候添加-a或者--show-all才能看到job创建的pod
-下面实例先创建一个固定完成数量2,并行数量4的Job
-12345678910111213141516171819202122232425262728293031[root@k8s-m1 k8s]# cat job.yml apiVersion: batch/v1kind: Jobmetadata:  name: test-jobspec:  completions: 2  parallelism: 4  tem...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/06/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/03</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/10/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/12/">NEXT &gt;</a>
@@ -1149,9 +1148,10 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1232,6 +1232,10 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2773,6 +2777,10 @@ Job的Pod运行完可以看到状态为Completed,低版本需要在get pod的时
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

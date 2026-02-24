@@ -419,6 +419,27 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/09/01/ubuntu18-and-cfq/">
+                <span class="abstract-title-text">ubuntu18下io调度算法是cfq导致mysql非常慢</span>
+            </a>
+            <div class="abstract-content">
+                <p>记录线上一次 io 调度算法导致的 mysql 读写慢问题</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/09/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/09/01</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="ubuntu18">ubuntu18</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
             
         <article class="index-post">
             <a class="abstract-title" href="/2021/08/27/k8s-runxtables.lock/">
@@ -770,28 +791,6 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">
-                <span class="abstract-title-text">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</span>
-            </a>
-            <div class="abstract-content">
-                由来今天在折腾 admission webhook 注入一些属性的时候遇到了 Error from server (InternalError): error when creating &quot;xxx.yml&quot;: Internal error occurred: jsonpatch add operation does not apply: doc is missing path: &quot;/spec/template/spec/dnsConfig/options&quot;。折腾半天才发现在代码里使用 jsonPatch 的话不能直接绕过结构体实例去 patch。 ...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/03/22">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/22</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/5/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/7/">NEXT &gt;</a>
@@ -1107,9 +1106,10 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1190,6 +1190,10 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2731,6 +2735,10 @@ CentOS Linux release 7.8.2003 (Core) - 3.1...
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

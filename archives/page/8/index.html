@@ -414,6 +414,29 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">
+                <span class="abstract-title-text">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</span>
+            </a>
+            <div class="abstract-content">
+                故障现场 k8s node 很多 pod 都被硬性驱逐显示 Evicted ，现场人员查看分区容量和 inode 都正常，但是一直 reclaim ephemeral-storage。
+处理环境信息12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879$ uname -aLinux xxx-2 3.10.0-693.el7.x86_64 #1 SM...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/10/29">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/10/29</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2021/09/28/ipvs-svc/">
                 <span class="abstract-title-text">在非容器环境上实现散装的 IPVS SVC</span>
             </a>
@@ -625,31 +648,6 @@ buildx 使用见文章 buildx 使用
                 <!-- tags -->
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="kubelet">kubelet</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/07/26/kylin-v10-boot-hang/">
-                <span class="abstract-title-text">鲲鹏920的麒麟v10物理服务器断电后无法启动处理</span>
-            </a>
-            <div class="abstract-content">
-                前情提要珠海园区升压前置检查，上周六整个园区关电检查，然后今天来后连不上我们在 鲲鹏920的麒麟v10机器上开的虚拟机了，进 bmc 的 web 看了下是开机进入后卡住。
-信息同步是当初安装系统的同事去处理这个事情的，他 bmc 的 web 上去重启在菜单那里按 e 编辑准备改 boot cmdline 进单用户，结果按 e 后要输入用户名和密码，询问了麒麟他们。很久也没给答复。然后就在那干等，上面的虚机有我的环境，我就过去看了下。
-尝试的处理麒麟那边的人员没有回复，我打算这边同步尝试下其他手段，而且不只一台无法开机，哪怕麒麟的回复了密码也能同步尝试不同手段。Linux 无法开机的就搞个...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/07/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/07/26</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="arm64">arm64</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="kylin">kylin</a>
 </div>
 
             </div>
@@ -906,9 +904,10 @@ buildx 使用见文章 buildx 使用
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -989,6 +988,10 @@ buildx 使用见文章 buildx 使用
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2530,6 +2533,10 @@ buildx 使用见文章 buildx 使用
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -305,7 +305,7 @@
 
                 <!-- 文章字数统计 -->
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">4.3k</span>阅读时长: <span class="post-count reading-time">19 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">4.5k</span>阅读时长: <span class="post-count reading-time">20 min</span></span>
                     </div>
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
@@ -658,6 +658,13 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sqlite3 /var/lib/headscale/db.sqlite</span><br><span class="line">.tables</span><br><span class="line"></span><br><span class="line"><span class="comment"># ip_addresses=&quot;100.63.0.3&quot;</span></span><br><span class="line">修改 ip 需要先 tailscale down 改好后再 tailscale up，修改后配置会同步到所有 tailscale client 上，特别是游戏可能会闪断下</span><br></pre></td></tr></table></figure>
 
 <p>其他的修改自己琢磨。</p>
+<h3 id="openwrt-ssh"><a href="#openwrt-ssh" class="headerlink" title="openwrt ssh"></a>openwrt ssh</h3><p>如果你的 dropbear 只监听 <code>br-lan</code> 接口下，希望在其他 tailscale 节点上通过 tailscale 网络 ssh 到 openwrt 上（也就是目标 IP 是这个 openwrt 的 tailscale0 网卡IP），web 上的 <code>系统-管理权</code> 是无法做到的指定多个网卡的，需要配置层面修改 dropbear 相关，先通过以下命令查看，必须有 <code>DirectInterface</code> 选项:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -m1 -A25 &#x27;validate_section_dropbear\(\)&#x27; /etc/init.d/dropbear</span><br></pre></td></tr></table></figure>
+
+<p>支持 <code>DirectInterface</code> 可以尝试下面的看看能额外监听 <code>tailscale0</code> 不：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/config/dropbear &lt;&lt; EOF</span><br><span class="line">config dropbear</span><br><span class="line">	option PasswordAuth &#x27;on&#x27;</span><br><span class="line">	option RootPasswordAuth &#x27;on&#x27;</span><br><span class="line">	option Port         &#x27;22&#x27;</span><br><span class="line">  option DirectInterface    &#x27;tailscale0&#x27;</span><br><span class="line">EOF</span><br><span class="line">/etc/init.d/dropbear restart</span><br></pre></td></tr></table></figure>
+
+<p>我这里不支持，所以 web 上的 <code>系统-管理权</code> 不指定接口，就是监听 <code>0.0.0.0</code>，如果 op 上有公网 IP 或者 IPv6，监听 <code>0.0.0.0</code> 需要设置防火墙避免 ssh 被爆破。</p>
 <h3 id="一些说明"><a href="#一些说明" class="headerlink" title="一些说明"></a>一些说明</h3><p>这里只介绍异地组网部分，其他的去看官方文档。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>请有自己的理解能力，不要随便照抄，端口啥的也可以自定义下。</p>
 <ul>
@@ -750,7 +757,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E9%9C%80%E8%A6%81-headscale"><span class="toc-number">2.</span> <span class="toc-text">为什么我需要 headscale</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2"><span class="toc-number">3.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC"><span class="toc-number">3.1.</span> <span class="toc-text">历史版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#headscale-%E9%83%A8%E7%BD%B2%E5%92%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">headscale 部署和设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#derp-%E9%83%A8%E7%BD%B2"><span class="toc-number">3.3.</span> <span class="toc-text">derp 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A5%E5%85%A5"><span class="toc-number">3.4.</span> <span class="toc-text">客户端接入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-authkeys"><span class="toc-number">3.4.1.</span> <span class="toc-text">创建 authkeys</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux-%E6%8E%A5%E5%85%A5"><span class="toc-number">3.4.2.</span> <span class="toc-text">Linux 接入</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#derp-%E4%B8%8A%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">derp 上的客户端</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Linux-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">Linux 客户端</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#windows"><span class="toc-number">3.4.3.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%8D%93"><span class="toc-number">3.4.4.</span> <span class="toc-text">安卓</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#openwrt"><span class="toc-number">3.4.5.</span> <span class="toc-text">openwrt</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tailscale-client-%E4%BD%BF%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">tailscale client 使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E9%80%9A%E5%86%85%E7%BD%91"><span class="toc-number">3.6.</span> <span class="toc-text">打通内网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E4%BF%AE%E6%94%B9"><span class="toc-number">3.7.</span> <span class="toc-text">信息修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%AF%B4%E6%98%8E"><span class="toc-number">3.8.</span> <span class="toc-text">一些说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E9%9C%80%E8%A6%81-headscale"><span class="toc-number">2.</span> <span class="toc-text">为什么我需要 headscale</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2"><span class="toc-number">3.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC"><span class="toc-number">3.1.</span> <span class="toc-text">历史版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#headscale-%E9%83%A8%E7%BD%B2%E5%92%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">headscale 部署和设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#derp-%E9%83%A8%E7%BD%B2"><span class="toc-number">3.3.</span> <span class="toc-text">derp 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A5%E5%85%A5"><span class="toc-number">3.4.</span> <span class="toc-text">客户端接入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-authkeys"><span class="toc-number">3.4.1.</span> <span class="toc-text">创建 authkeys</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux-%E6%8E%A5%E5%85%A5"><span class="toc-number">3.4.2.</span> <span class="toc-text">Linux 接入</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#derp-%E4%B8%8A%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">derp 上的客户端</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Linux-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">Linux 客户端</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#windows"><span class="toc-number">3.4.3.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%8D%93"><span class="toc-number">3.4.4.</span> <span class="toc-text">安卓</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#openwrt"><span class="toc-number">3.4.5.</span> <span class="toc-text">openwrt</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tailscale-client-%E4%BD%BF%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">tailscale client 使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E9%80%9A%E5%86%85%E7%BD%91"><span class="toc-number">3.6.</span> <span class="toc-text">打通内网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E4%BF%AE%E6%94%B9"><span class="toc-number">3.7.</span> <span class="toc-text">信息修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#openwrt-ssh"><span class="toc-number">3.8.</span> <span class="toc-text">openwrt ssh</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E8%AF%B4%E6%98%8E"><span class="toc-number">3.9.</span> <span class="toc-text">一些说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -970,9 +977,10 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1053,6 +1061,10 @@
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2594,6 +2606,10 @@
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

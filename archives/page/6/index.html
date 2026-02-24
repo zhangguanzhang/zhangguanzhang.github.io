@@ -413,6 +413,29 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2022/10/09/docker-containerd-panic/">
+                <span class="abstract-title-text">磁盘问题宕机后 docker 的 containerd 无法启动</span>
+            </a>
+            <div class="abstract-content">
+                <p>机器磁盘出问题后，重启后 docker 无法启动，和之前的 <a href="https://zhangguanzhang.github.io/2021/05/26/docker-panic-invalid-freelist-page/">docker-panic</a> 一样解决后，发现 containerd 无法启动</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/10/09">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/10/09</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="containerd">containerd</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="panic">panic</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2022/09/07/docker-veth-not-clean/">
                 <span class="abstract-title-text">低版本docker veth没清理造成容器网络问题</span>
             </a>
@@ -611,31 +634,6 @@ ansible报错如下：
         <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="tcp">tcp</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="keepalive">keepalive</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/03/24/python-list-kubernetes-permission/">
-                <span class="abstract-title-text">python kubernetes client list permission</span>
-            </a>
-            <div class="abstract-content">
-                由来这几天内部有个功能就是看 kubernetes client 的权限有哪些
-过程kubeconfig 生成先制作一个非 admin 的 kubeconfig，记得以前有个项目是部署后可以生成 kubeconfig 的，询问了一番后，其他群友提示下想起来是 permission-manager，部署后结果发现生成的 kubeconfig 压根不能用，报错未知机构签署的，结果还是按照以前 生成kubeconfig常规的两种方法 生成了一个简单的。
-尝试过程其实一开始打算自己写逻辑，增删改查需要的资源便利来检查，然后突然想起来 kubectl (忘了哪个版本开始)有个 auth 子命令的 ...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/03/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/03/24</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
 </div>
 
             </div>
@@ -892,9 +890,10 @@ ansible报错如下：
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 208
+        Total : 209
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -975,6 +974,10 @@ ansible报错如下：
         <li class="archive-post-item">
             <span class="archive-post-date">04/21</span>
             <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2025/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/14</span>
@@ -2516,6 +2519,10 @@ ansible报错如下：
             <span class="sidebar-tag-name" data-tags="sandbox">
                 <span class="iconfont-archer">&#xe606;</span>
                 sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
