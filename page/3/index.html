@@ -420,6 +420,28 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2024/05/01/kubernetes-hotplug-resource/">
+                <span class="abstract-title-text">k8s node 热扩容内存导致的一次业务故障</span>
+            </a>
+            <div class="abstract-content">
+                <p>k8s node 热扩容内存导致的一次业务故障</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/05/01">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2024/05/01</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="hotplug">hotplug</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2024/04/22/trivy/">
                 <span class="abstract-title-text">开源容器镜像扫描 trivy 懒人重点指南</span>
             </a>
@@ -732,31 +754,9 @@
             </div>
         </article>
         <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2023/05/22/pod-resolve/">
-                <span class="abstract-title-text">pod 的 /etc/resolv.conf 生成机制</span>
-            </a>
-            <div class="abstract-content">
-                <p>从源码角度来看 pod 的 &#x2F;etc&#x2F;resolv.conf 生成机制</p>
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2023/05/22">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2023/05/22</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="/etc/resolv.conf">/etc/resolv.conf</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/page/2/">&lt; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/4/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/page/2/">&lt; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/4/">NEXT &gt;</a>
         </nav>
 </main>
 
@@ -1070,9 +1070,11 @@
         
         
         
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 209
+        Total : 211
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1082,6 +1084,10 @@
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
             <a class="archive-post-title" href="/2026/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
@@ -1826,8 +1832,12 @@
             <a class="archive-post-title" href="/2017/07/15/dd-make-boot-device/">使用 dd 利用 iso 文件制作 USB 启动盘</a>
         </li>
         <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2017/07/07/Linux-basic-setting/">[持续更新] - Linux 一些软件下载安装和配置笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">07/06</span>
-            <a class="archive-post-title" href="/2017/07/06/windows/">windows 笔记</a>
+            <a class="archive-post-title" href="/2017/07/06/windows/">[持续更新] - Windows 一些软件下载安装和配置笔记</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">07/05</span>
@@ -2705,6 +2715,22 @@
             <span class="sidebar-tag-name" data-tags="https">
                 <span class="iconfont-archer">&#xe606;</span>
                 https
+            </span>
+            <span class="sidebar-tag-name" data-tags="software">
+                <span class="iconfont-archer">&#xe606;</span>
+                software
+            </span>
+            <span class="sidebar-tag-name" data-tags="openeuler">
+                <span class="iconfont-archer">&#xe606;</span>
+                openeuler
+            </span>
+            <span class="sidebar-tag-name" data-tags="glibc">
+                <span class="iconfont-archer">&#xe606;</span>
+                glibc
+            </span>
+            <span class="sidebar-tag-name" data-tags="Windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                Windows
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

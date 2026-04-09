@@ -302,7 +302,7 @@
 
                 <!-- 文章字数统计 -->
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
                     </div>
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
@@ -486,7 +486,8 @@
 <p>查资料得知有人分析 <code>framework.jar</code> 发现从安卓 14 起证书目录是 <code>/apex/com.android.conscrypt/cacerts</code>，但试了下依然无法直接写入。继续查发现 <code>/apex</code> 有更严格的系统分区保护，即便 root 后 remount 也改不了。后来看到做法是：先装 <a target="_blank" rel="noopener" href="https://github.com/KernelSU-Modules-Repo/meta-overlayfs">OverlayFS MetaModule</a>，再装 <a target="_blank" rel="noopener" href="https://github.com/ys1231/MoveCertificate">MoveCertificate</a>，把证书放到 <code>/data/local/tmp/cert/</code> 下重启，就能在系统凭据里看到新 CA。</p>
 <p>看了下 <a target="_blank" rel="noopener" href="https://github.com/ys1231/MoveCertificate/blob/iyue/post-fs-data.sh">MoveCertificate 的 post-fs-data.sh</a>，是通过 tmpfs 覆盖挂载 <code>/apex/com.android.conscrypt/cacerts</code> 并配合 SELinux 权限完成凭据列表的注入，前提是已安装 <code>OverlayFS MetaModule</code>。另外我试过只 ksu 里关掉 OverlayFS 模块不关别的，手机重启会起不来。</p>
 <p>然后把 Reqable 记录模式选成 <code>V-P-N</code>，应用指定微信，开启增强并启动抓包，打开微信和小程序，发现抓到的全是 <code>CONNECT</code>，点进请求显示 SSL 握手失败，说明 CA 没被正确信任。后来试了 Reqable 生成的 Magisk 模块刷入，并<strong>取消</strong>使用 <code>MoveCertificate</code> 模块，重启后就能正常抓到了。</p>
-<h2 id="安卓原理和工具选项"><a href="#安卓原理和工具选项" class="headerlink" title="安卓原理和工具选项"></a>安卓原理和工具选项</h2><p>模拟器和安卓上开虚机抓包不讨论，如果你看懂了原理又嫌弃 root 麻烦，可以自行查看相关文章。</p>
+<p>安卓 16 好些还要额外安装到用户凭据里。</p>
+<h2 id="安卓原理和工具选项"><a href="#安卓原理和工具选项" class="headerlink" title="安卓原理和工具选项"></a>安卓原理和工具选项</h2><p>模拟器和安卓上开光速虚机抓包啥的不讨论，如果你看懂了原理又嫌弃 root 麻烦，可以自行搜索查看相关文章。</p>
 <h3 id="指定-app-抓包原理"><a href="#指定-app-抓包原理" class="headerlink" title="指定 app 抓包原理"></a>指定 app 抓包原理</h3><p>安卓上「指定 app 走代理」的实现原理可以看我之前的文章 <a href="https://zhangguanzhang.github.io/2025/04/27/android-tun2sock/">开发一个让指定应用走代理的安卓 app 过程</a>。安卓的 VPNService 本身支持让指定 app 走类似 Linux <code>/dev/tun</code> 的通道，应用开发者只需实现相应逻辑即可。</p>
 <h3 id="工具选型"><a href="#工具选型" class="headerlink" title="工具选型"></a>工具选型</h3><p>有人会把 Fiddler 的 CA 导入手机，电脑跑 Fiddler，手机 WiFi 代理指向电脑的 Fiddler 端口。但不少 apk 会检测 WiFi 是否设置了代理，一旦发现就不走代理，导致抓不到该 app 的 HTTPS，所以更稳妥的方式还是：在安卓上装抓包&#x2F;代理软件，用 VPNService 指定 app，再做中间人拦截。</p>
 <p>微信小程序的鉴权里，<code>code</code> 不能重复使用（QQ 的似乎可以），所以常需要抓包拦截住请求不让它发出去，然用请求里的 code 在代码里去使用。我调研了一下，<strong>以下是搜到的对比</strong>：</p>
@@ -509,10 +510,10 @@
 <td><a target="_blank" rel="noopener" href="https://github.com/wanghongenpin/proxypin">proxypin</a></td>
 <td>开源</td>
 <td>UI 现代，请求查看不如 Reqable 细致，但支持断点、重写请求</td>
-<td>apk 完全可以像 Reqable 那样生成一个 magisk 模块，而不需要让人去下载注入CA 的 <a target="_blank" rel="noopener" href="https://github.com/wanghongenpin/Magisk-ProxyPinCA">Magisk-ProxyPinCA</a> 模块。 apk 生成的 CA 与 Magisk-ProxyPinCA 内的CA 是固定而不是随机的，可能是一个安全隐患点</td>
+<td>apk 完全可以像 Reqable 那样生成一个 magisk 模块，而不需要让人去下载注入CA 的 <a target="_blank" rel="noopener" href="https://github.com/wanghongenpin/Magisk-ProxyPinCA">Magisk-ProxyPinCA</a> 模块。 apk 生成的 CA 与 Magisk-ProxyPinCA 内的 CA 是固定而不是随机的，可能是一个安全隐患点</td>
 </tr>
 </tbody></table>
-<p>理清原理后，甚至可以自己搭一套分布式抓包方案，例如：</p>
+<p>安卓 16 好像限制挺多的，可以去尝试下虚拟机，我是安卓 15 + <code>proxypin</code> 和它的 ca 模块可以抓包。理清原理后，甚至可以自己搭一套分布式抓包方案，例如：</p>
 <ol>
 <li>在 Linux 上写&#x2F;部署一个带中间人能力的 SOCKS5 服务端；</li>
 <li>复用或开发开源安卓代理 app（如 appproxy）；</li>
@@ -527,13 +528,17 @@
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2026/02/23/android-https-capture/">http://zhangguanzhang.github.io/2026/02/23/android-https-capture/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2026/02/23/android-https-capture/">February 23rd 2026, 8:10:30 pm</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2026/02/23/android-https-capture/">二月 23日 2026, 8:10:30 晚上</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2026/02/23/android-https-capture/">February 23rd 2026, 8:10:30 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2026/04/09/openeuler-sudo-killed/" title="欧拉22.04容器内sudo 被 killed">
+                    <div class="nextTitle">欧拉22.04容器内sudo 被 killed</div>
+                </a>
         </li>
         <li class="previous">
                 <div class="prevSlogan">Previous Post</div>
@@ -824,9 +829,11 @@
         
         
         
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 209
+        Total : 211
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -836,6 +843,10 @@
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
             <a class="archive-post-title" href="/2026/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
@@ -1580,8 +1591,12 @@
             <a class="archive-post-title" href="/2017/07/15/dd-make-boot-device/">使用 dd 利用 iso 文件制作 USB 启动盘</a>
         </li>
         <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2017/07/07/Linux-basic-setting/">[持续更新] - Linux 一些软件下载安装和配置笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">07/06</span>
-            <a class="archive-post-title" href="/2017/07/06/windows/">windows 笔记</a>
+            <a class="archive-post-title" href="/2017/07/06/windows/">[持续更新] - Windows 一些软件下载安装和配置笔记</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">07/05</span>
@@ -2459,6 +2474,22 @@
             <span class="sidebar-tag-name" data-tags="https">
                 <span class="iconfont-archer">&#xe606;</span>
                 https
+            </span>
+            <span class="sidebar-tag-name" data-tags="software">
+                <span class="iconfont-archer">&#xe606;</span>
+                software
+            </span>
+            <span class="sidebar-tag-name" data-tags="openeuler">
+                <span class="iconfont-archer">&#xe606;</span>
+                openeuler
+            </span>
+            <span class="sidebar-tag-name" data-tags="glibc">
+                <span class="iconfont-archer">&#xe606;</span>
+                glibc
+            </span>
+            <span class="sidebar-tag-name" data-tags="Windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                Windows
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

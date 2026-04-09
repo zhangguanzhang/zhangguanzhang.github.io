@@ -421,6 +421,29 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2019/08/06/preseed/">
+                <span class="abstract-title-text">ubuntu preseed无人应答安装</span>
+            </a>
+            <div class="abstract-content">
+                之前的centos自动安装整得差不多了，今天有空研究下ubuntu的自动应答安装，过程是按照我遇到的问题的时间线的角度来描述，并不是总结后正确的开始姿势。kickstart是red hat开发的。ubuntu的安装界面是一个debian-installer的二进制文件进程运行tty1提供的选择交互安装界面:
+ubuntu自带的应答是preseed，相关文档页面是 https://help.ubuntu.com/lts/installation-guide/amd64/apb.html实际上安装完成后我们可以安装debconf-utils后使用debconf-get-selections ...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/08/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/08/06</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="preseed">preseed</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2019/07/14/chromedp/">
                 <span class="abstract-title-text">golang headless browser包chromedp初探</span>
             </a>
@@ -768,34 +791,9 @@ OS CentOS 7.5.1804
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/02/12/dashboard/">
-                <span class="abstract-title-text">通用的dashboard部署和tls，SSL相关部署</span>
-            </a>
-            <div class="abstract-content">
-                详细的讲解下部署dashboard，比市面上更详细和更多场景的选择，本文dashboard的暴露不会用nodeport(不喜欢使用它)和apiserver的web proxy代理也就是/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/这种
-讲下四种场景方式：
-
-
-纯dashboard http和https不惨合外部证书
-openssl 证书给dashboard当https
-个人向域名使用https小绿锁
-ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/02/12">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/12</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
-            <a class="extend prev" rel="prev" href="/page/9/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/11/">NEXT &gt;</a>
+            <a class="extend prev" rel="prev" href="/page/9/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/11/">NEXT &gt;</a>
         </nav>
 </main>
 
@@ -1109,9 +1107,11 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
         
         
         
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 209
+        Total : 211
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1121,6 +1121,10 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
             <a class="archive-post-title" href="/2026/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
@@ -1865,8 +1869,12 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
             <a class="archive-post-title" href="/2017/07/15/dd-make-boot-device/">使用 dd 利用 iso 文件制作 USB 启动盘</a>
         </li>
         <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2017/07/07/Linux-basic-setting/">[持续更新] - Linux 一些软件下载安装和配置笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">07/06</span>
-            <a class="archive-post-title" href="/2017/07/06/windows/">windows 笔记</a>
+            <a class="archive-post-title" href="/2017/07/06/windows/">[持续更新] - Windows 一些软件下载安装和配置笔记</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">07/05</span>
@@ -2744,6 +2752,22 @@ ingress tls 代理http[s]的dashboard以及最后讲解的如何定义带权...
             <span class="sidebar-tag-name" data-tags="https">
                 <span class="iconfont-archer">&#xe606;</span>
                 https
+            </span>
+            <span class="sidebar-tag-name" data-tags="software">
+                <span class="iconfont-archer">&#xe606;</span>
+                software
+            </span>
+            <span class="sidebar-tag-name" data-tags="openeuler">
+                <span class="iconfont-archer">&#xe606;</span>
+                openeuler
+            </span>
+            <span class="sidebar-tag-name" data-tags="glibc">
+                <span class="iconfont-archer">&#xe606;</span>
+                glibc
+            </span>
+            <span class="sidebar-tag-name" data-tags="Windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                Windows
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
