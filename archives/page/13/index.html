@@ -414,6 +414,29 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2020/03/10/go-mod-base-use/">
+                <span class="abstract-title-text">go mod的基础使用-科普</span>
+            </a>
+            <div class="abstract-content">
+                go mod由来文章主要是针对新人来介绍 go mod 是啥以及新手如何使用，老手不用看。现阶段go mod已经完全GA了，你会用了的话会非常方便像 python 的项目根目录有requirement.txt记录依赖包，nodejs 是packages.json，同样 go 的包管理从早期的go dep(gopkg)到vendor到现在的go mod.go dep 很早，没有接触过，如果你接触的项目有go dep，看完本文希望你可以学会改造你手上的老项目，vendor则是把包都存放项目的根路径的vendor文件夹里，就像下面。这会导致一个项目很大，多达40M以上。
+12345678910...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/03/10">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/10</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="go mod">go mod</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2020/03/02/centos6-hung-while-booting/">
                 <span class="abstract-title-text">centos6中毒重启后卡在启动页面</span>
             </a>
@@ -632,30 +655,6 @@ Linux一些目录规范和systemd
                 <!-- tags -->
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="consul">consul</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">
-                <span class="abstract-title-text">手动修复v1.14-v1.15版本k8s的issue:76956</span>
-            </a>
-            <div class="abstract-content">
-                由来该issue见 https://github.com/kubernetes/kubernetes/issues/76956, apiserver和controller-manager每次start的时候会刷下面信息。不影响使用，但是有强迫症可以按照本文思路手动修改。当然本文也是自己编译k8s的教程
-123456E0423 17:35:58.491576       1 prometheus.go:138] failed to register depth metric admission_quota_controller: duplicate metrics collector re...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/10/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/21</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
 </div>
 
             </div>
@@ -915,9 +914,10 @@ Linux一些目录规范和systemd
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 211
+        Total : 212
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -928,8 +928,12 @@ Linux一些目录规范和systemd
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">04/09</span>
-            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
@@ -1815,10 +1819,6 @@ Linux一些目录规范和systemd
                 <span class="iconfont-archer">&#xe606;</span>
                 8266
             </span>
-            <span class="sidebar-tag-name" data-tags="总结">
-                <span class="iconfont-archer">&#xe606;</span>
-                总结
-            </span>
             <span class="sidebar-tag-name" data-tags="ipmi">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipmi
@@ -2574,6 +2574,14 @@ Linux一些目录规范和systemd
             <span class="sidebar-tag-name" data-tags="Windows">
                 <span class="iconfont-archer">&#xe606;</span>
                 Windows
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp
+            </span>
+            <span class="sidebar-tag-name" data-tags="loong64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loong64
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

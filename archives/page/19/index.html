@@ -412,6 +412,29 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/07/15/dd-make-boot-device/">
+                <span class="abstract-title-text">使用 dd 利用 iso 文件制作 USB 启动盘</span>
+            </a>
+            <div class="abstract-content">
+                命令1234# bs ，每个块的填充字节，不足用空(NUL) 字符对齐# sync  直接写磁盘，不写缓存dd if=xxx.iso  of=/dev/xxx bs=8M
+
+可以利用 watch -n 5 每 5s 发送信号触发 dd 命令打印进度
+1watch -n 5 pkill -USR1 ^dd$
+
+块大小不带的速度对比1234567891011121314151617181920212223242526272829303132333435363738394041$ dd if=xxxxx.iso of=/dev/sdc oflag=sync2937+0 records in29...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2017/07/15">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/15</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
         <article class="index-post">
             <a class="abstract-title" href="/2017/07/07/Linux-basic-setting/">
                 <span class="abstract-title-text">[持续更新] - Linux 一些软件下载安装和配置笔记</span>
@@ -616,28 +639,6 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
                 <!-- tags -->
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="shell">shell</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2017/04/29/zabbixsetup/">
-                <span class="abstract-title-text">个人zabbix安装和坑的解决</span>
-            </a>
-            <div class="abstract-content">
-                <p>自己的摸索和坑的总结</p>
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2017/04/29">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/04/29</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="zabbix">zabbix</a>
 </div>
 
             </div>
@@ -897,9 +898,10 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 211
+        Total : 212
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -910,8 +912,12 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">04/09</span>
-            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
@@ -1797,10 +1803,6 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
                 <span class="iconfont-archer">&#xe606;</span>
                 8266
             </span>
-            <span class="sidebar-tag-name" data-tags="总结">
-                <span class="iconfont-archer">&#xe606;</span>
-                总结
-            </span>
             <span class="sidebar-tag-name" data-tags="ipmi">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipmi
@@ -2556,6 +2558,14 @@ Linux 里的 so用白话说，就是类似于 windows 的 dll 文件，通常是
             <span class="sidebar-tag-name" data-tags="Windows">
                 <span class="iconfont-archer">&#xe606;</span>
                 Windows
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp
+            </span>
+            <span class="sidebar-tag-name" data-tags="loong64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loong64
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

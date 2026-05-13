@@ -507,6 +507,9 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_args</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;解决 go.mod 里的 gitlab subgroups 问题&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--repo&#x27;</span>, action=<span class="string">&#x27;append&#x27;</span>, <span class="built_in">help</span>=<span class="string">&#x27;要处理的仓库名字，例如: xx.gitlab.cn/a/b/c&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--mod&#x27;</span>, default=<span class="string">&quot;./go.mod&quot;</span>, <span class="built_in">help</span>=<span class="string">&#x27;go.mod path&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> parser.parse_args()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">replace_repo</span>(<span class="params">repo_list, mod_json, mod_path</span>):</span><br><span class="line">    <span class="keyword">if</span> mod_json[<span class="string">&#x27;Replace&#x27;</span>]:</span><br><span class="line">        mod_replace_list = [ i[<span class="string">&#x27;Old&#x27;</span>][<span class="string">&#x27;Path&#x27;</span>] <span class="keyword">for</span> i <span class="keyword">in</span> mod_json[<span class="string">&#x27;Replace&#x27;</span>]]</span><br><span class="line">        repo_list = [repo <span class="keyword">for</span> repo <span class="keyword">in</span> repo_list <span class="keyword">if</span> repo <span class="keyword">not</span> <span class="keyword">in</span> mod_replace_list]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(repo_list) == <span class="number">0</span>:</span><br><span class="line">            logging.info(<span class="string">&quot;已经全部替换&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    replace_list = [ i <span class="keyword">for</span> i <span class="keyword">in</span> mod_json[<span class="string">&#x27;Require&#x27;</span>] <span class="keyword">if</span> i[<span class="string">&#x27;Path&#x27;</span>] <span class="keyword">in</span> repo_list <span class="keyword">and</span> (<span class="keyword">not</span> i.get(<span class="string">&#x27;Indirect&#x27;</span>, <span class="literal">False</span>))]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(replace_list) == <span class="number">0</span>:</span><br><span class="line">        logging.error(<span class="string">&quot;未找到需要替换的仓库: %s&quot;</span>, <span class="string">&#x27;,&#x27;</span>.join(repo_list))</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(mod_path, <span class="string">&#x27;a&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> replace_list:</span><br><span class="line">            replace_str = <span class="string">&quot;replace &#123;0&#125; =&gt; &#123;0&#125;.git &#123;1&#125;&quot;</span>.<span class="built_in">format</span>(item[<span class="string">&#x27;Path&#x27;</span>], item[<span class="string">&#x27;Version&#x27;</span>])</span><br><span class="line">            logging.info(<span class="string">&quot;添加 %s&quot;</span>, replace_str)</span><br><span class="line">            f.writelines(replace_str+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    logging.basicConfig(level=logging.INFO, <span class="built_in">format</span>=<span class="string">&#x27;%(asctime)s - %(levelname)s - %(message)s&#x27;</span>)</span><br><span class="line">    args = parse_args()</span><br><span class="line">    <span class="keyword">if</span> args.repo <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> <span class="built_in">len</span>(args.repo) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    mod_json = &#123;&#125;</span><br><span class="line">    mod_json_path = <span class="string">&quot;go.mod.json&quot;</span></span><br><span class="line">    <span class="keyword">if</span> os.isatty(<span class="number">0</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(mod_json_path):</span><br><span class="line">            logging.error(<span class="string">&quot;请以 go mod edit -json | python3 %s 运行&quot;</span>, __file__)</span><br><span class="line">            os._exit(<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(mod_json_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">            mod_json = json.load(file)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        mod_json = json.loads(sys.stdin.read())</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">not</span> <span class="built_in">isinstance</span>(mod_json, <span class="built_in">dict</span>)) <span class="keyword">or</span> mod_json.get(<span class="string">&quot;Module&quot;</span>, <span class="string">&quot;&quot;</span>) == <span class="string">&quot;&quot;</span>:</span><br><span class="line">        logging.error(<span class="string">&quot;请以 go mod edit -json | python3 %s 运行&quot;</span>, __file__)</span><br><span class="line">        os._exit(<span class="number">2</span>)</span><br><span class="line">    replace_repo(args.repo, mod_json, args.mod)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
 
 
+<p>报错 <code>no secure protocol found for repository</code> 就设置 <code>git config --global url.&quot;git@xxx.xxxgitlab.net:&quot;.insteadOf &quot;https://xxx.xxxgitlab.net/&quot;</code> 以及配置下通配符的 <code>StrictHostKeyChecking</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cat ~/.ssh/config</span><br><span class="line">Host 10.*</span><br><span class="line">  StrictHostKeyChecking no</span><br></pre></td></tr></table></figure>
+
     </article>
     <!-- license -->
         <div class="license-wrapper">
@@ -815,9 +818,10 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 211
+        Total : 212
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -828,8 +832,12 @@
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">04/09</span>
-            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
@@ -1715,10 +1723,6 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 8266
             </span>
-            <span class="sidebar-tag-name" data-tags="总结">
-                <span class="iconfont-archer">&#xe606;</span>
-                总结
-            </span>
             <span class="sidebar-tag-name" data-tags="ipmi">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipmi
@@ -2474,6 +2478,14 @@
             <span class="sidebar-tag-name" data-tags="Windows">
                 <span class="iconfont-archer">&#xe606;</span>
                 Windows
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp
+            </span>
+            <span class="sidebar-tag-name" data-tags="loong64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loong64
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

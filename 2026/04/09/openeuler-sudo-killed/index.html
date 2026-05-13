@@ -12,7 +12,7 @@
     <meta name="description" content="记录生活点滴">
     <meta name="description" content="记录下一次欧拉容器内sudo无法使用的排查过程。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="欧拉22.04容器内sudo 被 killed">
+<meta property="og:title" content="欧拉22.03容器内sudo 被 killed">
 <meta property="og:url" content="http://zhangguanzhang.github.io/2026/04/09/openeuler-sudo-killed/">
 <meta property="og:site_name" content="Zhangguanzhang">
 <meta property="og:description" content="记录下一次欧拉容器内sudo无法使用的排查过程。">
@@ -26,7 +26,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
-    <title>欧拉22.04容器内sudo 被 killed · zhangguanzhang&#39;s Blog</title>
+    <title>欧拉22.03容器内sudo 被 killed · zhangguanzhang&#39;s Blog</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -257,7 +257,7 @@
             <a href="/">zhangguanzhang&#39;s Blog</a>
         </div>
         <div class="post-title header-element">
-            <a href="#" class="post-name">欧拉22.04容器内sudo 被 killed</a>
+            <a href="#" class="post-name">欧拉22.03容器内sudo 被 killed</a>
         </div>
     </div>
 </header>
@@ -284,7 +284,7 @@
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-                欧拉22.04容器内sudo 被 killed
+                欧拉22.03容器内sudo 被 killed
             <!-- 404 -->
         </h1>
         <!-- 副标题 -->
@@ -302,7 +302,7 @@
 
                 <!-- 文章字数统计 -->
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">964</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">973</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
                     </div>
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
@@ -500,19 +500,26 @@
 <li>后续我们也要维护一份 glibc 代码编译成欧拉的 rpm 包</li>
 </ul>
 <p>让客户使用 CentOS 7.9 的最稳妥，同时该问题已经反馈给欧拉仓库 <a target="_blank" rel="noopener" href="https://atomgit.com/openeuler/openeuler-docker-images/issues/60">https://atomgit.com/openeuler/openeuler-docker-images/issues/60</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.redhat.com/zh-cn/documentation/red_hat_enterprise_linux/7/html/system-level_authentication_guide/troubleshooting-sudo">启用sudo 调试日志</a></li>
+</ul>
 
     </article>
     <!-- license -->
         <div class="license-wrapper">
             <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2026/04/09/openeuler-sudo-killed/">http://zhangguanzhang.github.io/2026/04/09/openeuler-sudo-killed/</a>
-            <p>发表日期：<a href="http://zhangguanzhang.github.io/2026/04/09/openeuler-sudo-killed/">April 9th 2026, 9:10:30 am</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2026/04/09/openeuler-sudo-killed/">四月 9日 2026, 9:10:30 上午</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2026/04/09/openeuler-sudo-killed/">April 9th 2026, 9:10:30 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2026/05/13/loongarch64/" title="龙芯折腾适配笔记">
+                    <div class="nextTitle">龙芯折腾适配笔记</div>
+                </a>
         </li>
         <li class="previous">
                 <div class="prevSlogan">Previous Post</div>
@@ -582,7 +589,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E6%9F%A5"><span class="toc-number">2.</span> <span class="toc-text">排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">权限？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E9%AA%8C%E8%AF%81"><span class="toc-number">2.2.</span> <span class="toc-text">制作验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA%E5%92%8C%E9%AA%8C%E8%AF%81"><span class="toc-number">2.3.</span> <span class="toc-text">结论和验证</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E6%9F%A5"><span class="toc-number">2.</span> <span class="toc-text">排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">权限？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E9%AA%8C%E8%AF%81"><span class="toc-number">2.2.</span> <span class="toc-text">制作验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA%E5%92%8C%E9%AA%8C%E8%AF%81"><span class="toc-number">2.3.</span> <span class="toc-text">结论和验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
             </div>
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -805,9 +812,10 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 211
+        Total : 212
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -818,8 +826,12 @@
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">04/09</span>
-            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
@@ -1705,10 +1717,6 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 8266
             </span>
-            <span class="sidebar-tag-name" data-tags="总结">
-                <span class="iconfont-archer">&#xe606;</span>
-                总结
-            </span>
             <span class="sidebar-tag-name" data-tags="ipmi">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipmi
@@ -2464,6 +2472,14 @@
             <span class="sidebar-tag-name" data-tags="Windows">
                 <span class="iconfont-archer">&#xe606;</span>
                 Windows
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp
+            </span>
+            <span class="sidebar-tag-name" data-tags="loong64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loong64
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

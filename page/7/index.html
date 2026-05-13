@@ -421,6 +421,34 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2021/04/08/kubelet-runc-disable-kmem/">
+                <span class="abstract-title-text">kubelet 和 runc 编译关闭 kmem</span>
+            </a>
+            <div class="abstract-content">
+                前提详情在 3.x 的内核上，cgroup 的 kmem account 特性有内存泄露问题。kubelet 和 runc 都需要修复。
+网上有言论说升级 Linux 内核至 kernel-3.10.0-1075.el7 及以上就可以修复这个问题，详细可见 slab leak causing a crash when using kmem control group。但是我测试了下面的都不行：
+
+CentOS7.4
+CentOS7.6
+CentOS7.7的 3.10.0-1062.el7.x86_64 
+CentOS Linux release 7.8.2003 (Core) - 3.1...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/04/08">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/04/08</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2021/03/23/iptables-docker-no-chain/">
                 <span class="abstract-title-text">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</span>
             </a>
@@ -738,28 +766,6 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="openshift">openshift</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="ocp">ocp</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/08/27/skopeo-static-build/">
-                <span class="abstract-title-text">skopeo 静态编译</span>
-            </a>
-            <div class="abstract-content">
-                <p>skopeo 静态编译步骤</p>
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/08/27">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/08/27</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="skopeo">skopeo</a>
 </div>
 
             </div>
@@ -1083,9 +1089,10 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 211
+        Total : 212
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1096,8 +1103,12 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">04/09</span>
-            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
@@ -1983,10 +1994,6 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
                 <span class="iconfont-archer">&#xe606;</span>
                 8266
             </span>
-            <span class="sidebar-tag-name" data-tags="总结">
-                <span class="iconfont-archer">&#xe606;</span>
-                总结
-            </span>
             <span class="sidebar-tag-name" data-tags="ipmi">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipmi
@@ -2742,6 +2749,14 @@ openshift 不像其他的 dashboard 诸如 rancher，k3s 之类的，它自己�
             <span class="sidebar-tag-name" data-tags="Windows">
                 <span class="iconfont-archer">&#xe606;</span>
                 Windows
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp
+            </span>
+            <span class="sidebar-tag-name" data-tags="loong64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loong64
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

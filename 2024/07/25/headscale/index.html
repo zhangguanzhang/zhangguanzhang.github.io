@@ -538,6 +538,9 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
 
 <p>关于 derp，从现有的 tailscale 代码情况来看，必须使用 https，而 <a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/compile-and-packages/blob/master/tailscale/docker-entrypoint.sh">我的 derp 镜像启动脚本</a> 内是会自动生成证书的，如果使用自己证书挂载进去即可。</p>
+<p>如果 ecs 是阿里云，阿里云的内网 DNS 网段会被上面的 tailscale 添加的 iptables drop 掉，需要提前放行下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I INPUT -s 100.100.0.0/16 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
 <h3 id="客户端接入"><a href="#客户端接入" class="headerlink" title="客户端接入"></a>客户端接入</h3><p>所有客户端有微皮恩的，需要把 ecs 的公网 IP 设置成直连不走代理，以及如果是家里宽带，可以把 Upnp 打开，这样打洞直连成功率会高些。</p>
 <h4 id="创建-authkeys"><a href="#创建-authkeys" class="headerlink" title="创建 authkeys"></a>创建 authkeys</h4><p>Tailscale 中有一个概念叫 tailnet，你可以理解成租户，租户与租户之间是相互隔离的，具体看参考 Tailscale 的官方文档： <a target="_blank" rel="noopener" href="https://tailscale.com/kb/1136/tailnet">What is a tailnet</a>。<br>Headscale 也有类似的实现叫 user，即用户。我们需要先创建一个 user，以便后续客户端接入，例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">headscale user create default</span><br></pre></td></tr></table></figure>
@@ -980,9 +983,10 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 211
+        Total : 212
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -993,8 +997,12 @@
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">04/09</span>
-            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.04容器内sudo 被 killed</a>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>
@@ -1880,10 +1888,6 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 8266
             </span>
-            <span class="sidebar-tag-name" data-tags="总结">
-                <span class="iconfont-archer">&#xe606;</span>
-                总结
-            </span>
             <span class="sidebar-tag-name" data-tags="ipmi">
                 <span class="iconfont-archer">&#xe606;</span>
                 ipmi
@@ -2639,6 +2643,14 @@
             <span class="sidebar-tag-name" data-tags="Windows">
                 <span class="iconfont-archer">&#xe606;</span>
                 Windows
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp
+            </span>
+            <span class="sidebar-tag-name" data-tags="loong64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loong64
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
