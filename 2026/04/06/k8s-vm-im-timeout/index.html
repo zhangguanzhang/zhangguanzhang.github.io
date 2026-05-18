@@ -535,7 +535,13 @@
 
 <p><img src="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/linux-softirq-on-single-core.png" alt="linux-softirq-on-single-core"></p>
 <p>询问了下研发，发消息的 IM 大概调用链如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    IM_C[IM 客户端];</span><br><span class="line">    IM_C --http--&gt; GW[总网关];</span><br><span class="line">    GW[总网关] --http--&gt; IM_G[IM 网关];</span><br><span class="line">    IM_G[IM 网关] --http--&gt; IM_LOGIC[IM logic];</span><br><span class="line">    IM_LOGIC[IM logic] --grpc--&gt; IM_MSG[IM MSG];</span><br><span class="line">    IM_MSG[IM MSG] --grpc--&gt; IM_IDG[IM IDG];</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph TD
+    IM_C[IM 客户端]
+    IM_C --http--> GW[总网关]
+    GW[总网关] --http--> IM_G[IM 网关]
+    IM_G[IM 网关] --http--> IM_LOGIC[IM logic]
+    IM_LOGIC[IM logic] --grpc--> IM_MSG[IM MSG]
+    IM_MSG[IM MSG] --grpc--> IM_IDG[IM IDG]</pre>
 
 <p>为啥只有 grpc 报错，应该也有 http 的，然后 IM 服务研发告诉我 IM 服务的 http client 封装的有重试逻辑，然后在 loki 里搜 IM 服务的 retry 关键字搜了下确实也有不少。然后不筛选 IM 服务搜 http 的 <code>Client.Timeout</code> 发现也有其他业务组的超时。因为消息需要大量鉴权和判断用户组和权限啥的，所以 IM 服务都是用 grpc 长链接互相调用，避免多次 http 调用产生的开销，而长连接最容易收到影响，例如开头提到的 redis client 也报错了。</p>
 <h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>单 CPU 处理网络 I&#x2F;O 存在瓶颈下，可以使用网卡多队列提高性能。</p>
