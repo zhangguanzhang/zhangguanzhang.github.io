@@ -474,8 +474,8 @@
 
 <p>这里是等同于你实际的分区，我们这基本是一个&#x2F;boot和一个根，看到<code>(hd0,msdos1)</code>是&#x2F;boot分区，文件是完全丢失的，<code>(hd0,msdos2)/</code>报错未知文件系统是因为这个是lvm，正常乐观下来讲只是丢失部分文件的话，可以参考下面步骤去恢复</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=RqRm1bEXO9M">https://www.youtube.com/watch?v=RqRm1bEXO9M</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_20545159/article/details/50810089">https://blog.csdn.net/qq_20545159/article/details/50810089</a></li>
+<li><a href="https://www.youtube.com/watch?v=RqRm1bEXO9M">https://www.youtube.com/watch?v=RqRm1bEXO9M</a></li>
+<li><a href="https://blog.csdn.net/qq_20545159/article/details/50810089">https://blog.csdn.net/qq_20545159/article/details/50810089</a></li>
 </ul>
 <h2 id="救援"><a href="#救援" class="headerlink" title="救援"></a>救援</h2><h3 id="livecd进入rescue救援"><a href="#livecd进入rescue救援" class="headerlink" title="livecd进入rescue救援"></a>livecd进入rescue救援</h3><p>这里我是完全丢失，我利用带外远程挂载了一个centos7.6的iso(最好和目标系统版本一样)，重启物理机进入cdrom，选择<code>Troubleshooting</code> –&gt; <code>Rescue a CentOS Linux system</code></p>
 <p>下面我引用下别人的图，如果图被拦截了请看文字吧<br><img src="https://cdn.thegeekdiary.com/wp-content/uploads/2017/10/troubleshooting-option-boot-RHEL-CentOS-7-into-rescue-mode.png" alt="boot"><br><img src="https://cdn.thegeekdiary.com/wp-content/uploads/2017/10/rescue-CentOS-RHEL-7-system.png" alt="resuemenu"><br><img src="https://cdn.thegeekdiary.com/wp-content/uploads/2017/09/find-linux-installation-for-rescue-mode-RHEL-7-reinstall-GRUB2.png" alt="recueshell"><br>选择1后然后回车会得到一个交互式shell，查看下分区信息</p>
@@ -509,7 +509,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@cn19 ~]# xfs_repair /dev/mapper/centos-home </span><br><span class="line">Phase 1 - find and verify superblock...</span><br><span class="line">bad primary superblock - bad magic number !!!</span><br><span class="line"></span><br><span class="line">attempting to find secondary superblock...</span><br><span class="line">......................Sorry, could not find valid secondary superblock</span><br><span class="line">Exiting now.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>询问了用户<code>/home</code>目录不重要，直接取消fstab取消&#x2F;home的挂载然后reboot恢复正常<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/machineInstaller/right.png" alt="right"></p>
-<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a target="_blank" rel="noopener" href="https://www.tecmint.com/recover-or-rescue-corrupted-grub-boot-loader-in-centos-7/">https://www.tecmint.com/recover-or-rescue-corrupted-grub-boot-loader-in-centos-7/</a><br>rescue mode安装kernel: <a target="_blank" rel="noopener" href="https://www.thegeekdiary.com/centos-rhel-7-how-to-install-kernel-from-rescue-mode/">https://www.thegeekdiary.com/centos-rhel-7-how-to-install-kernel-from-rescue-mode/</a><br>rescue mode 生成vmlinuz和initramfs: <a target="_blank" rel="noopener" href="https://www.thegeekdiary.com/how-to-re-generate-initramfs-and-vmlinuz-for-rescue-kernel-with-current-kernel-in-centos-rhel-7/">https://www.thegeekdiary.com/how-to-re-generate-initramfs-and-vmlinuz-for-rescue-kernel-with-current-kernel-in-centos-rhel-7/</a></p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="https://www.tecmint.com/recover-or-rescue-corrupted-grub-boot-loader-in-centos-7/">https://www.tecmint.com/recover-or-rescue-corrupted-grub-boot-loader-in-centos-7/</a><br>rescue mode安装kernel: <a href="https://www.thegeekdiary.com/centos-rhel-7-how-to-install-kernel-from-rescue-mode/">https://www.thegeekdiary.com/centos-rhel-7-how-to-install-kernel-from-rescue-mode/</a><br>rescue mode 生成vmlinuz和initramfs: <a href="https://www.thegeekdiary.com/how-to-re-generate-initramfs-and-vmlinuz-for-rescue-kernel-with-current-kernel-in-centos-rhel-7/">https://www.thegeekdiary.com/how-to-re-generate-initramfs-and-vmlinuz-for-rescue-kernel-with-current-kernel-in-centos-rhel-7/</a></p>
 
     </article>
     <!-- license -->
@@ -518,7 +518,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2019/10/12/boot-grub-rescue/">http://zhangguanzhang.github.io/2019/10/12/boot-grub-rescue/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2019/10/12/boot-grub-rescue/">October 12th 2019, 5:00:47 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2019/10/12/boot-grub-rescue/">October 12th 2019, 5:00:47 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

@@ -475,11 +475,11 @@
 </li>
 <li><p><code>工具</code>–<code>管理库</code>–<code>开发板管理器</code>–在搜索框里输入<code>firmata</code>安装<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/golang/gobot/esp8266/002.png" alt="board-firmata.jpg"></p>
 </li>
-<li><p>打开网页 <a target="_blank" rel="noopener" href="http://firmatabuilder.com/">http://firmatabuilder.com/</a> ，因为8266是个wifi模块儿，这里链接类型和使能的驱动为下图这些，如果想把ip固定住在局域网内使用可以写上ip<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/golang/gobot/esp8266/003.png" alt="web-firmata.jpg"></p>
+<li><p>打开网页 <a href="http://firmatabuilder.com/">http://firmatabuilder.com/</a> ，因为8266是个wifi模块儿，这里链接类型和使能的驱动为下图这些，如果想把ip固定住在局域网内使用可以写上ip<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/golang/gobot/esp8266/003.png" alt="web-firmata.jpg"></p>
 </li>
 <li><p>网页上移动到最下面输入文件名点击下载，解压后得到一个<code>ino</code>的Arduino IDE项目文件，用Arduino IDE打开它，然后在<code>工具</code>–<code>开发板</code>里选择<code>Node MCU 1.0</code></p>
 </li>
-<li><p>安装<code>CH340</code>驱动，<a target="_blank" rel="noopener" href="https://sparks.gogo.co.nz/ch340.html">https://sparks.gogo.co.nz/ch340.html</a> 点击<code>Download the Windows CH340 Driver</code>下载解压了以管理员身份运行，记得关闭windows的自带的那个def啥安全再安装</p>
+<li><p>安装<code>CH340</code>驱动，<a href="https://sparks.gogo.co.nz/ch340.html">https://sparks.gogo.co.nz/ch340.html</a> 点击<code>Download the Windows CH340 Driver</code>下载解压了以管理员身份运行，记得关闭windows的自带的那个def啥安全再安装</p>
 </li>
 <li><p>硬件插上usb口后等待windows弹出的驱动文件正在安装完成消失后，在ide里<code>工具</code>–<code>端口</code>里选择正确的COM口</p>
 </li>
@@ -489,14 +489,14 @@
 <li><p>点击<code>项目</code>–<code>上传</code>,下面出现<code>Hard press RST</code>啥的就可以打开串口下载软件然后按下8266板子上的rst重启，在串口软件里就可以看到输出信息了<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/golang/gobot/esp8266/004.png" alt="board-uart.jpg"></p>
 </li>
 </ul>
-<h4 id="golang代码"><a href="#golang代码" class="headerlink" title="golang代码"></a>golang代码</h4><p>goland新加项目选中go module，proxy写个代理地址，例如: <a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/goproxy/%E3%80%81https://goproxy.io%E3%80%81">https://mirrors.aliyun.com/goproxy/、https://goproxy.io、</a></p>
+<h4 id="golang代码"><a href="#golang代码" class="headerlink" title="golang代码"></a>golang代码</h4><p>goland新加项目选中go module，proxy写个代理地址，例如: <a href="https://mirrors.aliyun.com/goproxy/%E3%80%81https://goproxy.io%E3%80%81">https://mirrors.aliyun.com/goproxy/、https://goproxy.io、</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;os&quot;</span><br><span class="line">    &quot;time&quot;</span><br><span class="line"></span><br><span class="line">    &quot;gobot.io/x/gobot&quot;</span><br><span class="line">    &quot;gobot.io/x/gobot/drivers/gpio&quot;</span><br><span class="line">    &quot;gobot.io/x/gobot/platforms/firmata&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    firmataAdaptor := firmata.NewTCPAdaptor(os.Args[1])</span><br><span class="line">    led := gpio.NewLedDriver(firmataAdaptor, &quot;2&quot;)</span><br><span class="line"></span><br><span class="line">    work := func() &#123;</span><br><span class="line">        gobot.Every(1*time.Second, func() &#123;</span><br><span class="line">            led.Toggle()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    robot := gobot.NewRobot(&quot;bot&quot;,</span><br><span class="line">        []gobot.Connection&#123;firmataAdaptor&#125;,</span><br><span class="line">        []gobot.Device&#123;led&#125;,</span><br><span class="line">        work,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    robot.Start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>自行编译，arg1为板子的ip:port<br>运行的输出</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\guanzhang\go\src\test&gt;test.exe 192.168.123.74:3030</span><br><span class="line">2019/08/24 18:00:07 Initializing connections...</span><br><span class="line">2019/08/24 18:00:07 Initializing connection TCPFirmata-F4AF098BF1E8FBB ...</span><br><span class="line">2019/08/24 18:00:07 Initializing devices...</span><br><span class="line">2019/08/24 18:00:07 Initializing device LED-347A1A3D3308A707 ...</span><br><span class="line">2019/08/24 18:00:07 Robot bot initialized.</span><br><span class="line">2019/08/24 18:00:07 Starting Robot bot ...</span><br><span class="line">2019/08/24 18:00:07 Starting connections...</span><br><span class="line">2019/08/24 18:00:07 Starting connection TCPFirmata-F4AF098BF1E8FBB on port 192.168.123.74:3030...</span><br><span class="line">2019/08/24 18:00:07 Starting devices...</span><br><span class="line">2019/08/24 18:00:07 Starting device LED-347A1A3D3308A707 on pin 2...</span><br><span class="line">2019/08/24 18:00:07 Starting work...</span><br></pre></td></tr></table></figure>
 
 <p>我们可以看到灯在一秒一闪</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://gobot.io/documentation/platforms/esp8266/">https://gobot.io/documentation/platforms/esp8266/</a></li>
+<li><a href="https://gobot.io/documentation/platforms/esp8266/">https://gobot.io/documentation/platforms/esp8266/</a></li>
 </ul>
 
     </article>
@@ -506,7 +506,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2019/08/24/gobot-build/">http://zhangguanzhang.github.io/2019/08/24/gobot-build/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2019/08/24/gobot-build/">August 24th 2019, 6:12:36 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2019/08/24/gobot-build/">August 24th 2019, 6:12:36 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

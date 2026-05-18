@@ -469,7 +469,7 @@
         <p>图文讲解下微信接入自己云主机</p>
 <span id="more"></span>
 <h3 id="之前在网上摸索的接入微信整理下"><a href="#之前在网上摸索的接入微信整理下" class="headerlink" title="之前在网上摸索的接入微信整理下"></a>之前在网上摸索的接入微信整理下</h3><p>现在很多东西都依赖微信，微信公众号开发很方便，不用去适配app之类的客户端<br /><br>接入微信第一步准备条件:<br /><br>一台能外网80端口访问的主机<br>一个公众号<br /><br>主机可以看我之前的教程来搭建<br /></p>
-<p>自己去注册一个公众号，关于公众号，个人性质只能注册一个订阅号,服务号得有工商注册证明,企业号就不用说了,小程序个人不能申请<br /><br>所以说自己去申请一个订阅号<br>微信公众平台地址：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com</a><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqly1fkr8tnm4fqj30en0efdfz.jpg" alt="t2"><br>登录微信公众平台后台，在左侧列表中最下方，找到“ 基本配置 ”，点击进入<br>填写信息，第一个是你服务器ip&#x2F;脚本文件,这个脚本文件用来对接微信服务器检测用的<br /><br>第二个token是对接的关键字，随便写,但要记住后面要用<br /><br>第三个随机生成就行了加密方式选明文，后期懂了可以选安全模式<br>在网站根目录新建一个tesp.php(因为图里我写的test.php)<br>写下面代码</p>
+<p>自己去注册一个公众号，关于公众号，个人性质只能注册一个订阅号,服务号得有工商注册证明,企业号就不用说了,小程序个人不能申请<br /><br>所以说自己去申请一个订阅号<br>微信公众平台地址：<a href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com</a><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqly1fkr8tnm4fqj30en0efdfz.jpg" alt="t2"><br>登录微信公众平台后台，在左侧列表中最下方，找到“ 基本配置 ”，点击进入<br>填写信息，第一个是你服务器ip&#x2F;脚本文件,这个脚本文件用来对接微信服务器检测用的<br /><br>第二个token是对接的关键字，随便写,但要记住后面要用<br /><br>第三个随机生成就行了加密方式选明文，后期懂了可以选安全模式<br>在网站根目录新建一个tesp.php(因为图里我写的test.php)<br>写下面代码</p>
 <pre><code>
 &lt;?php
 $timestramp = $_GET['timestamp'];
@@ -520,7 +520,7 @@ php只学了点皮毛,微信服务器发过来的无非是对接验证或者是�
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2017/02/12/wx00/">http://zhangguanzhang.github.io/2017/02/12/wx00/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2017/02/12/wx00/">February 12th 2017, 5:29:31 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2017/02/12/wx00/">February 12th 2017, 5:29:31 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

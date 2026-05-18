@@ -462,8 +462,8 @@
 
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>redis 5.0.14 开始，会带有 arm64 上的 MADV_FREE&#x2F;fork 的 kernal bug check，参照以下 issue 和 pr</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/redis/redis/issues/8124">https://github.com/redis/redis/issues/8124</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/redis/redis/pull/8224">https://github.com/redis/redis/pull/8224</a></li>
+<li><a href="https://github.com/redis/redis/issues/8124">https://github.com/redis/redis/issues/8124</a></li>
+<li><a href="https://github.com/redis/redis/pull/8224">https://github.com/redis/redis/pull/8224</a></li>
 </ul>
 <h2 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h2><p>根据代码逻辑，redis arm64 上启动的时候会检测，如果存在 bug，则不会启动，类似下面的日志：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># WARNING Your kernel has a bug that could lead to data corruption during background save. Please upgrade to the latest stable kernel.</span><br><span class="line"># Redis will now exit to prevent data corruption. Note that it is possible to suppress this warning by setting the following config: ignore-warnings ARM64-COW-BUG</span><br><span class="line">WARN exited: redis (exit status 1; not expected)</span><br></pre></td></tr></table></figure>
@@ -493,7 +493,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/">http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/">May 22nd 2024, 5:10:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/05/22/redis-arm64-cow/">May 22nd 2024, 5:10:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

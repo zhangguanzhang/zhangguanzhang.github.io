@@ -545,7 +545,7 @@
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;<span class="variable">$&#123;git[@]&#125;</span>&quot;</span> checkout <span class="variable">$HEAD</span> 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
 
-<p>版本号信息可以输出到一个gitignore的文件里,编译的时候读取文件里的值拼接成<code>go build</code>的参数.我个人实现可能不是最优,我个人的整个细节性都在我github上<br><a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/gonelist">https://github.com/zhangguanzhang/gonelist</a><br>入口脚本是 <a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/gonelist/blob/master/build/build.sh">https://github.com/zhangguanzhang/gonelist/blob/master/build/build.sh</a></p>
+<p>版本号信息可以输出到一个gitignore的文件里,编译的时候读取文件里的值拼接成<code>go build</code>的参数.我个人实现可能不是最优,我个人的整个细节性都在我github上<br><a href="https://github.com/zhangguanzhang/gonelist">https://github.com/zhangguanzhang/gonelist</a><br>入口脚本是 <a href="https://github.com/zhangguanzhang/gonelist/blob/master/build/build.sh">https://github.com/zhangguanzhang/gonelist/blob/master/build/build.sh</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 使用master的代码构建</span><br><span class="line">bash build/build.sh build</span><br><span class="line"></span><br><span class="line"># 自己编译指定tag版本的话</span><br><span class="line">export TAG_NUM=xxx # 如果是tag推送,上面的逻辑处理就是tag的值不用声明,自己编译最新的 tag release 也不用声明变量</span><br><span class="line">bash build/build.sh release</span><br></pre></td></tr></table></figure>
 
 <p>版本信息的打印我是一行一条,方便脚本来做升级比对的正则提取,花样多的话可以像k8s那样支持 yaml 和 json 格式输出啥的 </p>
@@ -558,7 +558,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2020/04/27/go-version-ifno/">http://zhangguanzhang.github.io/2020/04/27/go-version-ifno/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2020/04/27/go-version-ifno/">April 27th 2020, 8:04:01 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2020/04/27/go-version-ifno/">April 27th 2020, 8:04:01 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

@@ -498,14 +498,14 @@
 <p>启用 tcp keepalive 的一端，在没有数据传输的时候，会有定时器（也有人翻译称为计数器）工作，到了 <code>tcp_keepalive_time</code> 秒还没有数据传输，就发一次 TCP 探测包。每隔 <code>tcp_keepalive_intvl</code> 发一次，如果首次对端响应 keepalive 报文，后面就不发送了，如果没响应也就是一直 <code>tcp_keepalive_probes</code> 次发送都没响应后，就会认为对方挂了。</p>
 <blockquote>
 <ul>
-<li>TCP 探测包是一个纯 ACK 包（<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc1122#section-4.2.3.6">RFC1122#TCP Keep-Alives</a> 规范建议：不应该包含任何数据，但也可以包含1个无意义的字节，比如0x0），其 Seq号 与上一个包是重复的，所以其实探测保活报文不在窗口控制范围内。</li>
+<li>TCP 探测包是一个纯 ACK 包（<a href="https://tools.ietf.org/html/rfc1122#section-4.2.3.6">RFC1122#TCP Keep-Alives</a> 规范建议：不应该包含任何数据，但也可以包含1个无意义的字节，比如0x0），其 Seq号 与上一个包是重复的，所以其实探测保活报文不在窗口控制范围内。</li>
 </ul>
 </blockquote>
 <p>我们调整了业务机器上的这三个参数，但是还是依旧的问题，发现必须在应用层创建 socket 的时候设置 <code>SO_KEEPALIVE</code> 套接字选项才能生效。例如 c 语言：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conn.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, True)</span><br><span class="line">conn.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, <span class="number">20</span>) # 覆盖tcp_keepalive_time</span><br><span class="line">conn.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, <span class="number">5</span>)  # 覆盖tcp_keepalive_probes</span><br><span class="line">conn.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, <span class="number">10</span>) # 覆盖tcp_keepalive_intvl</span><br></pre></td></tr></table></figure>
 
-<p>其他语言，例如 golang 的话可以看这个文章 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/69337371">知乎: golang 程序开启 tcp keepalive</a></p>
-<h3 id="nginx-tcp-代理思路"><a href="#nginx-tcp-代理思路" class="headerlink" title="nginx tcp 代理思路"></a>nginx tcp 代理思路</h3><p>和领导讨论后说用 nginx 做代理试下，根据 nginx 官方文档的 <a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_core_module.html#listen">listen 字段</a> 的 <code>[so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]]</code> 看到 nginx 可以开启 <code>so_keepalive</code>。</p>
+<p>其他语言，例如 golang 的话可以看这个文章 <a href="https://zhuanlan.zhihu.com/p/69337371">知乎: golang 程序开启 tcp keepalive</a></p>
+<h3 id="nginx-tcp-代理思路"><a href="#nginx-tcp-代理思路" class="headerlink" title="nginx tcp 代理思路"></a>nginx tcp 代理思路</h3><p>和领导讨论后说用 nginx 做代理试下，根据 nginx 官方文档的 <a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#listen">listen 字段</a> 的 <code>[so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]]</code> 看到 nginx 可以开启 <code>so_keepalive</code>。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    # http://nginx.org/en/docs/http/ngx_http_core_module.html#listen</span><br><span class="line">    #listen 0.0.0.0:3306 so_keepalive=on;</span><br><span class="line">    # 如果上面这样就使用 内核参数的值，也可以自定义，也就是下面这样对应三个参数</span><br><span class="line">    listen 0.0.0.0:3306 so_keepalive=60s:20:10;</span><br><span class="line">    proxy_pass xxxx:3306;</span><br><span class="line">    </span><br><span class="line">    #建立连接时间</span><br><span class="line">    proxy_connect_timeout 5s;</span><br><span class="line">    #保持连接时间</span><br><span class="line">    proxy_timeout 3600s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>测试了下发现还是不行，本地搭建个环境试试。</p>
@@ -541,7 +541,7 @@
 <p>起来后用 mysql的镜像起 mysql 客户端:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -ti --net host mysql:5.7 bash</span><br><span class="line">mysql -u root -p -h 192.168.2.112 -P 3307</span><br></pre></td></tr></table></figure>
 
-<p>抓包 <code>port 3306 and host 192.168.2.111</code> 没有看到 keepalive 的包，然后突然意识到 <code>listen</code> 的 <code>so_keepalive</code> 是 nginx 作为 server 端去探测 client 端的，而不是 proxy 的，搜了下搜到 <a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_socket_keepalive">proxy_socket_keepalive 字段</a>，<code>stream.d/test.conf</code> 配置 server 段里加下：</p>
+<p>抓包 <code>port 3306 and host 192.168.2.111</code> 没有看到 keepalive 的包，然后突然意识到 <code>listen</code> 的 <code>so_keepalive</code> 是 nginx 作为 server 端去探测 client 端的，而不是 proxy 的，搜了下搜到 <a href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_socket_keepalive">proxy_socket_keepalive 字段</a>，<code>stream.d/test.conf</code> 配置 server 段里加下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_socket_keepalive on;</span><br></pre></td></tr></table></figure>
 
 <p>然后发现这个开了后探测时间和间隔是按照的内核参数，调整了下内核参数，后续记得自行持久化到 <code>/etc/sysctl.d/xxx.conf</code>：</p>
@@ -558,16 +558,16 @@
 <li>基本只有 c 语言才有函数能不走内核参数，来自定义自己的 keepalive 三个值。也就是说大多数应用层开启 keepalive 后，还需要调整运行的机器的这三个内核参数。</li>
 <li>在 IM 开发经验里，客户端去使用 keepalive 才是最正确的。</li>
 <li>redis server 有配置开启 keepalive</li>
-<li>kafka 官方默认开启了 keepalive，见 <a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/KAFKA-2096">Enable keepalive socket option for broker</a> 和 <a target="_blank" rel="noopener" href="https://github.com/apache/kafka/blob/2.1.1/core/src/main/scala/kafka/network/SocketServer.scala#L465">官方源码里的 socketChannel.socket().setKeepAlive(true) </a></li>
+<li>kafka 官方默认开启了 keepalive，见 <a href="https://issues.apache.org/jira/browse/KAFKA-2096">Enable keepalive socket option for broker</a> 和 <a href="https://github.com/apache/kafka/blob/2.1.1/core/src/main/scala/kafka/network/SocketServer.scala#L465">官方源码里的 socketChannel.socket().setKeepAlive(true) </a></li>
 </ol>
 <p>其实本次 nginx 做代理，在思想上挺像 sidecar 的理念的。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e3791f975d7b">简书: TCP keepalive 详解</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.52im.net/thread-3506-1-1.html">即时通讯网: 彻底搞懂TCP协议层的KeepAlive保活机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/69337371">知乎: golang 程序开启 tcp keepalive</a></li>
-<li><a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_core_module.html#listen">nginx doc: listen 字段</a></li>
-<li><a target="_blank" rel="noopener" href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_socket_keepalive">nginx doc: proxy_socket_keepalive 字段</a></li>
-<li><a target="_blank" rel="noopener" href="https://plantegg.github.io/2017/06/02/%E5%B0%B1%E6%98%AF%E8%A6%81%E4%BD%A0%E6%87%82TCP--wireshark-dup-ack-issue/">博客: TCP-wireshark-dup-ack-issue</a></li>
+<li><a href="https://www.jianshu.com/p/e3791f975d7b">简书: TCP keepalive 详解</a></li>
+<li><a href="http://www.52im.net/thread-3506-1-1.html">即时通讯网: 彻底搞懂TCP协议层的KeepAlive保活机制</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/69337371">知乎: golang 程序开启 tcp keepalive</a></li>
+<li><a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#listen">nginx doc: listen 字段</a></li>
+<li><a href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_socket_keepalive">nginx doc: proxy_socket_keepalive 字段</a></li>
+<li><a href="https://plantegg.github.io/2017/06/02/%E5%B0%B1%E6%98%AF%E8%A6%81%E4%BD%A0%E6%87%82TCP--wireshark-dup-ack-issue/">博客: TCP-wireshark-dup-ack-issue</a></li>
 </ul>
 
     </article>
@@ -577,7 +577,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/04/11/sdn-tcp-keepalive/">http://zhangguanzhang.github.io/2022/04/11/sdn-tcp-keepalive/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/04/11/sdn-tcp-keepalive/">April 11th 2022, 11:28:30 am</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/04/11/sdn-tcp-keepalive/">April 11th 2022, 11:28:30 am</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

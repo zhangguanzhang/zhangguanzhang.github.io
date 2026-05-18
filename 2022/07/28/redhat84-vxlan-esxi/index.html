@@ -550,7 +550,7 @@
 <p>exsi 的 DVS 虚拟交换机开混杂模式了（中间还把几台机器迁移到同一台 exsi 上，可是还是有问题）还是不行，询问了内部的 exsi 人员，他让我看看是不是 NSX 影响的，给我发了个文章：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://kb.vmware.com/s/article/2149996?lang=zh_cn 这个文章说：</span><br><span class="line">从 NSX 6.2.4 开始，默认 VXLAN 端口为 4789，这是由 IANA 分配的标准端口。在 NSX 6.2.4 之前的版本中，默认 VXLAN UDP 端口号为 8472</span><br></pre></td></tr></table></figure>
 
-<p>对于 NSX 完全懵逼，然后找了个 vmware 的大佬 spark-go 咨询了下，大佬帮我看了下我们的 exsi 上没有 NSX。大佬帮我搜索了下，搜到一个 redhat 发布的 <a target="_blank" rel="noopener" href="https://access.redhat.com/errata/RHSA-2021:2570">kernel bug RHSA-2021:2570</a> :</p>
+<p>对于 NSX 完全懵逼，然后找了个 vmware 的大佬 spark-go 咨询了下，大佬帮我看了下我们的 exsi 上没有 NSX。大佬帮我搜索了下，搜到一个 redhat 发布的 <a href="https://access.redhat.com/errata/RHSA-2021:2570">kernel bug RHSA-2021:2570</a> :</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ESXi][RHEL-8] VMXNET3 v4 causes invalid checksums of inner packets of VXLAN tunnel (BZ#1960702)</span><br></pre></td></tr></table></figure>
 
 <p>其实昨天我搜素结果里有这个文章的，但是没有点进去看，光去看第一个 redhat 的使用 libvirtd 和 vxlan 的文档了。<code>vmxnet3</code> 是 exsi 给虚机的虚拟网卡，看 bug 描述和内核版本对比了下，就应该是这个问题了：</p>
@@ -566,8 +566,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ readlink -f /sys/class/net/ens192/device/driver/module</span><br><span class="line">/sys/module/vmxnet3</span><br></pre></td></tr></table></figure>
 
 <h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://access.redhat.com/errata/RHSA-2021:2570">RHSA-2021:2570</a></li>
-<li><a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/drivers/net/vmxnet3?id=b22580233d473dbf7bbfa4f6549c09e2c80e9e64">vmxnet3 driver fix </a></li>
+<li><a href="https://access.redhat.com/errata/RHSA-2021:2570">RHSA-2021:2570</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/drivers/net/vmxnet3?id=b22580233d473dbf7bbfa4f6549c09e2c80e9e64">vmxnet3 driver fix </a></li>
 </ul>
 
     </article>
@@ -577,7 +577,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/">http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/">July 28th 2022, 7:18:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/07/28/redhat84-vxlan-esxi/">July 28th 2022, 7:18:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

@@ -507,7 +507,7 @@
 </li>
 <li>offset 在 type 为 M 的时候有用，指定识别的时候的偏移位置，默认是 0 。</li>
 <li>magic 即用来识别的具体 magic 内容</li>
-<li>mask 在 type 为 M 的时候用，默认值全是 0xFF 的 bitmask，二进制下某一位为1，则表示文件的 ELF magic 必须和 magic对应的位匹配。magic 长度一般是 40，具体可以去看 <a target="_blank" rel="noopener" href="https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh">qemu-binfmt-conf.sh</a> 脚本，获取二进制文件的 magic 可以使用例如下面的 shell：<ul>
+<li>mask 在 type 为 M 的时候用，默认值全是 0xFF 的 bitmask，二进制下某一位为1，则表示文件的 ELF magic 必须和 magic对应的位匹配。magic 长度一般是 40，具体可以去看 <a href="https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh">qemu-binfmt-conf.sh</a> 脚本，获取二进制文件的 magic 可以使用例如下面的 shell：<ul>
 <li><code>xxd hello_arm64   | awk &#39;{for(i=2;i&lt;NF;i++){a=a$i;c++;if(c&gt;9){print a;exit;}}}&#39;</code> 该示例是 40 个</li>
 </ul>
 </li>
@@ -533,9 +533,9 @@
 <p>实际上运行上面的特权容器，等同于:</p>
 <ol>
 <li>特权容器下，容器内的 &#x2F;proc 和 mount 是和宿主机一致的</li>
-<li>入口 <a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh">register.sh 脚本</a> 挂载 binfmt_misc </li>
-<li>shift 掉 <code>--reset</code> 后，剩下参数传递执行 qemu 的 <a target="_blank" rel="noopener" href="https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh">qemu-binfmt-conf.sh</a> 脚本，注册各种架构二进制的打开方式为对应的 <code>qemu-$arch-static</code></li>
-<li>因为 <code>multiarch/qemu-user-static</code> 镜像里有 <a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/Dockerfile">COPY qemu-*-static &#x2F;usr&#x2F;bin&#x2F;</a>，然后把 <code>-p yes</code> 传递给最终在脚本里，也就是注册的时候会开 flags 的 <code>F</code> ，会把这些 <code>/usr/bin/qemu-*-static</code> 导入到内存里。这个需要内核支持，<a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/issues/100">centos 3.10内核就不支持</a></li>
+<li>入口 <a href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh">register.sh 脚本</a> 挂载 binfmt_misc </li>
+<li>shift 掉 <code>--reset</code> 后，剩下参数传递执行 qemu 的 <a href="https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh">qemu-binfmt-conf.sh</a> 脚本，注册各种架构二进制的打开方式为对应的 <code>qemu-$arch-static</code></li>
+<li>因为 <code>multiarch/qemu-user-static</code> 镜像里有 <a href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/Dockerfile">COPY qemu-*-static &#x2F;usr&#x2F;bin&#x2F;</a>，然后把 <code>-p yes</code> 传递给最终在脚本里，也就是注册的时候会开 flags 的 <code>F</code> ，会把这些 <code>/usr/bin/qemu-*-static</code> 导入到内存里。这个需要内核支持，<a href="https://github.com/multiarch/qemu-user-static/issues/100">centos 3.10内核就不支持</a></li>
 <li>然后在 x86_64 上执行其他架构的镜像，会被 binfmt_misc 识别，调用内存里的 <code>/usr/bin/qemu-*-static</code> 翻译执行</li>
 </ol>
 <p>还有个 <code>multiarch/qemu-user-static:register</code> 的镜像，运行是:</p>
@@ -554,8 +554,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./arch_arm64</span><br><span class="line">Runtime: linux</span><br><span class="line">CPU Architecture: arm64</span><br></pre></td></tr></table></figure>
 
 <h3 id="一些注意点"><a href="#一些注意点" class="headerlink" title="一些注意点"></a>一些注意点</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh#L3">register.sh 脚本</a> 里默认是把 <code>QEMU_BIN_DIR</code> 设置为 <code>/usr/bin/</code> ，直接使用 qemu 的脚本默认则是 <code>/usr/local/bin/</code></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh">register.sh 脚本</a> 里默认设置了 <code>--qemu-suffix &quot;-static&quot;</code>，意味着最终的 interpreter 会带有 <code>-static</code> 后缀</li>
+<li><a href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh#L3">register.sh 脚本</a> 里默认是把 <code>QEMU_BIN_DIR</code> 设置为 <code>/usr/bin/</code> ，直接使用 qemu 的脚本默认则是 <code>/usr/local/bin/</code></li>
+<li><a href="https://github.com/multiarch/qemu-user-static/blob/master/containers/latest/register.sh">register.sh 脚本</a> 里默认设置了 <code>--qemu-suffix &quot;-static&quot;</code>，意味着最终的 interpreter 会带有 <code>-static</code> 后缀</li>
 <li>multiarch&#x2F;qemu-user-static 镜像不一定更新及时，可能需要自己替换里面的一些文件，例如我这几天搞的 loongarch64 ，龙芯官方提供的 <code>qemu-loongarch64</code> + 最新的 qemu-binfmt-conf.sh 才行</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM multiarch/qemu-user-static</span><br><span class="line"># 因为设置了 --qemu-suffix &quot;-static&quot; 所以拷贝进去名字要对应</span><br><span class="line">COPY qemu-loongarch64 /usr/bin/qemu-loongarch64-static</span><br><span class="line">ADD https://raw.githubusercontent.com/qemu/qemu/master/scripts/qemu-binfmt-conf.sh /qemu-binfmt-conf.sh</span><br><span class="line">RUN chmod a+x /qemu-binfmt-conf.sh</span><br></pre></td></tr></table></figure>
@@ -566,14 +566,14 @@
 <p>之前使用 multiarch&#x2F;qemu-user-static 的 <code>qemu-loongarch64-static</code> 会报错 <code>Function not implemented</code>，龙芯官方给我的才可以正常使用，这块后续得等龙芯他们合并到 qemu 去了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm -ti cr.loongnix.cn/library/alpine:3.11.11 ls</span><br><span class="line">WARNING: The requested image&#x27;s platform (linux/loong64) does not match the detected host platform (linux/amd64) and no specific platform was requested</span><br><span class="line">ls: .: Function not implemented</span><br></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://github.com/loongson/build-tools/releases/download/2022.09.06/qemu-loongarch64">龙芯的 qemu 下载</a></p>
+<p><a href="https://github.com/loongson/build-tools/releases/download/2022.09.06/qemu-loongarch64">龙芯的 qemu 下载</a></p>
 <h4 id="env"><a href="#env" class="headerlink" title="env"></a>env</h4><p>发现 dockerfile 里这样会影响 qemu 执行</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ARG QEMU_VERSION</span><br></pre></td></tr></table></figure>
 
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.qemu.org/docs/master/user/main.html">https://www.qemu.org/docs/master/user/main.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Binfmt_misc">https://zh.wikipedia.org/wiki/Binfmt_misc</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html">https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html</a></li>
+<li><a href="https://www.qemu.org/docs/master/user/main.html">https://www.qemu.org/docs/master/user/main.html</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Binfmt_misc">https://zh.wikipedia.org/wiki/Binfmt_misc</a></li>
+<li><a href="https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html">https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html</a></li>
 </ul>
 
     </article>
@@ -583,7 +583,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2023/03/07/qemu-binfmt_misc/">http://zhangguanzhang.github.io/2023/03/07/qemu-binfmt_misc/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2023/03/07/qemu-binfmt_misc/">March 7th 2023, 10:40:30 am</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2023/03/07/qemu-binfmt_misc/">March 7th 2023, 10:40:30 am</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

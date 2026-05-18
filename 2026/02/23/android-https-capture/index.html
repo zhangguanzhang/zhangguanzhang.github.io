@@ -466,7 +466,7 @@
 <h2 id="原理相关"><a href="#原理相关" class="headerlink" title="原理相关"></a>原理相关</h2><p>基于逆向、协议逆向以及实现某些 app 自动化等需求，往往需要抓取指定 app 的 HTTPS 包才能完成。本文只讨论 HTTPS 抓包本身，涉及 apk 对设备 root 与反调试检测的就不展开了。</p>
 <h3 id="中间人"><a href="#中间人" class="headerlink" title="中间人"></a>中间人</h3><p>抓 HTTPS 的方式大致分为两类：hack 与非 hack。</p>
 <ul>
-<li><strong>hack 方式</strong>：例如基于 eBPF 的 <a target="_blank" rel="noopener" href="https://github.com/gojue/ecapture">gojue&#x2F;ecapture</a>，在 client 端 hook 相关 SSL 即可解密 HTTPS 报文，另外例如 frida hook app。</li>
+<li><strong>hack 方式</strong>：例如基于 eBPF 的 <a href="https://github.com/gojue/ecapture">gojue&#x2F;ecapture</a>，在 client 端 hook 相关 SSL 即可解密 HTTPS 报文，另外例如 frida hook app。</li>
 <li><strong>非 hack 方式</strong>：例如中间人攻击。</li>
 </ul>
 <p>eBPF 需要较高内核版本且有对应内核模块支持。网上很多人用 root、KSU 等，却很少去编译内核增加 ebpf 的支持，所以这种方式很难普及， frida 的话要写注入逻辑，一般要电脑配合且要懂点编程和逆向基础。而中间人攻击的原理是：</p>
@@ -480,11 +480,11 @@
 </ol>
 <p>HTTPS 刚普及时，很多客户端不校验中间人证书是否由权威 CA 签发（用浏览器访问会看到红色警告）。后来普遍校验证书后，做中间人时需要在 Linux 上把自建 CA 加入 <code>/etc/ssl/certs/ca-certificates.crt</code> 等系统信任链。</p>
 <h3 id="安卓的凭据"><a href="#安卓的凭据" class="headerlink" title="安卓的凭据"></a>安卓的凭据</h3><p>例如在 Windows 电脑上用 Fiddler，在电脑里加入 Fiddler 的 CA 后，Fiddler 可以抓浏览器或进程的 HTTPS 报文。Linux、Windows、安卓本质都是同一套中间人原理，只是细节不同。在安卓上，CA 以「凭据」形式存在，路径是：<code>设置</code> → <code>系统安全</code> → <code>凭据存储</code> → <code>信任的证书</code>，分为「系统」和「用户」两类。</p>
-<p>安卓 7.0 起不再信任用户安装的 CA，需要把 CA 放进「系统」凭据。需要手机 root，可用 <a target="_blank" rel="noopener" href="https://mt2.cn/download/">MT 管理器</a> 或 adb shell（root）把 CA 放到 <code>/system/etc/security/cacerts/</code>。</p>
+<p>安卓 7.0 起不再信任用户安装的 CA，需要把 CA 放进「系统」凭据。需要手机 root，可用 <a href="https://mt2.cn/download/">MT 管理器</a> 或 adb shell（root）把 CA 放到 <code>/system/etc/security/cacerts/</code>。</p>
 <h3 id="SSL-Pinning"><a href="#SSL-Pinning" class="headerlink" title="SSL Pinning"></a>SSL Pinning</h3><p>部分 app 不信任系统凭据或对服务器证书做校验，可能还需要配合 LSPosed 和 Magisk 模块（如 <code>JustTrustMe</code>、<code>TrustMeAlready</code>）hook 应用内的 <code>X509TrustManager</code>、<code>okhttp3</code> 等跳过证书校验。会 Frida 的话也可以直接 Frida hook。</p>
-<h3 id="高版本安卓的凭据"><a href="#高版本安卓的凭据" class="headerlink" title="高版本安卓的凭据"></a>高版本安卓的凭据</h3><p>在安卓 15 + KSU 上试过 <a target="_blank" rel="noopener" href="https://reqable.com/">Reqable</a>：左上角菜单 → 证书管理 → 安装证书，我选的是手动复制证书文件，证书会保存到 <code>Download/Reqable/xxxxx.0</code>。KSU 授权 <code>com.android.shell</code> 取得 root 后，在 adb root shell 里仍无法把证书推到 <code>/system/etc/security/cacerts/</code>，用 MT 管理器移动也会报「挂载读写失败」。</p>
-<p>查资料得知有人分析 <code>framework.jar</code> 发现从安卓 14 起证书目录是 <code>/apex/com.android.conscrypt/cacerts</code>，但试了下依然无法直接写入。继续查发现 <code>/apex</code> 有更严格的系统分区保护，即便 root 后 remount 也改不了。后来看到做法是：先装 <a target="_blank" rel="noopener" href="https://github.com/KernelSU-Modules-Repo/meta-overlayfs">OverlayFS MetaModule</a>，再装 <a target="_blank" rel="noopener" href="https://github.com/ys1231/MoveCertificate">MoveCertificate</a>，把证书放到 <code>/data/local/tmp/cert/</code> 下重启，就能在系统凭据里看到新 CA。</p>
-<p>看了下 <a target="_blank" rel="noopener" href="https://github.com/ys1231/MoveCertificate/blob/iyue/post-fs-data.sh">MoveCertificate 的 post-fs-data.sh</a>，是通过 tmpfs 覆盖挂载 <code>/apex/com.android.conscrypt/cacerts</code> 并配合 SELinux 权限完成凭据列表的注入，前提是已安装 <code>OverlayFS MetaModule</code>。另外我试过只 ksu 里关掉 OverlayFS 模块不关别的，手机重启会起不来。</p>
+<h3 id="高版本安卓的凭据"><a href="#高版本安卓的凭据" class="headerlink" title="高版本安卓的凭据"></a>高版本安卓的凭据</h3><p>在安卓 15 + KSU 上试过 <a href="https://reqable.com/">Reqable</a>：左上角菜单 → 证书管理 → 安装证书，我选的是手动复制证书文件，证书会保存到 <code>Download/Reqable/xxxxx.0</code>。KSU 授权 <code>com.android.shell</code> 取得 root 后，在 adb root shell 里仍无法把证书推到 <code>/system/etc/security/cacerts/</code>，用 MT 管理器移动也会报「挂载读写失败」。</p>
+<p>查资料得知有人分析 <code>framework.jar</code> 发现从安卓 14 起证书目录是 <code>/apex/com.android.conscrypt/cacerts</code>，但试了下依然无法直接写入。继续查发现 <code>/apex</code> 有更严格的系统分区保护，即便 root 后 remount 也改不了。后来看到做法是：先装 <a href="https://github.com/KernelSU-Modules-Repo/meta-overlayfs">OverlayFS MetaModule</a>，再装 <a href="https://github.com/ys1231/MoveCertificate">MoveCertificate</a>，把证书放到 <code>/data/local/tmp/cert/</code> 下重启，就能在系统凭据里看到新 CA。</p>
+<p>看了下 <a href="https://github.com/ys1231/MoveCertificate/blob/iyue/post-fs-data.sh">MoveCertificate 的 post-fs-data.sh</a>，是通过 tmpfs 覆盖挂载 <code>/apex/com.android.conscrypt/cacerts</code> 并配合 SELinux 权限完成凭据列表的注入，前提是已安装 <code>OverlayFS MetaModule</code>。另外我试过只 ksu 里关掉 OverlayFS 模块不关别的，手机重启会起不来。</p>
 <p>然后把 Reqable 记录模式选成 <code>V-P-N</code>，应用指定微信，开启增强并启动抓包，打开微信和小程序，发现抓到的全是 <code>CONNECT</code>，点进请求显示 SSL 握手失败，说明 CA 没被正确信任。后来试了 Reqable 生成的 Magisk 模块刷入，并<strong>取消</strong>使用 <code>MoveCertificate</code> 模块，重启后就能正常抓到了。</p>
 <p>安卓 16 好些还要额外安装到用户凭据里。</p>
 <h2 id="安卓原理和工具选项"><a href="#安卓原理和工具选项" class="headerlink" title="安卓原理和工具选项"></a>安卓原理和工具选项</h2><p>模拟器和安卓上开光速虚机抓包啥的不讨论，如果你看懂了原理又嫌弃 root 麻烦，可以自行搜索查看相关文章。</p>
@@ -501,16 +501,16 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><a target="_blank" rel="noopener" href="https://reqable.com/">Reqable</a></td>
+<td><a href="https://reqable.com/">Reqable</a></td>
 <td>未开源，前身是 HttpCanary</td>
 <td>UI 现代，请求查看体验较好。需 VIP 解锁全部功能（只有价格说明没具体有哪些功能）</td>
 <td>安装后 CA 随机生成这点不错，并且支持生成 magisk 模块；PC 端 USB 装证书到手机疑似通过 adb root 完成，无手动步骤，比较担心被注入不好的东西</td>
 </tr>
 <tr>
-<td><a target="_blank" rel="noopener" href="https://github.com/wanghongenpin/proxypin">proxypin</a></td>
+<td><a href="https://github.com/wanghongenpin/proxypin">proxypin</a></td>
 <td>开源</td>
 <td>UI 现代，请求查看不如 Reqable 细致，但支持断点、重写请求</td>
-<td>apk 完全可以像 Reqable 那样生成一个 magisk 模块，而不需要让人去下载注入CA 的 <a target="_blank" rel="noopener" href="https://github.com/wanghongenpin/Magisk-ProxyPinCA">Magisk-ProxyPinCA</a> 模块。 apk 生成的 CA 与 Magisk-ProxyPinCA 内的 CA 是固定而不是随机的，可能是一个安全隐患点</td>
+<td>apk 完全可以像 Reqable 那样生成一个 magisk 模块，而不需要让人去下载注入CA 的 <a href="https://github.com/wanghongenpin/Magisk-ProxyPinCA">Magisk-ProxyPinCA</a> 模块。 apk 生成的 CA 与 Magisk-ProxyPinCA 内的 CA 是固定而不是随机的，可能是一个安全隐患点</td>
 </tr>
 </tbody></table>
 <p>安卓 16 好像限制挺多的，可以去尝试下虚拟机，我是安卓 15 + <code>proxypin</code> 和它的 ca 模块可以抓包。理清原理后，甚至可以自己搭一套分布式抓包方案，例如：</p>
@@ -530,7 +530,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2026/02/23/android-https-capture/">http://zhangguanzhang.github.io/2026/02/23/android-https-capture/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2026/02/23/android-https-capture/">February 23rd 2026, 8:10:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2026/02/23/android-https-capture/">February 23rd 2026, 8:10:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

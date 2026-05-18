@@ -565,21 +565,21 @@
 <li>除了 0 扇区以外，每个扇区的块0、块1、块2 为数据块，可用于存储数据。</li>
 <li>每个扇区的块3为控制块，包括密码keyA，存取控制，密码keyB。存取控制的作用是控制对应扇区记录的读写权限与keyA和keyB的关系。由于每个扇区都有独立的key和存取控制，因此M1卡可以做到一卡多用互不干扰。</li>
 </ol>
-<p>更多详情见 <a target="_blank" rel="noopener" href="https://hceng.cn/2019/07/12/NFC%E6%89%8B%E6%9C%BA%E6%A8%A1%E6%8B%9F%E5%8A%A0%E5%AF%86%E9%97%A8%E7%A6%81%E5%8D%A1/">NFC手机模拟加密门禁卡</a> 里的基础知识。</p>
-<h3 id="ACR122U"><a href="#ACR122U" class="headerlink" title="ACR122U"></a>ACR122U</h3><p>Linux 下面有个复制脚本，<a target="_blank" rel="noopener" href="https://www.lostserver.com/static/nfc-cloner.sh">nfc-clone</a></p>
+<p>更多详情见 <a href="https://hceng.cn/2019/07/12/NFC%E6%89%8B%E6%9C%BA%E6%A8%A1%E6%8B%9F%E5%8A%A0%E5%AF%86%E9%97%A8%E7%A6%81%E5%8D%A1/">NFC手机模拟加密门禁卡</a> 里的基础知识。</p>
+<h3 id="ACR122U"><a href="#ACR122U" class="headerlink" title="ACR122U"></a>ACR122U</h3><p>Linux 下面有个复制脚本，<a href="https://www.lostserver.com/static/nfc-cloner.sh">nfc-clone</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install -y mfoc  libnfc-bin libnfc-bin libnfc-examples</span><br></pre></td></tr></table></figure>
 
 <p>ACR122U 上面的命令就可以驱动了：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ nfc-list</span><br><span class="line">nfc-list uses libnfc 1.7.1</span><br><span class="line">error	libnfc.driver.acr122_usb	Unable to claim USB interface (Device or resource busy)</span><br><span class="line">nfc-list: ERROR: Unable to open NFC device: acr122_usb:001:015</span><br><span class="line">$ lsmod | grep pn533</span><br><span class="line">pn533_usb              20480  0</span><br><span class="line">pn533                  36864  1 pn533_usb</span><br><span class="line">nfc                   110592  1 pn533</span><br></pre></td></tr></table></figure>
 
-<p>上面报错参考 <a target="_blank" rel="noopener" href="https://github.com/nfc-tools/libnfc/issues/402">nfc-tools&#x2F;libnfc</a> 解决：</p>
+<p>上面报错参考 <a href="https://github.com/nfc-tools/libnfc/issues/402">nfc-tools&#x2F;libnfc</a> 解决：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cat &gt; /etc/modprobe.d/blacklist-libnfc.conf</span><br><span class="line">blacklist nfc</span><br><span class="line">blacklist pn533</span><br><span class="line">blacklist pn533_usb</span><br><span class="line">$ sudo modprobe -rf pn533_usb</span><br><span class="line">$ nfc-list</span><br><span class="line">nfc-list uses libnfc 1.7.1</span><br><span class="line">NFC device: ACS / ACR122U PICC Interface opened</span><br></pre></td></tr></table></figure>
 
 <p>读卡：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ nfc-list</span><br><span class="line">nfc-list uses libnfc 1.7.1</span><br><span class="line">NFC device: ACS / ACR122U PICC Interface opened</span><br><span class="line">1 ISO14443A passive target(s) found:</span><br><span class="line">ISO/IEC 14443A (106 kbps) target:</span><br><span class="line">    ATQA (SENS_RES): 00  04  </span><br><span class="line">       UID (NFCID1): xx  xx  0f  7d  </span><br><span class="line">      SAK (SEL_RES): 28  </span><br><span class="line">                ATS: 78  80  90  02  20  90  00  00  00  00  00  xx  xx  0f  7d  </span><br></pre></td></tr></table></figure>
 
 <p>更多参考上面的脚本。</p>
-<h3 id="pm3"><a href="#pm3" class="headerlink" title="pm3"></a>pm3</h3><h4 id="固件编译"><a href="#固件编译" class="headerlink" title="固件编译"></a>固件编译</h4><p>官方固件仓库没看到更新，有名的就是 iceman（冰人）的 <a target="_blank" rel="noopener" href="https://github.com/RfidResearchGroup/proxmark3">RfidResearchGroup&#x2F;proxmark3</a>。</p>
+<h3 id="pm3"><a href="#pm3" class="headerlink" title="pm3"></a>pm3</h3><h4 id="固件编译"><a href="#固件编译" class="headerlink" title="固件编译"></a>固件编译</h4><p>官方固件仓库没看到更新，有名的就是 iceman（冰人）的 <a href="https://github.com/RfidResearchGroup/proxmark3">RfidResearchGroup&#x2F;proxmark3</a>。</p>
 <p>我是在我的 r2s 上用 docker 起特权容器玩的，<code>apt</code> 系列系统 <code>ldd --version</code> 看看 glibc 版本，大于等于 2.27，推荐起 <code>ubuntu:18.04</code> 容器编译：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Linux系统中可能存在ModemManager，从而干扰系统和proxmark3的通信。</span><br><span class="line"> apt remove modemmanager</span><br><span class="line"># 获取关闭</span><br><span class="line">sudo systemctl stop ModemManager</span><br><span class="line">sudo systemctl disable ModemManager</span><br><span class="line"></span><br><span class="line">git clone https://github.com/RfidResearchGroup/proxmark3</span><br><span class="line">docker run --name t1 --restart always -tid --privileged -v $PWD/proxmark3:/opt/proxmark3 -w /opt/proxmark3 ubuntu:18.04</span><br></pre></td></tr></table></figure>
 
@@ -619,7 +619,7 @@
 <p>分析：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[usb] pm3 --&gt; trace list -t 14a</span><br></pre></td></tr></table></figure>
 
-<p>运气好能分析到 <code>PWD-AUTH KEY</code> ，然后破解，参考 <a target="_blank" rel="noopener" href="https://raycn.pub/2021/08/21/reset-xiaomi-air-purifier-filters/">【PM3】重置小米空气净化器滤芯</a>。运气不好就无法嗅探。</p>
+<p>运气好能分析到 <code>PWD-AUTH KEY</code> ，然后破解，参考 <a href="https://raycn.pub/2021/08/21/reset-xiaomi-air-purifier-filters/">【PM3】重置小米空气净化器滤芯</a>。运气不好就无法嗅探。</p>
 <h3 id="破解的一些说明"><a href="#破解的一些说明" class="headerlink" title="破解的一些说明"></a>破解的一些说明</h3><ol>
 <li>把卡片解密后 dump 出来，dump 的数据是没加密的，再写入白卡，手机或者手环再读取白卡模拟</li>
 <li>设备可以读取 dump 数据写入手机的 nfc 卡片里，但是最好不要这样做，很多手机的 nfc 是单独一块电路，不跟随刷机恢复出厂设置的，读写可能会损坏 nfc 相关硬件只有换主板了。</li>
@@ -627,14 +627,14 @@
 <li>有些公司的 oa 软件支持添加电子工牌，实际添加行为是 oa 软件里点了添加后会给手机的钱包-nfc 添加一张模拟卡片，这个卡片是 cpu 模拟卡，SAK 显示 20，说明门禁联网的。</li>
 </ol>
 <h3 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h3><ol>
-<li>windows 我有安装串口驱动，但是下的 client 和 GUI 都无法通过 COM 口连上 pm3 ，进安全模式安装 <a target="_blank" rel="noopener" href="https://github.com/RfidResearchGroup/proxmark3/tree/master/driver">官方的驱动</a> 也不行。尝试过串口软件打开 com 口，看源码是 <code>baud=115200 parity=N data=8 stop=1</code>，但是还是不行</li>
-<li>安卓客户端 <a target="_blank" rel="noopener" href="https://github.com/AndProx/AndProx">AndProx&#x2F;AndProx</a> 因为我手机内核编译没开 <code>USB_ACM</code> 导致无法使用，<a target="_blank" rel="noopener" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/termux_notes.md">termux</a> 同样。</li>
-<li>多看看 <a target="_blank" rel="noopener" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/README.md">官方的 README.md</a></li>
+<li>windows 我有安装串口驱动，但是下的 client 和 GUI 都无法通过 COM 口连上 pm3 ，进安全模式安装 <a href="https://github.com/RfidResearchGroup/proxmark3/tree/master/driver">官方的驱动</a> 也不行。尝试过串口软件打开 com 口，看源码是 <code>baud=115200 parity=N data=8 stop=1</code>，但是还是不行</li>
+<li>安卓客户端 <a href="https://github.com/AndProx/AndProx">AndProx&#x2F;AndProx</a> 因为我手机内核编译没开 <code>USB_ACM</code> 导致无法使用，<a href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/termux_notes.md">termux</a> 同样。</li>
+<li>多看看 <a href="https://github.com/RfidResearchGroup/proxmark3/blob/master/README.md">官方的 README.md</a></li>
 </ol>
 <p>也有离线嗅探固件，我就不折腾了。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://raycn.pub/2021/08/21/reset-xiaomi-air-purifier-filters/">【PM3】重置小米空气净化器滤芯</a></li>
-<li><a target="_blank" rel="noopener" href="https://pm3.echo.cool/index.php/2018/08/21/pm3%E7%A6%BB%E7%BA%BF%E5%97%85%E6%8E%A2%E8%AF%B4%E6%98%8E/">PM3离线嗅探说明</a></li>
+<li><a href="https://raycn.pub/2021/08/21/reset-xiaomi-air-purifier-filters/">【PM3】重置小米空气净化器滤芯</a></li>
+<li><a href="https://pm3.echo.cool/index.php/2018/08/21/pm3%E7%A6%BB%E7%BA%BF%E5%97%85%E6%8E%A2%E8%AF%B4%E6%98%8E/">PM3离线嗅探说明</a></li>
 </ul>
 
     </article>
@@ -644,7 +644,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/04/23/nfc/">http://zhangguanzhang.github.io/2022/04/23/nfc/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/04/23/nfc/">April 23rd 2022, 2:28:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/04/23/nfc/">April 23rd 2022, 2:28:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

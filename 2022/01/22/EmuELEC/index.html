@@ -469,18 +469,18 @@
 
 <p>arcade、mame、neogeo capcom（这四个是街机）、nes、nds、gba、ps、psp、fc、sfc、很多平台的游戏。我个人是使用 N1 盒子，但是不推荐，很多那种宽带送的电视盒子也行，根据现在的讯息去看哪个合适。国内的话能讨论这方面的有以下几个平台：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.right.com.cn/forum/forum.php">恩山</a>，恩山是软路由为主，注意电视盒子板块去讨论</li>
-<li><a target="_blank" rel="noopener" href="https://www.emuelec.cn/">EmuELEC 中文网</a></li>
-<li><a target="_blank" rel="noopener" href="https://tieba.baidu.com/f?kw=emuelec&ie=utf-8">emuelec贴吧</a>，如果你 pc web 贴吧发帖让你下 app 端，你可以编辑好内容后 ctrl + 回车直接绕过这个限制发帖</li>
-<li><a target="_blank" rel="noopener" href="https://post.smzdm.com/">什么值得买</a>，该论坛的电视盒子版块也有人会讨论这个</li>
-<li><a target="_blank" rel="noopener" href="https://space.bilibili.com/97745521/video">b站的人中日月大佬</a>，他一般提供了整合包，业内也有名气</li>
+<li><a href="https://www.right.com.cn/forum/forum.php">恩山</a>，恩山是软路由为主，注意电视盒子板块去讨论</li>
+<li><a href="https://www.emuelec.cn/">EmuELEC 中文网</a></li>
+<li><a href="https://tieba.baidu.com/f?kw=emuelec&ie=utf-8">emuelec贴吧</a>，如果你 pc web 贴吧发帖让你下 app 端，你可以编辑好内容后 ctrl + 回车直接绕过这个限制发帖</li>
+<li><a href="https://post.smzdm.com/">什么值得买</a>，该论坛的电视盒子版块也有人会讨论这个</li>
+<li><a href="https://space.bilibili.com/97745521/video">b站的人中日月大佬</a>，他一般提供了整合包，业内也有名气</li>
 </ul>
 <h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>一般是两种:</p>
 <ul>
 <li>电视盒子解密(并不是所有盒子都能折腾这个)后，在盒子上安装 <code>Reboot to LibreELEC</code> 的 apk ，运行它从安卓电视系统切换到 U 盘启动，从而进入到游戏系统。</li>
 <li>你盒子本身支持从 U 盘启动，你 U 盘写入 EmuELEC 的 img 文件后插到盒子上开机即可。</li>
 </ul>
-<p>刷机软件推荐 <a target="_blank" rel="noopener" href="https://www.balena.io/etcher/">balenaEtcher</a>，建议下载 Portable 免安装的版本。EmuELEC 的镜像去搜你设备关键字+EmuELC 找。</p>
+<p>刷机软件推荐 <a href="https://www.balena.io/etcher/">balenaEtcher</a>，建议下载 Portable 免安装的版本。EmuELEC 的镜像去搜你设备关键字+EmuELC 找。</p>
 <p>初次打开需要设置手柄，手柄映射图<br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/picgo/xbox-set.png"><br><img src="https://raw.githubusercontent.com/zhangguanzhang/Image-Hosting/master/picgo/controller-360.png"></p>
 <h2 id="分区讲解"><a href="#分区讲解" class="headerlink" title="分区讲解"></a>分区讲解</h2><p>EmuELEC 的 img 刷到内存卡或者 U盘里后，windows 会弹出的让你是否格式化，记得点击否，一般是两个分区：</p>
 <ul>
@@ -488,7 +488,7 @@
 <li>ext4 的分区， windows 无法识别，单独存放游戏 roms 的分区。也是一些对外开放的配置引入。单独会被挂载成 <code>/storage</code> 目录</li>
 <li>EEROMS , 4.0 后开始新增的的分区，也就是之前的 <code>/storage/roms</code> 单独抽出来的一个单独分区，游戏都会存放在这里。</li>
 </ul>
-<p>前者是系统分区，一般升级的话升级这个就行了。添加游戏啥的可以在后者分区里按照平台添加，后者分区可以在 windows 上使用 <a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius</a> 打开。不过你刷好开机以及联网后，其实会自带一个 ssh 和 samba。都可以连上去操作，ssh 登录信息是 <code>root/emuelec</code>。 开机挂载 <code>/storage/roms</code> 的逻辑可以看脚本 <code>cat /usr/bin/mount_romfs.sh</code></p>
+<p>前者是系统分区，一般升级的话升级这个就行了。添加游戏啥的可以在后者分区里按照平台添加，后者分区可以在 windows 上使用 <a href="https://www.diskgenius.cn/">DiskGenius</a> 打开。不过你刷好开机以及联网后，其实会自带一个 ssh 和 samba。都可以连上去操作，ssh 登录信息是 <code>root/emuelec</code>。 开机挂载 <code>/storage/roms</code> 的逻辑可以看脚本 <code>cat /usr/bin/mount_romfs.sh</code></p>
 <h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">EmuELEC:~ # df -h</span><br><span class="line">Filesystem                Size      Used Available Use% Mounted on</span><br><span class="line">devtmpfs                791.1M      4.0K    791.1M   0% /dev</span><br><span class="line">/dev/sda1                 1.0G    694.4M    330.6M  68% /flash</span><br><span class="line">/dev/loop0              673.5M    673.5M         0 100% /</span><br><span class="line">/dev/sda2                26.1G     21.8G      4.3G  84% /storage</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /dev/shm</span><br><span class="line">tmpfs                   902.1M      9.2M    892.8M   1% /run</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /sys/fs/cgroup</span><br><span class="line">tmpfs                   902.1M      2.6M    899.5M   0% /var</span><br><span class="line">tmpfs                   902.1M         0    902.1M   0% /tmp</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/database</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/cores</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/joypads</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/shaders</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/overlays</span><br><span class="line">none                     26.1G     21.8G      4.3G  84% /tmp/assets</span><br></pre></td></tr></table></figure>
 
 <p>启动后, EMUELEC 分区被挂载为 <code>/flash</code>, STORAGE 分区被挂载为 <code>/storage</code>, system.img(也可能是那个 SYSTEM) 通过 <code>/dev/loop0</code> 被挂载为系统根目录 <code>/</code> 。所以, 用户能修改的仅仅是 <code>/flash</code> 和 <code>/storage</code> 目录下的内容<br>root用户的 home 目录被定位到 <code>/storage</code>, 如果需要添加登录后自动执行的命令(例如添加alias), 可以直接在 <code>/storage</code> 目录下新建 <code>.profile</code> 文件来实现。</p>
@@ -499,15 +499,15 @@
 <h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>下载源码进入 <code>make image</code>，专门平台就加变量编译，例如:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PROJECT=Amlogic-ce DEVICE=Amlogic-ng ARCH=aarch64 DISTRO=EmuELEC make image</span><br></pre></td></tr></table></figure>
 
-<p>例如贴吧也有人发自己编译的版本，但是这些比一般会锁 ssh，不让别人修改，当然你懂 Linux 的话可以 img 文件挂载了去改。网上也基本搜不到啥关于长篇大论讲编译的教程。建议还是先看官方的 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC">README.md</a> </p>
+<p>例如贴吧也有人发自己编译的版本，但是这些比一般会锁 ssh，不让别人修改，当然你懂 Linux 的话可以 img 文件挂载了去改。网上也基本搜不到啥关于长篇大论讲编译的教程。建议还是先看官方的 <a href="https://github.com/EmuELEC/EmuELEC">README.md</a> </p>
 <h2 id="使用问题"><a href="#使用问题" class="headerlink" title="使用问题"></a>使用问题</h2><h3 id="个别-HDMI-屏幕没声音"><a href="#个别-HDMI-屏幕没声音" class="headerlink" title="个别 HDMI 屏幕没声音"></a>个别 HDMI 屏幕没声音</h3><p>没声音的话尝试 EmuELEC setting – 音频 0,0 0,1 后重启试试。</p>
 <h3 id="延迟"><a href="#延迟" class="headerlink" title="延迟"></a>延迟</h3><p>有些人说是手柄问题，有线好于 &gt; 无线，某些牌子无线 &gt; 另外的无线。也有人说电视的原因。<br>我个人是在 ra 里设置 降低延迟的选项，打开以后参数设为 1 和 2都试了下，2好点，但是 2 可能比较吃配置，卡的话就试试 1</p>
-<h2 id="进阶玩法"><a href="#进阶玩法" class="headerlink" title="进阶玩法"></a>进阶玩法</h2><p><a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/wiki/bios">https://github.com/EmuELEC/EmuELEC/wiki/bios</a> bios存放路径</p>
+<h2 id="进阶玩法"><a href="#进阶玩法" class="headerlink" title="进阶玩法"></a>进阶玩法</h2><p><a href="https://github.com/EmuELEC/EmuELEC/wiki/bios">https://github.com/EmuELEC/EmuELEC/wiki/bios</a> bios存放路径</p>
 <h3 id="roms-网站"><a href="#roms-网站" class="headerlink" title="roms 网站"></a>roms 网站</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.oldmanemu.net/">老男人</a></li>
-<li><a target="_blank" rel="noopener" href="https://vimm.net/">vimm’s lair</a></li>
-<li><a target="_blank" rel="noopener" href="https://wowroms.com/en/all-roms">wowroms</a> 基本啥都有</li>
-<li><a target="_blank" rel="noopener" href="https://www.gamulator.com/roms">www.gamulator.com</a></li>
+<li><a href="https://www.oldmanemu.net/">老男人</a></li>
+<li><a href="https://vimm.net/">vimm’s lair</a></li>
+<li><a href="https://wowroms.com/en/all-roms">wowroms</a> 基本啥都有</li>
+<li><a href="https://www.gamulator.com/roms">www.gamulator.com</a></li>
 </ul>
 <h3 id="缩容和提取-roms"><a href="#缩容和提取-roms" class="headerlink" title="缩容和提取 roms"></a>缩容和提取 roms</h3><p>需要缩容是因为 img 里所有分区表大小加起来会超过 U 盘容量。</p>
 <h4 id="windows-缩容和提取-roms"><a href="#windows-缩容和提取-roms" class="headerlink" title="windows 缩容和提取 roms"></a>windows 缩容和提取 roms</h4><p>把 img 文件拖到 <code>DiskGenius</code> 里，然后删掉几个大游戏，特别 psp 里的。删掉后分区表大小并没变小，然后利用分区克隆工具，按照非 EEROMS 的分区在你 U 盘上创建后前面的分区，然后剩下分区给 EEROMS。格式化的时候记得每个分区的卷标名要设置上，<code>EMUELEC</code>、<code>STORAGE</code> 和 <code>EEROMS</code>。提取的话直接复制出来即可。</p>
@@ -546,7 +546,7 @@
 <p>然后新的 img 文件就可以直接刷 U 盘了。</p>
 <h3 id="外置-roms"><a href="#外置-roms" class="headerlink" title="外置 roms"></a>外置 roms</h3><p>也就是你可能一个 2G 或者 4G 的 U 盘刷纯净系统，然后游戏 roms 都存放在其他地方：</p>
 <ul>
-<li>其他存储介质，例如另一个 u 盘或者移动硬盘。不懂 Linux 的话可以格式化成 fat32，这样 windows 可以识别，分区里新建一个 roms 文件夹，然后 roms 里存放一个空白文件 <code>emuelecroms</code> ，roms 目录里存放各个目录即可。移动硬盘一般是 <code>exfat</code> 分区，linux 和 windows 都能识别。 samba 的话官方推荐使用 systemd mount 挂载，见 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/wiki/ROMS-on-CIFS-SAMBA-shares">sabma share</a></li>
+<li>其他存储介质，例如另一个 u 盘或者移动硬盘。不懂 Linux 的话可以格式化成 fat32，这样 windows 可以识别，分区里新建一个 roms 文件夹，然后 roms 里存放一个空白文件 <code>emuelecroms</code> ，roms 目录里存放各个目录即可。移动硬盘一般是 <code>exfat</code> 分区，linux 和 windows 都能识别。 samba 的话官方推荐使用 systemd mount 挂载，见 <a href="https://github.com/EmuELEC/EmuELEC/wiki/ROMS-on-CIFS-SAMBA-shares">sabma share</a></li>
 <li>网络存储，nas上分享成 samba，或者你自己电脑上开共享。</li>
 <li>阿里云盘 webdav 挂载，我自己研究出来的</li>
 </ul>
@@ -558,23 +558,23 @@
 <h4 id="webdav"><a href="#webdav" class="headerlink" title="webdav"></a>webdav</h4><p>阿里云盘 webdav 是我自己摸索出来的，因为有 aliyundrive-webdav 项目能把阿里云盘抽象成 webdav ，但是我 ssh 上去看了下我的固件里并不行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EmuELEC:~ # mount</span><br><span class="line">mount             mount.exfat       mount.exfat-fuse  mount.fuse        mount.ntfs        mountpoint</span><br></pre></td></tr></table></figure>
 
-<p>在官方 github 上 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/issues/793">提了 issue</a> 后，开发者告诉我 <code>installentware</code> 后能使用 opkg，我就整出来了。</p>
-<h5 id="aliyundrive-webdav"><a href="#aliyundrive-webdav" class="headerlink" title="aliyundrive-webdav"></a>aliyundrive-webdav</h5><p>先准备用大佬的 <a target="_blank" rel="noopener" href="https://github.com/messense/aliyundrive-webdav">messense&#x2F;aliyundrive-webdav</a> 把 阿里云盘 抽象成局域网的 webdav。有两种方案，一种是 openwrt 上，一种是非 openwrt 上，非 openwrt 上我是 Linux 跑 docker，windows 自己去 release 上下载 windows 的。Linux 的话 docker-compose 如下：</p>
+<p>在官方 github 上 <a href="https://github.com/EmuELEC/EmuELEC/issues/793">提了 issue</a> 后，开发者告诉我 <code>installentware</code> 后能使用 opkg，我就整出来了。</p>
+<h5 id="aliyundrive-webdav"><a href="#aliyundrive-webdav" class="headerlink" title="aliyundrive-webdav"></a>aliyundrive-webdav</h5><p>先准备用大佬的 <a href="https://github.com/messense/aliyundrive-webdav">messense&#x2F;aliyundrive-webdav</a> 把 阿里云盘 抽象成局域网的 webdav。有两种方案，一种是 openwrt 上，一种是非 openwrt 上，非 openwrt 上我是 Linux 跑 docker，windows 自己去 release 上下载 windows 的。Linux 的话 docker-compose 如下：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">aliyundrive-webdav:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">aliyundrive-webdav</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">host</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&#x27;REFRESH_TOKEN=xxxxxx&#x27;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">HOST=0.0.0.0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PORT=8080</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">WEBDAV_AUTH_USER=root</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">WEBDAV_AUTH_PASSWORD=root</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">messense/aliyundrive-webdav</span></span><br><span class="line">    <span class="attr">command:</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="string">/usr/bin/aliyundrive-webdav</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--auto-index</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--root=/person/life/Game/EmuELEC/roms</span> <span class="comment"># 阿里云盘上 roms 路径</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">--cache-ttl=10</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="挂载-webdav"><a href="#挂载-webdav" class="headerlink" title="挂载 webdav"></a>挂载 webdav</h5><p>实际上我研究出两种方案，一种是利用 rclone，一种是安装 davfs2 挂载</p>
-<h6 id="rclone"><a href="#rclone" class="headerlink" title="rclone"></a>rclone</h6><p>先ssh 上去 wget <a target="_blank" rel="noopener" href="https://github.com/rclone/rclone/releases">下载 linux-arm64.zip</a> 后，<code>unzip -x </code> 解压它后挂载：</p>
+<h6 id="rclone"><a href="#rclone" class="headerlink" title="rclone"></a>rclone</h6><p>先ssh 上去 wget <a href="https://github.com/rclone/rclone/releases">下载 linux-arm64.zip</a> 后，<code>unzip -x </code> 解压它后挂载：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加密密码</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;root&quot;</span> | ./rclone obscure -</span><br><span class="line"><span class="comment"># 挂载到当前 roms 目录</span></span><br><span class="line">./rclone mount :webdav: roms --webdav-url http://192.168.101.1:8080 --webdav-user root --webdav-pass DRggunKeWmBO8A9b9T2ZmkPFaR8 --cache-dir /tmp --allow-other --vfs-cache-mode writes --allow-non-empty</span><br></pre></td></tr></table></figure>
 
 <p>rclone webdav 文档：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://rclone.org/webdav/">https://rclone.org/webdav/</a></li>
-<li><a target="_blank" rel="noopener" href="https://rclone.org/commands/rclone_obscure/">https://rclone.org/commands/rclone_obscure/</a> # 为啥密码要加密</li>
+<li><a href="https://rclone.org/webdav/">https://rclone.org/webdav/</a></li>
+<li><a href="https://rclone.org/commands/rclone_obscure/">https://rclone.org/commands/rclone_obscure/</a> # 为啥密码要加密</li>
 </ul>
 <h6 id="mount-t-davfs"><a href="#mount-t-davfs" class="headerlink" title="mount -t davfs"></a>mount -t davfs</h6><p>先 ssh 上去</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行下面这个，一路yes 后重启</span></span><br><span class="line">installentware</span><br></pre></td></tr></table></figure>
 
-<p>然后你就能使用 opkg 了，安装下 <code>davfs2</code>，源在国外，不能安装就去上面的 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/EmuELEC/issues/793#issuecomment-1018214935">issue 里</a>看我安装时候的 url </p>
+<p>然后你就能使用 opkg 了，安装下 <code>davfs2</code>，源在国外，不能安装就去上面的 <a href="https://github.com/EmuELEC/EmuELEC/issues/793#issuecomment-1018214935">issue 里</a>看我安装时候的 url </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opkg install davfs2</span><br></pre></td></tr></table></figure>
 
 <p>当然这样是无法在 EmuELEC 里使用的，就像我提的 issue 里，需要修改几个地方：</p>
@@ -595,14 +595,14 @@
 <p>挂载完后进菜单刷新下游戏。</p>
 <p>关于 webdav 的一些文档:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://man.archlinux.org/man/mount.davfs.8.en">https://man.archlinux.org/man/mount.davfs.8.en</a></li>
+<li><a href="https://man.archlinux.org/man/mount.davfs.8.en">https://man.archlinux.org/man/mount.davfs.8.en</a></li>
 </ul>
 <p>后续可以参考 samba 写一个 systemd 的 mount</p>
 <h3 id="自制-roms"><a href="#自制-roms" class="headerlink" title="自制 roms"></a>自制 roms</h3><p>我这里是自己打包一个纯净的 N1 img 和网上其他 img 里的 ROMS 复制进去为主。</p>
 <p>N1 是个特殊存在，参照下面两个帖子：</p>
 <ul>
-<li>恩山 <a target="_blank" rel="noopener" href="https://www.right.com.cn/forum/thread-4090331-1-1.html">EmuELEC 4.2 自主安装</a>里的，</li>
-<li>贴吧 <a target="_blank" rel="noopener" href="https://tieba.baidu.com/p/7619382778?pn=1&p_tk=1322QifLqSShpTFmTFD890NZYhknA/BTlYv+JMFCYG1WaXS0J558KEir1sr/GhyhKoYcYhmNaHzkHIG4uN84DH58wemMHpNVngGfh7poXSCPq1KfAiXaTvOnRW+aIz8lXqSf&p_timestamp=1643350078&p_sign=37ee8f2d0a49b58124628a8003121082&p_signature=f28e253e43066beb6450b9130d8fe53d&__pc2ps_ab=1322QifLqSShpTFmTFD890NZYhknA/BTlYv+JMFCYG1WaXS0J558KEir1sr/GhyhKoYcYhmNaHzkHIG4uN84DH58wemMHpNVngGfh7poXSCPq1KfAiXaTvOnRW+aIz8lXqSf%7C1643350078%7Cf28e253e43066beb6450b9130d8fe53d%7C37ee8f2d0a49b58124628a8003121082&red_tag=0480290028&qq-pf-to=pcqq.group">N1可用的鬼灭之刃EmuELEC v4.3</a></li>
+<li>恩山 <a href="https://www.right.com.cn/forum/thread-4090331-1-1.html">EmuELEC 4.2 自主安装</a>里的，</li>
+<li>贴吧 <a href="https://tieba.baidu.com/p/7619382778?pn=1&p_tk=1322QifLqSShpTFmTFD890NZYhknA/BTlYv+JMFCYG1WaXS0J558KEir1sr/GhyhKoYcYhmNaHzkHIG4uN84DH58wemMHpNVngGfh7poXSCPq1KfAiXaTvOnRW+aIz8lXqSf&p_timestamp=1643350078&p_sign=37ee8f2d0a49b58124628a8003121082&p_signature=f28e253e43066beb6450b9130d8fe53d&__pc2ps_ab=1322QifLqSShpTFmTFD890NZYhknA/BTlYv+JMFCYG1WaXS0J558KEir1sr/GhyhKoYcYhmNaHzkHIG4uN84DH58wemMHpNVngGfh7poXSCPq1KfAiXaTvOnRW+aIz8lXqSf%7C1643350078%7Cf28e253e43066beb6450b9130d8fe53d%7C37ee8f2d0a49b58124628a8003121082&red_tag=0480290028&qq-pf-to=pcqq.group">N1可用的鬼灭之刃EmuELEC v4.3</a></li>
 </ul>
 <p>下载官方的 img 文件，然后 N1 的补丁文件我用在 4.3 的官方文件里去替换是可以的。对比了下我之前的人中日月的固件和官方 img 替换了 N1 补丁文件后，发现内核是一样的都是 <code>3.14.29</code>，说明人中日月打包也只是基础设置+游戏 roms 而已。<br>先官方的 img 文件刷到 U 盘里，然后 windows 上把补丁覆盖到第一个分区。然后插 N1 开机启动后设置如下：</p>
 <ul>
@@ -632,7 +632,7 @@
 <p>移除设备的话</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">remove AC:FD:93:CB:3E:BE</span><br></pre></td></tr></table></figure>
 
-<h4 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h4><p>去官方仓库找，例如 <a target="_blank" rel="noopener" href="https://github.com/EmuELEC/es-theme-alekfull-EmueELEC">EmuELEC&#x2F;es-theme-alekfull-EmueELEC</a>，进入下面目录下载后解压：</p>
+<h4 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h4><p>去官方仓库找，例如 <a href="https://github.com/EmuELEC/es-theme-alekfull-EmueELEC">EmuELEC&#x2F;es-theme-alekfull-EmueELEC</a>，进入下面目录下载后解压：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /storage/.config/emulationstation/themes</span><br><span class="line">wget https://github.com/EmuELEC/es-theme-alekfull-EmueELEC/archive/refs/heads/master.zip</span><br><span class="line">unzip -x master.zip &amp;&amp; rm -f master.zip</span><br><span class="line">mv es-theme-alekfull-EmueELEC-* es-theme-alekfull-EmueELEC</span><br></pre></td></tr></table></figure>
 
 <p>主题设置在 <code>/storage/.config/emulationstation/es_settings.cfg</code> 里的 <code>ThemeSet</code></p>
@@ -642,8 +642,8 @@
 <p>例如我要汉化 <code>DANGER ZONE</code> 这个菜单，按照下面步骤修改文件内容后发布：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /storage/.config/emuelec/configs/locale/zh_CN/LC_MESSAGES/</span><br><span class="line">vi emulationstation2.po</span><br><span class="line"># msgfmt 在包 gettext 里</span><br><span class="line">msgfmt -o emulationstation2.mo emulationstation2.po</span><br></pre></td></tr></table></figure>
 
-<h3 id="N1-补丁后开机-CoreELEC-图标解决"><a href="#N1-补丁后开机-CoreELEC-图标解决" class="headerlink" title="N1 补丁后开机 CoreELEC 图标解决"></a>N1 补丁后开机 CoreELEC 图标解决</h3><p>参照 <a target="_blank" rel="noopener" href="https://www.qishe.org/3774.html#">N1 启动原版 EmuELEC</a>:</p>
-<p>目前 N1跑 Emuelec 的办法都是替换补丁，补丁里的内核是从 CoreELEC 编译来的，所以启动时会显示 CoreELEC 的 logo，对于洁癖党来说不能忍受，而且一直用这个补丁内核的话，就不能随 EmuELEC 的更新而更新。哪有没有办法直接启动原版呢？答案是肯定的。首先得搞清楚为什么N1不能启动原版的原因。那是因为 EmuELEC 的内核打包成 Android boot image 格式，而 N1 的 uboot 却只支持未经压缩的内核，那我们只要想办法从 EmuELEC 的中解包出来未经压缩的内核和 initramfs 就可以了。<br>从新版的EmuELEC镜像中获取 kernel.img，然后下载 <a target="_blank" rel="noopener" href="http://whiteboard.ping.se/Android/Unmkbootimg">这个页面点那个 download 下载 unmkbootimg</a>，解压，在 linux 环境运行。</p>
+<h3 id="N1-补丁后开机-CoreELEC-图标解决"><a href="#N1-补丁后开机-CoreELEC-图标解决" class="headerlink" title="N1 补丁后开机 CoreELEC 图标解决"></a>N1 补丁后开机 CoreELEC 图标解决</h3><p>参照 <a href="https://www.qishe.org/3774.html#">N1 启动原版 EmuELEC</a>:</p>
+<p>目前 N1跑 Emuelec 的办法都是替换补丁，补丁里的内核是从 CoreELEC 编译来的，所以启动时会显示 CoreELEC 的 logo，对于洁癖党来说不能忍受，而且一直用这个补丁内核的话，就不能随 EmuELEC 的更新而更新。哪有没有办法直接启动原版呢？答案是肯定的。首先得搞清楚为什么N1不能启动原版的原因。那是因为 EmuELEC 的内核打包成 Android boot image 格式，而 N1 的 uboot 却只支持未经压缩的内核，那我们只要想办法从 EmuELEC 的中解包出来未经压缩的内核和 initramfs 就可以了。<br>从新版的EmuELEC镜像中获取 kernel.img，然后下载 <a href="http://whiteboard.ping.se/Android/Unmkbootimg">这个页面点那个 download 下载 unmkbootimg</a>，解压，在 linux 环境运行。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载 unmkbootimg</span></span><br><span class="line">wget http://whiteboard.ping.se/uploads/Android/unmkbootimg.gz</span><br><span class="line">gzip  -d unmkbootimg.gz</span><br><span class="line"><span class="built_in">chmod</span> a+x unmkbootimg</span><br><span class="line"></span><br><span class="line">./unmkbootimg kernel.img  </span><br><span class="line"><span class="comment"># 会得到类似以下的文件：</span></span><br><span class="line">initramfs.cpio.gz  </span><br><span class="line">zImage</span><br><span class="line"><span class="comment"># 同时记住输出里的  Kernel address</span></span><br><span class="line">To recompile this image, use:</span><br><span class="line">  mkbootimg --kernel zImage --ramdisk initramfs.cpio.gz ...</span><br></pre></td></tr></table></figure>
 
 <p>如果此时需要修改开机图片的话，可以执行下面操作，这个步骤是通用的</p>
@@ -653,7 +653,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># https://www.right.com.cn/forum/thread-6632323-1-1.html</span><br><span class="line"># 把 initramfs.cpio.gz 打包成 uInitrd。</span><br><span class="line">mkimage -A arm64 -O linux -T kernel -C none -d initramfs.cpio.gz uInitrd</span><br><span class="line"></span><br><span class="line">#这里得到的 kernel 就是未压缩的内核，把他改名成 kernel.img。</span><br><span class="line">lzop -d zImage -o kernel.img.new</span><br></pre></td></tr></table></figure>
 
 <p>大功告成，把 kernel.img 和 uInitrd 替换补丁里的同名文件，启动时就是用原版内核了</p>
-<h3 id="开机启动顺序"><a href="#开机启动顺序" class="headerlink" title="开机启动顺序"></a>开机启动顺序</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/michaelchain/article/details/119628601">https://blog.csdn.net/michaelchain/article/details/119628601</a> 参考这个，更多的不写进来了</p>
+<h3 id="开机启动顺序"><a href="#开机启动顺序" class="headerlink" title="开机启动顺序"></a>开机启动顺序</h3><p><a href="https://blog.csdn.net/michaelchain/article/details/119628601">https://blog.csdn.net/michaelchain/article/details/119628601</a> 参考这个，更多的不写进来了</p>
 <p>这个是在 uboot 中进行管理的, 可以通过 <code>fw_printenv</code> 命令进行查看:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">EmuELEC:~ # fw_printenv</span><br><span class="line">...</span><br><span class="line">baudrate=115200</span><br><span class="line">boot_count=0</span><br><span class="line">bootcmd=if test $&#123;bootfromnand&#125; = 1; then setenv bootfromnand 0; saveenv; else run bootfromsd; run bootfromusb; fi; run storeboot</span><br><span class="line">bootcount_check=echo bootcounts=$&#123;boot_count&#125;; if itest $&#123;boot_count&#125; == 0; then setenv boot_count 1;saveenv;else if itest $&#123;boot_count&#125; == 1; then setenv boot_count 2;saveenv;else if itest $&#123;boot_count&#125; == 2; then setenv boot_count 3;saveenv;else if itest $&#123;boot_count&#125; == 3; then setenv boot_count 4;saveenv;else if itest $&#123;boot_count&#125; == 4; then run recovery_from_flash;fi;fi;fi;fi;fi</span><br><span class="line">bootdelay=0</span><br><span class="line">bootfromnand=0</span><br><span class="line">bootfromsd=mmcinfo; if fatload mmc 0 $&#123;loadaddr&#125; kernel.img; then run sddtb; setenv bootargs $&#123;bootargs&#125; bootfromsd; bootm; fi</span><br><span class="line">bootfromusb=usb start 0; if fatload usb 0 $&#123;loadaddr&#125; kernel.img; then run usbdtb; setenv bootargs $&#123;bootargs&#125; bootfromusb; bootm; fi</span><br><span class="line">bootmode_check=get_rebootmode; echo reboot_mode=$&#123;reboot_mode&#125;;if test $&#123;reboot_mode&#125; = factory_reset; then defenv_reserv;setenv upgrade_step 2; save;fi;</span><br><span class="line">cmdline_keys=if keyman init 0x1234; then if sec_keyunify read mac $&#123;loadaddr&#125; str; then setenv bootargs $&#123;bootargs&#125; mac=$&#123;mac&#125; androidboot.mac=$&#123;mac&#125;;fi;fi;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
@@ -667,7 +667,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/01/22/EmuELEC/">http://zhangguanzhang.github.io/2022/01/22/EmuELEC/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/01/22/EmuELEC/">January 22nd 2022, 2:28:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/01/22/EmuELEC/">January 22nd 2022, 2:28:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

@@ -503,8 +503,8 @@
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test2</span></span><br><span class="line">  <span class="attr">shell:</span> <span class="string">|</span></span><br><span class="line"><span class="string"> su -c &#x27;docker login &#123;&#123; REGISTRY_DOMAIN &#125;&#125;:&#123;&#123; REGISTRY_PORT &#125;&#125; -u xxx -p xxx&#x27; ansible_ssh_user</span></span><br><span class="line"><span class="string">  when: </span></span><br><span class="line"><span class="string">    # if use ansible_connection=local, the var ansible_ssh_user will not defined</span></span><br><span class="line"><span class="string">    - ansible_ssh_user is defined</span></span><br><span class="line"><span class="string">    - ansible_ssh_user != &#x27;root&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.ansible.com/ansible/2.6/modules/meta_module.html">https://docs.ansible.com/ansible/2.6/modules/meta_module.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://serverfault.com/questions/930804/force-ansible-to-log-off-to-refresh-user-groups/1095626">https://serverfault.com/questions/930804/force-ansible-to-log-off-to-refresh-user-groups/1095626</a></li>
+<li><a href="https://docs.ansible.com/ansible/2.6/modules/meta_module.html">https://docs.ansible.com/ansible/2.6/modules/meta_module.html</a></li>
+<li><a href="https://serverfault.com/questions/930804/force-ansible-to-log-off-to-refresh-user-groups/1095626">https://serverfault.com/questions/930804/force-ansible-to-log-off-to-refresh-user-groups/1095626</a></li>
 </ul>
 
     </article>
@@ -514,7 +514,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2020/11/23/ansible-reload-user/">http://zhangguanzhang.github.io/2020/11/23/ansible-reload-user/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2020/11/23/ansible-reload-user/">November 23rd 2020, 8:42:08 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2020/11/23/ansible-reload-user/">November 23rd 2020, 8:42:08 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

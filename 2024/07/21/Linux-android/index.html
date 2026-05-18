@@ -463,16 +463,16 @@
 <span id="more"></span>
 
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>长期记录和更新关于安卓和 Linux 的一些折腾笔记，没有 Linux 和刷机基础的不要看了。</p>
-<h2 id="adb"><a href="#adb" class="headerlink" title="adb"></a>adb</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a target="_blank" rel="noopener" href="https://developer.android.com/tools/releases/platform-tools?hl=zh-cn">platform-tools</a></p>
+<h2 id="adb"><a href="#adb" class="headerlink" title="adb"></a>adb</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a href="https://developer.android.com/tools/releases/platform-tools?hl=zh-cn">platform-tools</a></p>
 <h3 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h3><p><img src="https://raw.githubusercontent.com/Swind/pure-python-adb/master/docs/adb_cli.png" alt="adb-pic"></p>
 <p>小米系列手机开 adb 需要登录账号和插入 sim 卡，然后 Linux 和软路由上也可以安装 adb（打通网络后可以做很多事情），不要局限在看到的物体思维上。开了 usb adb 后插入电脑上：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看设备</span></span><br><span class="line">adb devices</span><br><span class="line"></span><br><span class="line"><span class="comment"># 让设备 adb server 以 5555 方式运行，而非使用 usb</span></span><br><span class="line">adb tcpip 5555</span><br><span class="line"></span><br><span class="line"><span class="comment"># tcp 连接</span></span><br><span class="line">adb connect &lt;ip&gt;:5555</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不带设备名就是关闭所有连接</span></span><br><span class="line">adb disconnect [xxx]</span><br><span class="line"></span><br><span class="line"><span class="comment"># adb 执行任何命令的时候，如果 server 服务没有启动就会启动</span></span><br><span class="line"><span class="comment"># 此命令是杀掉 server 进程，Linux 和 win 都有 server 服务</span></span><br><span class="line"><span class="comment"># daemon 是运行在手机上的，server 管理 client 和 daemon 之间的通信</span></span><br><span class="line">adb kill-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问本机 8888 端口转发到设备的 8080 端口</span></span><br><span class="line">adb forward tcp:8888 tcp:8080</span><br></pre></td></tr></table></figure>
 
-<p>更多见文档 <a target="_blank" rel="noopener" href="https://developer.android.google.cn/tools/adb?hl=zh-cn">tools&#x2F;adb</a></p>
+<p>更多见文档 <a href="https://developer.android.google.cn/tools/adb?hl=zh-cn">tools&#x2F;adb</a></p>
 <h3 id="adb-shell"><a href="#adb-shell" class="headerlink" title="adb shell"></a>adb shell</h3><p>一些 adb shell 命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ adb shell dumpsys battery</span><br><span class="line">Current Battery Service state:</span><br><span class="line">  AC powered: <span class="literal">true</span>  &lt;-- 接入充电器</span><br><span class="line">  USB powered: <span class="literal">false</span></span><br><span class="line">  Wireless powered: <span class="literal">false</span></span><br><span class="line">  Max charging current: 0</span><br><span class="line">  Max charging voltage: 0</span><br><span class="line">  Charge counter: 2946000</span><br><span class="line">  status: 5</span><br><span class="line">  health: 2</span><br><span class="line">  present: <span class="literal">true</span></span><br><span class="line">  level: 100    &lt;--- 当前电量百分比</span><br><span class="line">  scale: 100</span><br><span class="line">  voltage: 4262  &lt;-- 电压</span><br><span class="line">  temperature: 426 &lt;-- 温度 42.6 ℃</span><br><span class="line">  technology: Li-poly</span><br><span class="line"><span class="comment"># 开启屏幕分析指针</span></span><br><span class="line">adb shell settings put system pointer_location 1</span><br><span class="line"><span class="comment"># 坐标是坐上0,0 左到右是 X 上到下是 Y，下面是横屏点屏幕上一个按钮的坐标</span></span><br><span class="line">adb shell input tap 1580 930</span><br><span class="line"><span class="comment"># 获取事件，sendevent 模拟比较麻烦</span></span><br><span class="line">adb shell getevent -l</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>更多查看 <a target="_blank" rel="noopener" href="https://adbinstaller.com/commands%EF%BC%8C%E5%8F%A6%E5%A4%96">https://adbinstaller.com/commands，另外</a> git bash 里拉取推送文件路径拼接符号不一样，可以 env 下面这样：</p>
+<p>更多查看 <a href="https://adbinstaller.com/commands%EF%BC%8C%E5%8F%A6%E5%A4%96">https://adbinstaller.com/commands，另外</a> git bash 里拉取推送文件路径拼接符号不一样，可以 env 下面这样：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSYS_NO_PATHCONV=1 adb -s xxx pull /storage/emulated/0/Android/data/xxx .</span><br></pre></td></tr></table></figure>
 
 <h3 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h3><p>打算把 adb 启动在 Linux 上，发现它 daemon 监听端口不是 bind 0.0.0.0：</p>
@@ -480,34 +480,34 @@
 
 <p>然后搜了下没有好的解决办法，有人去 hack 源码的，上面这个命令是大佬发的，只能前台运行，可以配合 screen 或者 systemd 啥的常驻。</p>
 <h2 id="安卓虚拟化"><a href="#安卓虚拟化" class="headerlink" title="安卓虚拟化"></a>安卓虚拟化</h2><p>x86_64 机器上折腾的一些安卓虚拟化笔记，如果要在 x86_64 的安卓和安卓虚拟机或者容器内安装运行 arm64 的 apk ，需要带有 <code>Native Bridge</code>。</p>
-<h3 id="Bliss-OS"><a href="#Bliss-OS" class="headerlink" title="Bliss OS"></a>Bliss OS</h3><p>一个 x86_64 安卓系统，相对于 <a target="_blank" rel="noopener" href="https://www.android-x86.org/">android-x86</a> 似乎更新频繁，可以 pve 之类虚拟化导入安装，但是有些版本没带还是把 <code>Native Bridge</code> 删了。</p>
-<h3 id="Waydroid"><a href="#Waydroid" class="headerlink" title="Waydroid"></a>Waydroid</h3><p>anbox 后继 <a target="_blank" rel="noopener" href="https://waydro.id/">Waydroid</a> 还没试过，是容器起的模拟器。</p>
-<h3 id="budtmo-docker-android"><a href="#budtmo-docker-android" class="headerlink" title="budtmo&#x2F;docker-android"></a>budtmo&#x2F;docker-android</h3><p><a target="_blank" rel="noopener" href="https://github.com/budtmo/docker-android">https://github.com/budtmo/docker-android</a> 感觉太重了，而且没 arm64 架构镜像。</p>
-<h3 id="remote-android-redroid-doc"><a href="#remote-android-redroid-doc" class="headerlink" title="remote-android&#x2F;redroid-doc"></a>remote-android&#x2F;redroid-doc</h3><p><a target="_blank" rel="noopener" href="https://github.com/remote-android/redroid-doc">https://github.com/remote-android/redroid-doc</a> 尝试运行 arm64 的 apk 成功了，chrome 的浏览器不行，需要有些依赖才可以运行，uc 浏览器也不行，最后用的  arm64 firefox 浏览器。另外发现有些 apk 安装后打开黑屏，最后从 proxmox 虚拟机切到宿主机上 docker 起才解决，也看到有人 arm64 M1 mac 上起安卓容器。</p>
+<h3 id="Bliss-OS"><a href="#Bliss-OS" class="headerlink" title="Bliss OS"></a>Bliss OS</h3><p>一个 x86_64 安卓系统，相对于 <a href="https://www.android-x86.org/">android-x86</a> 似乎更新频繁，可以 pve 之类虚拟化导入安装，但是有些版本没带还是把 <code>Native Bridge</code> 删了。</p>
+<h3 id="Waydroid"><a href="#Waydroid" class="headerlink" title="Waydroid"></a>Waydroid</h3><p>anbox 后继 <a href="https://waydro.id/">Waydroid</a> 还没试过，是容器起的模拟器。</p>
+<h3 id="budtmo-docker-android"><a href="#budtmo-docker-android" class="headerlink" title="budtmo&#x2F;docker-android"></a>budtmo&#x2F;docker-android</h3><p><a href="https://github.com/budtmo/docker-android">https://github.com/budtmo/docker-android</a> 感觉太重了，而且没 arm64 架构镜像。</p>
+<h3 id="remote-android-redroid-doc"><a href="#remote-android-redroid-doc" class="headerlink" title="remote-android&#x2F;redroid-doc"></a>remote-android&#x2F;redroid-doc</h3><p><a href="https://github.com/remote-android/redroid-doc">https://github.com/remote-android/redroid-doc</a> 尝试运行 arm64 的 apk 成功了，chrome 的浏览器不行，需要有些依赖才可以运行，uc 浏览器也不行，最后用的  arm64 firefox 浏览器。另外发现有些 apk 安装后打开黑屏，最后从 proxmox 虚拟机切到宿主机上 docker 起才解决，也看到有人 arm64 M1 mac 上起安卓容器。</p>
 <h2 id="一些软件"><a href="#一些软件" class="headerlink" title="一些软件"></a>一些软件</h2><p>一些软件相关</p>
 <h3 id="备份恢复"><a href="#备份恢复" class="headerlink" title="备份恢复"></a>备份恢复</h3><h4 id="谷歌身份验证器"><a href="#谷歌身份验证器" class="headerlink" title="谷歌身份验证器"></a>谷歌身份验证器</h4><p><code>/data/data/com.google.android.apps.authenticator2/databases/databases</code> 备份导入到新手机上覆盖</p>
-<h3 id="scrcpy"><a href="#scrcpy" class="headerlink" title="scrcpy"></a>scrcpy</h3><p><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a> 牛逼的项目，不用多说，配合 adb 使用：</p>
+<h3 id="scrcpy"><a href="#scrcpy" class="headerlink" title="scrcpy"></a>scrcpy</h3><p><a href="https://github.com/Genymobile/scrcpy">https://github.com/Genymobile/scrcpy</a> 牛逼的项目，不用多说，配合 adb 使用：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scrcpy</span><br><span class="line"> -S, --turn-screen-off # 远程时候，关闭设备的屏幕</span><br><span class="line">#  --max-size 1024 --video-bit-rate=2M --max-fps=15 低画质</span><br></pre></td></tr></table></figure>
 
 <p>关闭屏幕这个，lcd 的触发后，如果关闭 scrcpy 后面屏幕还会亮，而 oled 的则不会，单独想 adb 实现它的关闭屏幕显示而不休眠，可以参考</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://meta.appinn.net/t/topic/46361">https://meta.appinn.net/t/topic/46361</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Genymobile/scrcpy/issues/2888">https://github.com/Genymobile/scrcpy/issues/2888</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/barry-ran/QtScrcpy/issues/194">https://github.com/barry-ran/QtScrcpy/issues/194</a></li>
+<li><a href="https://meta.appinn.net/t/topic/46361">https://meta.appinn.net/t/topic/46361</a></li>
+<li><a href="https://github.com/Genymobile/scrcpy/issues/2888">https://github.com/Genymobile/scrcpy/issues/2888</a></li>
+<li><a href="https://github.com/barry-ran/QtScrcpy/issues/194">https://github.com/barry-ran/QtScrcpy/issues/194</a></li>
 </ul>
 <p>还有其他很多 scrcpy 项目，以及可以很多编程语言有 scrcpy 的库，可以做到写代码控制手机和上面的应用。</p>
 <h2 id="adb-协议"><a href="#adb-协议" class="headerlink" title="adb 协议"></a>adb 协议</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/cstyan/adbDocumentation">https://github.com/cstyan/adbDocumentation</a></li>
+<li><a href="https://github.com/cstyan/adbDocumentation">https://github.com/cstyan/adbDocumentation</a></li>
 </ul>
 <h3 id="golang"><a href="#golang" class="headerlink" title="golang"></a>golang</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/electricbubble/gadb">https://github.com/electricbubble/gadb</a></li>
+<li><a href="https://github.com/electricbubble/gadb">https://github.com/electricbubble/gadb</a></li>
 </ul>
 <h2 id="逆向"><a href="#逆向" class="headerlink" title="逆向"></a>逆向</h2><h3 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-408645-1-1.html">https://www.52pojie.cn/thread-408645-1-1.html</a></li>
+<li><a href="https://www.52pojie.cn/thread-408645-1-1.html">https://www.52pojie.cn/thread-408645-1-1.html</a></li>
 </ul>
 <h3 id="常见逆向"><a href="#常见逆向" class="headerlink" title="常见逆向"></a>常见逆向</h3><ul>
 <li>frida objection</li>
-<li><a target="_blank" rel="noopener" href="https://kuizuo.cn/docs/frida-so-hook/">https://kuizuo.cn/docs/frida-so-hook/</a></li>
+<li><a href="https://kuizuo.cn/docs/frida-so-hook/">https://kuizuo.cn/docs/frida-so-hook/</a></li>
 </ul>
 <h3 id="frida"><a href="#frida" class="headerlink" title="frida"></a>frida</h3><p>spwan</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-U usb， -f 是Attach模式，不带-f是Spawn 模式，前者会启动app注入，后者是自己选择啥时候注入</span></span><br><span class="line">frida -U -f &lt;app_name&gt; -l hook.js</span><br></pre></td></tr></table></figure>
@@ -515,29 +515,29 @@
 <p>js 的话，hook 内容如下类似：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setImmediate</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Java</span>.<span class="title function_">perform</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> <span class="title class_">MainActivity</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;com.example.MainActivity&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Hook Java 方法</span></span><br><span class="line">        <span class="title class_">MainActivity</span>.<span class="property">foo</span>.<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">str</span>) &#123;</span><br><span class="line">            <span class="comment">// 调用方法</span></span><br><span class="line">            <span class="keyword">var</span> ret = <span class="variable language_">this</span>.<span class="title function_">foo</span>(str);</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Return value:&#x27;</span>, ret);</span><br><span class="line">            <span class="comment">// 返回</span></span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>过检测 frida <a target="_blank" rel="noopener" href="https://github.com/Ylarod/Florida">Ylarod&#x2F;Florida</a></p>
+<p>过检测 frida <a href="https://github.com/Ylarod/Florida">Ylarod&#x2F;Florida</a></p>
 <p>抓包:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/siyujie/OkHttpLogger-Frida">https://github.com/siyujie/OkHttpLogger-Frida</a></li>
+<li><a href="https://github.com/siyujie/OkHttpLogger-Frida">https://github.com/siyujie/OkHttpLogger-Frida</a></li>
 </ul>
 <h3 id="unit-游戏逆向"><a href="#unit-游戏逆向" class="headerlink" title="unit 游戏逆向"></a>unit 游戏逆向</h3><p><code>libs/{libil2cpp,libmain,libunity,libxlua}.so</code></p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://veo.pub/2020/xlua/">https://veo.pub/2020/xlua/</a></li>
-<li><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-257678.htm">https://bbs.kanxue.com/thread-257678.htm</a> </li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/linxinfa/article/details/116572369">https://blog.csdn.net/linxinfa/article/details/116572369</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vfsfitvnm/frida-il2cpp-bridge">https://github.com/vfsfitvnm/frida-il2cpp-bridge</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/MlgmXyysd/IL2CppMemoryDumper">https://github.com/MlgmXyysd/IL2CppMemoryDumper</a></li>
+<li><a href="https://veo.pub/2020/xlua/">https://veo.pub/2020/xlua/</a></li>
+<li><a href="https://bbs.kanxue.com/thread-257678.htm">https://bbs.kanxue.com/thread-257678.htm</a> </li>
+<li><a href="https://blog.csdn.net/linxinfa/article/details/116572369">https://blog.csdn.net/linxinfa/article/details/116572369</a></li>
+<li><a href="https://github.com/vfsfitvnm/frida-il2cpp-bridge">https://github.com/vfsfitvnm/frida-il2cpp-bridge</a></li>
+<li><a href="https://github.com/MlgmXyysd/IL2CppMemoryDumper">https://github.com/MlgmXyysd/IL2CppMemoryDumper</a></li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://bbs.kanxue.com/thread-280500.htm</span></span><br><span class="line">npm install frida-compile</span><br><span class="line">npm install --save-dev frida-il2cpp-bridge</span><br><span class="line">npm run watch</span><br><span class="line"></span><br><span class="line">frida -f xxx -l hook.js</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/dnSpyEx/dnSpy">https://github.com/dnSpyEx/dnSpy</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=NBjGm7YAZUQ">https://www.youtube.com/watch?v=NBjGm7YAZUQ</a></li>
+<li><a href="https://github.com/dnSpyEx/dnSpy">https://github.com/dnSpyEx/dnSpy</a></li>
+<li><a href="https://www.youtube.com/watch?v=NBjGm7YAZUQ">https://www.youtube.com/watch?v=NBjGm7YAZUQ</a></li>
 </ul>
 <h3 id="辅助逆向"><a href="#辅助逆向" class="headerlink" title="辅助逆向"></a>辅助逆向</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_56039202/article/details/126980383">某直装外挂卡密校验逆向分析</a></li>
+<li><a href="https://blog.csdn.net/weixin_56039202/article/details/126980383">某直装外挂卡密校验逆向分析</a></li>
 </ul>
-<h2 id="刷机和-ROOT"><a href="#刷机和-ROOT" class="headerlink" title="刷机和 ROOT"></a>刷机和 ROOT</h2><h3 id="一加13T"><a href="#一加13T" class="headerlink" title="一加13T"></a>一加13T</h3><p>参考<a target="_blank" rel="noopener" href="https://blog.isteed.cc/post/oneplus-13-root-guide/">一加 13 解锁并获得 root 权限</a>，使用 kernel SU 举例，从 <a target="_blank" rel="noopener" href="https://developer.android.google.cn/studio/run/win-usb?hl=zh-cn">Android 开发者（国内）</a> 下载 USB 驱动 <code>android_winusb.inf</code>，但很搞笑的是，Android 开发者（国内）的下载链接 404，应该是谷歌哪边没传上去。</p>
+<h2 id="刷机和-ROOT"><a href="#刷机和-ROOT" class="headerlink" title="刷机和 ROOT"></a>刷机和 ROOT</h2><h3 id="一加13T"><a href="#一加13T" class="headerlink" title="一加13T"></a>一加13T</h3><p>参考<a href="https://blog.isteed.cc/post/oneplus-13-root-guide/">一加 13 解锁并获得 root 权限</a>，使用 kernel SU 举例，从 <a href="https://developer.android.google.cn/studio/run/win-usb?hl=zh-cn">Android 开发者（国内）</a> 下载 USB 驱动 <code>android_winusb.inf</code>，但很搞笑的是，Android 开发者（国内）的下载链接 404，应该是谷歌哪边没传上去。</p>
 <h4 id="解锁"><a href="#解锁" class="headerlink" title="解锁"></a>解锁</h4><ol>
 <li>手机在 <code>设置</code> - <code>关于本机</code> - <code>版本信息</code> 中狂点 版本号 7 次，直到进入开发者模式，同时记下 内核版本，保存到手机以外的地方。</li>
 <li>手机在 <code>设置</code> - <code>系统与更新</code> - <code>开发者选项</code> 中开启 <code>OEM 解锁</code> 与 <code>USB 调试</code>，使用优质线连电脑，否则后面步骤不成功啥的</li>
@@ -546,24 +546,24 @@
 <li>根据提示按下音量减选择 <code>UNLOCK THE BOOTLOADER</code>，再按电源键确认解锁，此刻会重启并类似恢复出厂设置一样清掉数据。</li>
 </ol>
 <h4 id="kernel-SU"><a href="#kernel-SU" class="headerlink" title="kernel SU"></a>kernel SU</h4><p>kernel SU 分为 LKM 和 GKI 模式，由于一加13T 内核开源且一加手机安卓版本号高，以及酷安有人编译内核，所以可以使用 GKI 模式。kernel SU 和面具 root 优点类似，使用 kernel SU 的管机器 app 修补 boot&#x2F;init_boot 后安装，再刷入 GKI 内核。</p>
-<p>kernel SU 的管理器 APP 我使用的是 <a target="_blank" rel="noopener" href="https://github.com/SukiSU-Ultra/SukiSU-Ultra/releases">SukiSU-Ultra</a>，下载安装到手机上。</p>
+<p>kernel SU 的管理器 APP 我使用的是 <a href="https://github.com/SukiSU-Ultra/SukiSU-Ultra/releases">SukiSU-Ultra</a>，下载安装到手机上。</p>
 <h4 id="修补和刷入-init-boot"><a href="#修补和刷入-init-boot" class="headerlink" title="修补和刷入 init_boot"></a>修补和刷入 init_boot</h4><p>安卓 13+ 后是修补 init_boot 不再是 boot 了，从之前记录的内核版本下载手机系统对应的 ROM，我这里是微信公众号 <code>one+更新</code> 获取，下载后使用 <code>FastbootEnhance</code> 的 <code>Payload.bin 解包</code>从 ROM 提取 <code>init_boot.img</code>。提取后传到手机的 <code>Download</code> 内，打开 <code>SukiSU-Ultra</code> 上面内核版本上面可以点击，进去后 <code>LKM 修补/安装</code> 修补 <code>Download</code> 内的 <code>init_boot.img</code>，会在 Download 内生成 <code>kernelsu_patched_20250901_155148.img</code> 类似文件。该文件传到电脑上，手机连电脑：</p>
 <p>手机开机同时按爪 电源键+音量减键进入 <code>fastboot</code> 模式后刷入</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastboot flash init_boot kernelsu_patched_20250901_155148.img</span><br></pre></td></tr></table></figure>
 
 <p>刷入手机后如果重启不了一般是下错 ROM 了，或者像我一样使用老的 <code>fastboot flash boot</code> 方式刷入了 init_boot 造成（后面 flash boot 和 flash init_boot 俩都刷才好）。</p>
-<h4 id="ak3"><a href="#ak3" class="headerlink" title="ak3"></a>ak3</h4><p>上面修补 init_boot 刷入后是 LKM 模式，要刷入 GKI 的 anykernel3 才是 GKI 模式，我是使用酷安的古晨，可以 <a target="_blank" rel="noopener" href="https://github.com/schqiushui/oplus-kernel-zip-files/releases">他 github 下载</a>，下载后打开 <code>SukiSU-Ultra</code> 上 <code>刷写 AnyKernel3</code> 选择下载的，刷入完成后重启。打开 <code>SukiSU-Ultra</code> 上面的菜单 - 基本设置 - 下拉 开启 开机自启动。</p>
+<h4 id="ak3"><a href="#ak3" class="headerlink" title="ak3"></a>ak3</h4><p>上面修补 init_boot 刷入后是 LKM 模式，要刷入 GKI 的 anykernel3 才是 GKI 模式，我是使用酷安的古晨，可以 <a href="https://github.com/schqiushui/oplus-kernel-zip-files/releases">他 github 下载</a>，下载后打开 <code>SukiSU-Ultra</code> 上 <code>刷写 AnyKernel3</code> 选择下载的，刷入完成后重启。打开 <code>SukiSU-Ultra</code> 上面的菜单 - 基本设置 - 下拉 开启 开机自启动。</p>
 <h3 id="救砖经历"><a href="#救砖经历" class="headerlink" title="救砖经历"></a>救砖经历</h3><p>SukiSU-Ultra 管理器从3 升级到 4 版本有 break change，然后重启后一直重启，然后再刷 patch 后的 init_boot.img 还是不行，感觉必须卸载掉模块，ksu 和 SukiSU-Ultra 开机过程中按音量下按键连按三次可以屏蔽模块，试了下不行，于是先刷回 init_boot.img 再临时 boot 能开机了：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">fastboot flash init_boot init_boot.img</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">fastboot boot boot.img</span></span><br></pre></td></tr></table></figure>
 
-<p>但是这样临时开机后是没 root 的，无法卸载掉模块，然后刷了第三方 rec <a target="_blank" rel="noopener" href="https://github.com/kmiit/twrp_device_oplus_sm87xx">https://github.com/kmiit/twrp_device_oplus_sm87xx</a> :</p>
+<p>但是这样临时开机后是没 root 的，无法卸载掉模块，然后刷了第三方 rec <a href="https://github.com/kmiit/twrp_device_oplus_sm87xx">https://github.com/kmiit/twrp_device_oplus_sm87xx</a> :</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">有 ab 槽，这里偷懒没接着 recovery_b 了</span></span><br><span class="line">fastboot flash recovery_a TWRP-3.7.1-16-sm87xx-2025-12-26.img</span><br></pre></td></tr></table></figure>
 
 <p>进 rec 里给 <code>/data/adb/modules/</code> 目录删了后能开机了，记得后续每次使用 rec 后开机要删掉 <code>/sdcard/TWRP</code> 文件夹避免检测。</p>
 <p>再升级下 ak3 和安装下模块恢复。</p>
-<h4 id="模块相关"><a href="#模块相关" class="headerlink" title="模块相关"></a>模块相关</h4><p><a target="_blank" rel="noopener" href="https://github.com/Dr-TSNG/ZygiskNext">https://github.com/Dr-TSNG/ZygiskNext</a><br><a target="_blank" rel="noopener" href="https://github.com/JingMatrix/LSPosed">https://github.com/JingMatrix/LSPosed</a> 安装后重启，点击它下面的启动后 momo 检测里显示的 bootloader 未锁定无了<br>TEE 损坏 <a target="_blank" rel="noopener" href="https://github.com/5ec1cff/TrickyStore">https://github.com/5ec1cff/TrickyStore</a><br>此模块给上面模块增加管理页面 <a target="_blank" rel="noopener" href="https://github.com/KOWX712/Tricky-Addon-Update-Target-List/releases">https://github.com/KOWX712/Tricky-Addon-Update-Target-List/releases</a><br>TrickyStore  其他的几个开源的貌似不稳定，如果不打游戏可以尝试下 <a target="_blank" rel="noopener" href="https://github.com/beakthoven/TrickyStoreOSS">https://github.com/beakthoven/TrickyStoreOSS</a></p>
+<h4 id="模块相关"><a href="#模块相关" class="headerlink" title="模块相关"></a>模块相关</h4><p><a href="https://github.com/Dr-TSNG/ZygiskNext">https://github.com/Dr-TSNG/ZygiskNext</a><br><a href="https://github.com/JingMatrix/LSPosed">https://github.com/JingMatrix/LSPosed</a> 安装后重启，点击它下面的启动后 momo 检测里显示的 bootloader 未锁定无了<br>TEE 损坏 <a href="https://github.com/5ec1cff/TrickyStore">https://github.com/5ec1cff/TrickyStore</a><br>此模块给上面模块增加管理页面 <a href="https://github.com/KOWX712/Tricky-Addon-Update-Target-List/releases">https://github.com/KOWX712/Tricky-Addon-Update-Target-List/releases</a><br>TrickyStore  其他的几个开源的貌似不稳定，如果不打游戏可以尝试下 <a href="https://github.com/beakthoven/TrickyStoreOSS">https://github.com/beakthoven/TrickyStoreOSS</a></p>
 <p>TEE key 查看 <code>*#899#</code> - <code>手动测试</code> - <code>工程模式</code> - <code>其他 key</code></p>
-<h4 id="广告关闭和禁用内置-app"><a href="#广告关闭和禁用内置-app" class="headerlink" title="广告关闭和禁用内置 app"></a>广告关闭和禁用内置 app</h4><p>很多界面进去关闭，参照视频 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1fw7tziE1M/">https://www.bilibili.com/video/BV1fw7tziE1M/</a></p>
+<h4 id="广告关闭和禁用内置-app"><a href="#广告关闭和禁用内置-app" class="headerlink" title="广告关闭和禁用内置 app"></a>广告关闭和禁用内置 app</h4><p>很多界面进去关闭，参照视频 <a href="https://www.bilibili.com/video/BV1fw7tziE1M/">https://www.bilibili.com/video/BV1fw7tziE1M/</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">儿童模式</span></span><br><span class="line">pm uninstall --user 0 com.coloros.childrenspace</span><br><span class="line"></span><br><span class="line">pm uninstall --user 0 com.coloros.familyguard</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">数字健康与家人守护</span></span><br><span class="line">pm uninstall --user 0 com.coloros.digitalwellbeing</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">音乐</span></span><br><span class="line">pm uninstall --user 0 com.heytap.music</span><br><span class="line"></span><br><span class="line">adb shell pm disable-user com.oplus.sau</span><br><span class="line">adb shell pm disable-user com.oplus.ota</span><br></pre></td></tr></table></figure>
 
 <h4 id="一些其他相关"><a href="#一些其他相关" class="headerlink" title="一些其他相关"></a>一些其他相关</h4><p>ksu 后需要授权 <code>com.android.shell</code> 才能 adb shell 里 su</p>
@@ -575,7 +575,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/07/21/Linux-android/">http://zhangguanzhang.github.io/2024/07/21/Linux-android/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/07/21/Linux-android/">July 21st 2024, 8:10:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/07/21/Linux-android/">July 21st 2024, 8:10:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

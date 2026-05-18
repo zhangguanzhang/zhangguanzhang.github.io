@@ -462,8 +462,8 @@
         <p>不依赖 go ，最小二进制把 pprof 转 svg 的探索</p>
 <span id="more"></span>
 
-<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>内部同事做了个采集业务 pprof 的功能，发现工具镜像非常臃肿，带了个 golang 出去。用的是 <a target="_blank" rel="noopener" href="https://github.com/uber-archive/go-torch">go-torch</a> 把 <code>curl -o /debug/pprof/profile</code> 采集的文件转成 svg ，转换的日志里发现它命令行调用了 <code>go tool pprof</code>，而且 <code>go-torch</code> 我看仓库已经不维护了。</p>
-<h2 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h2><p>一个是涉及到迭代解决安全，另一个 golang 已经 go 自举了，把 <code>go tool pprof</code> 的 <code>pprof</code> 命令抠出来直接用就行了，甚至都不需要 golang 环境了，搜了下发现实际 <code>go tool pprof</code> 就是仓库 <a target="_blank" rel="noopener" href="https://github.com/google/pprof">google&#x2F;pprof</a>。</p>
+<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>内部同事做了个采集业务 pprof 的功能，发现工具镜像非常臃肿，带了个 golang 出去。用的是 <a href="https://github.com/uber-archive/go-torch">go-torch</a> 把 <code>curl -o /debug/pprof/profile</code> 采集的文件转成 svg ，转换的日志里发现它命令行调用了 <code>go tool pprof</code>，而且 <code>go-torch</code> 我看仓库已经不维护了。</p>
+<h2 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h2><p>一个是涉及到迭代解决安全，另一个 golang 已经 go 自举了，把 <code>go tool pprof</code> 的 <code>pprof</code> 命令抠出来直接用就行了，甚至都不需要 golang 环境了，搜了下发现实际 <code>go tool pprof</code> 就是仓库 <a href="https://github.com/google/pprof">google&#x2F;pprof</a>。</p>
 <h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p><code>go-torch</code> 转换的命令如下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">go-torch xxx-profile-20240416110934.pg.gz -f 1.svg</span></span><br><span class="line">INFO[03:12:29] Run pprof command: go tool pprof -raw -seconds 30 xxx-profile-20240416110934.pg.gz</span><br><span class="line">INFO[03:12:29] Writing svg to 1.svg</span><br></pre></td></tr></table></figure>
 
@@ -471,7 +471,7 @@
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/uber-archive/go-torch/blob/master/renderer/flamegraph.go#L37</span></span><br><span class="line">flameGraphScripts    = []<span class="type">string</span>&#123;<span class="string">&quot;flamegraph&quot;</span>, <span class="string">&quot;flamegraph.pl&quot;</span>, <span class="string">&quot;./flamegraph.pl&quot;</span>, <span class="string">&quot;./FlameGraph/flamegraph.pl&quot;</span>, <span class="string">&quot;flame-graph-gen&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如果单纯转 svg，pprof 工具就可以，它转 svg 会先转 dot 格式，然后 exec 调用 <code>graphviz</code> 包下的 dot 命令。</p>
-<p>dot 命令要包管理安装，并且很多依赖，看看有没有 golang 的实现。谷歌搜索 <code>golang dot to svg</code> 看到了第一个仓库 <a target="_blank" rel="noopener" href="https://github.com/goccy/go-graphviz">goccy&#x2F;go-graphviz</a>，大致看了下 readme.md ，发现它不依赖 <code>graphviz</code> 并且提供了一个 dot 的命令实现。测试下：</p>
+<p>dot 命令要包管理安装，并且很多依赖，看看有没有 golang 的实现。谷歌搜索 <code>golang dot to svg</code> 看到了第一个仓库 <a href="https://github.com/goccy/go-graphviz">goccy&#x2F;go-graphviz</a>，大致看了下 readme.md ，发现它不依赖 <code>graphviz</code> 并且提供了一个 dot 的命令实现。测试下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go install github.com/google/pprof@latest</span><br><span class="line">go install github.com/goccy/go-graphviz/cmd/dot@latest</span><br></pre></td></tr></table></figure>
 
 <p>测试转 svg：</p>
@@ -493,7 +493,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2024/04/16/pprof-small/">http://zhangguanzhang.github.io/2024/04/16/pprof-small/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2024/04/16/pprof-small/">April 16th 2024, 7:05:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2024/04/16/pprof-small/">April 16th 2024, 7:05:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

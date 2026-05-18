@@ -473,7 +473,7 @@
 <p>同时出现这个抢占的时候<code>node_sockstat_TCP</code>特别高，而且<code>inuse</code>还大于<code>alloc</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># TYPE node_sockstat_TCP_alloc gauge</span><br><span class="line">node_sockstat_TCP_alloc 33276</span><br><span class="line"># HELP node_sockstat_TCP_inuse Number of TCP sockets in state inuse.</span><br><span class="line"># TYPE node_sockstat_TCP_inuse gauge</span><br><span class="line">node_sockstat_TCP_inuse 33059</span><br></pre></td></tr></table></figure>
 <p>处理后就降下来了</p>
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>2021&#x2F;06&#x2F;16 在 1.15.5 集群测试了下，发现 kube-proxy 还会给 nat 表加规则，也就是说即使 nodePort 没有 bind 住，nat表的规则存在下也能访问到。也不是说 nodePort的 bind没用。详情见issue：<a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/75443">https://github.com/kubernetes/kubernetes/issues/75443</a></p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>2021&#x2F;06&#x2F;16 在 1.15.5 集群测试了下，发现 kube-proxy 还会给 nat 表加规则，也就是说即使 nodePort 没有 bind 住，nat表的规则存在下也能访问到。也不是说 nodePort的 bind没用。详情见issue：<a href="https://github.com/kubernetes/kubernetes/issues/75443">https://github.com/kubernetes/kubernetes/issues/75443</a></p>
 
     </article>
     <!-- license -->
@@ -482,7 +482,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2019/07/08/nodeport-err/">http://zhangguanzhang.github.io/2019/07/08/nodeport-err/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2019/07/08/nodeport-err/">July 8th 2019, 8:24:09 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2019/07/08/nodeport-err/">July 8th 2019, 8:24:09 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

@@ -458,7 +458,7 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h2 id="前提详情"><a href="#前提详情" class="headerlink" title="前提详情"></a>前提详情</h2><p>在 3.x 的内核上，cgroup 的 kmem account 特性有内存泄露问题。kubelet 和 runc 都需要修复。</p>
-<p>网上有言论说升级 Linux 内核至 <code>kernel-3.10.0-1075.el7</code> 及以上就可以修复这个问题，详细可见 <a target="_blank" rel="noopener" href="https://bugzilla.redhat.com/show_bug.cgi?id=1507149#c101">slab leak causing a crash when using kmem control group</a>。但是我测试了下面的都不行：</p>
+<p>网上有言论说升级 Linux 内核至 <code>kernel-3.10.0-1075.el7</code> 及以上就可以修复这个问题，详细可见 <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1507149#c101">slab leak causing a crash when using kmem control group</a>。但是我测试了下面的都不行：</p>
 <ul>
 <li>CentOS7.4</li>
 <li>CentOS7.6</li>
@@ -501,7 +501,7 @@
 <p> <code>arm64</code> 的 runc 可以直接下面这样编译，不过 arm64 目前国内的系统的内核都很高不存在这个问题，没必要编译 runc 。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make shell</span><br><span class="line">make localcross</span><br></pre></td></tr></table></figure>
 
-<h3 id="1-0-0-rc10-版本"><a href="#1-0-0-rc10-版本" class="headerlink" title="1.0.0-rc10 版本"></a>1.0.0-rc10 版本</h3><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1743789">https://cloud.tencent.com/developer/article/1743789</a> 这个文章里说了 runc 也需要关闭</p>
+<h3 id="1-0-0-rc10-版本"><a href="#1-0-0-rc10-版本" class="headerlink" title="1.0.0-rc10 版本"></a>1.0.0-rc10 版本</h3><p><a href="https://cloud.tencent.com/developer/article/1743789">https://cloud.tencent.com/developer/article/1743789</a> 这个文章里说了 runc 也需要关闭</p>
 <p>如果下面命令能成功执行则说明 runc 没关闭 kmem ，当然此方法不是绝对的，新 runc 下命令执行没有问题的，要看文章最后面的 <code>memory.kmem.slabinfo</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm --name test --kernel-memory 100M nginx:alpine</span><br></pre></td></tr></table></figure>
 <p><code>19.03.14</code> 测试发现可以运行，说明没有关闭，查看它的 <code>runc</code> 版本</p>
@@ -510,8 +510,8 @@
 <p>根据 commit 跳转</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/opencontainers/runc/commit/dc9208a3303feef5b3839f4323d9beb36df0a9dd</span><br></pre></td></tr></table></figure>
 
-<p>根据这个 commit，找到了是 <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/tree/v1.0.0-rc10">https://github.com/opencontainers/runc/tree/v1.0.0-rc10</a> 这个 tag，</p>
-<p>编译支持的 tag 见 <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/tree/v1.0.0-rc10#build-tags">https://github.com/opencontainers/runc/tree/v1.0.0-rc10#build-tags</a><br>编译参数从 <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/blob/v1.0.0-rc10/script/release.sh#L30">release 脚本</a> 找到是下面的参数</p>
+<p>根据这个 commit，找到了是 <a href="https://github.com/opencontainers/runc/tree/v1.0.0-rc10">https://github.com/opencontainers/runc/tree/v1.0.0-rc10</a> 这个 tag，</p>
+<p>编译支持的 tag 见 <a href="https://github.com/opencontainers/runc/tree/v1.0.0-rc10#build-tags">https://github.com/opencontainers/runc/tree/v1.0.0-rc10#build-tags</a><br>编译参数从 <a href="https://github.com/opencontainers/runc/blob/v1.0.0-rc10/script/release.sh#L30">release 脚本</a> 找到是下面的参数</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make BUILDTAGS=&quot;seccomp selinux apparmor&quot; static</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">后面的新版本貌似默认的 tags 是 seccomp 了</span></span><br></pre></td></tr></table></figure>
 
 <p>下载源码</p>
@@ -530,7 +530,7 @@
 <p>先修改 <code>Dockerfile</code> 让它使用 <code>tests/integration/multi-arch.bash.new</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cp Dockerfile Dockerfile.new</span><br><span class="line">vi Dockerfile.new </span><br><span class="line">tail -n2 Dockerfile.new</span><br><span class="line">RUN . tests/integration/multi-arch.bash.new \</span><br><span class="line">    &amp;&amp; curl -o- -sSL `get_busybox` | tar xfJC - $&#123;ROOTFS&#125;</span><br><span class="line">	</span><br></pre></td></tr></table></figure>
 
-<p>新文件下载地址可以在 <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/blob/bb28c44f12bf24ea64590edfb4f23a4b4d2eaae8/tests/integration/get-images.sh#L59">master 分支最新的脚本里</a> 找到</p>
+<p>新文件下载地址可以在 <a href="https://github.com/opencontainers/runc/blob/bb28c44f12bf24ea64590edfb4f23a4b4d2eaae8/tests/integration/get-images.sh#L59">master 分支最新的脚本里</a> 找到</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get &quot;$BUSYBOX_IMAGE&quot; \</span><br><span class="line">	&quot;https://github.com/docker-library/busybox/raw/dist-$&#123;arch&#125;/stable/glibc/busybox.tar.xz&quot;</span><br></pre></td></tr></table></figure>
 
 <p>按照下面修改好</p>
@@ -579,9 +579,9 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/kernel/slab  | wc -l</span><br></pre></td></tr></table></figure>
 
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://eddycjy.com/posts/why-container-memory-exceed2/">https://eddycjy.com/posts/why-container-memory-exceed2/</a></li>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1739289?from=information.detail.slub:+unable+to+allocate+memory+on+node+-1">https://cloud.tencent.com/developer/article/1739289?from=information.detail.slub%3A+unable+to+allocate+memory+on+node+-1</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/blob/v1.20.6/vendor/github.com/opencontainers/runc/libcontainer/cgroups/fs/kmem_disabled.go">https://github.com/kubernetes/kubernetes/blob/v1.20.6/vendor/github.com/opencontainers/runc/libcontainer/cgroups/fs/kmem_disabled.go</a></li>
+<li><a href="https://eddycjy.com/posts/why-container-memory-exceed2/">https://eddycjy.com/posts/why-container-memory-exceed2/</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1739289?from=information.detail.slub:+unable+to+allocate+memory+on+node+-1">https://cloud.tencent.com/developer/article/1739289?from=information.detail.slub%3A+unable+to+allocate+memory+on+node+-1</a></li>
+<li><a href="https://github.com/kubernetes/kubernetes/blob/v1.20.6/vendor/github.com/opencontainers/runc/libcontainer/cgroups/fs/kmem_disabled.go">https://github.com/kubernetes/kubernetes/blob/v1.20.6/vendor/github.com/opencontainers/runc/libcontainer/cgroups/fs/kmem_disabled.go</a></li>
 </ul>
 
     </article>
@@ -591,7 +591,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2021/04/08/kubelet-runc-disable-kmem/">http://zhangguanzhang.github.io/2021/04/08/kubelet-runc-disable-kmem/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2021/04/08/kubelet-runc-disable-kmem/">April 8th 2021, 5:28:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2021/04/08/kubelet-runc-disable-kmem/">April 8th 2021, 5:28:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

@@ -470,7 +470,7 @@
     <article class="article-entry">
         <p>自己的摸索和坑的总结</p>
 <span id="more"></span>
-<p>系统是centos 6.8 64位,lnmp<br>环境搭建可以找我签名博客拿去参考<br>我是下载的源码编译安装的,下载地址往下拉就能看到源码包,下载地址<a href="http://www.zabbix.com/download" target="_blank">http://www.zabbix.com/download</a><br>然后官方手册地址<a href="https://www.zabbix.com/documentation/3.0/manual/installation/install" target="_blank">点我跳转到官方手册</a><br>下图是官方说明(点击图片放大),php的配置选项,自行修改,我用sed修改,下面是记录<br><a target="_blank" rel="noopener" href="http://ww1.sinaimg.cn/large/0060lm7Tly1fokx69vm6nj316o0msmzr.jpg"><img src="http://ww1.sinaimg.cn/large/0060lm7Tly1fokx69vm6nj316o0msmzr.jpg" alt="manual"></a></p>
+<p>系统是centos 6.8 64位,lnmp<br>环境搭建可以找我签名博客拿去参考<br>我是下载的源码编译安装的,下载地址往下拉就能看到源码包,下载地址<a href="http://www.zabbix.com/download" target="_blank">http://www.zabbix.com/download</a><br>然后官方手册地址<a href="https://www.zabbix.com/documentation/3.0/manual/installation/install" target="_blank">点我跳转到官方手册</a><br>下图是官方说明(点击图片放大),php的配置选项,自行修改,我用sed修改,下面是记录<br><a href="http://ww1.sinaimg.cn/large/0060lm7Tly1fokx69vm6nj316o0msmzr.jpg"><img src="http://ww1.sinaimg.cn/large/0060lm7Tly1fokx69vm6nj316o0msmzr.jpg" alt="manual"></a></p>
 <pre><code>[root@guan etc]# grep 'max_execution_time' php.ini
 max_execution_time = 30
 [root@guan etc]# sed -i '/max_execution_time/s#30#300#' php.ini
@@ -627,7 +627,7 @@ Starting zabbix_server:                                    [  OK  ]
 [root@guan zabbix-3.0.9]# cp -r frontends/php/* /data/web/www/zabbix/
 </code></pre>
 
-<p>然后访问web页面<a target="_blank" rel="noopener" href="http://ip/zabbix%E5%8D%B3%E5%8F%AF%E8%BF%9B%E5%85%A5web%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AE%E9%A1%B5%E9%9D%A2">http://ip/zabbix即可进入web的初始化配置页面</a><br>第一步是欢迎页面,第二步是检查你的软件是否达到要求<br>达不到要求的话会是红色选项,php的扩展不会安装的话可以重新编译下php,图借用下官方的<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/installation/install_2.png?cache=" alt="t2"></p>
+<p>然后访问web页面<a href="http://ip/zabbix%E5%8D%B3%E5%8F%AF%E8%BF%9B%E5%85%A5web%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AE%E9%A1%B5%E9%9D%A2">http://ip/zabbix即可进入web的初始化配置页面</a><br>第一步是欢迎页面,第二步是检查你的软件是否达到要求<br>达不到要求的话会是红色选项,php的扩展不会安装的话可以重新编译下php,图借用下官方的<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/installation/install_2.png?cache=" alt="t2"></p>
 <p>然后第三步,如果出现下面的无法连接数据库的话host那个localhost换成127.0.0.1即可<br>原因是因为linux的mysql下localhost默认是使用sock连接,127.0.0.1则是tcp连接<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/installation/install_3.png?cache=" alt="t3"><br>第四步设置zabbix-server的端口,默认就不需要改了<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/installation/install_4.png?cache=" alt="t4"><br>第五步确认信息,<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/installation/install_5.png?cache=" alt="t"><br>第六步提示成功<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/installation/install_7.png?w=550&tok=0d699c" alt="t5"><br>如果第六步是出现下面的,一般是php没有写入web目录的权限,检查你的web目录是否是web server的所有者和所有组<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/installation/install_6.png?cache=" alt="t6"><br>完成之后<br><img src="https://www.zabbix.com/documentation/3.0/_media/manual/quickstart/login.png?cache=" alt="t7"><br>默认用户名是Admin密码是zabbix</p>
 <p>然后用户信息那我切换了下语言,发现中文乱码,在win下复制字体,我复制的是楷体<br>上传到zabbix下的fonts目录可以看到默认使用的字体是DejaVuSans<br>字体配置是在web目录的zabbix&#x2F;include&#x2F;defines.inc.php里,我改为的楷体</p>
 <pre><code>[root@guan include]# pwd
@@ -686,7 +686,7 @@ Starting zabbix_agentd:                                    [  OK  ]
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2017/04/29/zabbixsetup/">http://zhangguanzhang.github.io/2017/04/29/zabbixsetup/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2017/04/29/zabbixsetup/">April 29th 2017, 9:48:50 am</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2017/04/29/zabbixsetup/">April 29th 2017, 9:48:50 am</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

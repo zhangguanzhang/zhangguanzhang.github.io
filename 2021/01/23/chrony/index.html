@@ -463,9 +463,9 @@
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>写于 2022&#x2F;05&#x2F;07 ，我们 docker 和 k8s 都是 bin 文件部署的，但是集群的时间同步 chrony 还是包管理安装的，每个系统维护一个包（而且有几率客户环境本身依赖就有问题，会导致离线安装我们的包报错）太麻烦，想着静态编译试下。后半部分写 chrony 的配置笔记，主要是静态编译</p>
 <h2 id="chrony"><a href="#chrony" class="headerlink" title="chrony"></a>chrony</h2><h3 id="静态编译"><a href="#静态编译" class="headerlink" title="静态编译"></a>静态编译</h3><h4 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h4><p>先找源码，github 上没找到，于是 <code>man chronyd</code> 找到 <code>https://chrony.tuxfamily.org/</code> ，以及下面 url：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://chrony.tuxfamily.org/download.html">https://chrony.tuxfamily.org/download.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://chrony.tuxfamily.org/doc/">https://chrony.tuxfamily.org/doc/</a></li>
-<li><a target="_blank" rel="noopener" href="https://chrony.tuxfamily.org/doc/devel/installation.html">https://chrony.tuxfamily.org/doc/devel/installation.html</a></li>
+<li><a href="https://chrony.tuxfamily.org/download.html">https://chrony.tuxfamily.org/download.html</a></li>
+<li><a href="https://chrony.tuxfamily.org/doc/">https://chrony.tuxfamily.org/doc/</a></li>
+<li><a href="https://chrony.tuxfamily.org/doc/devel/installation.html">https://chrony.tuxfamily.org/doc/devel/installation.html</a></li>
 </ul>
 <h4 id="参考信息"><a href="#参考信息" class="headerlink" title="参考信息"></a>参考信息</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># centos 7</span><br><span class="line">chronyd -v</span><br><span class="line">chronyd (chrony) version 3.4 (+CMDMON +NTP +REFCLOCK +RTC +PRIVDROP +SCFILTER +SIGND +ASYNCDNS +SECHASH +IPV6 +DEBUG)</span><br><span class="line"></span><br><span class="line"># ubuntu 22.04</span><br><span class="line">chronyd -v</span><br><span class="line">chronyd (chrony) version 4.2 (+CMDMON +NTP +REFCLOCK +RTC +PRIVDROP +SCFILTER +SIGND +ASYNCDNS +NTS +SECHASH +IPV6 -DEBUG)</span><br></pre></td></tr></table></figure>
 
@@ -489,9 +489,9 @@
 <h5 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h5><p><code>LDFLAGS</code> 加 <code>-lm</code> 的原因，开启 math </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -lm -static -s -Wmissing-prototypes -Wall -o /tmp/conftest test.c -static</span><br><span class="line">/usr/bin/ld: /tmp/ccXh9njR.o: in function `main&#x27;:</span><br><span class="line">test.c:(.text+0x19): undefined reference to `sqrt&#x27;</span><br><span class="line">/usr/bin/ld: test.c:(.text+0x1e): undefined reference to `log&#x27;</span><br><span class="line">/usr/bin/ld: test.c:(.text+0x33): undefined reference to `pow&#x27;</span><br><span class="line">collect2: error: ld returned 1 exit status</span><br><span class="line">$ gcc  -static -s -Wmissing-prototypes -Wall -o /tmp/conftest test.c -static -lm</span><br></pre></td></tr></table></figure>
 
-<h3 id="chrony-配置"><a href="#chrony-配置" class="headerlink" title="chrony 配置"></a>chrony 配置</h3><p><a target="_blank" rel="noopener" href="https://chrony.tuxfamily.org/doc/devel/chrony.conf.html">https://chrony.tuxfamily.org/doc/devel/chrony.conf.html</a></p>
+<h3 id="chrony-配置"><a href="#chrony-配置" class="headerlink" title="chrony 配置"></a>chrony 配置</h3><p><a href="https://chrony.tuxfamily.org/doc/devel/chrony.conf.html">https://chrony.tuxfamily.org/doc/devel/chrony.conf.html</a></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://gitlab.alpinelinux.org/alpine/aports/-/issues/11272">alpine: Package request: LibTomCrypt and LibTomMath</a></li>
+<li><a href="https://gitlab.alpinelinux.org/alpine/aports/-/issues/11272">alpine: Package request: LibTomCrypt and LibTomMath</a></li>
 </ul>
 
     </article>
@@ -501,7 +501,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2021/01/23/chrony/">http://zhangguanzhang.github.io/2021/01/23/chrony/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2021/01/23/chrony/">January 23rd 2021, 2:28:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2021/01/23/chrony/">January 23rd 2021, 2:28:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

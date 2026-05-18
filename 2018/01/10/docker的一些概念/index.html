@@ -461,7 +461,7 @@
     <article class="article-entry">
         <p>总结下容器的一些概念和虚拟机的区别以及<code>CMD</code>和<code>entrypoint</code></p>
 <span id="more"></span>
-<p>先直接切入主题，容器好处和虚拟机的一些差异以及需要看懂本文的基础知识可以稍微看下面的博客过一遍<br><a target="_blank" rel="noopener" href="http://www.cnblogs.com/linuxops/p/6781047.html">http://www.cnblogs.com/linuxops/p/6781047.html</a></p>
+<p>先直接切入主题，容器好处和虚拟机的一些差异以及需要看懂本文的基础知识可以稍微看下面的博客过一遍<br><a href="http://www.cnblogs.com/linuxops/p/6781047.html">http://www.cnblogs.com/linuxops/p/6781047.html</a></p>
 <blockquote>
 <ul>
 <li>容器是利用linux的<code>cgroup</code>和<code>namespace</code>隔离的，在宿主机上本质是个隔离的进程。</li>
@@ -607,7 +607,7 @@
 <p>第一个打印当前终端这个shell的PID<br>第二个打印这个终端的父级PID<br>第三个是终端shell fork了一个子进程，这个子进程打印了它的父级PID,也就是这个终端的PID<br>第四个是这个sh的进程顶替了终端shell,打印它的父级PID,由于终端shell被顶替掉了,这个sh进程执行完毕就会断开ssh</p>
 <p>大概上面这样，其实不确定流程是啥样或者想从某个基础镜像构建自己需要的镜像的话一个是可以去dockerhub上参照别人或者官方写的dockerfile<br>然后可以用docker -ti 镜像名 &#x2F;bin&#x2F;bash (如果你的业务需要网络做自己做端口映射,同理配置文件挂载进去)先进容器里<br>安装一些东西后把你的进程起来后(这个时候容器主进程是bash,无所谓你的业务进程是否是前后台,不过最好前台，可以看输出)再把这些流程写成dockerfile(做成通用型镜像或者需要在容器启动后执行而且构建镜像的时候执行的就写到entrypoint脚本里)</p>
 <p>PS:还有构建镜像用了entrypoint脚本记住一个经常容易踩坑的地方是windows无法保存linux的文件可执行权限,所以Dockerfile里构建记得COPY脚本进去后写个RUN chmod u+x entrypoint.sh</p>
-<p>另外容器里可能很多命令没有，你把相应的配置文件挂载进去你可以在宿主机上面修改<br>前不久制作了一个npm的通用型镜像过程在地址<a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/docker-compose_nodejs">https://github.com/zhangguanzhang/docker-compose_nodejs</a><br>是nodejs和mysql的,里面有我写的entrypoint脚本,dockerfile参考官方的增加了entrypoint部分，用的是docker-compose，docker-compose是个容器编排工具，根据你写的yml文件内容来启动和设置容器的属性参数啥的，很多方便</p>
+<p>另外容器里可能很多命令没有，你把相应的配置文件挂载进去你可以在宿主机上面修改<br>前不久制作了一个npm的通用型镜像过程在地址<a href="https://github.com/zhangguanzhang/docker-compose_nodejs">https://github.com/zhangguanzhang/docker-compose_nodejs</a><br>是nodejs和mysql的,里面有我写的entrypoint脚本,dockerfile参考官方的增加了entrypoint部分，用的是docker-compose，docker-compose是个容器编排工具，根据你写的yml文件内容来启动和设置容器的属性参数啥的，很多方便</p>
 
     </article>
     <!-- license -->
@@ -616,7 +616,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">http://zhangguanzhang.github.io/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">January 10th 2018, 11:17:03 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">January 10th 2018, 11:17:03 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

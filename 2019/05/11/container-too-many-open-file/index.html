@@ -475,7 +475,7 @@
 <p>对比了正常环境，看了下打开数量正常，所以看下系统的参数</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl -n fs.file-max</span><br><span class="line">10240</span><br></pre></td></tr></table></figure>
 
-<p>正常来讲，现在操作系统的内核版本下，这个值有个计算公式的，<a target="_blank" rel="noopener" href="https://serverfault.com/questions/716578/default-value-of-proc-sys-fs-file-max">参考</a>：</p>
+<p>正常来讲，现在操作系统的内核版本下，这个值有个计算公式的，<a href="https://serverfault.com/questions/716578/default-value-of-proc-sys-fs-file-max">参考</a>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  n = (mempages * (PAGE_SIZE / 1024)) / 10;</span><br><span class="line">  files_stat.max_files = max_t(unsigned long, n, NR_FILE);</span><br><span class="line"># PAGE_SIZE可以通过 getconf PAGE_SIZE，一般是 4096</span><br></pre></td></tr></table></figure>
 
 
@@ -486,8 +486,8 @@
 
 <p>参考:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6180569/need-to-calculate-optimum-ulimit-and-fs-file-max-values-according-to-my-own-se">https://stackoverflow.com/questions/6180569/need-to-calculate-optimum-ulimit-and-fs-file-max-values-according-to-my-own-se</a></li>
-<li><a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/fs/file_table.c#n390">https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/fs/file_table.c#n390</a></li>
+<li><a href="https://stackoverflow.com/questions/6180569/need-to-calculate-optimum-ulimit-and-fs-file-max-values-according-to-my-own-se">https://stackoverflow.com/questions/6180569/need-to-calculate-optimum-ulimit-and-fs-file-max-values-according-to-my-own-se</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/fs/file_table.c#n390">https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/fs/file_table.c#n390</a></li>
 </ul>
 
     </article>
@@ -497,7 +497,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2019/05/11/container-too-many-open-file/">http://zhangguanzhang.github.io/2019/05/11/container-too-many-open-file/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2019/05/11/container-too-many-open-file/">May 11th 2019, 5:08:06 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2019/05/11/container-too-many-open-file/">May 11th 2019, 5:08:06 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

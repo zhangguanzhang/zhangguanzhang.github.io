@@ -494,10 +494,10 @@
 
 <h3 id="gitlab-subgroup"><a href="#gitlab-subgroup" class="headerlink" title="gitlab subgroup"></a>gitlab subgroup</h3><p>搜了下，发现是 gitlab 的鉴权和 golang 的 get 逻辑冲突，双方都认为对方不规范，谁都不让谁，具体见文章:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/D_AsV9QpOZ_5v8f1eKoxjQ">Go 模块使用 GitLab subgroups 的问题</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/user/project/use_project_as_go_package.html#authenticate-go-requests-to-private-projects">use_project_as_go_package</a></li>
-<li><a target="_blank" rel="noopener" href="https://go.dev/ref/mod#private-module-proxy-auth">private-module-proxy-auth</a></li>
-<li><a target="_blank" rel="noopener" href="https://gitlab.com/gitlab-org/gitlab/-/issues/437005">Allow to set a go-modules folder for private Go projects</a></li>
+<li><a href="https://mp.weixin.qq.com/s/D_AsV9QpOZ_5v8f1eKoxjQ">Go 模块使用 GitLab subgroups 的问题</a></li>
+<li><a href="https://docs.gitlab.com/ee/user/project/use_project_as_go_package.html#authenticate-go-requests-to-private-projects">use_project_as_go_package</a></li>
+<li><a href="https://go.dev/ref/mod#private-module-proxy-auth">private-module-proxy-auth</a></li>
+<li><a href="https://gitlab.com/gitlab-org/gitlab/-/issues/437005">Allow to set a go-modules folder for private Go projects</a></li>
 </ul>
 <p>解决方案只有两种，一种是 <code>~/.netrc</code> 但是是明文密码，不适用于 CI&#x2F;CD 构建。<br>使用 replace 的话需要指定一样的版本，而 <code>go get</code> 升级依赖的时候 replace 不会动。<br>写 shell 在 <code>go build</code> 前执行的话，怕正则边界和模糊匹配到了前缀一样的，并且 <code>go mod edit -json</code> 可以输出 json 信息，好在 golang 编译镜像是 ubuntu，内部有 python。</p>
 <h3 id="脚本解决"><a href="#脚本解决" class="headerlink" title="脚本解决"></a>脚本解决</h3><p>花了点时间写了如下 python 脚本，执行方式如下：</p>
@@ -517,7 +517,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2025/06/17/golang-gitlab-subgroup/">http://zhangguanzhang.github.io/2025/06/17/golang-gitlab-subgroup/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/06/17/golang-gitlab-subgroup/">June 17th 2025, 2:40:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2025/06/17/golang-gitlab-subgroup/">June 17th 2025, 2:40:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

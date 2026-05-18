@@ -465,11 +465,11 @@
 <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>内部需要调研 podman 替换掉 docker，因为我们私有化要适配很多操作系统（很多客户内部规定了必须使用啥系统，所以要支持），使用最常见的 CentOS 7：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> /etc/redhat-release</span> </span><br><span class="line">CentOS Linux release 7.8.2003 (Core)</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">uname</span> -a</span></span><br><span class="line">Linux xxx 3.10.0-1127.el7.x86_64 #1 SMP Tue Mar 31 23:36:51 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
 
-<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><h3 id="离线安装"><a href="#离线安装" class="headerlink" title="离线安装"></a>离线安装</h3><p><a target="_blank" rel="noopener" href="https://podman.io/docs/installation">官方安装文档</a>上并没有 centos7 的安装，因为已经 EOL 好几年。考虑到客户会无网，需要类似 docker-static 那样，搜索谷歌和 github 找到 <a target="_blank" rel="noopener" href="https://github.com/mgoltzsche/podman-static">podman-static</a>。podman 最新版本是v5，下载 v5.5.2 的压缩包后解压。</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><h3 id="离线安装"><a href="#离线安装" class="headerlink" title="离线安装"></a>离线安装</h3><p><a href="https://podman.io/docs/installation">官方安装文档</a>上并没有 centos7 的安装，因为已经 EOL 好几年。考虑到客户会无网，需要类似 docker-static 那样，搜索谷歌和 github 找到 <a href="https://github.com/mgoltzsche/podman-static">podman-static</a>。podman 最新版本是v5，下载 v5.5.2 的压缩包后解压。</p>
 <h3 id="daemon-进程相关"><a href="#daemon-进程相关" class="headerlink" title="daemon 进程相关"></a>daemon 进程相关</h3><p>因为我们还需要调用 API，所以需要起 daemon 进程监听 socket 和 tcp，需要以下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">podman system service -h</span></span><br><span class="line">Run API service</span><br><span class="line"></span><br><span class="line">Description:</span><br><span class="line">  Run an API service</span><br><span class="line"></span><br><span class="line">Enable a listening service for API access to Podman commands.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  podman system service [options] [URI]</span><br><span class="line"></span><br><span class="line">Examples:</span><br><span class="line">  podman system service --time=0 unix:///tmp/podman.sock</span><br><span class="line">  podman system service --time=0 tcp://localhost:8888</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">      --cors string   Set CORS Headers</span><br><span class="line">  -t, --time uint     Time until the service session expires in seconds.  Use 0 to disable the timeout (default 5)</span><br></pre></td></tr></table></figure>
 
-<p>发现无法同时监听 tcp 和 socket，并且 tcp 不支持tls选项，搜索issue <a target="_blank" rel="noopener" href="https://github.com/containers/podman/issues/24583">Support (m)TLS API socket</a>发现暂未支持，只能使用 socket 监听。</p>
+<p>发现无法同时监听 tcp 和 socket，并且 tcp 不支持tls选项，搜索issue <a href="https://github.com/containers/podman/issues/24583">Support (m)TLS API socket</a>发现暂未支持，只能使用 socket 监听。</p>
 <p>然后发现无法监听指定路径 socket文件：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">API service listening on \&quot;/run/podman/podman.sock\&quot;. URI: \&quot;unix:///var/run/docker.sock\&quot;&quot;</span><br></pre></td></tr></table></figure>
 
@@ -519,8 +519,8 @@
 
 <p>对于v5和v4的报错均搜索到类似的问题:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/mgoltzsche/podman-static/issues/138">https://github.com/mgoltzsche/podman-static/issues/138</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/containers/podman/discussions/12840">https://github.com/containers/podman/discussions/12840</a></li>
+<li><a href="https://github.com/mgoltzsche/podman-static/issues/138">https://github.com/mgoltzsche/podman-static/issues/138</a></li>
+<li><a href="https://github.com/containers/podman/discussions/12840">https://github.com/containers/podman/discussions/12840</a></li>
 </ul>
 <p>centos7的3.10内核不满足最低的4.18</p>
 <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
@@ -535,7 +535,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2025/08/06/centos7-podman/">http://zhangguanzhang.github.io/2025/08/06/centos7-podman/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/08/06/centos7-podman/">August 6th 2025, 10:10:30 am</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2025/08/06/centos7-podman/">August 6th 2025, 10:10:30 am</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

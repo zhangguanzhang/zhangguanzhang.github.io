@@ -458,7 +458,7 @@
                 <main class="main post-page">
     <article class="article-entry">
         <h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>市面上的翻译误导人，压根不是啥<code>平均增长率</code>，看了下源码和实际算下来让大家好理解</p>
-<h3 id="rate"><a href="#rate" class="headerlink" title="rate"></a>rate</h3><p>主要代码是在 <a target="_blank" rel="noopener" href="https://github.com/prometheus/prometheus/blob/master/promql/functions.go">https://github.com/prometheus/prometheus/blob/master/promql/functions.go</a> 的<code>extrapolatedRate</code> 和 <code>funcRate</code>，funcRate为</p>
+<h3 id="rate"><a href="#rate" class="headerlink" title="rate"></a>rate</h3><p>主要代码是在 <a href="https://github.com/prometheus/prometheus/blob/master/promql/functions.go">https://github.com/prometheus/prometheus/blob/master/promql/functions.go</a> 的<code>extrapolatedRate</code> 和 <code>funcRate</code>，funcRate为</p>
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">funcRate</span><span class="params">(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper)</span></span> Vector &#123;</span><br><span class="line">  <span class="keyword">return</span> extrapolatedRate(vals, args, enh, <span class="literal">true</span>, <span class="literal">true</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>它的前后还有<code>funcDelta</code>和<code>funcIncrease</code>对应promql的<code>delta</code>和<code>increase</code>，这俩函数内部都是调用的<code>extrapolatedRate</code>，主要区别是通过向<code>extrapolatedRate</code>函数传递最后的两个布尔标志位的差异，来在<code>extrapolatedRate</code>内部进行差异化计算，也就是说<code>rate</code>、<code>delta</code>和<code>increase</code>的部分数学计算逻辑是一样的。</p>
@@ -495,7 +495,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2020/07/30/prometheus-rate-and-irate/">http://zhangguanzhang.github.io/2020/07/30/prometheus-rate-and-irate/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2020/07/30/prometheus-rate-and-irate/">July 30th 2020, 10:58:10 am</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2020/07/30/prometheus-rate-and-irate/">July 30th 2020, 10:58:10 am</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

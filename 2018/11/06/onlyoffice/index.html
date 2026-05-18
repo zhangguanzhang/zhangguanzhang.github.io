@@ -469,7 +469,7 @@
 <p>稍微用docker history看了下发现里面一堆各种数据库都放同一个镜像里,根本没有解耦<br><img src="https://github.com/zhangguanzhang/Image-Hosting/blob/master/onlyoffice/0.png?raw=true" alt=""></p>
 <p>于是便有了解耦这个镜像的冲动</p>
 <p>先找官方的例子跑跑看</p>
-<p>地址：<a target="_blank" rel="noopener" href="https://api.onlyoffice.com/editors/demopreview">https://api.onlyoffice.com/editors/demopreview</a></p>
+<p>地址：<a href="https://api.onlyoffice.com/editors/demopreview">https://api.onlyoffice.com/editors/demopreview</a></p>
 <p>看了下官方都是js写的,所以选了个Nodejs的demo来跑,另外之前用docker帮过同学搭建过一个nodejs的小程序后台环境,对nodejs项目部署有点经验</p>
 <p>选择 Node.js Example<br><img src="https://github.com/zhangguanzhang/Image-Hosting/blob/master/onlyoffice/1.png?raw=true" alt=""></p>
 <p>解压后，修改配置<code>config/default.jsonm</code>，siteUrl 为 DocumentServer的地址<br>一个标准的nodejs项目根目录有package.json文件,里面有模块依赖<br><code>npm install</code>安装模块<br><code>node bin/www</code>即可运行起来<br>之前帮同学搭建小程序环境(同学是前端,所以用的nodejs写前后端)自己做了个nodejs的镜像,适合测试,每次主进程跑起来之前都会<code>npm install</code>,这里用我自己的镜像跑(后期npm的模块可以固化到镜像里,这里仅供快速搭建使用方便)</p>
@@ -478,10 +478,10 @@
 <p>然后把修改过后整个demo挂载到镜像的<code>WORKDIR</code>跑起来<br><img src="https://github.com/zhangguanzhang/Image-Hosting/blob/master/onlyoffice/2.png?raw=true" alt=""></p>
 <img src="https://github.com/zhangguanzhang/Image-Hosting/blob/master/onlyoffice/3.png?raw=true" alt="">
 
-<p>然后在官方的仓库找到了Dockerfile,好吧,不用去看<code>docker history --no-trunc</code>了<br><a target="_blank" rel="noopener" href="https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/Dockerfile">https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/Dockerfile</a></p>
+<p>然后在官方的仓库找到了Dockerfile,好吧,不用去看<code>docker history --no-trunc</code>了<br><a href="https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/Dockerfile">https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/Dockerfile</a></p>
 <p>看了下Dockerfile整体过程是下面:</p>
 <p>添加nodejs的源用于安装nodejs,安装<code>nodejs,postgres,redis-server,rabbitmq-server,supervisor</code></p>
-<p>然后entrypoint脚本逻辑<br><a target="_blank" rel="noopener" href="https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/run-document-server.sh">https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/run-document-server.sh</a></p>
+<p>然后entrypoint脚本逻辑<br><a href="https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/run-document-server.sh">https://github.com/ONLYOFFICE/Docker-DocumentServer/blob/master/run-document-server.sh</a></p>
 <p>开始执行的是一堆目录的<code>mkdir,chown</code><br>然后根据变量值执行,假设此时符合条件进去</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ONLYOFFICE_DATA_CONTAINER_HOST=<span class="variable">$&#123;ONLYOFFICE_DATA_CONTAINER_HOST:-localhost&#125;</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;ONLYOFFICE_DATA_CONTAINER_HOST&#125;</span> = <span class="string">&quot;localhost&quot;</span> ]; <span class="keyword">then</span></span><br></pre></td></tr></table></figure>
 <p>然后执行函数<code>read_setting</code><br>里面是读取文件<code>/etc/onlyoffice/documentserver/local.json</code>的值</p>
@@ -554,8 +554,8 @@
 
 <p>所以entrypoint里启动supervisor的时候会启动onlyoffice</p>
 <p>镜像里依赖安装太多了,然后找到了非docker安装的文档稍微清晰了些</p>
-<p><a target="_blank" rel="noopener" href="https://helpcenter.onlyoffice.com/server/linux/document/linux-installation-centos.aspx?_ga=2.211658390.2064741635.1541596271-1982326324.1541482842">https://helpcenter.onlyoffice.com/server/linux/document/linux-installation-centos.aspx?_ga&#x3D;2.211658390.2064741635.1541596271-1982326324.1541482842</a></p>
-<p><a target="_blank" rel="noopener" href="https://helpcenter.onlyoffice.com/server/linux/document/index.aspx">https://helpcenter.onlyoffice.com/server/linux/document/index.aspx</a><br>安装了<code>onlyoffice-documentserver</code>后发现大体文件一样,解包rpm后更直观</p>
+<p><a href="https://helpcenter.onlyoffice.com/server/linux/document/linux-installation-centos.aspx?_ga=2.211658390.2064741635.1541596271-1982326324.1541482842">https://helpcenter.onlyoffice.com/server/linux/document/linux-installation-centos.aspx?_ga&#x3D;2.211658390.2064741635.1541596271-1982326324.1541482842</a></p>
+<p><a href="https://helpcenter.onlyoffice.com/server/linux/document/index.aspx">https://helpcenter.onlyoffice.com/server/linux/document/index.aspx</a><br>安装了<code>onlyoffice-documentserver</code>后发现大体文件一样,解包rpm后更直观</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install onlyoffice-documentserver</span><br></pre></td></tr></table></figure>
 <p>整体思路有了,documentserver的源码都放一起,里面几个组建都是supervisor跑<br>源码是js的,所以这几个组建分离解耦的话必须在nodejs作为基础镜像(so依赖啥的不知道解决起来麻烦不)<br>然后一些数据库啥的可以直接各自的官方镜像稍微挂载初始化sql啥的</p>
 <p>由于对于nodejs不熟悉,同学上班也忙,无法帮我拆分项目,项目结构也不熟悉</p>
@@ -572,7 +572,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2018/11/06/onlyoffice/">http://zhangguanzhang.github.io/2018/11/06/onlyoffice/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2018/11/06/onlyoffice/">November 6th 2018, 7:05:29 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2018/11/06/onlyoffice/">November 6th 2018, 7:05:29 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

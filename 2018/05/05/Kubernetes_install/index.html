@@ -482,7 +482,7 @@
 <li>Docker CE latest version(18.03)</li>
 </ul>
 </blockquote>
-<p>** 不建议用docker 18.05 , docker CE 18.05有<a target="_blank" rel="noopener" href="https://github.com/moby/moby/issues/37032">bind mount的bug</a> **</p>
+<p>** 不建议用docker 18.05 , docker CE 18.05有<a href="https://github.com/moby/moby/issues/37032">bind mount的bug</a> **</p>
 <img src="https://kairen.github.io/images/kube/kubernetes-aa-ha.png" alt="">
 
 <p><span style="font-size: 1.4em;color: #333;font-weight:bold">节点信息</span><br>本教学将以下列节点数与规格来进行部署Kubernetes集群,系统可采用<code>Ubuntu 16.x</code>与<code>CentOS 7.x</code></p>
@@ -541,7 +541,7 @@
 <blockquote>
 <ul>
 <li>所有操作全部用root使用者进行(方便用)，以SRE来说不推荐。</li>
-<li>可以下载<a target="_blank" rel="noopener" href="https://kairen.github.io/files/manual-v1.10/Vagrantfile">Vagrantfile</a>来建立Virtualbox虚拟机集群。不过需要注意机器资源是否足够</li>
+<li>可以下载<a href="https://kairen.github.io/files/manual-v1.10/Vagrantfile">Vagrantfile</a>来建立Virtualbox虚拟机集群。不过需要注意机器资源是否足够</li>
 </ul>
 </blockquote>
 <h2 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h2><ul>
@@ -586,7 +586,7 @@
 </ul>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">quay.io/calico/node      v3.0.4              5361c5a52912        8 weeks ago         278MB</span><br><span class="line">quay.io/calico/cni       v2.0.3              cef0252b1749        2 months ago        69.1MB</span><br><span class="line">k8s.gcr.io/pause-amd64   3.1                 da86e6ba6ca1        5 months ago        742kB</span><br></pre></td></tr></table></figure>
-<p>这三个因为墙的原因会拉取不到,我已经save成文件了(有工具的可以直接pull上面镜像)<br>文件地址是<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1v7uN4ht-7qvA1uk9ZMmuMA">https://pan.baidu.com/s/1v7uN4ht-7qvA1uk9ZMmuMA</a><br>上面是百度云,下载不了或者限速的可以用下面七牛云地址下载并导入镜像</p>
+<p>这三个因为墙的原因会拉取不到,我已经save成文件了(有工具的可以直接pull上面镜像)<br>文件地址是<a href="https://pan.baidu.com/s/1v7uN4ht-7qvA1uk9ZMmuMA">https://pan.baidu.com/s/1v7uN4ht-7qvA1uk9ZMmuMA</a><br>上面是百度云,下载不了或者限速的可以用下面七牛云地址下载并导入镜像</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ wget http://ols7lqkih.bkt.clouddn.com/images.tar.gz</span><br><span class="line">$ docker load -i images.tar.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
@@ -609,7 +609,7 @@
 
 <p>最新版的kubectl使用以下命令来下载可获得最新版本,如果要最新的自行工具下载</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl</span><br></pre></td></tr></table></figure>
-<p>要下载特定版本，请$(curl -s <a target="_blank" rel="noopener" href="https://storage.googleapis.com/kubernetes-release/release/stable.txt)%E5%B0%86%E4%B8%8A%E9%9D%A2%E5%91%BD%E4%BB%A4%E7%9A%84%E9%83%A8%E5%88%86%E6%9B%BF%E6%8D%A2%E4%B8%BA%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC%E3%80%82">https://storage.googleapis.com/kubernetes-release/release/stable.txt)将上面命令的部分替换为特定版本。</a></p>
+<p>要下载特定版本，请$(curl -s <a href="https://storage.googleapis.com/kubernetes-release/release/stable.txt)%E5%B0%86%E4%B8%8A%E9%9D%A2%E5%91%BD%E4%BB%A4%E7%9A%84%E9%83%A8%E5%88%86%E6%9B%BF%E6%8D%A2%E4%B8%BA%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC%E3%80%82">https://storage.googleapis.com/kubernetes-release/release/stable.txt)将上面命令的部分替换为特定版本。</a></p>
 <p>例如如果不追求最新版本,使用下面的1.10.0地址</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> KUBE_URL=<span class="string">&quot;https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64&quot;</span></span><br><span class="line">$ wget <span class="string">&quot;<span class="variable">$&#123;KUBE_URL&#125;</span>/kubelet&quot;</span> -O /usr/local/bin/kubelet</span><br><span class="line">$ <span class="built_in">chmod</span> +x /usr/local/bin/kubelet</span><br><span class="line"></span><br><span class="line"><span class="comment"># node 请忽略下载 kubectl</span></span><br><span class="line">$ wget <span class="string">&quot;<span class="variable">$&#123;KUBE_URL&#125;</span>/kubectl&quot;</span> -O /usr/local/bin/kubectl</span><br><span class="line">$ <span class="built_in">chmod</span> +x /usr/local/bin/kubectl</span><br></pre></td></tr></table></figure>
 
@@ -916,7 +916,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2018/05/05/Kubernetes_install/">http://zhangguanzhang.github.io/2018/05/05/Kubernetes_install/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2018/05/05/Kubernetes_install/">May 5th 2018, 6:14:35 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2018/05/05/Kubernetes_install/">May 5th 2018, 6:14:35 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

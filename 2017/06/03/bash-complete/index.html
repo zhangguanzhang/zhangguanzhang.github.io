@@ -467,7 +467,7 @@
 <p>当然bash支持自定义补全,也就是让我们实现和<code>systemctl</code>命令那样补全</p>
 <p>假设我们要<code>systemctl disable --now firewalld</code><br><code>systemctl空格</code>后按<code>tab键</code>会显示<code>systemctl</code>的第二个部分的所有支持的选项<br>此时继续输入<code>di</code>按<code>tab键</code>会补全成<code>systemctl disable</code>,输入<code>--now</code>(相似的太多了,所以基本输入完)补全,当然最后的服务名此时补全不了,因为systemctl的补全不怎么完美</p>
 <p>通过上面的过程知道了补全不单单是常见的前两种场景,如果我们使用第四种场景去自定义会大大加快我们的工作效率<br>一般我们会安装bash-completion包来得到更好的补全效果，这个包提供了一些现成的命令补全脚本，一些基础的函数方便编写补全脚本，还有一个基本的配置脚本。但也正如之前说的，这个包不是必须的，只不过可以省些力气。</p>
-<h2 id="bash补全相关脚本和加载流程"><a href="#bash补全相关脚本和加载流程" class="headerlink" title="bash补全相关脚本和加载流程"></a>bash补全相关脚本和加载流程</h2><p><a target="_blank" rel="noopener" href="http://www.alivepea.me/linux/bash-completion/">官方文档</a>就那么点介绍,网上看到的博客也不详细,看了一些官方的补全脚本注释又太少,这里写下我的摸索经验</p>
+<h2 id="bash补全相关脚本和加载流程"><a href="#bash补全相关脚本和加载流程" class="headerlink" title="bash补全相关脚本和加载流程"></a>bash补全相关脚本和加载流程</h2><p><a href="http://www.alivepea.me/linux/bash-completion/">官方文档</a>就那么点介绍,网上看到的博客也不详细,看了一些官方的补全脚本注释又太少,这里写下我的摸索经验</p>
 <p>安装了<code>bash-completion</code>后会有下面这几个文件(建议最好有两台环境,一个安装一个不安装方便文章后面去测试)</p>
 <p>PS: 很多安装的软件都有补全脚本,可以去<code>/usr/share/bash-completion/completions/</code>看看,有的话cp到<code>/etc/bash_completion.d/</code>里即可生效</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/profile.d/bash_completion.sh</span><br><span class="line">/usr/share/bash-completion/bash_completion</span><br></pre></td></tr></table></figure>
@@ -496,7 +496,7 @@
 <li>compopt</li>
 </ul>
 </blockquote>
-<p>点击查看<a target="_blank" rel="noopener" href="https://blog.csdn.net/ieearth/article/details/52703598">中文文档</a></p>
+<p>点击查看<a href="https://blog.csdn.net/ieearth/article/details/52703598">中文文档</a></p>
 <p>看起来选项和选项的值还挺多的,但是做几个例子就能记住常见的选项和值以及各种内置环境变量了<br>下列是常见的选项</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-F function	执行shell 函数，函数中生成COMPREPLY作为候选的补全结果</span><br><span class="line">-C command	将 command 命令的执行结果作为候选的补全 结果</span><br><span class="line">-G pattern	将匹配 pattern的文件名作为候选的补全结果</span><br><span class="line">-W wordlist	分割 wordlist 中的单词，作为候选的补全结果</span><br><span class="line">-p [name]	列出当前所有的补全命令</span><br><span class="line">-r [name]	删除某个补全命令</span><br></pre></td></tr></table></figure>
 
@@ -543,7 +543,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2017/06/03/bash-complete/">http://zhangguanzhang.github.io/2017/06/03/bash-complete/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2017/06/03/bash-complete/">June 3rd 2017, 7:28:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2017/06/03/bash-complete/">June 3rd 2017, 7:28:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

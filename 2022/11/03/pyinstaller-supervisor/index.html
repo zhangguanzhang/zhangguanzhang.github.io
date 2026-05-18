@@ -557,7 +557,7 @@
 
 <h4 id="完整流程"><a href="#完整流程" class="headerlink" title="完整流程"></a>完整流程</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -ti -w /test --entrypoint bash centos:7</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">python3 会自带 python3-pip ， binutils 是 pyinstaller 打包的时候依赖</span></span><br><span class="line">yum install -y python3 binutils gcc zlib-devel which</span><br><span class="line"></span><br><span class="line">pip3 install wheel</span><br><span class="line">pip3 install pyinstaller</span><br><span class="line">pip3 install supervisor</span><br><span class="line"></span><br><span class="line">ver=$(find /usr/ -type f -name &#x27;version.txt&#x27; -path &#x27;*/supervisor/*&#x27; -exec cat &#123;&#125; \; )</span><br><span class="line">op_file=$(find /usr/ -type f -name &#x27;options.py&#x27; -path &#x27;*/supervisor/*&#x27;)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置 VERSION</span></span><br><span class="line">sed -ri &#x27;/^VERSION\s+=\s+/s#= .+#= &quot;&#x27;&quot;$&#123;ver&#125;&quot;&#x27;&quot;#&#x27; $op_file</span><br><span class="line"></span><br><span class="line">dir=$(find /usr -type d -name supervisor -path &#x27;*/site-packages/*&#x27;  -exec dirname &#123;&#125; \;)</span><br><span class="line">pyinstaller --onefile -p $dir `which pidproxy`</span><br><span class="line">pyinstaller --onefile -p $dir `which supervisord`</span><br><span class="line">pyinstaller --onefile -p $dir `which supervisorctl`</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h3 id="制作-rpm-包"><a href="#制作-rpm-包" class="headerlink" title="制作 rpm 包"></a>制作 rpm 包</h3><p>其实这个步骤也可以用于容器内无 python 添加 supervisor<br>相关步骤和文件存放在我 github 上<br><a target="_blank" rel="noopener" href="https://github.com/zhangguanzhang/compile-and-packages">https://github.com/zhangguanzhang/compile-and-packages</a></p>
+<h3 id="制作-rpm-包"><a href="#制作-rpm-包" class="headerlink" title="制作 rpm 包"></a>制作 rpm 包</h3><p>其实这个步骤也可以用于容器内无 python 添加 supervisor<br>相关步骤和文件存放在我 github 上<br><a href="https://github.com/zhangguanzhang/compile-and-packages">https://github.com/zhangguanzhang/compile-and-packages</a></p>
 <h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><h3 id="取消-onefile-打包"><a href="#取消-onefile-打包" class="headerlink" title="取消 onefile 打包"></a>取消 onefile 打包</h3><p>歇逼了，部署上去无法运行，运行报错:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error while loading shared libraries: libz.so.1: failed to map segment from shared object</span><br></pre></td></tr></table></figure>
 
@@ -578,12 +578,12 @@
 <p>主要是 jna 有 java 的 -D 选项支持，所以解压出 so 放 lib 目录配合参数就能解决</p>
 <p>参考：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/8.11/rpm.html#rpm-repo">https://www.elastic.co/guide/en/elasticsearch/reference/8.11/rpm.html#rpm-repo</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/8.11/targz.html">https://www.elastic.co/guide/en/elasticsearch/reference/8.11/targz.html</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/8.11/rpm.html#rpm-repo">https://www.elastic.co/guide/en/elasticsearch/reference/8.11/rpm.html#rpm-repo</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/8.11/targz.html">https://www.elastic.co/guide/en/elasticsearch/reference/8.11/targz.html</a></li>
 </ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://rhel.pkgs.org/7/epel-aarch64/supervisor-3.1.4-1.el7.noarch.rpm.html">https://rhel.pkgs.org/7/epel-aarch64/supervisor-3.1.4-1.el7.noarch.rpm.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://src.fedoraproject.org/rpms/supervisor/blob/epel7/f/supervisor.spec">https://src.fedoraproject.org/rpms/supervisor/blob/epel7/f/supervisor.spec</a></li>
+<li><a href="https://rhel.pkgs.org/7/epel-aarch64/supervisor-3.1.4-1.el7.noarch.rpm.html">https://rhel.pkgs.org/7/epel-aarch64/supervisor-3.1.4-1.el7.noarch.rpm.html</a></li>
+<li><a href="https://src.fedoraproject.org/rpms/supervisor/blob/epel7/f/supervisor.spec">https://src.fedoraproject.org/rpms/supervisor/blob/epel7/f/supervisor.spec</a></li>
 </ul>
 
     </article>
@@ -593,7 +593,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2022/11/03/pyinstaller-supervisor/">http://zhangguanzhang.github.io/2022/11/03/pyinstaller-supervisor/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2022/11/03/pyinstaller-supervisor/">November 3rd 2022, 5:10:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2022/11/03/pyinstaller-supervisor/">November 3rd 2022, 5:10:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

@@ -476,7 +476,7 @@
 <p>而对于 kubeadm，网上有修改编译的，或者 go build 的时候注入覆盖默认的时间的，自行搜索。</p>
 <h4 id="certSAN"><a href="#certSAN" class="headerlink" title="certSAN"></a>certSAN</h4><p>k8s 里 <code>kube-apiserver</code> 和 <code>etcd</code> 都是部署在多个机器上实现高可用的，在 <code>openssl/cfssl/kubeadm</code> 里推荐加 IP 以外还要加域名以防后续换 IP 相关：</p>
 <ul>
-<li>openssl 配置文件参考 <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kubespray/blob/master/roles/etcd/templates/openssl.conf.j2">kubernetes-sigs&#x2F;kubespray 的 openssl.conf</a></li>
+<li>openssl 配置文件参考 <a href="https://github.com/kubernetes-sigs/kubespray/blob/master/roles/etcd/templates/openssl.conf.j2">kubernetes-sigs&#x2F;kubespray 的 openssl.conf</a></li>
 <li>cfssl 使用的 json 文件里的 <code>hosts</code> 字段</li>
 <li>kubeadm 的 <code>certSANs</code> 字段</li>
 </ul>
@@ -516,8 +516,8 @@
 <p>也就是组 <code>system:masters</code> 具备 clusterrole <code>cluster-admin</code> 的权限。</p>
 <p>本小结参考：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/">使用 RBAC 鉴权</a></li>
-<li><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/setup-tools/kubeadm/implementation-details/">kubeadm 实现细节</a></li>
+<li><a href="https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/rbac/">使用 RBAC 鉴权</a></li>
+<li><a href="https://kubernetes.io/zh-cn/docs/reference/setup-tools/kubeadm/implementation-details/">kubeadm 实现细节</a></li>
 </ul>
 <h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>说完理论部分，来实战下，利用证书的 <code>CN(Common Name)</code> 与 <code>O(Organization)</code> 字段来创建两个权限证书测试下：</p>
 <ul>
@@ -611,7 +611,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2025/06/02/kubernetes-cert/">http://zhangguanzhang.github.io/2025/06/02/kubernetes-cert/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/06/02/kubernetes-cert/">June 2nd 2025, 8:40:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2025/06/02/kubernetes-cert/">June 2nd 2025, 8:40:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

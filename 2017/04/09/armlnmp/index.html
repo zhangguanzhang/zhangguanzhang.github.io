@@ -482,8 +482,8 @@
 无论哪种方式只有手机屏幕开启下其他端在ssh下才会正常,不然你锁屏了ssh输入命令卡在那一样<br /><br />
 第一种因为小米和魅族底层有点不同,并且路径的权限问题经常出现挂载失败的现象</span>
 
-<p>参照<a target="_blank" rel="noopener" href="http://tieba.baidu.com/p/4819456440">关于挂载不上镜像和创建镜像问题，解决与分析</a><br /><br><a href="http://tieba.baidu.com/p/4247344719?see_lz=1" target="_blank">在安卓上完成内存卡分区，安装原版镜像到分区。</a><br>内存卡分区软件在这个帖子里,下载安装后参照帖子里分区就行了<br /><br>个人经验提醒几点:<br>这个软件别升级，升级了就要收费的,本身就是一个破解软件<br>另外我分区提示失败,然后重启后点开软件分区才成功的~<br>我的分区格式如图所示,我分的是ext4(至于为啥选ext4看后面)<br /><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqgy1fkr7gou14fj30k00zkaec.jpg" alt="ext2"><br /><br /><br>15G的内存卡<br>第一次分完后安装不了,后来分区的时候选的ext4就好了<br /><br><br /><br /><br>然后先安装linux deploy和busybox<br>下面链接里的俩bousybox都装,因为我之前只安装的第一个,后面在线安装出现一个ar not found的错误,后面询问别人才知道没安装ru.meefik版的busybox<br /></p>
-<p>链接：<a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1kVymrrT">http://pan.baidu.com/s/1kVymrrT</a> 密码：n5kf<br>aparted是那个帖子里的内存卡分区软件<br>juicessh是ssh软件,破解版的,别升级,linux deploy安装完升级下,我找不到我这个版本了。。<br /><br /><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqly1fkr7mclz45j30k00zkdhx.jpg" alt="arg"><br /><br>上图是我的参数,不过现在源好像改成了<a target="_blank" rel="noopener" href="http://mirrors.aliyun.com/kali/,%E6%9E%B6%E6%9E%84%E5%8F%AF%E4%BB%A5%E8%87%AA%E5%B7%B1%E7%94%A8%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85cpu-z%E6%9F%A5%E7%9C%8B%E4%B8%8B%E8%87%AA%E5%B7%B1%E6%89%8B%E6%9C%BA%E6%98%AF%E5%95%A5%E6%9E%B6%E6%9E%84,%E9%80%89%E9%94%99%E4%BA%86%E4%BC%9A%E5%AE%89%E8%A3%85%E5%A4%B1%E8%B4%A5">http://mirrors.aliyun.com/kali/,架构可以自己用终端命令行或者cpu-z查看下自己手机是啥架构,选错了会安装失败</a><br>我也忘了我在线安装的时候用的哪个了<br /><br /><br>安装过程是下载包,解压包,安装包，当时没截图,借用下别人的图<br /><br><img src="http://imgsrc.baidu.com/forum/pic/item/ca4a3b00213fb80e654dd91931d12f2ebb389480.jpg" alt="demo"><br /><br /><br>安装完成后点击下面的启动,可能ssh啥的全部是skip,需要多点击几次停止启动停止启动<br /><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqly1fkr7njksazj30k00zkwhg.jpg" alt="demo2"><br /><br /><br>安装完成如上图图所示(请忽略掉那个sdcard的skip,挂载安卓上的路径失败了)<br /></p>
+<p>参照<a href="http://tieba.baidu.com/p/4819456440">关于挂载不上镜像和创建镜像问题，解决与分析</a><br /><br><a href="http://tieba.baidu.com/p/4247344719?see_lz=1" target="_blank">在安卓上完成内存卡分区，安装原版镜像到分区。</a><br>内存卡分区软件在这个帖子里,下载安装后参照帖子里分区就行了<br /><br>个人经验提醒几点:<br>这个软件别升级，升级了就要收费的,本身就是一个破解软件<br>另外我分区提示失败,然后重启后点开软件分区才成功的~<br>我的分区格式如图所示,我分的是ext4(至于为啥选ext4看后面)<br /><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqgy1fkr7gou14fj30k00zkaec.jpg" alt="ext2"><br /><br /><br>15G的内存卡<br>第一次分完后安装不了,后来分区的时候选的ext4就好了<br /><br><br /><br /><br>然后先安装linux deploy和busybox<br>下面链接里的俩bousybox都装,因为我之前只安装的第一个,后面在线安装出现一个ar not found的错误,后面询问别人才知道没安装ru.meefik版的busybox<br /></p>
+<p>链接：<a href="http://pan.baidu.com/s/1kVymrrT">http://pan.baidu.com/s/1kVymrrT</a> 密码：n5kf<br>aparted是那个帖子里的内存卡分区软件<br>juicessh是ssh软件,破解版的,别升级,linux deploy安装完升级下,我找不到我这个版本了。。<br /><br /><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqly1fkr7mclz45j30k00zkdhx.jpg" alt="arg"><br /><br>上图是我的参数,不过现在源好像改成了<a href="http://mirrors.aliyun.com/kali/,%E6%9E%B6%E6%9E%84%E5%8F%AF%E4%BB%A5%E8%87%AA%E5%B7%B1%E7%94%A8%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85cpu-z%E6%9F%A5%E7%9C%8B%E4%B8%8B%E8%87%AA%E5%B7%B1%E6%89%8B%E6%9C%BA%E6%98%AF%E5%95%A5%E6%9E%B6%E6%9E%84,%E9%80%89%E9%94%99%E4%BA%86%E4%BC%9A%E5%AE%89%E8%A3%85%E5%A4%B1%E8%B4%A5">http://mirrors.aliyun.com/kali/,架构可以自己用终端命令行或者cpu-z查看下自己手机是啥架构,选错了会安装失败</a><br>我也忘了我在线安装的时候用的哪个了<br /><br /><br>安装过程是下载包,解压包,安装包，当时没截图,借用下别人的图<br /><br><img src="http://imgsrc.baidu.com/forum/pic/item/ca4a3b00213fb80e654dd91931d12f2ebb389480.jpg" alt="demo"><br /><br /><br>安装完成后点击下面的启动,可能ssh啥的全部是skip,需要多点击几次停止启动停止启动<br /><br><img src="https://ws1.sinaimg.cn/large/005ZEsHqly1fkr7njksazj30k00zkwhg.jpg" alt="demo2"><br /><br /><br>安装完成如上图图所示(请忽略掉那个sdcard的skip,挂载安卓上的路径失败了)<br /></p>
 <p>成功与否看脸,另外多去<a href="http://tieba.baidu.com/f?kw=%E7%A7%BB%E5%8A%A8linux&ie=utf-8" target="_blank"><span style="font-size: 30px">移动linux吧</span></a>学习下</p>
 <h3>安卓上linux源码编译安装lnmp的坑和总结</h3>
 之前安卓安装linux的那个kali的内存卡被我多此读写后坏了
@@ -549,7 +549,7 @@ ldconfig -v
 <pre><code>usermod -a -G aid_inet www</code></pre>
 
 <p>然后也访问php页面成功<br><br /><br><span style="color: red;font-size: 22px">步骤是按照我写的lnmp脚本来执行的，除了上面的俩个用户组和修正动态链接库的命令以外和我脚本一模一样<br>脚本里写得步骤清晰，还有注释，有兴趣大家去看看<a href="www.zhangguanzhang.com/download/lnmp.sh" target="_blank">centos一键lnmp脚本</a><br>脚本不定期更新，如果使用的话每次下载下</span></p>
-<p>7.30最新进展,录制了安装视频<br>链接：<a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1bptScGZ">http://pan.baidu.com/s/1bptScGZ</a> 密码：pdk5</p>
+<p>7.30最新进展,录制了安装视频<br>链接：<a href="http://pan.baidu.com/s/1bptScGZ">http://pan.baidu.com/s/1bptScGZ</a> 密码：pdk5</p>
 
     </article>
     <!-- license -->
@@ -558,7 +558,7 @@ ldconfig -v
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2017/04/09/armlnmp/">http://zhangguanzhang.github.io/2017/04/09/armlnmp/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2017/04/09/armlnmp/">April 9th 2017, 9:41:08 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2017/04/09/armlnmp/">April 9th 2017, 9:41:08 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">

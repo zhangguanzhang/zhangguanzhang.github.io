@@ -482,8 +482,8 @@
 
 <p>看这个宏定义内的代码就是 fcntl 使用 <code>F_OFD_SETLK</code> 针对 Pid 文件上锁，这个特性是内核特性，现场是 CentOS 7.4 ，内核版本 <code>3.10.0-693.el7.x86_64</code>，想看下这块提交，于是下载源码后找到下面俩个 commmit：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/acassen/keepalived/commit/2c4cd3b927e5f12f59c62481261621b70375a304">https://github.com/acassen/keepalived/commit/2c4cd3b927e5f12f59c62481261621b70375a304</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/acassen/keepalived/commit/7d2b85d1f03d3ae2944237c60c3eeb5edc4fa12a">https://github.com/acassen/keepalived/commit/7d2b85d1f03d3ae2944237c60c3eeb5edc4fa12a</a></li>
+<li><a href="https://github.com/acassen/keepalived/commit/2c4cd3b927e5f12f59c62481261621b70375a304">https://github.com/acassen/keepalived/commit/2c4cd3b927e5f12f59c62481261621b70375a304</a></li>
+<li><a href="https://github.com/acassen/keepalived/commit/7d2b85d1f03d3ae2944237c60c3eeb5edc4fa12a">https://github.com/acassen/keepalived/commit/7d2b85d1f03d3ae2944237c60c3eeb5edc4fa12a</a></li>
 </ul>
 <p>第一个 commit 是增加 Pid 锁，第二个是允许宏定义不用这个特性在老系统上构建，利用 autoconf 检测支持 <code>F_OFD_SETLK</code> 不。</p>
 <h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>因为我们使用的是容器化部署，基础镜像换成欧拉了，而欧拉的包管理安装的 keepalived 版本太低，所以我是 Dockerfile 内编译安装的 keepalived，而构建这个镜像的机器的内核比较高，只能构建的时候传递选项关闭了。</p>
@@ -502,7 +502,7 @@
             <p>原文链接：<a href="http://zhangguanzhang.github.io/2025/10/17/keepalived-locking-pid-file-invalid/">http://zhangguanzhang.github.io/2025/10/17/keepalived-locking-pid-file-invalid/</a>
             <p>发表日期：<a href="http://zhangguanzhang.github.io/2025/10/17/keepalived-locking-pid-file-invalid/">October 17th 2025, 6:10:30 pm</a>
             <p>更新日期：<a href="http://zhangguanzhang.github.io/2025/10/17/keepalived-locking-pid-file-invalid/">October 17th 2025, 6:10:30 pm</a>
-            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">
