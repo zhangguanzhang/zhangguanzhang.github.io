@@ -421,6 +421,32 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2019/03/03/kubernetes-1-13-4/">
+                <span class="abstract-title-text">二进制部署Kubernetes v1.13.12 HA可选</span>
+            </a>
+            <div class="abstract-content">
+                本次采用二进制文件方式部署,本文过程写成了更详细更多可选方案的ansible部署方案 https://github.com/zhangguanzhang/Kubernetes-ansible和之前的步骤差不多都是和kubeadm步骤一样,不过这次所有kubelet全部走bootstrap不会像之前master上的kubelet生成证书,另外证书换成openssl生成
+不建议使用secureCRT这个ssh软件复制本篇博客内容的命令,因为它的部分版本对包含多条命令的处理结果并不完美,可能很多命令不是预期结果
+本文命令里有些是输出,不要乱粘贴输入(虽然也没影响)
+本文命令全部是在k8s-m1...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2019/03/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/03</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="operator">operator</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2019/02/19/jira-confluence/">
                 <span class="abstract-title-text">docker部署jira(8.0.0)和confluence(6.14.1)</span>
             </a>
@@ -816,29 +842,6 @@ Clust...
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/07/18/ecs-vip/">
-                <span class="abstract-title-text">基于openstack的ecs上使用VIP</span>
-            </a>
-            <div class="abstract-content">
-                客户需要在云上使用vip,后面发现不通，查询了后发现openstack的neutron会存在ip和mac绑定的关系,可以阅读下面的链接查看说明https://blog.codecentric.de/en/2016/11/highly-available-vips-openstack-vms-vrrp/即如果网卡上有不是下发的ip在向外发包后包会被drop掉,需要用neutron的cli解绑ip和mac的绑定,我们这这个功能已经做在了web上了,所以可以直接解绑
-存在绑定的关系下，意味着flanneld不能使用host-gw模式，除非云厂商实现了cni-plugins或者不是原生的open...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2018/07/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/18</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="keepavlied">keepavlied</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/10/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/12/">NEXT &gt;</a>
@@ -1158,9 +1161,10 @@ Clust...
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 212
+        Total : 213
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1177,6 +1181,10 @@ Clust...
         <li class="archive-post-item">
             <span class="archive-post-date">04/09</span>
             <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/06</span>
+            <a class="archive-post-title" href="/2026/04/06/k8s-vm-im-timeout/">K8S IM 服务高峰期频繁 tcp timeout</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">02/23</span>

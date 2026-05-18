@@ -1,0 +1,2936 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Zhangguanzhang">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Zhangguanzhang">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="记录生活点滴">
+    <meta name="description" content="记录下一次虚拟机上K8S IM 服务高峰期 timeout 排查过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8S IM 服务高峰期频繁 tcp timeout">
+<meta property="og:url" content="http://zhangguanzhang.github.io/2026/04/06/k8s-vm-im-timeout/">
+<meta property="og:site_name" content="Zhangguanzhang">
+<meta property="og:description" content="记录下一次虚拟机上K8S IM 服务高峰期 timeout 排查过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/k8s-im-grpc-client-net-rst.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/linux-softirq-on-single-core.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/Linux-RSS.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/Linux-RPS.png">
+<meta property="article:published_time" content="2026-04-06T09:10:30.000Z">
+<meta property="article:modified_time" content="2026-04-06T09:10:30.000Z">
+<meta property="article:author" content="Zhangguanzhang">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="kylin">
+<meta property="article:tag" content="net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/k8s-im-grpc-client-net-rst.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>K8S IM 服务高峰期频繁 tcp timeout · zhangguanzhang&#39;s Blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+        <script>
+            var hits = JSON.parse('{"per_page":10}')
+            var labels = JSON.parse('{"input_placeholder":"Search for Posts","hits_empty":"We did not find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}')
+
+            var algolia = {
+                applicationID: '3RNEGEC262',
+                apiKey: '6403a5f93c8554eb5b5ed2ad42b9693e',
+                indexName: 'blog',
+                hits: hits,
+                labels: labels
+            }
+        </script>
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 8.1.0"><link rel="alternate" href="/atom.xml" title="Zhangguanzhang" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">zhangguanzhang's Blog</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">zhangguanzhang&#39;s Blog</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">K8S IM 服务高峰期频繁 tcp timeout</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                K8S IM 服务高峰期频繁 tcp timeout
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="kubernetes">kubernetes</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="net">net</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="kylin">kylin</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">6.8k</span>阅读时长: <span class="post-count reading-time">31 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2026/04/06</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>记录下一次虚拟机上K8S IM 服务高峰期 timeout 排查过程。</p>
+<span id="more"></span>
+
+<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>客户采购我们服务，客户提供了 arm64 鲲鹏虚拟化上的 Kylin 虚机部署，整体是部署 K8S 后再部署 IM 业务，今年2月份开始，IM 服务在白天高峰期使用期间频繁消息发不出去，日志里频繁出现 grpc 报错 <code>connenction timed out</code></p>
+<h2 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h2><p>k8s: </p>
+<ul>
+<li>version: <code>1.27.16</code></li>
+<li>CNI: flannel vxlan</li>
+<li>Pod CIDR：<code>10.187.0.0/16</code><br>docker: 26.1.4<br>os: <code>Kylin Linux Advanced Server V10 (Tercek)</code><br>kernel: <code>4.19.90-23.50.v2101.ky10.aarch64</code></li>
+</ul>
+<p>客户环境完全内网，无法远程，不允许执行 sudo 和切到 root，需要执行啥 root 命令和抓包都要输出相关步骤给客户，客户反馈给他们的云平台的人执行。</p>
+<h2 id="故障现象描述"><a href="#故障现象描述" class="headerlink" title="故障现象描述"></a>故障现象描述</h2><p>客户去年采购我们服务，然后客户公司的云平台提供了 arm64 鲲鹏虚拟化上的 Kylin 虚机，然后我们实施去部署 IM 服务，今年2月份开始，IM 服务在白天高峰期使用期间频繁消息发不出去，就是类似微信那样消息发送失败，然后消息左侧有个红色圈，点它重试发送，或者消息转圈很久才发送出去。<br>客户反馈去年没这个现象，今年2月份中附近开始频繁出现，已经严重影响使用，使用人数没有增加，为啥开始频繁出现。</p>
+<h2 id="出差排查"><a href="#出差排查" class="headerlink" title="出差排查"></a>出差排查</h2><p>安排我和一个 IM 服务研发出差去客户现场排查，总体大致人群：</p>
+<ul>
+<li>我司人员有 3-4 人在现场，我和 IM 研发为主</li>
+<li>客户的 pm 和部分技术人员</li>
+<li>客户的云平台人员</li>
+</ul>
+<h3 id="离谱的后端接口逻辑"><a href="#离谱的后端接口逻辑" class="headerlink" title="离谱的后端接口逻辑"></a>离谱的后端接口逻辑</h3><p>第一天 03&#x2F;27 周五晚上到达，然后去客户那儿，其他同事认为是我们以前设计的 raw 规则问题导致，来之前给了客户删除相关规则的命令，客户的云平台人员执行变更后，让我去客户环境确认下，客户晚上是不使用 IM 服务的。确认 IM 几台删除了相关 raw 规则，然后去客户办公室打算走，然后客户有个女 nodejs 后端上架一个插件后功能有问题，就大致帮她看了下。</p>
+<p>页面功能大概为打开投稿弹出一个上传，封面图片和 pdf 和其他日期参数，然后提交后显示已有的，显示不到，去数据库查询，pdf 和图片相关信息都为空。坐在旁边看了下代码，代码逻辑大概如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">let pdf_name=&quot;&quot;;</span><br><span class="line">let pdf_size=&quot;&quot;;</span><br><span class="line">let cover_url=&quot;&quot;;</span><br><span class="line"></span><br><span class="line">app.post(&#x27;/app/upload&#x27;, (req, res) =&gt; &#123;</span><br><span class="line">  uploadpdf_to_minio();</span><br><span class="line">  if req.file.type == &quot;pdf&quot; &#123;</span><br><span class="line">    pdf_name=req.xxx;</span><br><span class="line">    pdf_size=req.xxx;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    cover_url=&quot;xxxx&quot;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.post(&#x27;/app/uploadComplete&#x27;, (req, res) =&gt; &#123;</span><br><span class="line">    save_to_db(pdf_name,pdf_size,cover_url);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>大概伪代码如上，因为 pdf 和封面上传，最后提交表单创建，她写的一个上传接口支持 pdf 和封面两种类型，最后提交的时候取全局变量入库，问我能不能只改后端解决问题（前后端需要打包成一个插件包部署的），我想了下只有前后端一起改才能解决了，最主要的是前端居然也会配合这种逻辑来写。<br>最后让她们前后端都重构，分为三个接口做，图片和 pdf 和最后提交（一个上传和一个提交也行，但是怕她们后续还要做修改已有投稿属性需求），改的过程中发现前端居然用的是原生 js ，还有原型链到处用，改错了好几次，问怎么不用 ts 强类型的，她回复项目一直用的 js，最后折腾好久才上线。<br>当然我中途说了上传文件逻辑存在隐患，文件名都是原始的返回前端，会可以被人恶意攻击覆盖，不过她们也不管了，说先上线。</p>
+<h3 id="初步排查"><a href="#初步排查" class="headerlink" title="初步排查"></a>初步排查</h3><p>03&#x2F;30 IM 研发到场，结果前一周五晚上下班后还做了另一个变更，客户上了另一个他们开发的插件，该插件造成 IM 服务某个地方有问题，当天基本花时间处理这个问题去了。</p>
+<p>IM 研发组在出差之前让现场根据他们代码逻辑搜了下日志，找到了 grpc 的报错：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/grpc/grpc-go/blob/v1.60.1/internal/transport/http2_client.go#L1571</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *http2Client)</span></span> reader(errCh <span class="keyword">chan</span>&lt;- <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">defer</span> <span class="built_in">close</span>(t.readerDone)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err := t.readServerPreface(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		errCh &lt;- err</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">close</span>(errCh)</span><br><span class="line">	<span class="keyword">if</span> t.keepaliveEnabled &#123;</span><br><span class="line">		atomic.StoreInt64(&amp;t.lastRead, time.Now().UnixNano())</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// loop to keep reading incoming messages on this transport.</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		t.controlBuf.throttle()</span><br><span class="line">		frame, err := t.framer.fr.ReadFrame()</span><br><span class="line">		<span class="keyword">if</span> t.keepaliveEnabled &#123;</span><br><span class="line">			atomic.StoreInt64(&amp;t.lastRead, time.Now().UnixNano())</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="comment">// Abort an active stream if the http2.Framer returns a</span></span><br><span class="line">			<span class="comment">// http2.StreamError. This can happen only if the server&#x27;s response</span></span><br><span class="line">			<span class="comment">// is malformed http2.</span></span><br><span class="line">			<span class="keyword">if</span> se, ok := err.(http2.StreamError); ok &#123;</span><br><span class="line">				t.mu.Lock()</span><br><span class="line">				s := t.activeStreams[se.StreamID]</span><br><span class="line">				t.mu.Unlock()</span><br><span class="line">				<span class="keyword">if</span> s != <span class="literal">nil</span> &#123;</span><br><span class="line">					<span class="comment">// use error detail to provide better err message</span></span><br><span class="line">					code := http2ErrConvTab[se.Code]</span><br><span class="line">					errorDetail := t.framer.fr.ErrorDetail()</span><br><span class="line">					<span class="keyword">var</span> msg <span class="type">string</span></span><br><span class="line">					<span class="keyword">if</span> errorDetail != <span class="literal">nil</span> &#123;</span><br><span class="line">						msg = errorDetail.Error()</span><br><span class="line">					&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">						msg = <span class="string">&quot;received invalid frame&quot;</span></span><br><span class="line">					&#125;</span><br><span class="line">					t.closeStream(s, status.Error(code, msg), <span class="literal">true</span>, http2.ErrCodeProtocol, status.New(code, msg), <span class="literal">nil</span>, <span class="literal">false</span>)</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="comment">// Transport error.</span></span><br><span class="line">				t.Close(connectionErrorf(<span class="literal">true</span>, err, <span class="string">&quot;error reading from server: %v&quot;</span>, err))</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是服务调用 grpc read 报错了 <code>error reading from server: read tcp 10.187.6.94:54034 -&gt; 10.187.9.85:3169: read: connection timed out</code>，从 grpc 逻辑看，这个不是 grpc 应用层，而是下层网络层出现的问题。</p>
+<p>后面搜关键字 <code>error reading from server</code> 发现 IM 服务涉及到作为 grpc 客户端的服务都会白天业务高峰期随机打这个报错，根据 trace-id 搜索日志，发现服务日志上下文出现了以下：</p>
+<ul>
+<li>作为 http <code>i/o timeout</code> 的 <code>Post \&quot;http://....\&quot;: dial tcp 10.96.x.x:80 i/o timeout</code></li>
+<li>作为 redis 客户端的 <code>read tcp 10.187.x.xx:43823 -&gt; host_ip:6379: i/o timeout</code></li>
+</ul>
+<p>查看 Prometheus 监控均无丢包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 两天跨度</span><br><span class="line">irate(node_network_receive_drop_total[5m]) 数据为0</span><br><span class="line">rate(node_network_transmit_drop_total[5m]) 0-0.0033波动</span><br><span class="line">rate(node_network_receive_errs_total[5m]) 一直为0</span><br><span class="line">rate(node_network_transmit_errs_total[5m]) 一直为0</span><br><span class="line">rate(node_netstat_TcpExt_ListenOverflows[5m]) 数值基本为0，每天只有个别尖刺为1</span><br><span class="line">rate(node_netstat_TcpExt_ListenDrops[5m]) 数值基本为0，每天只有个别尖刺为1</span><br></pre></td></tr></table></figure>
+
+<p>并且监控上看 conntrack 条目都没达到 max，系统日志 kernel 和 dmesg 均无异常。</p>
+<p>现场服务分布是 IM 服务在其中的八台节点上面，然后让客户找 3-4 台迁移到同一个虚拟化宿的主机上，客户说不支持，客户说问了云平台说不支持。我算是看出来了，让这个云平台做事非常麻烦😂。</p>
+<h3 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h3><p>由于客户云平台不愿意调整节点虚机分布情况，必须有作为，03&#x2F;31 号就想着抓下包看看，客户云平台要求我们发抓包命令他们去抓😂，哎心累。选择一个最频繁的 IM 服务，抓它作为 grpc 客户端访问另一个 IM 服务的情况：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timeout 15m tcpdump -nn -i cni0 host and 10.187.5.89 and port 3169 -w 21.41-10.187.5.89-port3169.pcap</span><br></pre></td></tr></table></figure>
+
+<p>因为 K8S 的 Pod 容器的 veth 都是挂在 cni0 下的，所以抓 cni0 和限制端口，3169 是另一个服务的 grpc server 端口。抓完后，搜这个 5.89 的 grpc client 容器日志 <code>error reading from server</code> 找它作为客户端时候端口数字，然后抓包文件在 wireshark 里过滤，最后找到了对应的：</p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/k8s-im-grpc-client-net-rst.png" alt="k8s-im-grpc-client-net-rst"></p>
+<p>过滤后的 pcap 文件使用 tcpdump 转换下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tcpdump -nn -r xxx.pcap &gt; grpc.txt</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> grpc.txt</span></span><br><span class="line">...</span><br><span class="line">15:42:16.983236 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [P.], seq 936445:937108, ack 877897, win 3576, options [nop,nop,TS val 4046697723 ecr 2606253242], length 663</span><br><span class="line">15:42:17.075246 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [.], ack 935375, win 2973, options [nop,nop,TS val 2606253385 ecr 4046697578], length 0</span><br><span class="line">15:42:17.075265 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], seq 937108:938506, ack 877897, win 3576, options [nop,nop,TS val 4046697815 ecr 2606253385], length 1398</span><br><span class="line">15:42:17.103330 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [.], ack 935800, win 2973, options [nop,nop,TS val 2606253413 ecr 4046697666], length 0</span><br><span class="line">15:42:17.103516 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [P.], seq 938506:939886, ack 877897, win 3576, options [nop,nop,TS val 4046697843 ecr 2606253413], length 1380</span><br><span class="line">15:42:17.103679 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 877897:877927, ack 935800, win 2973, options [nop,nop,TS val 2606253413 ecr 4046697666], length 30</span><br><span class="line">15:42:17.155748 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 877927, win 3576, options [nop,nop,TS val 4046697895 ecr 2606253413], length 0</span><br><span class="line">15:42:17.261364 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [.], ack 937108, win 2973, options [nop,nop,TS val 2606253571 ecr 4046697693], length 0</span><br><span class="line">15:42:17.261380 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], seq 939886:942682, ack 877927, win 3576, options [nop,nop,TS val 4046698001 ecr 2606253571], length 2796</span><br><span class="line">15:42:17.377646 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 877927:878006, ack 937108, win 2973, options [nop,nop,TS val 2606253687 ecr 4046697693], length 79</span><br><span class="line">15:42:17.377728 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878006, win 3576, options [nop,nop,TS val 4046698117 ecr 2606253687], length 0</span><br><span class="line">15:42:17.546274 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [.], ack 937108, win 2973, options [nop,nop,TS val 2606253856 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 0</span><br><span class="line">15:42:17.546287 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], seq 937108:938506, ack 878006, win 3576, options [nop,nop,TS val 4046698286 ecr 2606253856], length 1398</span><br><span class="line">15:42:17.546289 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [P.], seq 938506:939886, ack 878006, win 3576, options [nop,nop,TS val 4046698286 ecr 2606253856], length 1380</span><br><span class="line">15:42:18.086062 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 877927:878006, ack 937108, win 2973, options [nop,nop,TS val 2606254395 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 79</span><br><span class="line">15:42:18.086149 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878006, win 3576, options [nop,nop,TS val 4046698826 ecr 2606254395,nop,nop,sack 1 &#123;877927:878006&#125;], length 0</span><br><span class="line">15:42:18.115164 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 878006:878120, ack 937108, win 2973, options [nop,nop,TS val 2606254425 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 114</span><br><span class="line">15:42:18.115179 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878120, win 3576, options [nop,nop,TS val 4046698855 ecr 2606254425], length 0</span><br><span class="line">15:42:18.132230 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 878120:878199, ack 937108, win 2973, options [nop,nop,TS val 2606254442 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 79</span><br><span class="line">15:42:18.132265 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878199, win 3576, options [nop,nop,TS val 4046698872 ecr 2606254442], length 0</span><br><span class="line">15:42:18.135213 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 878199:878263, ack 937108, win 2973, options [nop,nop,TS val 2606254445 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 64</span><br><span class="line">15:42:18.135245 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878263, win 3576, options [nop,nop,TS val 4046698875 ecr 2606254445], length 0</span><br><span class="line">15:42:18.245356 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], seq 937108:938506, ack 878263, win 3576, options [nop,nop,TS val 4046698985 ecr 2606254445], length 1398</span><br><span class="line">15:42:18.664046 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 878263:878515, ack 937108, win 2973, options [nop,nop,TS val 2606254974 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 252</span><br><span class="line">15:42:18.664056 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878515, win 3576, options [nop,nop,TS val 4046699404 ecr 2606254974], length 0</span><br><span class="line">15:42:18.664121 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 878515:878767, ack 937108, win 2973, options [nop,nop,TS val 2606254974 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 252</span><br><span class="line">15:42:18.664134 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878767, win 3576, options [nop,nop,TS val 4046699404 ecr 2606254974], length 0</span><br><span class="line">15:42:19.605358 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], seq 937108:938506, ack 878767, win 3576, options [nop,nop,TS val 4046700345 ecr 2606254974], length 1398</span><br><span class="line">15:42:20.261862 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 878767:878804, ack 937108, win 2973, options [nop,nop,TS val 2606256572 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 37</span><br><span class="line">15:42:20.261871 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [.], ack 878804, win 3576, options [nop,nop,TS val 4046701001 ecr 2606256572], length 0</span><br><span class="line">15:42:21.593744 IP 10.187.9.85.3169 &gt; 10.187.5.89.33344: Flags [P.], seq 878804:881233, ack 937108, win 2973, options [nop,nop,TS val 2606257904 ecr 4046697693,nop,nop,sack 1 &#123;939886:942682&#125;], length 2429</span><br><span class="line">15:42:21.593759 IP 10.187.5.89.33344 &gt; 10.187.9.85.3169: Flags [R], seq 820483431, win 0, length 0</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 sack hole <code>ack 937108 sack {939886:942682}</code> 说服务端收到了后面的 <code>939886:942682</code>，但还在等前面的 <code>937108:939886</code>。由于监控查看了网卡没有丢包 drop，可能发生在队列、qdisc、conntrack、overlay、虚拟网卡、软中断、对端内核处理慢、中间 NAT&#x2F;SLB 等位置。</p>
+<p>期间客户不愿意迁移虚机，就让我们调整服务分布：</p>
+<ul>
+<li>grpc client 和 server 的 Pod 到同一个节点</li>
+<li>相关 Pod 重启调整副本到其他节点上啥的</li>
+<li>某个服务副本数量调整</li>
+</ul>
+<p>让我们各种配合折腾，然后出现了某个他们认为不合理的现象，晚上开会让我们解释，服务太多了而且是网状调用，我感觉解释没啥意义。</p>
+<h3 id="进一步分析"><a href="#进一步分析" class="headerlink" title="进一步分析"></a>进一步分析</h3><p>在开会沟通的时候，客户有个人员反馈在白天业务高峰期长 ping 了下节点 IP 发现丢包，结合前面监控和都是 client 角色的 tcp 连接出现，而且 IM 节点机器都在同一个二层，感觉更像是软中断造成。当场离开会议室，去客户测试环境上用 iperf3 压测了下确实复现了。</p>
+<p>然后第二天白天客户上班时间，查看了下节点监控，白天的时候业务高峰期 CPU 负载都普遍 70%-80%，使用 mpstat 看下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mpstat -P ALL 1</span></span><br><span class="line">...</span><br><span class="line">15时:05分:01秒  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle</span><br><span class="line">15时:05分:02秒  all   32.95    0.00   21.46    0.00    1.40   25.40    0.00    0.00    0.00   18.79</span><br><span class="line">15时:05分:02秒    0   26.32    0.00   45.45    0.00    1.01   21.21    0.00    0.00    0.00    6.06</span><br><span class="line">15时:05分:02秒    1   33.98    0.00   23.30    0.00    0.97   23.30    0.00    0.00    0.00   18.45</span><br><span class="line">15时:05分:02秒    2   40.00    0.00   20.00    0.00    7.00   21.00    0.00    0.00    0.00   12.00</span><br><span class="line">15时:05分:02秒    3   22.92    0.00   19.79    0.00    1.04   20.83    0.00    0.00    0.00   35.42</span><br><span class="line">15时:05分:02秒    4   23.00    0.00   12.00    0.00    1.00   27.00    0.00    0.00    0.00   37.00</span><br><span class="line">15时:05分:02秒    5   24.51    0.00   25.49    0.00    0.98   27.45    0.00    0.00    0.00   21.57</span><br><span class="line">15时:05分:02秒    6   21.98    0.00   21.98    0.00    3.30   16.48    0.00    0.00    0.00   36.26</span><br><span class="line">15时:05分:02秒    7   25.51    0.00   22.45    0.00    0.00   31.63    0.00    0.00    0.00   20.41</span><br><span class="line">15时:05分:02秒    8   34.38    0.00   22.92    0.00    1.04   21.88    0.00    0.00    0.00   19.79</span><br><span class="line">15时:05分:02秒    9    3.09    0.00    4.12    0.00    1.03   91.75    0.00    0.00    0.00    0.00</span><br><span class="line">15时:05分:02秒   10   26.26    0.00   30.30    0.00    1.01   22.22    0.00    0.00    0.00   20.20</span><br><span class="line">15时:05分:02秒   11   66.67    0.00   16.16    0.00    1.01    9.09    0.00    0.00    0.00    7.07</span><br><span class="line">15时:05分:02秒   12   87.88    0.00    7.07    0.00    0.00    5.05    0.00    0.00    0.00    0.00</span><br><span class="line">15时:05分:02秒   13   26.73    0.00   27.72    0.00    0.99   29.70    0.00    0.00    0.00   14.85</span><br><span class="line">15时:05分:02秒   14   26.53    0.00   22.45    0.00    1.02   22.45    0.00    0.00    0.00   27.55</span><br><span class="line">15时:05分:02秒   14   36.08    0.00   21.65    0.00    1.03   15.46    0.00    0.00    0.00   25.77</span><br><span class="line">^C</span><br></pre></td></tr></table></figure>
+
+<p>CPU9 的软中断太高了，网卡收包软中断可以通过 Linux 的 <a target="_blank" rel="noopener" href="https://insights-core.readthedocs.io/en/latest/shared_parsers_catalog/softnet_stat.html">softnet_stat</a> 查看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">awk <span class="string">&#x27;&#123;for (i=1; i&lt;=NF; i++) printf strtonum(&quot;0x&quot; $i) (i==NF?&quot;\n&quot;:&quot; &quot;)&#125;&#x27;</span> /proc/net/softnet_stat | column -t</span></span><br><span class="line">1938196764  0     64045  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">4102185009  0     62016  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">2617098581  0     60736  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">1981260274  0     61325  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">2030547761  0     61382  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">3711414160  0     66266  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">1912023011  0     60173  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">1205738633  0     60451  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">4206669130  0     49669  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">3091698373  0     85583  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">967669351   0     51121  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">1147484404  0     54033  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">3309583543  0     50007  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">3025071012  0     57034  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">2015253678  0     56725  0  0  0  0  0  0  0  0  0  0</span><br><span class="line">4257427908  0     68121  0  0  0  0  0  0  0  0  0  0</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">grep -E <span class="string">&#x27;CPU|virtio.+(in|out)put&#x27;</span> /proc/interrupts</span></span><br><span class="line">           CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7       CPU8       CPU9       CPU10       CPU11       CPU12       CPU13       CPU14       CPU15</span><br><span class="line"> 98:      23713      34466      39165      25040     114273      49758      27276      70459          0 2075005390           0      152774       15573       93013      125418       93070    ITS-MSI 1572865 Edge   virtio3-input.0    </span><br><span class="line"> 99:          0          0          0          0          1          0          0          0          0  184847131           0           0           0           0           0           0    ITS-MSI 1572866 Edge   virtio3-output.0   </span><br><span class="line">...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ip a s | grep enp3</span></span><br><span class="line">2: enp3s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    inet xxx.x.xx.xx/24 brd xxx.x.xx.xxx scope global enp3s0</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> /proc/irq/98/smp_affinity</span></span><br><span class="line">00000000,00000000,00000000,00000200</span><br><span class="line">cat /proc/irq/98/smp_affinity_list</span><br><span class="line">9</span><br></pre></td></tr></table></figure>
+
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>可以看到 cpu softirq 在 CPU9 上很高，而 <code>/proc/net/softnet_stat</code> 分析：</p>
+<p>第二列（dropped）为0，softnet_stat 第三列(time_squeeze)里为不0：<br>• 每轮 softirq 有处理预算（时间&#x2F;包数），内核规定一次软中断最多处理 <code>netdev_budget</code> 个包（默认 300），或最多运行 2 个 jiffies（约 2ms），没处理完就被调度器打断，下次再来<br>• 若时间 &#x2F; 包数到了，队列里还有没处理完的包，就会 <code>time_squeeze++</code><br>然后👆 <code>/proc/interrupts</code> 里看到 <code>virtio3-input</code> 在 CPU9 上中断太多了，而 <code>virtio3</code> 对应业务网卡 <code>enp3s0</code>， 说明 cpu 在处理网卡包的时候软中断太多。</p>
+<p>不是：<br>• ❌ backlog 太小（否则 <code>/proc/net/softnet_stat</code> 第2列会涨），并且客户的 <code>backlog</code> 不是默认的 <code>1000</code> 而是 <code>8000</code><br>• ❌ ring buffer 溢出（通常会伴随 drop）<br>• ❌ 纯网络丢包</p>
+<p>从这些信息来看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">流量进入网卡</span><br><span class="line">   ↓</span><br><span class="line">集中打到单核 CPU（IRQ/RSS 不均）</span><br><span class="line">   ↓</span><br><span class="line">softirq 来不及及时处理（time_squeeze 增长）</span><br><span class="line">   ↓</span><br><span class="line">包没有丢，但“排队延迟”变大</span><br><span class="line">   ↓</span><br><span class="line">TCP ACK / 数据包延迟</span><br><span class="line">   ↓</span><br><span class="line">应用等待超时（read timeout）</span><br><span class="line">   ↓</span><br><span class="line">应用主动关闭连接 → 发送 RST</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/linux-softirq-on-single-core.png" alt="linux-softirq-on-single-core"></p>
+<p>询问了下研发，发消息的 IM 大概调用链如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    IM_C[IM 客户端]</span><br><span class="line">    IM_C --http--&gt; GW[总网关]</span><br><span class="line">    GW[总网关] --http--&gt; IM_G[IM 网关]</span><br><span class="line">    IM_G[IM 网关] --http--&gt; IM_LOGIC[IM logic]</span><br><span class="line">    IM_LOGIC[IM logic] --grpc--&gt; IM_MSG[IM MSG]</span><br><span class="line">    IM_MSG[IM MSG] --grpc--&gt; IM_IDG[IM IDG]</span><br></pre></td></tr></table></figure>
+
+<p>为啥只有 grpc 报错，应该也有 http 的，然后 IM 服务研发告诉我 IM 服务的 http client 封装的有重试逻辑，然后在 loki 里搜 IM 服务的 retry 关键字搜了下确实也有不少。然后不筛选 IM 服务搜 http 的 <code>Client.Timeout</code> 发现也有其他业务组的超时。因为消息需要大量鉴权和判断用户组和权限啥的，所以 IM 服务都是用 grpc 长链接互相调用，避免多次 http 调用产生的开销，而长连接最容易收到影响，例如开头提到的 redis client 也报错了。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>单 CPU 处理网络 I&#x2F;O 存在瓶颈下，可以使用网卡多队列提高性能。</p>
+<p>通常情况下, 每张网卡有一个队列(queue), 所有收到的包从这个队列入, 内核从这个队列里取数据处理. 该队列其实是 ring buffer(环形队列), 内核如果取数据不及时, 则会存在丢包的情况.<br>一个CPU处理一个队列的数据, 这个叫中断。默认是cpu0(第一个CPU)处理。一旦流量特别大, 这个 CPU 负载很高, 性能存在瓶颈。所以网卡开发了多队列功能, 即一个网卡有多个队列, 收到的包根据 TCP 四元组信息 hash 后放入其中一个队列, 后面该链接的所有包都放入该队列。每个队列对应不同的中断, 使用 irqbalance 将不同的中断绑定到不同的核。充分利用了多核并行处理特性。提高了效率。</p>
+<h3 id="RSS"><a href="#RSS" class="headerlink" title="RSS"></a>RSS</h3><p>目前是单队列到单个 CPU 上，而 Linux 有 RSS 硬件层面解决</p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/Linux-RSS.png" alt="Linux-RSS"></p>
+<p>但是机器是虚拟机，网上很多网络优化文章都是物理机下使用的，<code>ethtool -x eth0</code> 啥的都无法使用或者信息缺少和不支持，需要虚拟化上调整 virsh xml：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">model</span> <span class="attr">type</span>=<span class="string">&#x27;virtio&#x27;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">driver</span> <span class="attr">name</span>=<span class="string">&#x27;vhost&#x27;</span> <span class="attr">queues</span>=<span class="string">&#x27;8&#x27;</span>/&gt;</span> #新增</span><br></pre></td></tr></table></figure>
+
+<p>开启后会消耗主机更多的虚拟化域 CPU&#x2F;内存资源，即与虚拟机共享主机上的 CPU&#x2F;内存资源，单个虚拟机因网卡多队列导致额外的资源占用为：按1个虚拟机3个网卡来算，每个网卡8队列深度2048，会占用24个vhost线程，高负载极端情况下占用480MB内存（队列深度为2048，假设平均报文长度为10KB，则一个vhost-net线程最多因缓存报文占用20MB内存）；空载情况下占用的内存消耗可以忽略。开启后可以虚机内通过：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ethtool -l enp3s0</span></span><br><span class="line">Channel parameters for ens18:</span><br><span class="line">Pre-set maximums:</span><br><span class="line">RX:		0</span><br><span class="line">TX:		0</span><br><span class="line">Other:		0</span><br><span class="line">Combined:	1</span><br><span class="line">Current hardware settings:</span><br><span class="line">RX:		0</span><br><span class="line">TX:		0</span><br><span class="line">Other:		0</span><br><span class="line">Combined:	8 &lt;---</span><br></pre></td></tr></table></figure>
+
+<p>但是客户的虚拟化云平台组不让变更，说要是给虚拟化整崩了咋整。</p>
+<h3 id="RPS"><a href="#RPS" class="headerlink" title="RPS"></a>RPS</h3><p>然后就看系统层面有无解决办法，然后使用 Linux 的 RPS 了。RSS（工作在网卡的硬件层） 和 RPS（工作在 Linux 内核的软件层） 的目的都是把数据包分散到更多的 CPU 上进行处理，使得系统有更强的网络包处理能力。在把数据包分散到各个 CPU 时，保证了同一个数据流在一个 CPU 上，这样就可以减少包的乱序。</p>
+<p>iperf3 压测复现，在客户的测试环境使用找4台机器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">机器1起两个server端口</span></span><br><span class="line">iperf3 -s -p 5201</span><br><span class="line">iperf3 -s -p 5202</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">机器2和机器3 访问机器1</span></span><br><span class="line">iperf3 -c &lt;m1_ip&gt; -u -p 5201 -b 200M -l 128 -t 60</span><br><span class="line">iperf3 -c &lt;m1_ip&gt; -u -p 5201 -b 200M -l 128 -t 60</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">机器4 上ping机器1</span></span><br><span class="line">ping &lt;m1_ip&gt;</span><br></pre></td></tr></table></figure>
+
+<p>iperf3 的 Lost&#x2F;Total 列和压测期间ping统计信息都可以直观看到丢包，然后尝试配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">调整 rps_cpus 为4个核心，f的二进制为1111代表4个核心，需要<span class="built_in">sudo</span>或者root下执行</span></span><br><span class="line">echo f &gt; /sys/class/net/enp3s0/queues/rx-0/rps_cpus</span><br></pre></td></tr></table></figure>
+
+<p>然后同样步骤 iperf3 压测发现 ping 都不会丢包，并且查看 cpu 软中断不会集中到一个核心上。</p>
+<p><img src="https://raw.githubusercontent.com/zhangguanzhang/simple-container-network-book/refs/heads/master/images/Linux-RPS.png" alt="Linux-RPS"></p>
+<p>客户生产环境所有机器最小为 16C，所有机器的 rps_cpu 可以先配置4个核心不会太激进。其次客户是虚拟机，不是有 NUMA 的物理机，有 NUMA 给核心绑定的同时没有配置cpu亲和性的话会导致 cpu 跨 NUMA 而增加耗时，所以在虚拟机上这个方案没问题，客户问我虚拟化崩了咋整，我说调整虚拟机的内核参数给虚拟化整崩了那云平台那帮人不应该去找鲲鹏虚拟化的人理论吗。后面说这个变更要写方案和走流程审批。</p>
+<p>持久化，上面是 echo，机器重启就无了，可以用 systemd：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /etc/systemd/system/set-rps.service &lt;&lt; EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=Set RPS CPU mask for enp3s0</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/bin/sh -c &#x27;echo f &gt; /sys/class/net/enp3s0/queues/rx-0/rps_cpus&#x27;</span><br><span class="line">RemainAfterExit=yes</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>但是怕别人给 systemd 这个 unit 禁止了，使用 udev：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /etc/udev/rules.d/99-rps.rules &lt;&lt; EOF</span><br><span class="line">ACTION==&quot;add&quot;, SUBSYSTEM==&quot;net&quot;, KERNEL==&quot;enp3s0&quot;, RUN+=&quot;/bin/sh -c &#x27;echo f &gt; /sys/class/net/%k/queues/rx-0/rps_cpus&#x27;&quot;</span><br><span class="line">EOF</span><br><span class="line">udevadm control --reload-rules</span><br><span class="line">udevadm trigger</span><br></pre></td></tr></table></figure>
+
+<p>或者 <code>NetworkManager dispatcher</code>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /etc/NetworkManager/dispatcher.d/rps &lt;&lt; EOF</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">if [ &quot;$1&quot; = &quot;enp3s0&quot; ] &amp;&amp; [ &quot;$2&quot; = &quot;up&quot; ]; then</span><br><span class="line">    echo f &gt; /sys/class/net/enp3s0/queues/rx-0/rps_cpus</span><br><span class="line">fi</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>对于 node_exporter 相关采集是没有开启的，需要调整下</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/prometheus/node_exporter/blob/v1.8.2/collector/interrupts_common.go#L31</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	registerCollector(<span class="string">&quot;interrupts&quot;</span>, defaultDisabled, NewInterruptsCollector)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同理还有 <code>softirqs</code>，发现 softnet 开启了，但是没做 grafana 指标。</p>
+<h2 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h2><p>客户晚上 IM 服务无人使用，客户云平台的人一直不让先变更一两台，然后客户各种让我们调整服务副本数量和挪节点和重启服务和重启机器，每次操作完后的现象让我们解释和开会，非常心力憔悴，然后现场待到 04&#x2F;03周五，客户心累了让开个大会拉了我领导和 IM 研发领导，让我们指派一个总对接人，这个对接人向他汇报，缺啥人对接人去找。然后办公室的同事会后又拉个会，明明我们写了现场排查记录的云文档，后面上会来的人不仔细看，就直接来问现场某些监控数据和命令输出和内核参数，又是重复的浪费时间。然后又说内部搭建环境复现，问题是当天周五又是清明节放假，我觉得不现实，首先内部 arm64 机器资源紧张，而且当天下午肯定很多人请假，到时候谁来搭建环境和压测复现，而且客户节点和配置规格又高，客户等不了这么久。</p>
+<p>监控我们做了监控回放，但是客户监控数据很大，导出两天都很久，然后又是老版本，发到办公室的同事重放失败和慢，新版本又换了监控 agent 和指标。私有化就是这样，不像 toC 那样只有自己环境一个最新版本，很多客户现场是老版本而且不愿意升级。</p>
+<p>内核参数这块我记得以前三四年前配合麒麟找一个问题原因，麒麟让执行某个命令是收集 &#x2F;proc &#x2F;sys 目录下每个文件打包成压缩包，但是同事找了下麒麟的最新对接人，他说没这种。我记得以前整过一次的，哎，算了。</p>
+<p>由于 &#x2F;proc &#x2F;sys 下存在部分文件一直有内容产生的，直接 tar 打包成压缩包不现实，谷歌搜了下类似需求发现有 <code>sos_report</code> 命令，然后后面出差回来在华为云上开了按时计费的鲲鹏机器，发现 sos_report 会检查 os-release 直接报错不支持的系统，查看了下鲲鹏的相关参数：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sysctl -a |&amp; grep -E <span class="string">&#x27;net.core. .mem_max|net.ipv4.udp_mem|net.core.netdev_build|rps_&#x27;</span></span></span><br><span class="line">net.core.netdev_budget = 300</span><br><span class="line">net.core.netdev_budget_usecs = 8000</span><br><span class="line">net.core.rmem_max = 212992</span><br><span class="line">net.core.rps_sock_flow_entries =16384</span><br><span class="line">net.core.wmem_max = 212992</span><br><span class="line">net.ipv4.udp_mem = 1527822 2037098 3855644</span><br></pre></td></tr></table></figure>
+
+<p>开了一个 arm64 的 CentOS 还是啥系统来着，发现能收集到，但是解开看了下缺数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/root/sosreport-ecs-3dda-2026-04-08-yhycnjr/sys/class/net/eth0</span><br><span class="line">[root@gz eth0]# ls -l</span><br><span class="line">total 8</span><br><span class="line">-rw-r--r-- 1 root root    7 Apr  8 11:03 flags</span><br><span class="line">drwxr-xr-x 2 root root 4096 Apr  8 11:03 statistics</span><br></pre></td></tr></table></figure>
+
+<p>这次排查给我的感觉就像看病，一个病人觉得胸口不舒服，然后给他先开药吃下后续观察，他不吃，开检查说怕辐射，开穿刺病理检查说怕危险，啥都不愿意，就是要你最简单的排查手段能查出是啥病，这要不是 TOB和TOG 环境，而是 TOC 自己的环境，老早就晚上找时间调整下第二天就看成果了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.redhat.com/zh-cn/documentation/red_hat_enterprise_linux/8/html/monitoring_and_managing_system_status_and_performance/tuning-the-network-performance_monitoring-and-managing-system-status-and-performance">redhat 调优网络性能</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.redhat.com/zh-cn/documentation/red_hat_enterprise_linux/7/html/performance_tuning_guide/sect-red_hat_enterprise_linux-performance_tuning_guide-networking-configuration_tools#sect-Red_Hat_Enterprise_Linux-Performance_Tuning_Guide-Configuration_tools-Configuring_Receive_Packet_Steering_RPS">redhat 配置 RPS 和 RFS</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/2018/03/16/redis-high-concurrency-optimization.html">Redis 高负载下的中断优化</a></li>
+<li><a target="_blank" rel="noopener" href="https://quant67.com/post/k8s-network/01-linux-network-stack/linux-network-stack.html">一个包从网卡到用户态的完整旅程</a></li>
+</ul>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://zhangguanzhang.github.io">Zhangguanzhang</a>
+            <p>原文链接：<a href="http://zhangguanzhang.github.io/2026/04/06/k8s-vm-im-timeout/">http://zhangguanzhang.github.io/2026/04/06/k8s-vm-im-timeout/</a>
+            <p>发表日期：<a href="http://zhangguanzhang.github.io/2026/04/06/k8s-vm-im-timeout/">April 6th 2026, 9:10:30 am</a>
+            <p>更新日期：<a href="http://zhangguanzhang.github.io/2026/04/06/k8s-vm-im-timeout/">April 6th 2026, 9:10:30 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2026/04/09/openeuler-sudo-killed/" title="欧拉22.03容器内sudo 被 killed">
+                    <div class="nextTitle">欧拉22.03容器内sudo 被 killed</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2026/02/23/android-https-capture/" title="[持续更新] - 安卓 HTTPS 抓包那些事">
+                    <div class="prevTitle">[持续更新] - 安卓 HTTPS 抓包那些事</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+    <script src='https://utteranc.es/client.js'
+        repo='zhangguanzhang/blog-comment'
+        issue-term='title'
+        label='Comment'
+        theme='github-light'
+        crossorigin='anonymous'
+        async>
+    </script>
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:zhangguanzhang@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/zhangguanzhang" class="iconfont-archer github" target="_blank" title="github"></a>
+                <span class="iconfont-archer wechat" title="wechat">
+                    <img class="profile-qr" src="/assets/example_wc.png" />
+                </span>
+                <a href="/assets/zhifubao.png" class="iconfont-archer others" target="_blank" title="others"></a>
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B1%E6%9D%A5"><span class="toc-number">1.</span> <span class="toc-text">由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E4%BF%A1%E6%81%AF"><span class="toc-number">2.</span> <span class="toc-text">环境信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E7%8E%B0%E8%B1%A1%E6%8F%8F%E8%BF%B0"><span class="toc-number">3.</span> <span class="toc-text">故障现象描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BA%E5%B7%AE%E6%8E%92%E6%9F%A5"><span class="toc-number">4.</span> <span class="toc-text">出差排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%BB%E8%B0%B1%E7%9A%84%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3%E9%80%BB%E8%BE%91"><span class="toc-number">4.1.</span> <span class="toc-text">离谱的后端接口逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E6%AD%A5%E6%8E%92%E6%9F%A5"><span class="toc-number">4.2.</span> <span class="toc-text">初步排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8C%85"><span class="toc-number">4.3.</span> <span class="toc-text">抓包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90"><span class="toc-number">4.4.</span> <span class="toc-text">进一步分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">4.5.</span> <span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">5.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RSS"><span class="toc-number">5.1.</span> <span class="toc-text">RSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RPS"><span class="toc-number">5.2.</span> <span class="toc-text">RPS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E6%80%9D"><span class="toc-number">6.</span> <span class="toc-text">反思</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 213
+        </div>
+        <!-- search  -->
+            <div class="site-search site-search-loading popup-trigger">
+                <span class="iconfont-archer search-icon">&#xe627;</span>
+            </div>
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2026 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2026/04/09/openeuler-sudo-killed/">欧拉22.03容器内sudo 被 killed</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/06</span>
+            <a class="archive-post-title" href="/2026/04/06/k8s-vm-im-timeout/">K8S IM 服务高峰期频繁 tcp timeout</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span>
+            <a class="archive-post-title" href="/2026/02/23/android-https-capture/">[持续更新] - 安卓 HTTPS 抓包那些事</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2025/12/18/replacing-shell-commands-with-library-calls/">[持续更新] - 为什么不应该为了实现需求而调用命令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2025/11/12/docker-sandbox-dns/">docker 重启非 host 网络容器造成 dns 异常的梳理和pr修复</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2025/11/06/docker-GetImageBlob-no-such/">docker open /var/lib/docker/tmp/GetImageBlobXXX: no such file 的正确处理方式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/31</span>
+            <a class="archive-post-title" href="/2025/10/31/skopeo-copy-panic/">多线程执行skopeo copy panic的一次解决过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span>
+            <a class="archive-post-title" href="/2025/10/23/docker-bin-containerd/">离线安装docker和包管理安装docker下containerd的启动相关</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">keepalived Locking pid file error 22 - Invalid argument</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2025/10/15/k8s-NodePort-filter/">从自己造轮子NodePort白名单到参考 calico 规则</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2025/10/13/k8s-hostNetwork-hostname/">hostNetwork下hostname的坑</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2025/09/23/flannel.1-cannot-ping/">个别节点上 flannel.1 的 IP 无法 ping</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2025/09/12/salt-run-hang/">salt-run很久才返回</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span>
+            <a class="archive-post-title" href="/2025/09/10/kylin-4.19.90-52.49-udp-drop/">麒麟内核4.19.90-52.49导致的flannel vxlan跨节点不通</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span>
+            <a class="archive-post-title" href="/2025/09/03/flannel-mode-chaos/">flannel 路由错乱</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2025/08/06/centos7-podman/">私有化下(CentOS 7)Podman调研</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2025/07/29/python-grpc-first-long/">python grpc 使用域名第一次耗时长问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2025/06/17/golang-gitlab-subgroup/">golang gitlab subgroup 构建问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2025/06/02/kubernetes-cert/">小白向的 kubernetes 证书讲解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2025/04/27/android-tun2sock/">开发一个让指定应用走代理的安卓 app 过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2025/04/21/kube-log-runner/">kube-log-runner 使用和适配 logrotate 改造</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2025/02/14/aliyun-ecs-ssl/">阿里云 ecs 上 etcd SSL reset</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span>
+            <a class="archive-post-title" href="/2025/02/13/clickhouse-arm64-v8.0-build/">给鲲鹏920和低版本飞腾编译arm64 clickhouse</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2025/01/08/docker-login-hang/">docker login hang</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2024/11/24/inotifywait-and-confd/">inotifywait 和 confd 在一起踩的坑</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2024/09/16/hostPort-problem/">hostPort 不通排查，以及挖掘问题根源</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span>
+            <a class="archive-post-title" href="/2024/08/02/k8s-ipv6/">在 IPv6 单栈下适配部署 K8S、中间件、应用适配</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2024/07/25/headscale/">[持续更新] - headscale 搭建和应用场景</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2024/07/21/Linux-android/">[持续更新] - 安卓折腾笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/17</span>
+            <a class="archive-post-title" href="/2024/06/17/hostPort-source-addr-cni0/">hostPort 访问进来的源 IP 是 cni0 地址的排查</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2024/05/22/redis-arm64-cow/">arm64 redis COW 检测</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span>
+            <a class="archive-post-title" href="/2024/05/01/kubernetes-hotplug-resource/">k8s node 热扩容内存导致的一次业务故障</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2024/04/22/trivy/">开源容器镜像扫描 trivy 懒人重点指南</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span>
+            <a class="archive-post-title" href="/2024/04/16/pprof-small/">golang pprof 转 svg 的最小二进制依赖尝试</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2024/04/11/cri-docker-sandbox-image/">cri-dockerd 无法拉取需认证仓库上的 pause 镜像解决</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2024/04/08/nvidia-container-toolkit/">docker 和 k8s 使用 gpu 笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2024/02/06/serviceAccountToken-valid/">高版本client-go在serviceAccountToken下invalid bearer token?</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2024/01/26/docker-registry-tag-delete/">docker v2 registry 本地仓库如何只删除指定 tag 而非 manifest 下的所有 tag</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/16</span>
+            <a class="archive-post-title" href="/2024/01/16/go-docker-img/">golang 代码层面构建和推送容器镜像到远端仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2024/01/08/docker-apparmor/">docker 和 apparmor</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span>
+            <a class="archive-post-title" href="/2023/12/01/resolvconf-hang/">openat /etc/resolv.conf 卡住的一次排查</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2023/11/03/non-root-containers/">[持续更新] - 容器非 root 启动改造的经验</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2023/10/20/pve7-to-8-hang-on-start/">proxmox 7.4 升级8 后开机卡在 Loading kernel 6.2.16-15</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span>
+            <a class="archive-post-title" href="/2023/08/18/kubernetes-nfs-waiting-condition/">k8s 使用 nfs 下 pod 无法创建的解决思路</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2023/08/08/qemu-cgo-build-hang/">qemu-user-static 下 cgo go build 卡住的一次解决</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2023/07/13/k8s-externalIPs/">为什么ipvs下externalIPs乱设置会崩</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2023/05/22/pod-resolve/">pod 的 /etc/resolv.conf 生成机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/12</span>
+            <a class="archive-post-title" href="/2023/04/12/docker-pull-hang/">国产系统上解决docker pull卡住的问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/07</span>
+            <a class="archive-post-title" href="/2023/03/07/qemu-binfmt_misc/">利用 qemu user 模式和 binfmt_misc 构建其他架构的 docker 镜像</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2023/02/14/openstack-vm-rabbitmqctl/">openstack 虚机上 rabbitmqctl 超时</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span>
+            <a class="archive-post-title" href="/2022/12/30/k8s-java-request-cpu/">k8s java 容器未设置 requests.cpu 导致性能问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2022/11/03/pyinstaller-supervisor/">如何打包一个不依赖 python 的 supervisor 的包去离线部署</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/09</span>
+            <a class="archive-post-title" href="/2022/10/09/docker-containerd-panic/">磁盘问题宕机后 docker 的 containerd 无法启动</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span>
+            <a class="archive-post-title" href="/2022/09/07/docker-veth-not-clean/">低版本docker veth没清理造成容器网络问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span>
+            <a class="archive-post-title" href="/2022/07/28/redhat84-vxlan-esxi/">exsi 使用 redhat8.4 搭建k8s集群，flannel vxlan 模式的不正常排错</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2022/07/12/pod-no-ip-addr/">k8s pod 没有 IP ，报错 failed to read pod IP from plugin/docker</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2022/06/03/container-not-forward/">docker info无warning，iptables规则正常，宿主机就是不转发</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2022/05/13/overlayfs-unix-socket/">低版本内核下容器内部无法使用 unix socket 通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/23</span>
+            <a class="archive-post-title" href="/2022/04/23/nfc/">nfc 折腾笔记，ACR122U/proxmark3</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2022/04/22/segfault-often/">docker containerd 不定时的 segfault 的一次处理过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span>
+            <a class="archive-post-title" href="/2022/04/21/ecs-xmrig/">ecs 中毒的一次处理过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2022/04/11/sdn-tcp-keepalive/">无数据的 tcp 链接被 SDN/防火墙 干掉的一种处理办法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2022/03/24/python-list-kubernetes-permission/">python kubernetes client list permission</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/17</span>
+            <a class="archive-post-title" href="/2022/03/17/woff2/">ttf转woff工具谷歌woff2的静态编译</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/16</span>
+            <a class="archive-post-title" href="/2022/03/16/cannot-assign-requested-address/">server 端的 cannot assign requested address</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span>
+            <a class="archive-post-title" href="/2022/02/24/keepalived-static-build/">keepalived static link build</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/18</span>
+            <a class="archive-post-title" href="/2022/02/18/proxmox-boot-disk-lvmid-not-found/">proxmox 开机 error: disk 'lvmid/[vg uuid]/[lv uuid]' not found</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/10</span>
+            <a class="archive-post-title" href="/2022/02/10/docker-daemon-layer-broken/">18.09.03 docker daemon layer broken 的一次不优雅处理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2022/01/26/nginx-static-build/">利用 docker buildx 静态编译 nginx</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2022/01/22/EmuELEC/">EmuELEC 笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span>
+            <a class="archive-post-title" href="/2021/12/19/openwrt-update/">openwrt 的在线升级固件和扩容的研究</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2021/12/12/mod-rejected-by-service/">docker数据盘损坏后启动报错 Error starting daemon: Error initializing network controller: Error creating default "bridge" network: package not installed</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span>
+            <a class="archive-post-title" href="/2021/10/29/kubelet-ephemeral-storage-loop-evicted/">1.15 kubelet 在 nodefs 容量富裕下循环 reclaim ephemeral-storage</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/28</span>
+            <a class="archive-post-title" href="/2021/09/28/ipvs-svc/">在非容器环境上实现散装的 IPVS SVC</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/16</span>
+            <a class="archive-post-title" href="/2021/09/16/read-containerd-con-reset/">解决 docker 的 read unix @->/run/containerd/s/xxx read: connection reset by peer: unknown</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span>
+            <a class="archive-post-title" href="/2021/09/03/openwrt-usb-net/">[持续更新] - Openwrt USB 网络</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span>
+            <a class="archive-post-title" href="/2021/09/02/fio/">fio 静态编译和基础使用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span>
+            <a class="archive-post-title" href="/2021/09/01/ubuntu18-and-cfq/">ubuntu18下io调度算法是cfq导致mysql非常慢</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/k8s-runxtables.lock/">干掉烦人的 open /run/xtables.lock: is a directory</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span>
+            <a class="archive-post-title" href="/2021/08/25/flannel-a-host-net-tmout/">flannel下集群有个节点网络不通的一次排查</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/cni-plugins-bridge-err/">一次 cni-plugins 导致集群 dns 无法解析的排错</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span>
+            <a class="archive-post-title" href="/2021/08/16/reserve-compute-resources/">kubelet 为系统配置预留资源</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2021/07/26/kylin-v10-boot-hang/">鲲鹏920的麒麟v10物理服务器断电后无法启动处理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span>
+            <a class="archive-post-title" href="/2021/07/20/dlv-remote/">dlv命令行的远程调试 golang 进程步骤(包含容器进程)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2021/07/16/consul-mips64le/">编译mips64le架构的consul</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2021/07/06/kube-apiserver-cannot-start-after-reboot/">机器重启后 kube-apiserver 无法启动，etcd刷(error "EOF", ServerName "")</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2021/07/05/systemctl-start-docker-canceled/">Job for docker.service canceled</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/08</span>
+            <a class="archive-post-title" href="/2021/06/08/ocp4.5.9-restore-etcd/">openshift 4.5.9 etcd损坏+脑裂修复过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2021/04/30/kubernetes-sec-agent-node-network-error/">一次单节点单个pod网络问题排查过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span>
+            <a class="archive-post-title" href="/2021/04/08/kubelet-runc-disable-kmem/">kubelet 和 runc 编译关闭 kmem</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2021/03/23/iptables-docker-no-chain/">iptables --wait -t nat -A DOCKER...: iptables NO chain/target/match by that name</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2021/03/22/jsonpatch-doc-is-missing-path/">Internal error occurred: jsonpatch add operation does not apply: doc is missing path: xxx</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span>
+            <a class="archive-post-title" href="/2021/03/12/build-arm64-docker-compose-action/">使用github action 配合 docker buildx 编译 arm64 docker-compose</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2021/02/02/node-shutdown-dns-unavailable/">集群节点关机导致dns在eviction pod之前几率不可用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2021/01/24/e2fsprogs/">e2fsck 太老报错 has unsupported feature(s): metadata_csum，从而尝试静态编译</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2021/01/23/chrony/">chrony 静态编译和笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2020/12/04/docker1803-hang-container-restore/">docker18.03 hang at 'restoring container'</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-reload-user/">ansible reload user group</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span>
+            <a class="archive-post-title" href="/2020/11/23/ansible-hang-in-docker/">ansible hang in docker container</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span>
+            <a class="archive-post-title" href="/2020/11/20/disable-swap/">永久关闭swap的正确姿势</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2020/11/06/kylin-arm-clone-vxlan-error/">银河麒麟arm64系统克隆机器上k8s vxlan跨节点不通的一次排查</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2020/10/30/uos20-nftables/">统信USO 20 hostPort 无法访问</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2020/09/18/ocp-4.5-install/">openshift 4.5.9 离线安装</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2020/08/27/skopeo-static-build/">skopeo 静态编译</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span>
+            <a class="archive-post-title" href="/2020/08/05/wireguard-for-personal/">个人用 wireguard 笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span>
+            <a class="archive-post-title" href="/2020/07/30/prometheus-rate-and-irate/">prometheus的rate与irate内部是如何计算的</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2020/07/23/fs-error-fix-k8s-master/">k8s master机器文件系统故障的一次恢复过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2020/07/05/linux-auditd/">Linux audit 审计</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2020/06/25/kubernetes-pprof/">k8s pprof 分析 cpu 和内存</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2020/06/23/host-gw-in-aliyun/">阿里云上使用flannel host-gw跨节点pod不通的解决</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2020/06/19/go-prom-exporter/">[未写完]使用go开发一个Prometheus的exporter</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/23</span>
+            <a class="archive-post-title" href="/2020/05/23/k8s-vxlan-63-timeout/">v1.17+ k8s集群下CNI使用VXLAN模式SVC有63秒延迟的触发原因定位</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/13</span>
+            <a class="archive-post-title" href="/2020/05/13/x86-router-flash/">proxmox x86软路由笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/dns-formerr/">adguardhome dns FORMERR 错误</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2020/05/12/N1-flash/">斐讯N1刷机和旁路由的设置</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/go-version-ifno/">git工作流下golang项目的version信息该如何处理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2020/04/03/kubernetes-admission-controllers/">编写一个动态准入控制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/26</span>
+            <a class="archive-post-title" href="/2020/03/26/KubeXXXMismatch/">一次deploy,rs,sts Mismatch 的处理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span>
+            <a class="archive-post-title" href="/2020/03/10/go-mod-base-use/">go mod的基础使用-科普</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/centos6-hung-while-booting/">centos6中毒重启后卡在启动页面</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2020/03/02/binfmt-0000/">记录一次request_module: runaway loop modeprobe binfmt-0000</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span>
+            <a class="archive-post-title" href="/2020/02/27/microsoft-graph-for-onedrive/">使用microsoft-graph的api对接onedrive</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span>
+            <a class="archive-post-title" href="/2020/01/15/kill-ctr-with-grace-period/">Killing container "docker://xxx with 30 second grace period</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2020/01/08/docker-panic-invalid-page-type/">docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2019/12/05/suse-fix-data-but-device-busy/">opensuse的一次救援</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span>
+            <a class="archive-post-title" href="/2019/12/03/dos-to-gpt/">从PTTYPE="dos"到TYPE="LVM2_member"的救援</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2019/11/24/kubeadm-base-use/">[长期更新]--应大多数人要求写下kubeadm的基础使用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2019/10/24/deployment-consul-in-k8s/">consul仅当服务发现在k8s无状态部署使用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2019/10/21/k8s-v1.14-v1.15-fix-issue/">手动修复v1.14-v1.15版本k8s的issue:76956</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2019/10/12/boot-grub-rescue/">/boot目录被清空下物理机无法开机的一次救援</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/ansible-count-Idempotency/">ansible数量限制上的幂等性</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/27</span>
+            <a class="archive-post-title" href="/2019/09/27/consul-tls/">高可用的SSL consul cluster实践</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2019/09/05/prometheus-change-timezone/">修改源码更改prometheus的时区问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2019/08/24/gobot-build/">gobot控制esp8266</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/06</span>
+            <a class="archive-post-title" href="/2019/08/06/preseed/">ubuntu preseed无人应答安装</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span>
+            <a class="archive-post-title" href="/2019/07/14/chromedp/">golang headless browser包chromedp初探</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2019/07/08/nodeport-err/">为什么我不用nodePort之偶然中奖几率</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2019/07/07/golang-http/">golang的net/http包的客户端简单科普</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2019/06/26/uefi-pxe/">uefi模式下docker+交换机部署pxe批量安装</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span>
+            <a class="archive-post-title" href="/2019/06/23/autoInstallServer/">拟定excel表格服务器自动按照表格配置信息和安装的实现过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span>
+            <a class="archive-post-title" href="/2019/06/12/CLP/">SMASH CLP的一些笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2019/06/02/cobra/">golang cobra的一些笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2019/05/11/container-too-many-open-file/">standard_init_linux.go:211: exec user process caused "too many open files in system"</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2019/04/28/k8s-java-start-time-not-same/">闲谈线上俩k8s环境同等limits下pod启动时间不一样解决过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span>
+            <a class="archive-post-title" href="/2019/03/22/k8s-controller-error/">一次kube-controller-manager的bug导致的线上无法调度处理过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2019/03/15/flannel-bin/">不走etcd v2 api下二进制跑flannel的总结</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span>
+            <a class="archive-post-title" href="/2019/03/11/k8s-ha/">k8s高可用涉及到ip填写的相关配置和一些坑</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span>
+            <a class="archive-post-title" href="/2019/03/03/kubernetes-1-13-4/">二进制部署Kubernetes v1.13.12 HA可选</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/19</span>
+            <a class="archive-post-title" href="/2019/02/19/jira-confluence/">docker部署jira(8.0.0)和confluence(6.14.1)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2019/02/12/dashboard/">通用的dashboard部署和tls，SSL相关部署</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span>
+            <a class="archive-post-title" href="/2019/01/30/fstab/">fstab与systemd.mount自动挂载的一点研究和见解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span>
+            <a class="archive-post-title" href="/2019/01/22/proxmox-cloud-init/">proxmox里使用cloud-init和一些笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2018/12/04/black-box-exporter/">prometheus的黑盒监控</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2018/11/24/how-to-use-kubeadm/">对于初入k8s和kubeadm的一些建议</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2018/11/06/onlyoffice/">一次docker镜像的解耦--onlyoffice</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018/11/05/10chars/">记录一次十字符病毒清理过程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span>
+            <a class="archive-post-title" href="/2018/10/27/create-kubeconfig/">生成kubeconfig常规的两种方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2018/10/12/prometheus-operator/">全手动部署prometheus-operator监控K8S集群以及一些坑</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2018/10/06/IngressController/">IngressController使用和它的高可用落地</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span>
+            <a class="archive-post-title" href="/2018/09/24/k8s-some-vpc-cluster/">跨VPC或者跨云供应商搭建K8S集群正确姿势</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/18</span>
+            <a class="archive-post-title" href="/2018/09/18/kubernetes-1-11-x-bin/">二进制部署Kubernetes v1.11.x(1.12.x) HA可选</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span>
+            <a class="archive-post-title" href="/2018/08/03/Kubernetes_install_1.11.1/">Kubernetes v1.11.x HA全手动苦工安装教学</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2018/07/18/ecs-vip/">基于openstack的ecs上使用VIP</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/08</span>
+            <a class="archive-post-title" href="/2018/07/08/travis-sync-gcr-io/">利用travis同步gcr.io镜像到dockerhub</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2018/06/25/etcd-error/">记录一次线上k8s节点故障</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2018/06/03/kubernetes-s-job/">kubernetes's Job总结和实战以及坑</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span>
+            <a class="archive-post-title" href="/2018/06/02/kubernetes-nodeSelector/">kubernetes的PodAffinity的不解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2018/05/05/Kubernetes_install/">[转载+修正]Kubernetes v1.10.x HA全手动苦工安装教学</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2018/04/29/kubernetes-configMap-mount/">kubernetes的configMap文件挂载不同的路径且不覆盖目录的解决方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/keepalived-Heartbeat-use-mg-net/">使用管理网当作业务网keepalived VIP的心跳线</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/15</span>
+            <a class="archive-post-title" href="/2018/02/15/linux-tc/">Linux tc基础使用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/05</span>
+            <a class="archive-post-title" href="/2018/02/05/docker-image-can-t-rm/">docker无法删除掉镜像的解决方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span>
+            <a class="archive-post-title" href="/2018/01/20/docker-rm%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9/">慎用docker的--rm选项!!!</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2018/01/10/docker%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/">docker的一些概念</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span>
+            <a class="archive-post-title" href="/2017/12/24/docker%E5%AE%B9%E5%99%A8%E8%AE%BF%E9%97%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA/">docker容器访问宿主机</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/23</span>
+            <a class="archive-post-title" href="/2017/12/23/docker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94/">docker容器网络互联</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span>
+            <a class="archive-post-title" href="/2017/08/03/iptables-whitelist/">Linux 上 iptables ipset 白名单</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2017/07/25/linux-bridge/">centos桥接测试</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/15</span>
+            <a class="archive-post-title" href="/2017/07/15/dd-make-boot-device/">使用 dd 利用 iso 文件制作 USB 启动盘</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/07</span>
+            <a class="archive-post-title" href="/2017/07/07/Linux-basic-setting/">[持续更新] - Linux 一些软件下载安装和配置笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/06</span>
+            <a class="archive-post-title" href="/2017/07/06/windows/">[持续更新] - Windows 一些软件下载安装和配置笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span>
+            <a class="archive-post-title" href="/2017/07/05/centos7-some-mirror/">centos7 的一些常见软件的安装 mirror</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2017/06/26/lua-list-all-upsteam/">lua列出所有upsteam</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span>
+            <a class="archive-post-title" href="/2017/06/03/bash-complete/">bash自定义补全</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span>
+            <a class="archive-post-title" href="/2017/05/25/shell-opts/">shell脚本的选项和参数处理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span>
+            <a class="archive-post-title" href="/2017/05/15/rpmbuild/">rpm包的制作笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span>
+            <a class="archive-post-title" href="/2017/05/12/ssh-trust/">ssh互信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2017/05/06/shell%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%8F%90%E5%8D%87%E6%95%88%E7%8E%87/">shell利用快捷键提升命令输入和编辑</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2017/04/29/zabbixsetup/">个人zabbix安装和坑的解决</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/26</span>
+            <a class="archive-post-title" href="/2017/04/26/%E6%AD%A3%E5%88%99%E9%9B%B6%E5%AE%BD%E6%96%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%B8%AA%E6%B3%A8%E6%84%8F%E7%82%B9/">正则零宽断言的一个注意点</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/25</span>
+            <a class="archive-post-title" href="/2017/04/25/%E8%BD%AC%E8%BD%BD-awk%E4%B8%ADRS-OFS-RS-ORS%E5%8C%BA%E5%88%AB%E4%BA%8E%E8%81%94%E7%B3%BB/">[转载]awk中RS,ORS,FS,OFS区别于联系</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/lvm-practice/">记录LVM和raid的练习</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span>
+            <a class="archive-post-title" href="/2017/04/20/linux-partition-grow/">虚拟化扩容硬盘大小</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span>
+            <a class="archive-post-title" href="/2017/04/17/iot/">分享下自己做的外网控制硬件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shell_process/">shell多进程并发执行</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span>
+            <a class="archive-post-title" href="/2017/04/15/shellsubstring/">shell的字符串截取</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span>
+            <a class="archive-post-title" href="/2017/04/11/8266hexdownload/">8266模块的烧写和sdk的坑</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2017/04/09/armlnmp/">安卓安装linux并且源码编译安装搭建lnmp的坑和总结</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/03</span>
+            <a class="archive-post-title" href="/2017/04/03/bond/">centos配置bond</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/28</span>
+            <a class="archive-post-title" href="/2017/03/28/zombie-process/">Linux 僵尸进程处理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span>
+            <a class="archive-post-title" href="/2017/03/23/check-dhcp-or-static/">判断是否是 dhcp 获取ip的一个手段</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span>
+            <a class="archive-post-title" href="/2017/03/20/ftp-install/">vsftpd虚拟用户简单部署</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2017/03/15/lnmp/">源码编译安装lnmp</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span>
+            <a class="archive-post-title" href="/2017/02/26/ad/">Altium Designer里走线开窗和挖除铺铜还有一些技巧</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/12</span>
+            <a class="archive-post-title" href="/2017/02/12/wx00/">微信公众号接入自己服务器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span>
+            <a class="archive-post-title" href="/2017/02/02/lamp/">lamp环境搭建总结</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/08</span>
+            <a class="archive-post-title" href="/2017/01/08/tuling-wx/">微信公众号接入图灵机器人api</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2016 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span>
+            <a class="archive-post-title" href="/2016/11/13/cad/">cad</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2016/10/30/20161030/">记录下自己制作的led-vu</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2016/10/28/hello/">hello world</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="diy">
+                <span class="iconfont-archer">&#xe606;</span>
+                diy
+            </span>
+            <span class="sidebar-tag-name" data-tags="8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                8266
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipmi">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipmi
+            </span>
+            <span class="sidebar-tag-name" data-tags="CLP">
+                <span class="iconfont-archer">&#xe606;</span>
+                CLP
+            </span>
+            <span class="sidebar-tag-name" data-tags="EmuELEC">
+                <span class="iconfont-archer">&#xe606;</span>
+                EmuELEC
+            </span>
+            <span class="sidebar-tag-name" data-tags="linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                linux
+            </span>
+            <span class="sidebar-tag-name" data-tags="k8s">
+                <span class="iconfont-archer">&#xe606;</span>
+                k8s
+            </span>
+            <span class="sidebar-tag-name" data-tags="Mismatch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Mismatch
+            </span>
+            <span class="sidebar-tag-name" data-tags="ingress">
+                <span class="iconfont-archer">&#xe606;</span>
+                ingress
+            </span>
+            <span class="sidebar-tag-name" data-tags="android">
+                <span class="iconfont-archer">&#xe606;</span>
+                android
+            </span>
+            <span class="sidebar-tag-name" data-tags="Altium Designer">
+                <span class="iconfont-archer">&#xe606;</span>
+                Altium Designer
+            </span>
+            <span class="sidebar-tag-name" data-tags="N1">
+                <span class="iconfont-archer">&#xe606;</span>
+                N1
+            </span>
+            <span class="sidebar-tag-name" data-tags="openwrt">
+                <span class="iconfont-archer">&#xe606;</span>
+                openwrt
+            </span>
+            <span class="sidebar-tag-name" data-tags="etcd">
+                <span class="iconfont-archer">&#xe606;</span>
+                etcd
+            </span>
+            <span class="sidebar-tag-name" data-tags="ssl">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssl
+            </span>
+            <span class="sidebar-tag-name" data-tags="aliyun">
+                <span class="iconfont-archer">&#xe606;</span>
+                aliyun
+            </span>
+            <span class="sidebar-tag-name" data-tags="tun2sock2">
+                <span class="iconfont-archer">&#xe606;</span>
+                tun2sock2
+            </span>
+            <span class="sidebar-tag-name" data-tags="ansible">
+                <span class="iconfont-archer">&#xe606;</span>
+                ansible
+            </span>
+            <span class="sidebar-tag-name" data-tags="consul">
+                <span class="iconfont-archer">&#xe606;</span>
+                consul
+            </span>
+            <span class="sidebar-tag-name" data-tags="docker">
+                <span class="iconfont-archer">&#xe606;</span>
+                docker
+            </span>
+            <span class="sidebar-tag-name" data-tags="lnmp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lnmp
+            </span>
+            <span class="sidebar-tag-name" data-tags="安卓">
+                <span class="iconfont-archer">&#xe606;</span>
+                安卓
+            </span>
+            <span class="sidebar-tag-name" data-tags="initrd">
+                <span class="iconfont-archer">&#xe606;</span>
+                initrd
+            </span>
+            <span class="sidebar-tag-name" data-tags="grub">
+                <span class="iconfont-archer">&#xe606;</span>
+                grub
+            </span>
+            <span class="sidebar-tag-name" data-tags="raid">
+                <span class="iconfont-archer">&#xe606;</span>
+                raid
+            </span>
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+            <span class="sidebar-tag-name" data-tags="kernel">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernel
+            </span>
+            <span class="sidebar-tag-name" data-tags="prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                prometheus
+            </span>
+            <span class="sidebar-tag-name" data-tags="exporter">
+                <span class="iconfont-archer">&#xe606;</span>
+                exporter
+            </span>
+            <span class="sidebar-tag-name" data-tags="boot">
+                <span class="iconfont-archer">&#xe606;</span>
+                boot
+            </span>
+            <span class="sidebar-tag-name" data-tags="tcp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tcp
+            </span>
+            <span class="sidebar-tag-name" data-tags="golang">
+                <span class="iconfont-archer">&#xe606;</span>
+                golang
+            </span>
+            <span class="sidebar-tag-name" data-tags="cad">
+                <span class="iconfont-archer">&#xe606;</span>
+                cad
+            </span>
+            <span class="sidebar-tag-name" data-tags="centos6">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos6
+            </span>
+            <span class="sidebar-tag-name" data-tags="podman">
+                <span class="iconfont-archer">&#xe606;</span>
+                podman
+            </span>
+            <span class="sidebar-tag-name" data-tags="centos">
+                <span class="iconfont-archer">&#xe606;</span>
+                centos
+            </span>
+            <span class="sidebar-tag-name" data-tags="chromedp">
+                <span class="iconfont-archer">&#xe606;</span>
+                chromedp
+            </span>
+            <span class="sidebar-tag-name" data-tags="chrony">
+                <span class="iconfont-archer">&#xe606;</span>
+                chrony
+            </span>
+            <span class="sidebar-tag-name" data-tags="cobra">
+                <span class="iconfont-archer">&#xe606;</span>
+                cobra
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubernetes">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubernetes
+            </span>
+            <span class="sidebar-tag-name" data-tags="cni-plugins">
+                <span class="iconfont-archer">&#xe606;</span>
+                cni-plugins
+            </span>
+            <span class="sidebar-tag-name" data-tags="mips64le">
+                <span class="iconfont-archer">&#xe606;</span>
+                mips64le
+            </span>
+            <span class="sidebar-tag-name" data-tags="clickhouse">
+                <span class="iconfont-archer">&#xe606;</span>
+                clickhouse
+            </span>
+            <span class="sidebar-tag-name" data-tags="arm64">
+                <span class="iconfont-archer">&#xe606;</span>
+                arm64
+            </span>
+            <span class="sidebar-tag-name" data-tags="kernal">
+                <span class="iconfont-archer">&#xe606;</span>
+                kernal
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubeconfig">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeconfig
+            </span>
+            <span class="sidebar-tag-name" data-tags="cri-dockerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                cri-dockerd
+            </span>
+            <span class="sidebar-tag-name" data-tags="swap">
+                <span class="iconfont-archer">&#xe606;</span>
+                swap
+            </span>
+            <span class="sidebar-tag-name" data-tags="adguardhome">
+                <span class="iconfont-archer">&#xe606;</span>
+                adguardhome
+            </span>
+            <span class="sidebar-tag-name" data-tags="dns">
+                <span class="iconfont-archer">&#xe606;</span>
+                dns
+            </span>
+            <span class="sidebar-tag-name" data-tags="dlv">
+                <span class="iconfont-archer">&#xe606;</span>
+                dlv
+            </span>
+            <span class="sidebar-tag-name" data-tags="apparmor">
+                <span class="iconfont-archer">&#xe606;</span>
+                apparmor
+            </span>
+            <span class="sidebar-tag-name" data-tags="containerd">
+                <span class="iconfont-archer">&#xe606;</span>
+                containerd
+            </span>
+            <span class="sidebar-tag-name" data-tags="panic">
+                <span class="iconfont-archer">&#xe606;</span>
+                panic
+            </span>
+            <span class="sidebar-tag-name" data-tags="net">
+                <span class="iconfont-archer">&#xe606;</span>
+                net
+            </span>
+            <span class="sidebar-tag-name" data-tags="Dockerfile">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dockerfile
+            </span>
+            <span class="sidebar-tag-name" data-tags="veth">
+                <span class="iconfont-archer">&#xe606;</span>
+                veth
+            </span>
+            <span class="sidebar-tag-name" data-tags="hang">
+                <span class="iconfont-archer">&#xe606;</span>
+                hang
+            </span>
+            <span class="sidebar-tag-name" data-tags="e2fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                e2fsck
+            </span>
+            <span class="sidebar-tag-name" data-tags="fsck">
+                <span class="iconfont-archer">&#xe606;</span>
+                fsck
+            </span>
+            <span class="sidebar-tag-name" data-tags="keepavlied">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepavlied
+            </span>
+            <span class="sidebar-tag-name" data-tags="ecs">
+                <span class="iconfont-archer">&#xe606;</span>
+                ecs
+            </span>
+            <span class="sidebar-tag-name" data-tags="xmrig">
+                <span class="iconfont-archer">&#xe606;</span>
+                xmrig
+            </span>
+            <span class="sidebar-tag-name" data-tags="flannel">
+                <span class="iconfont-archer">&#xe606;</span>
+                flannel
+            </span>
+            <span class="sidebar-tag-name" data-tags="fio">
+                <span class="iconfont-archer">&#xe606;</span>
+                fio
+            </span>
+            <span class="sidebar-tag-name" data-tags="vxlan">
+                <span class="iconfont-archer">&#xe606;</span>
+                vxlan
+            </span>
+            <span class="sidebar-tag-name" data-tags="ftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ftp
+            </span>
+            <span class="sidebar-tag-name" data-tags="cifs">
+                <span class="iconfont-archer">&#xe606;</span>
+                cifs
+            </span>
+            <span class="sidebar-tag-name" data-tags="go mod">
+                <span class="iconfont-archer">&#xe606;</span>
+                go mod
+            </span>
+            <span class="sidebar-tag-name" data-tags="go">
+                <span class="iconfont-archer">&#xe606;</span>
+                go
+            </span>
+            <span class="sidebar-tag-name" data-tags="gobot">
+                <span class="iconfont-archer">&#xe606;</span>
+                gobot
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp8266">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp8266
+            </span>
+            <span class="sidebar-tag-name" data-tags="http">
+                <span class="iconfont-archer">&#xe606;</span>
+                http
+            </span>
+            <span class="sidebar-tag-name" data-tags="gitlab">
+                <span class="iconfont-archer">&#xe606;</span>
+                gitlab
+            </span>
+            <span class="sidebar-tag-name" data-tags="subgroup">
+                <span class="iconfont-archer">&#xe606;</span>
+                subgroup
+            </span>
+            <span class="sidebar-tag-name" data-tags="hello world">
+                <span class="iconfont-archer">&#xe606;</span>
+                hello world
+            </span>
+            <span class="sidebar-tag-name" data-tags="headscale">
+                <span class="iconfont-archer">&#xe606;</span>
+                headscale
+            </span>
+            <span class="sidebar-tag-name" data-tags="derper">
+                <span class="iconfont-archer">&#xe606;</span>
+                derper
+            </span>
+            <span class="sidebar-tag-name" data-tags="host-gw">
+                <span class="iconfont-archer">&#xe606;</span>
+                host-gw
+            </span>
+            <span class="sidebar-tag-name" data-tags="hostPort">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostPort
+            </span>
+            <span class="sidebar-tag-name" data-tags="iptables">
+                <span class="iconfont-archer">&#xe606;</span>
+                iptables
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipset">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipset
+            </span>
+            <span class="sidebar-tag-name" data-tags="inotifywait">
+                <span class="iconfont-archer">&#xe606;</span>
+                inotifywait
+            </span>
+            <span class="sidebar-tag-name" data-tags="confd">
+                <span class="iconfont-archer">&#xe606;</span>
+                confd
+            </span>
+            <span class="sidebar-tag-name" data-tags="mqtt">
+                <span class="iconfont-archer">&#xe606;</span>
+                mqtt
+            </span>
+            <span class="sidebar-tag-name" data-tags="原创">
+                <span class="iconfont-archer">&#xe606;</span>
+                原创
+            </span>
+            <span class="sidebar-tag-name" data-tags="jira">
+                <span class="iconfont-archer">&#xe606;</span>
+                jira
+            </span>
+            <span class="sidebar-tag-name" data-tags="confluence">
+                <span class="iconfont-archer">&#xe606;</span>
+                confluence
+            </span>
+            <span class="sidebar-tag-name" data-tags="lvs">
+                <span class="iconfont-archer">&#xe606;</span>
+                lvs
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipvsadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipvsadm
+            </span>
+            <span class="sidebar-tag-name" data-tags="kube-proxy">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-proxy
+            </span>
+            <span class="sidebar-tag-name" data-tags="nodeport">
+                <span class="iconfont-archer">&#xe606;</span>
+                nodeport
+            </span>
+            <span class="sidebar-tag-name" data-tags="kube-controller-manager">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-controller-manager
+            </span>
+            <span class="sidebar-tag-name" data-tags="externalIP">
+                <span class="iconfont-archer">&#xe606;</span>
+                externalIP
+            </span>
+            <span class="sidebar-tag-name" data-tags="hostname">
+                <span class="iconfont-archer">&#xe606;</span>
+                hostname
+            </span>
+            <span class="sidebar-tag-name" data-tags="ttf">
+                <span class="iconfont-archer">&#xe606;</span>
+                ttf
+            </span>
+            <span class="sidebar-tag-name" data-tags="woff">
+                <span class="iconfont-archer">&#xe606;</span>
+                woff
+            </span>
+            <span class="sidebar-tag-name" data-tags="java">
+                <span class="iconfont-archer">&#xe606;</span>
+                java
+            </span>
+            <span class="sidebar-tag-name" data-tags="springboot">
+                <span class="iconfont-archer">&#xe606;</span>
+                springboot
+            </span>
+            <span class="sidebar-tag-name" data-tags="63s">
+                <span class="iconfont-archer">&#xe606;</span>
+                63s
+            </span>
+            <span class="sidebar-tag-name" data-tags="timeout">
+                <span class="iconfont-archer">&#xe606;</span>
+                timeout
+            </span>
+            <span class="sidebar-tag-name" data-tags="vip">
+                <span class="iconfont-archer">&#xe606;</span>
+                vip
+            </span>
+            <span class="sidebar-tag-name" data-tags="keepalived">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalived
+            </span>
+            <span class="sidebar-tag-name" data-tags="fnctl">
+                <span class="iconfont-archer">&#xe606;</span>
+                fnctl
+            </span>
+            <span class="sidebar-tag-name" data-tags="kube-log-runner">
+                <span class="iconfont-archer">&#xe606;</span>
+                kube-log-runner
+            </span>
+            <span class="sidebar-tag-name" data-tags="logrotate">
+                <span class="iconfont-archer">&#xe606;</span>
+                logrotate
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubelet">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubelet
+            </span>
+            <span class="sidebar-tag-name" data-tags="kubeadm">
+                <span class="iconfont-archer">&#xe606;</span>
+                kubeadm
+            </span>
+            <span class="sidebar-tag-name" data-tags="operator">
+                <span class="iconfont-archer">&#xe606;</span>
+                operator
+            </span>
+            <span class="sidebar-tag-name" data-tags="ConfigMap">
+                <span class="iconfont-archer">&#xe606;</span>
+                ConfigMap
+            </span>
+            <span class="sidebar-tag-name" data-tags="PodAffinity">
+                <span class="iconfont-archer">&#xe606;</span>
+                PodAffinity
+            </span>
+            <span class="sidebar-tag-name" data-tags="nfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfs
+            </span>
+            <span class="sidebar-tag-name" data-tags="hotplug">
+                <span class="iconfont-archer">&#xe606;</span>
+                hotplug
+            </span>
+            <span class="sidebar-tag-name" data-tags="kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                kylin
+            </span>
+            <span class="sidebar-tag-name" data-tags="systemd">
+                <span class="iconfont-archer">&#xe606;</span>
+                systemd
+            </span>
+            <span class="sidebar-tag-name" data-tags="Kylin">
+                <span class="iconfont-archer">&#xe606;</span>
+                Kylin
+            </span>
+            <span class="sidebar-tag-name" data-tags="lamp">
+                <span class="iconfont-archer">&#xe606;</span>
+                lamp
+            </span>
+            <span class="sidebar-tag-name" data-tags="audit">
+                <span class="iconfont-archer">&#xe606;</span>
+                audit
+            </span>
+            <span class="sidebar-tag-name" data-tags="fs">
+                <span class="iconfont-archer">&#xe606;</span>
+                fs
+            </span>
+            <span class="sidebar-tag-name" data-tags="nginx">
+                <span class="iconfont-archer">&#xe606;</span>
+                nginx
+            </span>
+            <span class="sidebar-tag-name" data-tags="microsoft">
+                <span class="iconfont-archer">&#xe606;</span>
+                microsoft
+            </span>
+            <span class="sidebar-tag-name" data-tags="graph">
+                <span class="iconfont-archer">&#xe606;</span>
+                graph
+            </span>
+            <span class="sidebar-tag-name" data-tags="onedrive">
+                <span class="iconfont-archer">&#xe606;</span>
+                onedrive
+            </span>
+            <span class="sidebar-tag-name" data-tags="nfc">
+                <span class="iconfont-archer">&#xe606;</span>
+                nfc
+            </span>
+            <span class="sidebar-tag-name" data-tags="pm3">
+                <span class="iconfont-archer">&#xe606;</span>
+                pm3
+            </span>
+            <span class="sidebar-tag-name" data-tags="non-root">
+                <span class="iconfont-archer">&#xe606;</span>
+                non-root
+            </span>
+            <span class="sidebar-tag-name" data-tags="containers">
+                <span class="iconfont-archer">&#xe606;</span>
+                containers
+            </span>
+            <span class="sidebar-tag-name" data-tags="coredns">
+                <span class="iconfont-archer">&#xe606;</span>
+                coredns
+            </span>
+            <span class="sidebar-tag-name" data-tags="gpu">
+                <span class="iconfont-archer">&#xe606;</span>
+                gpu
+            </span>
+            <span class="sidebar-tag-name" data-tags="nvidia">
+                <span class="iconfont-archer">&#xe606;</span>
+                nvidia
+            </span>
+            <span class="sidebar-tag-name" data-tags="openshift">
+                <span class="iconfont-archer">&#xe606;</span>
+                openshift
+            </span>
+            <span class="sidebar-tag-name" data-tags="ocp">
+                <span class="iconfont-archer">&#xe606;</span>
+                ocp
+            </span>
+            <span class="sidebar-tag-name" data-tags="openstack">
+                <span class="iconfont-archer">&#xe606;</span>
+                openstack
+            </span>
+            <span class="sidebar-tag-name" data-tags="squashfs">
+                <span class="iconfont-archer">&#xe606;</span>
+                squashfs
+            </span>
+            <span class="sidebar-tag-name" data-tags="usb-net">
+                <span class="iconfont-archer">&#xe606;</span>
+                usb-net
+            </span>
+            <span class="sidebar-tag-name" data-tags="overlay">
+                <span class="iconfont-archer">&#xe606;</span>
+                overlay
+            </span>
+            <span class="sidebar-tag-name" data-tags="/etc/resolv.conf">
+                <span class="iconfont-archer">&#xe606;</span>
+                /etc/resolv.conf
+            </span>
+            <span class="sidebar-tag-name" data-tags="pprof">
+                <span class="iconfont-archer">&#xe606;</span>
+                pprof
+            </span>
+            <span class="sidebar-tag-name" data-tags="timezone">
+                <span class="iconfont-archer">&#xe606;</span>
+                timezone
+            </span>
+            <span class="sidebar-tag-name" data-tags="Prometheus">
+                <span class="iconfont-archer">&#xe606;</span>
+                Prometheus
+            </span>
+            <span class="sidebar-tag-name" data-tags="cloud-init">
+                <span class="iconfont-archer">&#xe606;</span>
+                cloud-init
+            </span>
+            <span class="sidebar-tag-name" data-tags="supervisor">
+                <span class="iconfont-archer">&#xe606;</span>
+                supervisor
+            </span>
+            <span class="sidebar-tag-name" data-tags="pyinstaller">
+                <span class="iconfont-archer">&#xe606;</span>
+                pyinstaller
+            </span>
+            <span class="sidebar-tag-name" data-tags="python">
+                <span class="iconfont-archer">&#xe606;</span>
+                python
+            </span>
+            <span class="sidebar-tag-name" data-tags="preseed">
+                <span class="iconfont-archer">&#xe606;</span>
+                preseed
+            </span>
+            <span class="sidebar-tag-name" data-tags="proxmox">
+                <span class="iconfont-archer">&#xe606;</span>
+                proxmox
+            </span>
+            <span class="sidebar-tag-name" data-tags="grpc">
+                <span class="iconfont-archer">&#xe606;</span>
+                grpc
+            </span>
+            <span class="sidebar-tag-name" data-tags="qemu">
+                <span class="iconfont-archer">&#xe606;</span>
+                qemu
+            </span>
+            <span class="sidebar-tag-name" data-tags="binfmt_misc">
+                <span class="iconfont-archer">&#xe606;</span>
+                binfmt_misc
+            </span>
+            <span class="sidebar-tag-name" data-tags="loongarch64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loongarch64
+            </span>
+            <span class="sidebar-tag-name" data-tags="cgo">
+                <span class="iconfont-archer">&#xe606;</span>
+                cgo
+            </span>
+            <span class="sidebar-tag-name" data-tags="redis">
+                <span class="iconfont-archer">&#xe606;</span>
+                redis
+            </span>
+            <span class="sidebar-tag-name" data-tags="exsi">
+                <span class="iconfont-archer">&#xe606;</span>
+                exsi
+            </span>
+            <span class="sidebar-tag-name" data-tags="redhat8.4">
+                <span class="iconfont-archer">&#xe606;</span>
+                redhat8.4
+            </span>
+            <span class="sidebar-tag-name" data-tags="rpm">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpm
+            </span>
+            <span class="sidebar-tag-name" data-tags="rpmbuild">
+                <span class="iconfont-archer">&#xe606;</span>
+                rpmbuild
+            </span>
+            <span class="sidebar-tag-name" data-tags="salt">
+                <span class="iconfont-archer">&#xe606;</span>
+                salt
+            </span>
+            <span class="sidebar-tag-name" data-tags="salt-run">
+                <span class="iconfont-archer">&#xe606;</span>
+                salt-run
+            </span>
+            <span class="sidebar-tag-name" data-tags="ipv6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ipv6
+            </span>
+            <span class="sidebar-tag-name" data-tags="vmware">
+                <span class="iconfont-archer">&#xe606;</span>
+                vmware
+            </span>
+            <span class="sidebar-tag-name" data-tags="hung">
+                <span class="iconfont-archer">&#xe606;</span>
+                hung
+            </span>
+            <span class="sidebar-tag-name" data-tags="keepalive">
+                <span class="iconfont-archer">&#xe606;</span>
+                keepalive
+            </span>
+            <span class="sidebar-tag-name" data-tags="serviceAccountToken">
+                <span class="iconfont-archer">&#xe606;</span>
+                serviceAccountToken
+            </span>
+            <span class="sidebar-tag-name" data-tags="bash">
+                <span class="iconfont-archer">&#xe606;</span>
+                bash
+            </span>
+            <span class="sidebar-tag-name" data-tags="shell">
+                <span class="iconfont-archer">&#xe606;</span>
+                shell
+            </span>
+            <span class="sidebar-tag-name" data-tags="segfault">
+                <span class="iconfont-archer">&#xe606;</span>
+                segfault
+            </span>
+            <span class="sidebar-tag-name" data-tags="skopeo">
+                <span class="iconfont-archer">&#xe606;</span>
+                skopeo
+            </span>
+            <span class="sidebar-tag-name" data-tags="boltdb">
+                <span class="iconfont-archer">&#xe606;</span>
+                boltdb
+            </span>
+            <span class="sidebar-tag-name" data-tags="ssh">
+                <span class="iconfont-archer">&#xe606;</span>
+                ssh
+            </span>
+            <span class="sidebar-tag-name" data-tags="suse">
+                <span class="iconfont-archer">&#xe606;</span>
+                suse
+            </span>
+            <span class="sidebar-tag-name" data-tags="dockerhub">
+                <span class="iconfont-archer">&#xe606;</span>
+                dockerhub
+            </span>
+            <span class="sidebar-tag-name" data-tags="gcr.io">
+                <span class="iconfont-archer">&#xe606;</span>
+                gcr.io
+            </span>
+            <span class="sidebar-tag-name" data-tags="微信">
+                <span class="iconfont-archer">&#xe606;</span>
+                微信
+            </span>
+            <span class="sidebar-tag-name" data-tags="api">
+                <span class="iconfont-archer">&#xe606;</span>
+                api
+            </span>
+            <span class="sidebar-tag-name" data-tags="ubuntu18">
+                <span class="iconfont-archer">&#xe606;</span>
+                ubuntu18
+            </span>
+            <span class="sidebar-tag-name" data-tags="tftp">
+                <span class="iconfont-archer">&#xe606;</span>
+                tftp
+            </span>
+            <span class="sidebar-tag-name" data-tags="trivy">
+                <span class="iconfont-archer">&#xe606;</span>
+                trivy
+            </span>
+            <span class="sidebar-tag-name" data-tags="uos">
+                <span class="iconfont-archer">&#xe606;</span>
+                uos
+            </span>
+            <span class="sidebar-tag-name" data-tags="wireguard">
+                <span class="iconfont-archer">&#xe606;</span>
+                wireguard
+            </span>
+            <span class="sidebar-tag-name" data-tags="x86">
+                <span class="iconfont-archer">&#xe606;</span>
+                x86
+            </span>
+            <span class="sidebar-tag-name" data-tags="zombie">
+                <span class="iconfont-archer">&#xe606;</span>
+                zombie
+            </span>
+            <span class="sidebar-tag-name" data-tags="zabbix">
+                <span class="iconfont-archer">&#xe606;</span>
+                zabbix
+            </span>
+            <span class="sidebar-tag-name" data-tags="正则">
+                <span class="iconfont-archer">&#xe606;</span>
+                正则
+            </span>
+            <span class="sidebar-tag-name" data-tags="awk">
+                <span class="iconfont-archer">&#xe606;</span>
+                awk
+            </span>
+            <span class="sidebar-tag-name" data-tags="GetImageBlob">
+                <span class="iconfont-archer">&#xe606;</span>
+                GetImageBlob
+            </span>
+            <span class="sidebar-tag-name" data-tags="sandbox">
+                <span class="iconfont-archer">&#xe606;</span>
+                sandbox
+            </span>
+            <span class="sidebar-tag-name" data-tags="https">
+                <span class="iconfont-archer">&#xe606;</span>
+                https
+            </span>
+            <span class="sidebar-tag-name" data-tags="software">
+                <span class="iconfont-archer">&#xe606;</span>
+                software
+            </span>
+            <span class="sidebar-tag-name" data-tags="openeuler">
+                <span class="iconfont-archer">&#xe606;</span>
+                openeuler
+            </span>
+            <span class="sidebar-tag-name" data-tags="glibc">
+                <span class="iconfont-archer">&#xe606;</span>
+                glibc
+            </span>
+            <span class="sidebar-tag-name" data-tags="Windows">
+                <span class="iconfont-archer">&#xe606;</span>
+                Windows
+            </span>
+            <span class="sidebar-tag-name" data-tags="esp">
+                <span class="iconfont-archer">&#xe606;</span>
+                esp
+            </span>
+            <span class="sidebar-tag-name" data-tags="loong64">
+                <span class="iconfont-archer">&#xe606;</span>
+                loong64
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="日志">
+            <span class="iconfont-archer">&#xe60a;</span>
+            日志
+        </span>
+        <span class="sidebar-category-name" data-categories="ipmi">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ipmi
+        </span>
+        <span class="sidebar-category-name" data-categories="闲搞">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲搞
+        </span>
+        <span class="sidebar-category-name" data-categories="kubernetes">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubernetes
+        </span>
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+        <span class="sidebar-category-name" data-categories="kubelet">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubelet
+        </span>
+        <span class="sidebar-category-name" data-categories="ansible">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ansible
+        </span>
+        <span class="sidebar-category-name" data-categories="pxe">
+            <span class="iconfont-archer">&#xe60a;</span>
+            pxe
+        </span>
+        <span class="sidebar-category-name" data-categories="Linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Linux
+        </span>
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+        <span class="sidebar-category-name" data-categories="Auto cad">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Auto cad
+        </span>
+        <span class="sidebar-category-name" data-categories="心得">
+            <span class="iconfont-archer">&#xe60a;</span>
+            心得
+        </span>
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+        <span class="sidebar-category-name" data-categories="consul">
+            <span class="iconfont-archer">&#xe60a;</span>
+            consul
+        </span>
+        <span class="sidebar-category-name" data-categories="kubeconfig">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeconfig
+        </span>
+        <span class="sidebar-category-name" data-categories="grub">
+            <span class="iconfont-archer">&#xe60a;</span>
+            grub
+        </span>
+        <span class="sidebar-category-name" data-categories="linux">
+            <span class="iconfont-archer">&#xe60a;</span>
+            linux
+        </span>
+        <span class="sidebar-category-name" data-categories="centos6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            centos6
+        </span>
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+        <span class="sidebar-category-name" data-categories="容器">
+            <span class="iconfont-archer">&#xe60a;</span>
+            容器
+        </span>
+        <span class="sidebar-category-name" data-categories="openstack">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openstack
+        </span>
+        <span class="sidebar-category-name" data-categories="boot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            boot
+        </span>
+        <span class="sidebar-category-name" data-categories="vsftp">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vsftp
+        </span>
+        <span class="sidebar-category-name" data-categories="fstab">
+            <span class="iconfont-archer">&#xe60a;</span>
+            fstab
+        </span>
+        <span class="sidebar-category-name" data-categories="panic">
+            <span class="iconfont-archer">&#xe60a;</span>
+            panic
+        </span>
+        <span class="sidebar-category-name" data-categories="go">
+            <span class="iconfont-archer">&#xe60a;</span>
+            go
+        </span>
+        <span class="sidebar-category-name" data-categories="version">
+            <span class="iconfont-archer">&#xe60a;</span>
+            version
+        </span>
+        <span class="sidebar-category-name" data-categories="gobot">
+            <span class="iconfont-archer">&#xe60a;</span>
+            gobot
+        </span>
+        <span class="sidebar-category-name" data-categories="http">
+            <span class="iconfont-archer">&#xe60a;</span>
+            http
+        </span>
+        <span class="sidebar-category-name" data-categories="闲聊">
+            <span class="iconfont-archer">&#xe60a;</span>
+            闲聊
+        </span>
+        <span class="sidebar-category-name" data-categories="iptables">
+            <span class="iconfont-archer">&#xe60a;</span>
+            iptables
+        </span>
+        <span class="sidebar-category-name" data-categories="admission">
+            <span class="iconfont-archer">&#xe60a;</span>
+            admission
+        </span>
+        <span class="sidebar-category-name" data-categories="kube-controller-manager">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kube-controller-manager
+        </span>
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+        <span class="sidebar-category-name" data-categories="keepalived">
+            <span class="iconfont-archer">&#xe60a;</span>
+            keepalived
+        </span>
+        <span class="sidebar-category-name" data-categories="kubeadm">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kubeadm
+        </span>
+        <span class="sidebar-category-name" data-categories="k8s">
+            <span class="iconfont-archer">&#xe60a;</span>
+            k8s
+        </span>
+        <span class="sidebar-category-name" data-categories="Job">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Job
+        </span>
+        <span class="sidebar-category-name" data-categories="vxlan">
+            <span class="iconfont-archer">&#xe60a;</span>
+            vxlan
+        </span>
+        <span class="sidebar-category-name" data-categories="Kylin">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Kylin
+        </span>
+        <span class="sidebar-category-name" data-categories="kmem">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kmem
+        </span>
+        <span class="sidebar-category-name" data-categories="lua">
+            <span class="iconfont-archer">&#xe60a;</span>
+            lua
+        </span>
+        <span class="sidebar-category-name" data-categories="LVM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            LVM
+        </span>
+        <span class="sidebar-category-name" data-categories="microsoft">
+            <span class="iconfont-archer">&#xe60a;</span>
+            microsoft
+        </span>
+        <span class="sidebar-category-name" data-categories="coredns">
+            <span class="iconfont-archer">&#xe60a;</span>
+            coredns
+        </span>
+        <span class="sidebar-category-name" data-categories="openwrt">
+            <span class="iconfont-archer">&#xe60a;</span>
+            openwrt
+        </span>
+        <span class="sidebar-category-name" data-categories="raid">
+            <span class="iconfont-archer">&#xe60a;</span>
+            raid
+        </span>
+        <span class="sidebar-category-name" data-categories="graph">
+            <span class="iconfont-archer">&#xe60a;</span>
+            graph
+        </span>
+        <span class="sidebar-category-name" data-categories="node-cache">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node-cache
+        </span>
+        <span class="sidebar-category-name" data-categories="golang">
+            <span class="iconfont-archer">&#xe60a;</span>
+            golang
+        </span>
+        <span class="sidebar-category-name" data-categories="Prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Prometheus
+        </span>
+        <span class="sidebar-category-name" data-categories="prometheus">
+            <span class="iconfont-archer">&#xe60a;</span>
+            prometheus
+        </span>
+        <span class="sidebar-category-name" data-categories="proxmox">
+            <span class="iconfont-archer">&#xe60a;</span>
+            proxmox
+        </span>
+        <span class="sidebar-category-name" data-categories="preseed">
+            <span class="iconfont-archer">&#xe60a;</span>
+            preseed
+        </span>
+        <span class="sidebar-category-name" data-categories="onedrive">
+            <span class="iconfont-archer">&#xe60a;</span>
+            onedrive
+        </span>
+        <span class="sidebar-category-name" data-categories="总结">
+            <span class="iconfont-archer">&#xe60a;</span>
+            总结
+        </span>
+        <span class="sidebar-category-name" data-categories="suse">
+            <span class="iconfont-archer">&#xe60a;</span>
+            suse
+        </span>
+        <span class="sidebar-category-name" data-categories="CI">
+            <span class="iconfont-archer">&#xe60a;</span>
+            CI
+        </span>
+        <span class="sidebar-category-name" data-categories="ubuntu18">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ubuntu18
+        </span>
+        <span class="sidebar-category-name" data-categories="docker">
+            <span class="iconfont-archer">&#xe60a;</span>
+            docker
+        </span>
+        <span class="sidebar-category-name" data-categories="travis">
+            <span class="iconfont-archer">&#xe60a;</span>
+            travis
+        </span>
+        <span class="sidebar-category-name" data-categories="uos">
+            <span class="iconfont-archer">&#xe60a;</span>
+            uos
+        </span>
+        <span class="sidebar-category-name" data-categories="wireguard">
+            <span class="iconfont-archer">&#xe60a;</span>
+            wireguard
+        </span>
+        <span class="sidebar-category-name" data-categories="kickstart">
+            <span class="iconfont-archer">&#xe60a;</span>
+            kickstart
+        </span>
+        <span class="sidebar-category-name" data-categories="zombie">
+            <span class="iconfont-archer">&#xe60a;</span>
+            zombie
+        </span>
+        <span class="sidebar-category-name" data-categories="运维">
+            <span class="iconfont-archer">&#xe60a;</span>
+            运维
+        </span>
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "http://zhangguanzhang.github.io",
+        root: siteMetaRoot,
+        author: "Zhangguanzhang"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+            <div class="site-search site-search-loading">
+    <div class="algolia-popup popup">
+        <div class="algolia-search">
+            <div class="algolia-search-input-icon">
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="algolia-search-input" id="algolia-search-input"></div>
+            <div class="popup-btn-close">
+                <i class="iconfont-archer">&#xe609;</i>
+            </div>
+        </div>
+
+        <div class="algolia-results">
+            <div id="algolia-stats" class="algolia-stats"></div>
+            <div id="algolia-hits"></div>
+            <div id="algolia-pagination" class="algolia-pagination"></div>
+        </div>
+    </div>
+</div>
+
+            <script src="/scripts/search.js" async></script>
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>
