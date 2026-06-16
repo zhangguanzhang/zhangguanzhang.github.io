@@ -421,6 +421,30 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2020/10/20/kylin-v10-k8s-overlay-error/">
+                <span class="abstract-title-text">银河麒麟arm64系统上k8s集群跨节点不通的一次排查</span>
+            </a>
+            <div class="abstract-content">
+                由来同事在客户那边部署的集群问题频繁，先给他解决了个问题后又反映说业务 POD 由于 DNS 无法解析而启动失败，排查完发现这样的情况从没遇到过，挺有意思的，这里记录下。实际排查过程也有往错误的方向浪费了一些时间和尝试，就不写进来了，以正确的角度写下排查过程。
+环境信息集群信息:
+12345678910111213141516171819202122232425$ kubectl version -o json&#123;  &quot;clientVersion&quot;: &#123;    &quot;major&quot;: &quot;1&quot;,    &quot;mi...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/10/20">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/20</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Kylin">Kylin</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2020/09/18/ocp-4.5-install/">
                 <span class="abstract-title-text">openshift 4.5.9 离线安装</span>
             </a>
@@ -777,26 +801,6 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             </div>
         </article>
         <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/04/03/kubernetes-admission-controllers/">
-                <span class="abstract-title-text">编写一个动态准入控制</span>
-            </a>
-            <div class="abstract-content">
-                12345678apiVersion: v1kind: Podmetadata:  name: testspec:  containers:  - name: test    image: nginx:alpine
-
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354&#123;   &quot;kind&quot;:&quot;Pod&quot;,   &quot;apiVersion&quot;:&quot;v1&quot;,   &qu...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/04/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/03</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/7/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/9/">NEXT &gt;</a>
@@ -1118,9 +1122,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 214
+        Total : 215
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -1130,6 +1135,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span>
+            <a class="archive-post-title" href="/2026/06/16/proxmox-csi/">proxmox CSI 使用</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
             <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
@@ -2793,6 +2802,10 @@ N1有8G的rom 2G的ram，cpu 是 armv8 的。询问了一番 pdd 上有卖的，
             <span class="sidebar-tag-name" data-tags="loong64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loong64
+            </span>
+            <span class="sidebar-tag-name" data-tags="CSI">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSI
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

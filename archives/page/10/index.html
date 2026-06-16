@@ -414,6 +414,32 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2021/05/26/docker-panic-invalid-freelist-page/">
+                <span class="abstract-title-text">docker-ce 18.09.3 启动panic: invalid freelist page: 56, page type is leaf的解决处理</span>
+            </a>
+            <div class="abstract-content">
+                这个问题和之前的docker-18.06.3-ce启动panic: invalid page type: 0: 0的解决处理差不多，不过 db 文件不同。客户停止 docker 后起不来了，查看日志：
+1journalctl -xe -u docker
+
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879805月 26 18:42:17 xxx...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/05/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/05/26</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2021/04/30/kubernetes-sec-agent-node-network-error/">
                 <span class="abstract-title-text">一次单节点单个pod网络问题排查过程</span>
             </a>
@@ -616,27 +642,6 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
                 <!-- tags -->
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="hang">hang</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/11/23/ansible-reload-user/">
-                <span class="abstract-title-text">ansible reload user group</span>
-            </a>
-            <div class="abstract-content">
-                <p>记录下今天被 ansible 会话持久坑到的一个 user group 问题</p>
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2020/11/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/11/23</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
 </div>
 
             </div>
@@ -899,9 +904,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 214
+        Total : 215
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -911,6 +917,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span>
+            <a class="archive-post-title" href="/2026/06/16/proxmox-csi/">proxmox CSI 使用</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
             <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
@@ -2574,6 +2584,10 @@ docker-practice/actions-setup-docker@master 将会在在 action 的 runner 里�
             <span class="sidebar-tag-name" data-tags="loong64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loong64
+            </span>
+            <span class="sidebar-tag-name" data-tags="CSI">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSI
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -414,6 +414,26 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2020/04/03/kubernetes-admission-controllers/">
+                <span class="abstract-title-text">编写一个动态准入控制</span>
+            </a>
+            <div class="abstract-content">
+                12345678apiVersion: v1kind: Podmetadata:  name: testspec:  containers:  - name: test    image: nginx:alpine
+
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354&#123;   &quot;kind&quot;:&quot;Pod&quot;,   &quot;apiVersion&quot;:&quot;v1&quot;,   &qu...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2020/04/03">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/03</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2020/03/26/KubeXXXMismatch/">
                 <span class="abstract-title-text">一次deploy,rs,sts Mismatch 的处理</span>
             </a>
@@ -625,37 +645,6 @@
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="grub">grub</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="boot">boot</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/11/24/kubeadm-base-use/">
-                <span class="abstract-title-text">[长期更新]--应大多数人要求写下kubeadm的基础使用</span>
-            </a>
-            <div class="abstract-content">
-                市面上很多kubeadm的文章都是错误示范或者不够详细，大多数都没写系统设置之类的就直接kubeadm init导致很多跟着做的人会报错
-我期望看到本文的读者最少具备以下知识:
-
-Linux一些目录规范和systemd
-学过一点docker
-懂dns和&#x2F;etc&#x2F;hosts、curl互相结合来测试一些web的接口响应状态
-不要求github有自己项目，至少会浏览github
-
-本教学将以下列节点数与规格来进行部署Kubernetes集群,系统CentOS 7.6+，有条件7.8，不要使用centos7.4以及一下，容器技术依赖于内核技术，低版本系统部署和运行后问题会非常...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2019/11/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/11/24</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="k8s">k8s</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="kubeadm">kubeadm</a>
 </div>
 
             </div>
@@ -918,9 +907,10 @@ Linux一些目录规范和systemd
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 214
+        Total : 215
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -930,6 +920,10 @@ Linux一些目录规范和systemd
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span>
+            <a class="archive-post-title" href="/2026/06/16/proxmox-csi/">proxmox CSI 使用</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
             <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
@@ -2593,6 +2587,10 @@ Linux一些目录规范和systemd
             <span class="sidebar-tag-name" data-tags="loong64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loong64
+            </span>
+            <span class="sidebar-tag-name" data-tags="CSI">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSI
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

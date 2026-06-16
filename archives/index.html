@@ -413,6 +413,28 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2026/06/16/proxmox-csi/">
+                <span class="abstract-title-text">proxmox CSI 使用</span>
+            </a>
+            <div class="abstract-content">
+                <p>记录下 proxmox CSI 部署和使用。</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2026/06/16">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2026/06/16</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="proxmox">proxmox</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="CSI">CSI</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2026/05/13/loongarch64/">
                 <span class="abstract-title-text">龙芯折腾适配笔记</span>
             </a>
@@ -607,36 +629,6 @@
                     <div class="abstract-tags" >
         <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
         <a class="post-tag" href="javascript:void(0);" data-tags="containerd">containerd</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2025/10/17/keepalived-locking-pid-file-invalid/">
-                <span class="abstract-title-text">keepalived Locking pid file error 22 - Invalid argument</span>
-            </a>
-            <div class="abstract-content">
-                由来现场部署业务后发现访问有问题，排查后发现业务网关访问 etcd 的 keepalived IPVS svc 不通
-排查基础排查12$ curl 169.254.20.4:12379curl: (7) Failed to connect to 169.254.20.4 port 12379: Connection refused
-
-这个是我们 etcd 的 svc 的，curl real server 正常：
-1$ curl &lt;本机IP&gt;:12379
-
-然后看了下 iptables -t filter -S 无额外规则，怕客户安全加固啥的前面 insert 了规则影响。
-1...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2025/10/17">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2025/10/17</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="keepalived">keepalived</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="fnctl">fnctl</a>
 </div>
 
             </div>
@@ -899,9 +891,10 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 214
+        Total : 215
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -911,6 +904,10 @@
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span>
+            <a class="archive-post-title" href="/2026/06/16/proxmox-csi/">proxmox CSI 使用</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
             <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
@@ -2574,6 +2571,10 @@
             <span class="sidebar-tag-name" data-tags="loong64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loong64
+            </span>
+            <span class="sidebar-tag-name" data-tags="CSI">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSI
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

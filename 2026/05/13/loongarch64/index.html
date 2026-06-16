@@ -302,7 +302,7 @@
 
                 <!-- 文章字数统计 -->
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.8k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
                     </div>
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
@@ -488,6 +488,9 @@
 <h4 id="nodejs"><a href="#nodejs" class="headerlink" title="nodejs"></a>nodejs</h4><p>源 <a href="https://registry.loongnix.cn:4873/">https://registry.loongnix.cn:4873</a> 例如 sharp 库依赖 libvips 库需要单独使用龙芯编译的：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sharp@0.33.5 --registry=https://registry.loongnix.cn:4873/</span><br></pre></td></tr></table></figure>
 
+<p>更多见 <a href="https://docs.loongnix.cn/nodejs/Doc/list/04.npm%E4%BB%93%E5%BA%93%E9%80%82%E9%85%8D%E5%88%97%E8%A1%A8.html">npm仓库适配列表</a>，以下是一些常见的包和版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">esbuild@0.27.0</span><br><span class="line">corepack@0.28.0</span><br><span class="line">npm@10.7.0</span><br><span class="line">pkg@5.8.1</span><br><span class="line">ttf2woff@3.0.0</span><br></pre></td></tr></table></figure>
+
 <h4 id="rust"><a href="#rust" class="headerlink" title="rust"></a>rust</h4><p><a href="https://docs.loongnix.cn/rust/rustup.html">https://docs.loongnix.cn/rust/rustup.html</a></p>
 <h4 id="ffmpeg"><a href="#ffmpeg" class="headerlink" title="ffmpeg"></a>ffmpeg</h4><p>loongnix-repos 里带一些源，但是 <code>yum repolist all</code> 看到会没有开启，如果安装 ffmpeg：</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum install -y loongnix-repos \</span><br><span class="line">    ; \</span><br><span class="line">dnf install -y --setopt=tsflags=nodocs --setopt=install_weak_deps=False \</span><br><span class="line">    --enablerepo=plus \</span><br><span class="line">    ffmpeg \</span><br><span class="line">    ; \</span><br><span class="line">dnf clean all; \</span><br><span class="line">rm -rf /var/cache/dnf /var/cache/yum/* /tmp/*</span><br></pre></td></tr></table></figure>
@@ -496,6 +499,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> /etc/os-release</span> </span><br><span class="line">NAME=&quot;Kylin Linux Advanced Server&quot;</span><br><span class="line">VERSION=&quot;V11 (Swan25)&quot;</span><br><span class="line">ID=&quot;kylin&quot;</span><br><span class="line">VERSION_ID=&quot;V11&quot;</span><br><span class="line">PRETTY_NAME=&quot;Kylin Linux Advanced Server V11 (Swan25)&quot;</span><br><span class="line">ANSI_COLOR=&quot;0;31&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">uname</span> -a</span></span><br><span class="line">Linux localhost.localdomain 6.6.0-32.7.v2505.ky11.loongarch64 #1 SMP Tue Jul  8 02:45:54 UTC 2025 loongarch64 loongarch64 loongarch64 GNU/Linux</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lscpu</span></span><br><span class="line">架构：               loongarch64</span><br><span class="line">  CPU 运行模式：     32-bit, 64-bit</span><br><span class="line">  Address sizes:     48 bits physical, 48 bits virtual</span><br><span class="line">  字节序：           Little Endian</span><br><span class="line">CPU:                 16</span><br><span class="line">  在线 CPU 列表：    0-15</span><br><span class="line">BIOS 厂商 ID：       QEMU</span><br><span class="line">型号名称：           Loongson-3A5000</span><br><span class="line">  BIOS 型号名称：    virt  CPU @ 2.0GHz</span><br><span class="line">  BIOS CPU family:   1</span><br><span class="line">  CPU 系列：         Loongson-64bit</span><br><span class="line">  型号：             0x10</span><br><span class="line">  每个核的线程数：   1</span><br><span class="line">  每个座的核数：     1</span><br><span class="line">  座：               16</span><br><span class="line">  BogoMIPS：         4000.00</span><br><span class="line">  标记：             cpucfg lam ual fpu lsx lasx crc32</span><br><span class="line">Caches (sum of all): </span><br><span class="line">  L1d:               1 MiB (16 instances)</span><br><span class="line">  L1i:               1 MiB (16 instances)</span><br><span class="line">  L2:                4 MiB (16 instances)</span><br><span class="line">  L3:                16 MiB (1 instance)</span><br><span class="line">NUMA:                </span><br><span class="line">  NUMA 节点：        1</span><br><span class="line">  NUMA 节点0 CPU：   0-15</span><br></pre></td></tr></table></figure>
 
 <p>不是较新的龙芯服务器都可以安装 abi1.0 和 abi2.0 的系统的，只不过龙芯现在主推 abi2.0 ，较新的服务器上没有去测试过 abi1.0。</p>
+<p>docker 镜像仓库在 <a href="https://lcr.loongnix.cn/search">https://lcr.loongnix.cn/search</a> <a href="https://github.com/Loongson-Cloud-Community/docker-library">https://github.com/Loongson-Cloud-Community/docker-library</a></p>
 <h3 id="虚拟化相关-1"><a href="#虚拟化相关-1" class="headerlink" title="虚拟化相关"></a>虚拟化相关</h3><h4 id="阵列"><a href="#阵列" class="headerlink" title="阵列"></a>阵列</h4><p>服务器安装完成后，插了 ssd 盘发现系统不识别，感觉要做阵列才行，lspci 后看了 pci 信息，搜了下应该可以用 <code>storcli</code> 做阵列，然后谷歌搜了下相关还真找到了一个 rpm，不过它内部是 qemu-x86_64 运行的 x86_64 二进制</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">wget https://update.cs2c.com.cn/loongarch0928/0926-dianxin/Packages/v10-sp1-appstore-openstack-queens/Packages/storcli-1.23-03.a.ky10.loongarch64.rpm</span><br><span class="line">yum localinstall storcli-1.23-03.a.ky10.loongarch64.rpm</span><br><span class="line">rpm -ql storcli</span><br><span class="line">cd /opt/MegaRAID/storcli/</span><br><span class="line">qemu-x86_64 ./storcli64 show</span><br><span class="line">qemu-x86_64 ./storcli64 /c0/eall/sall show</span><br><span class="line"></span><br><span class="line">Drive Information :</span><br><span class="line">=================</span><br><span class="line"></span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">EID:Slt DID State DG      Size Intf Med SED PI SeSz Model          Sp Type </span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">252:4    11 Onln   0 893.75 GB SATA SSD N   N  512B SageMicro SSD  U  -    </span><br><span class="line">252:5    10 Onln   0 893.75 GB SATA SSD N   N  512B SageMicro SSD  U  -    </span><br><span class="line">252:7    12 UGood  -  3.492 TB SATA SSD N   N  512B YRS1TSA03840YC U  -    </span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建一个单盘的RAID0虚拟磁盘，</span></span><br><span class="line">qemu-x86_64 ./storcli64 /c0  add vd type=r0 drives=252:7</span><br><span class="line">qemu-x86_64 ./storcli64 /c0/eall/sall show</span><br><span class="line"></span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">EID:Slt DID State DG      Size Intf Med SED PI SeSz Model          Sp Type </span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">252:4    11 Onln   0 893.75 GB SATA SSD N   N  512B SageMicro SSD  U  -    </span><br><span class="line">252:5    10 Onln   0 893.75 GB SATA SSD N   N  512B SageMicro SSD  U  -    </span><br><span class="line">252:7    12 Onln   1  3.492 TB SATA SSD N   N  512B YRS1TSA03840YC U  -    </span><br><span class="line">---------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
 
@@ -530,6 +534,10 @@
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2026/06/16/proxmox-csi/" title="proxmox CSI 使用">
+                    <div class="nextTitle">proxmox CSI 使用</div>
+                </a>
         </li>
         <li class="previous">
                 <div class="prevSlogan">Previous Post</div>
@@ -825,9 +833,10 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 214
+        Total : 215
         </div>
         <!-- search  -->
             <div class="site-search site-search-loading popup-trigger">
@@ -837,6 +846,10 @@
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span>
+            <a class="archive-post-title" href="/2026/06/16/proxmox-csi/">proxmox CSI 使用</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/13</span>
             <a class="archive-post-title" href="/2026/05/13/loongarch64/">龙芯折腾适配笔记</a>
@@ -2500,6 +2513,10 @@
             <span class="sidebar-tag-name" data-tags="loong64">
                 <span class="iconfont-archer">&#xe606;</span>
                 loong64
+            </span>
+            <span class="sidebar-tag-name" data-tags="CSI">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSI
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
